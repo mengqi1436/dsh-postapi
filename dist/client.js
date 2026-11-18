@@ -4145,6 +4145,16 @@ ensureGlobals();
 
 // src/client/index.js
 var inject = ["slots", "locale", "sidebarRightTabs"];
+function safeEffect(ctx, label, body) {
+  ctx.effect(() => {
+    const result = body();
+    if (result === void 0 || result === null) return void 0;
+    if (typeof result === "function") return result;
+    if (typeof result.then === "function" || typeof result[Symbol.iterator] === "function" || typeof result[Symbol.asyncIterator] === "function") return result;
+    console.warn("[dsh-postapi] " + label + " \u8FD4\u56DE\u4E86\u975E disposer \u503C\uFF08\u5DF2\u5FFD\u7565\uFF09\uFF1A", typeof result);
+    return void 0;
+  }, label);
+}
 function ComposerBadge() {
   return (0, import_react18.createElement)("svg", {
     viewBox: "0 0 64 64",
@@ -4162,27 +4172,32 @@ function apply(ctx) {
     return;
   }
   const t = ctx.locale ? ctx.locale.bind(POSTAPI_NS) : (key) => zh[key] ?? key;
-  ctx.effect(() => ctx.sidebarRightTabs.register(postapiDefinition(t)), "dsh-postapi: postapi tab type");
+  safeEffect(ctx, "dsh-postapi: postapi tab type", () => ctx.sidebarRightTabs.register(postapiDefinition(t)));
   if (ctx.locale) {
-    ctx.effect(() => ctx.locale.register(POSTAPI_NS, { zh, en }), "dsh-postapi: dictionaries");
+    safeEffect(ctx, "dsh-postapi: dictionaries", () => ctx.locale.register(POSTAPI_NS, { zh, en }));
   }
-  ctx.effect(() => ctx.slots.inject("sidebar.right.pane.tab", () => ctx.slots.register(
+  safeEffect(ctx, "dsh-postapi: tab body", () => ctx.slots.inject("sidebar.right.pane.tab", () => ctx.slots.register(
     { name: "sidebar.right.pane.tab", key: POSTAPI_ID, locale: POSTAPI_NS },
     PostApiBody
-  )), "dsh-postapi: tab body");
-  ctx.effect(() => ctx.slots.inject("sidebar.right.pane.tab.title", () => ctx.slots.register(
+  )));
+  safeEffect(ctx, "dsh-postapi: tab title", () => ctx.slots.inject("sidebar.right.pane.tab.title", () => ctx.slots.register(
     { name: "sidebar.right.pane.tab.title", key: POSTAPI_ID },
     ApiTitle
-  )), "dsh-postapi: tab title");
+  )));
   try {
-    ctx.effect(() => ctx.slots.inject("conversation.composer.dock", () => ctx.slots.register(
+    safeEffect(ctx, "dsh-postapi: composer badge", () => ctx.slots.inject("conversation.composer.dock", () => ctx.slots.register(
       { name: "conversation.composer.dock", id: "dsh-postapi", order: 5 },
       ComposerBadge
-    )), "dsh-postapi: composer badge");
+    )));
   } catch (err) {
     console.warn("[dsh-postapi] composer \u5FBD\u7AE0\u672A\u6CE8\u518C\uFF08slot \u63D0\u4F9B\u65B9\u7F3A\u5931\uFF09\uFF1A", err && err.message);
   }
-  ctx.effect(() => installApi(), "dsh-postapi: bridge api install");
+  safeEffect(ctx, "dsh-postapi: bridge api install", () => {
+    installApi();
+    return () => {
+      if (typeof window !== "undefined" && window.__postapiApi) delete window.__postapiApi;
+    };
+  });
 }
 
     Object.assign(exports, module.exports);

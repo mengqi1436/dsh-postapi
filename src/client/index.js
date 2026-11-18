@@ -17,6 +17,30 @@ import './pages-entry.js'
 /** 客户端依赖的宿主 face：全部为内置 face（宿主总线不提供插件自定义 face）。 */
 export const inject = ['slots', 'locale', 'sidebarRightTabs']
 
+/**
+ * ctx.effect 的安全包装。
+ *
+ * cordis 的 Fiber#_execute 只接受 effect body 返回「函数 / null / Promise / 同步或异步迭代器」；
+ * 返回普通对象（例如 register 把注册记录对象当返回值）会抛 TypeError('Invalid effect')，
+ * 整个 apply 随之失败，宿主回滚本 entry 的全部注册——页签因此完全消失且只有一条
+ * 「1 entry did not activate」警告。这里把任何非函数、非 null 的返回值丢掉并记一条 warn，
+ * 让单个注册点的形态差异不至于拖垮整条注册链。
+ * @param ctx - 客户端根上下文。
+ * @param label - effect 标签（诊断用）。
+ * @param body - effect body，返回值被归一化。
+ * @returns 无。
+ */
+function safeEffect(ctx, label, body) {
+  ctx.effect(() => {
+    const result = body()
+    if (result === undefined || result === null) return undefined
+    if (typeof result === 'function') return result
+    if (typeof result.then === 'function' || typeof result[Symbol.iterator] === 'function' || typeof result[Symbol.asyncIterator] === 'function') return result
+    console.warn('[dsh-postapi] ' + label + ' 返回了非 disposer 值（已忽略）：', typeof result)
+    return undefined
+  }, label)
+}
+
 /** 会话输入框底栏徽章（conversation.composer.dock，骨架已验证的官方 slot）。 */
 function ComposerBadge() {
   return createElement('svg', {
@@ -43,33 +67,43 @@ export function apply(ctx) {
   const t = ctx.locale ? ctx.locale.bind(POSTAPI_NS) : (key) => zh[key] ?? key
 
   // 1. 页签类型声明：keepMounted + guide 单入口直开（契约 §4）。
-  ctx.effect(() => ctx.sidebarRightTabs.register(postapiDefinition(t)), 'dsh-postapi: postapi tab type')
+  safeEffect(ctx, 'dsh-postapi: postapi tab type', () => ctx.sidebarRightTabs.register(postapiDefinition(t)))
   // 2. 'postapi' 命名空间字典。
   if (ctx.locale) {
-    ctx.effect(() => ctx.locale.register(POSTAPI_NS, { zh, en }), 'dsh-postapi: dictionaries')
+    safeEffect(ctx, 'dsh-postapi: dictionaries', () => ctx.locale.register(POSTAPI_NS, { zh, en }))
   }
   // 3. 页签 body：席位 key = definition.id（POSTAPI_ID，不拼 localeKey）。
-  ctx.effect(() => ctx.slots.inject('sidebar.right.pane.tab', () => ctx.slots.register(
+  safeEffect(ctx, 'dsh-postapi: tab body', () => ctx.slots.inject('sidebar.right.pane.tab', () => ctx.slots.register(
     { name: 'sidebar.right.pane.tab', key: POSTAPI_ID, locale: POSTAPI_NS },
     PostApiBody,
-  )), 'dsh-postapi: tab body')
+  )))
   // 4. 页签 chip 标题。
-  ctx.effect(() => ctx.slots.inject('sidebar.right.pane.tab.title', () => ctx.slots.register(
+  safeEffect(ctx, 'dsh-postapi: tab title', () => ctx.slots.inject('sidebar.right.pane.tab.title', () => ctx.slots.register(
     { name: 'sidebar.right.pane.tab.title', key: POSTAPI_ID },
     ApiTitle,
-  )), 'dsh-postapi: tab title')
+  )))
   // 5. composer.dock 徽章：该 slot 由 conversation 插件提供，未安装时 inject 会抛错；
   //    软失败处理，任何异常都不允许拖垮页签注册链（页签是主功能）。
   try {
-    ctx.effect(() => ctx.slots.inject('conversation.composer.dock', () => ctx.slots.register(
+    safeEffect(ctx, 'dsh-postapi: composer badge', () => ctx.slots.inject('conversation.composer.dock', () => ctx.slots.register(
       { name: 'conversation.composer.dock', id: 'dsh-postapi', order: 5 },
       ComposerBadge,
-    )), 'dsh-postapi: composer badge')
+    )))
   } catch (err) {
     console.warn('[dsh-postapi] composer 徽章未注册（slot 提供方缺失）：', err && err.message)
   }
   // 6. 同源 HTTP 桥（db-tool 同款）：宿主 face 总线只提供内置 face，postapi.*
   //    无法注册为自定义 face；window.__postapiApi 经 fetch('/dsh-postapi/api/…')
   //    调用宿主桥路由，桥不可达时自动降级内存桩（契约 §2 签名不变）。
-  ctx.effect(() => installApi(), 'dsh-postapi: bridge api install')
+  //
+  //    注意 effect body 必须返回「disposer 函数 / null / Promise / 迭代器」之一：
+  //    cordis 的 Fiber#_execute 收到普通对象会抛 TypeError('Invalid effect')，
+  //    整个 apply 随之失败，宿主回滚本 entry 的全部注册（页签因此消失）。
+  //    installApi() 的返回值是 api 对象，只能丢弃，disposer 里清掉挂载点。
+  safeEffect(ctx, 'dsh-postapi: bridge api install', () => {
+    installApi()
+    return () => {
+      if (typeof window !== 'undefined' && window.__postapiApi) delete window.__postapiApi
+    }
+  })
 }

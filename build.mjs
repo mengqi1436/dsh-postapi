@@ -146,7 +146,17 @@ const fakeCtx = {
     inject: (name, fn) => { calls.push(['slots.inject', name]); return fn() },
     register: (def, comp) => { calls.push(['slots.register', def.name, def.key ?? def.id, def.locale ?? null]); return () => {} },
   },
-  effect: (fn, label) => { calls.push(['effect', label]); return fn() },
+  effect: (fn, label) => {
+    calls.push(['effect', label])
+    const result = fn()
+    // cordis Fiber#_execute 只接受函数 / null / Promise / 迭代器；普通对象会抛 Invalid effect，
+    // 整个 apply 失败、宿主回滚所有注册（页签静默消失）。smoke 必须同样严格。
+    const ok = result === undefined || result === null || typeof result === 'function'
+      || typeof result.then === 'function' || typeof result[Symbol.iterator] === 'function'
+      || typeof result[Symbol.asyncIterator] === 'function'
+    assert(ok, 'effect「' + label + '」返回值不是合法 disposer（' + typeof result + '），宿主会抛 Invalid effect')
+    return typeof result === 'function' ? result : () => {}
+  },
 }
 exp.apply(fakeCtx)
 
