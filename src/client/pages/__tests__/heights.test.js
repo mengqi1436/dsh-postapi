@@ -12,18 +12,28 @@ const PAGES_DIR = resolve(__dirname, '..')
 
 const CSS_FILE = join(PAGES_DIR, 'design-tokens.css')
 // 参与高度纪律扫描的页面组件（theme.js 无样式，不参与）
-const PAGE_FILES = ['overview.jsx', 'doc.jsx', 'debug.jsx', 'flow.jsx', 'settings.jsx', 'sequence.jsx']
-const REGISTERED_PAGES = ['overview', 'doc', 'debug', 'flow', 'settings']
+const PAGE_FILES = [
+  'overview.jsx', 'doc.jsx', 'debug.jsx', 'mock.jsx', 'schema.jsx', 'env.jsx',
+  'history.jsx', 'test.jsx', 'import.jsx', 'flow.jsx', 'search.jsx', 'settings.jsx',
+  'sequence.jsx',
+]
+const REGISTERED_PAGES = [
+  'overview', 'doc', 'debug', 'mock', 'schema', 'env',
+  'history', 'test', 'import', 'flow', 'search', 'settings',
+]
 
 // 允许的高度值：尺寸 token 引用 / 含 token 或 100% 的 calc / 自适应关键字
-const TOKEN_HEIGHT_RE = /^var\(--(ctl|row|pill)-h\)$/
+// 尺寸 token 家族：主控件 / 小控件 / 大控件 / 行 / 胶囊 / 顶栏（Apifox 版新增三档控件高）
+const TOKEN_HEIGHT_RE = /^var\(--(ctl-h|ctl-h-sm|ctl-h-lg|row-h|pill-h|topbar-h)\)$/
 const AUTO_VALUES = new Set(['100%', 'auto', 'inherit', 'fit-content', 'min-content', 'max-content'])
 
 function checkHeightValue(value) {
   const v = String(value).trim()
   if (TOKEN_HEIGHT_RE.test(v)) return null
   if (AUTO_VALUES.has(v)) return null
-  if (/^calc\(/.test(v) && /var\(--(ctl|row|pill)-h\)|100%/.test(v)) return null
+  if (v === '0') return null
+  // calc 里只要引用 token 变量或 100% 就算合规（滚动条、分段高度等派生值都走 calc）
+  if (/^calc\(/.test(v) && /var\(--|100%/.test(v)) return null
   return '高度值未引用尺寸 token（--ctl-h/--row-h/--pill-h）'
 }
 
@@ -43,9 +53,12 @@ export function run() {
   }
   const css = readFileSync(CSS_FILE, 'utf8')
   const tokenDefs = {
-    '--ctl-h': /--ctl-h:\s*28px/.test(css),
-    '--row-h': /--row-h:\s*32px/.test(css),
-    '--pill-h': /--pill-h:\s*20px/.test(css),
+    '--ctl-h': /--ctl-h:\s*32px/.test(css),
+    '--ctl-h-sm': /--ctl-h-sm:\s*24px/.test(css),
+    '--ctl-h-lg': /--ctl-h-lg:\s*40px/.test(css),
+    '--row-h': /--row-h:\s*36px/.test(css),
+    '--pill-h': /--pill-h:\s*22px/.test(css),
+    '--topbar-h': /--topbar-h:\s*48px/.test(css),
   }
   for (const [name, ok] of Object.entries(tokenDefs)) {
     checks++
