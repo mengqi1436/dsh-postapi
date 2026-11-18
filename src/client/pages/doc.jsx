@@ -1,6 +1,8 @@
 // doc.jsx — 接口文档页（#/doc/:endpointId）
-// 左树（目录/接口，可折叠）+ 正文（Markdown 描述、Path/Query/Headers/Cookies 四组参数表、
-// 请求体、认证、多响应切换、响应示例）+ 右 TOC 锚点 + 「复制为 cURL」。
+// Apifox 三段式：左树（.pp-col-left + .pp-tree，目录 .pp-tree-group / 接口行 .pp-tree-row）
+// + 主区（.pp-main，.pp-doc-h1 + .pp-doc-section + .pp-doc-h2 + .pp-table）
+// + 右 TOC（.pp-col-right + .pp-toc + .pp-toc-item）。
+// 方法徽标统一用 Apifox 白字彩底 .pp-method[data-method]；颜色/字号全部来自 token，内联只放 layout。
 // 数据走 window.__postapiApi.storage（listProjects / getProject / saveResponse），
 // 未注入时渲染文件内 mock 并可见标注「示例数据」。
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -73,8 +75,7 @@ const MOCK_PROJECT = {
       id: 'ep_1003', name: '取消订单', folderId: 'fld_01', order: 2, protocol: 'http',
       method: 'DELETE', url: '/api/v1/orders/{orderId}',
       description: '取消未支付的订单。',
-      params: [],
-      pathParams: [
+      params: [], pathParams: [
         { key: 'orderId', value: 'ORD-001', enabled: true, description: '订单号', required: true, type: 'string' },
       ],
       headers: [], cookies: [],
@@ -148,7 +149,7 @@ function renderInline(text, keyPrefix) {
     if (m.index > last) nodes.push(text.slice(last, m.index))
     const token = m[0]
     const key = keyPrefix + '-' + i++
-    if (token.charAt(0) === '\x60') nodes.push(<code key={key} className="pp-table-mono">{token.slice(1, -1)}</code>)
+    if (token.charAt(0) === '\x60') nodes.push(<code key={key} className="pp-mono">{token.slice(1, -1)}</code>)
     else if (token.slice(0, 2) === '**') nodes.push(<strong key={key}>{token.slice(2, -2)}</strong>)
     else {
       const link = /^\[([^\]]+)\]\(([^)]+)\)$/.exec(token)
@@ -169,13 +170,13 @@ function Markdown({ text }) {
   let inFence = false
   let listItems = []
   const flushFence = (key) => {
-    blocks.push(<pre key={key} className="pp-pre">{buffer.join('\n')}</pre>)
+    blocks.push(<pre key={key} className="pp-pre pp-pre-scroll">{buffer.join('\n')}</pre>)
     buffer = []
   }
   const flushList = (key) => {
     if (listItems.length === 0) return
     blocks.push(
-      <ul key={key} style={{ margin: '0 0 var(--sp-2) 0', paddingLeft: 'var(--sp-4)' }}>
+      <ul key={key} className="pp-md-list">
         {listItems.map((item, idx) => <li key={idx}>{renderInline(item, key + '-li' + idx)}</li>)}
       </ul>,
     )
@@ -191,7 +192,7 @@ function Markdown({ text }) {
     const heading = /^(#{1,6})\s+(.*)$/.exec(line)
     if (heading) {
       flushList(key + '-l')
-      blocks.push(<div key={key} className="pp-card-title">{renderInline(heading[2], key)}</div>)
+      blocks.push(<div key={key} className="pp-doc-h2">{renderInline(heading[2], key)}</div>)
       return
     }
     if (/^\s*[-*]\s+/.test(line)) { listItems.push(line.replace(/^\s*[-*]\s+/, '')); return }
@@ -349,21 +350,17 @@ export function DocPage({ route, api }) {
   }
 
   const tree = (
-    <nav className="pp-pane" style={{ padding: 'var(--sp-2)' }}>
-      <div className="pp-card-title" style={{ padding: '0 var(--sp-2)' }}>{project.name || '未命名项目'}</div>
+    <div className="pp-tree">
+      <div className="pp-tree-group">{project.name || '未命名项目'}</div>
       {folders.map((folder) => {
         const inFolder = endpoints.filter((e) => e.folderId === folder.id)
         const isCollapsed = Boolean(collapsed[folder.id])
         return (
           <div key={folder.id}>
-            <div
-              className="pp-tree-row pp-muted"
-              data-active={false}
-              onClick={() => setCollapsed((prev) => ({ ...prev, [folder.id]: !prev[folder.id] }))}
-            >
-              <span>{isCollapsed ? '▸' : '▾'}</span>
-              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{folder.name}</span>
-              <span className="pp-muted">{inFolder.length}</span>
+            <div className="pp-tree-row" onClick={() => setCollapsed((prev) => ({ ...prev, [folder.id]: !prev[folder.id] }))}>
+              <span className="pp-faint">{isCollapsed ? '▸' : '▾'}</span>
+              <span className="pp-ellipsis">{folder.name}</span>
+              <span className="pp-tree-row-count">{inFolder.length}</span>
             </div>
             {isCollapsed ? null : inFolder.map((e) => (
               <div
@@ -371,10 +368,10 @@ export function DocPage({ route, api }) {
                 className="pp-tree-row"
                 data-active={Boolean(ep) && e.id === ep.id}
                 onClick={() => pick(e.id)}
-                style={{ paddingLeft: 'var(--sp-4)' }}
+                style={{ paddingLeft: 'var(--sp-5)' }}
               >
                 <span className="pp-method" data-method={e.method}>{e.method}</span>
-                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{e.name}</span>
+                <span className="pp-ellipsis">{e.name}</span>
               </div>
             ))}
           </div>
@@ -382,161 +379,176 @@ export function DocPage({ route, api }) {
       })}
       {endpoints.filter((e) => !e.folderId).length > 0 ? (
         <div>
-          <div className="pp-tree-row pp-muted">未归类</div>
+          <div className="pp-tree-group">未归类</div>
           {endpoints.filter((e) => !e.folderId).map((e) => (
             <div key={e.id} className="pp-tree-row" data-active={Boolean(ep) && e.id === ep.id} onClick={() => pick(e.id)}>
               <span className="pp-method" data-method={e.method}>{e.method}</span>
-              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{e.name}</span>
+              <span className="pp-ellipsis">{e.name}</span>
             </div>
           ))}
         </div>
       ) : null}
       {endpoints.length === 0 ? <EmptyState text="暂无接口" hint="先在总览页创建项目与接口" /> : null}
-    </nav>
+    </div>
+  )
+
+  const toc = (
+    <div className="pp-toc">
+      <div className="pp-tree-group">本页目录</div>
+      {TOC.map((t) => (
+        <a
+          key={t.id}
+          className="pp-toc-item"
+          data-active={activeSec === t.id}
+          onClick={(e) => { e.preventDefault(); jump(t.id) }}
+          href={'#/doc/' + encodeURIComponent(ep ? ep.id : '')}
+        >
+          {t.label}
+        </a>
+      ))}
+    </div>
   )
 
   if (!ep) {
     return (
-      <div className="pp-scope pp-page" data-page="doc" ref={rootRef}>
-        <h1 className="pp-page-title">接口文档</h1>
-        {tree}
+      <div className="pp-scope pp-page-flush" data-page="doc" ref={rootRef}>
+        <div className="pp-body-2col" style={{ height: '100%' }}>
+          <nav className="pp-col pp-col-left">{tree}</nav>
+          <main className="pp-main">
+            <div className="pp-page">
+              <h1 className="pp-doc-h1">接口文档</h1>
+              <EmptyState text="暂无接口" hint="先在总览页创建项目与接口" />
+            </div>
+          </main>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="pp-scope pp-page" data-page="doc" ref={rootRef}>
-      <div className="pp-doc-layout">
-        {tree}
+    <div className="pp-scope pp-page-flush" data-page="doc" ref={rootRef}>
+      <div className="pp-body-3col" style={{ height: '100%' }}>
+        <nav className="pp-col pp-col-left">{tree}</nav>
 
-        <main style={{ minWidth: 0 }}>
-          {isMock ? <p className="pp-muted">示例数据 — window.__postapiApi 未注入或读取失败，以下为文件内 mock</p> : null}
-          {error ? <p className="pp-muted">{error}</p> : null}
+        <main className="pp-main">
+          <div className="pp-page">
+            {isMock ? <p className="pp-note pp-note-warn">示例数据 — window.__postapiApi 未注入或读取失败，以下为文件内 mock</p> : null}
+            {error ? <p className="pp-note pp-note-bad">{error}</p> : null}
 
-          <section id="sec-info">
-            <h1 className="pp-page-title">
-              <span className="pp-method" data-method={ep.method}>{ep.method}</span>{' '}
-              {ep.name}
-            </h1>
-            <p className="pp-table-mono">{ep.method} {ep.url}</p>
-            {ep.protocol && ep.protocol !== 'http' ? (
-              <p className="pp-muted">协议 {ep.protocol}：规划中（仅保留类型位，发送回落 HTTP）</p>
-            ) : null}
-            <div style={{ marginTop: 'var(--sp-2)' }}><Markdown text={ep.description} /></div>
-            <div style={{ display: 'flex', gap: 'var(--sp-2)', alignItems: 'center', marginTop: 'var(--sp-3)' }}>
-              <button className="pp-btn" onClick={copyCurl}>复制为 cURL</button>
-              {copied ? <span className="pp-muted">{copied}</span> : null}
-            </div>
-          </section>
-
-          <section id="sec-path" className="pp-doc-section">
-            <h2 className="pp-card-title">Path 参数</h2>
-            <ParamTable rows={ep.pathParams} readOnly emptyText="无 Path 参数" />
-          </section>
-
-          <section id="sec-params" className="pp-doc-section">
-            <h2 className="pp-card-title">Query 参数</h2>
-            <ParamTable rows={ep.params} readOnly emptyText="无 Query 参数" />
-          </section>
-
-          <section id="sec-headers" className="pp-doc-section">
-            <h2 className="pp-card-title">请求头</h2>
-            <ParamTable rows={ep.headers} readOnly emptyText="无请求头" />
-          </section>
-
-          <section id="sec-cookies" className="pp-doc-section">
-            <h2 className="pp-card-title">Cookies</h2>
-            <ParamTable rows={ep.cookies} readOnly emptyText="无 Cookies" />
-          </section>
-
-          <section id="sec-body" className="pp-doc-section">
-            <h2 className="pp-card-title">请求体（{ep.body && ep.body.type ? ep.body.type : 'none'}）</h2>
-            {ep.body && ep.body.content ? (
-              <JsonEditor value={ep.body.content} readOnly rows={8} />
-            ) : (
-              <EmptyState text="无请求体" />
-            )}
-            {ep.body && ep.body.type && BODY_TYPES.indexOf(ep.body.type) < 0 ? (
-              <p className="pp-muted">未知 body 类型：{ep.body.type}</p>
-            ) : null}
-          </section>
-
-          <section id="sec-auth" className="pp-doc-section">
-            <h2 className="pp-card-title">认证</h2>
-            <p className="pp-muted">{AUTH_LABEL[(ep.auth && ep.auth.type) || 'none'] || (ep.auth && ep.auth.type)}</p>
-            {ep.auth && ep.auth.type === 'apikey' ? (
-              <p className="pp-table-mono">{(ep.auth.key || 'key') + ' → ' + (ep.auth.addTo === 'query' ? 'query' : 'header')}</p>
-            ) : null}
-          </section>
-
-          <section id="sec-response" className="pp-doc-section">
-            <h2 className="pp-card-title">响应</h2>
-            {responses.length === 0 ? (
-              <EmptyState text="尚未定义响应" hint="在调试页发送后保存为接口，或新增响应" />
-            ) : (
-              <div>
-                <div className="pp-tabs">
-                  {responses.map((r) => (
-                    <button
-                      key={r.id}
-                      className="pp-tab"
-                      data-active={Boolean(activeResponse) && r.id === activeResponse.id}
-                      onClick={() => setResponseId(r.id)}
-                    >
-                      {r.code} {r.name || ''}
-                    </button>
-                  ))}
-                </div>
-                {activeResponse ? (
-                  <div style={{ marginTop: 'var(--sp-2)' }}>
-                    <div style={{ display: 'flex', gap: 'var(--sp-2)', alignItems: 'center', marginBottom: 'var(--sp-2)' }}>
-                      <StatusPill status={activeResponse.code} text={activeResponse.name || ''} />
-                      <span className="pp-muted">{activeResponse.contentType || 'application/json'}</span>
-                      {activeResponse.isDefault ? <span className="pp-pill">默认</span> : null}
-                      {canSaveResponse ? (
-                        <button className="pp-btn" onClick={saveResponse}>保存响应</button>
-                      ) : (
-                        <span className="pp-muted">只读：storage.saveResponse 不可用</span>
-                      )}
-                    </div>
-                    <JsonEditor
-                      value={activeResponse.body}
-                      rows={10}
-                      readOnly={!canSaveResponse}
-                      onChange={(next) => patchResponse({ body: next })}
-                    />
-                    {Array.isArray(activeResponse.headers) && activeResponse.headers.length > 0 ? (
-                      <div style={{ marginTop: 'var(--sp-2)' }}>
-                        <div className="pp-card-title">响应头</div>
-                        <ParamTable rows={activeResponse.headers} readOnly columns={['key', 'value']} emptyText="无响应头" />
-                      </div>
-                    ) : null}
-                  </div>
+            <section id="sec-info">
+              <h1 className="pp-doc-h1">
+                <span className="pp-method" data-method={ep.method}>{ep.method}</span>
+                <span className="pp-ellipsis">{ep.name}</span>
+              </h1>
+              <p className="pp-mono pp-muted" style={{ margin: '0 0 var(--sp-2) 0' }}>{ep.method} {ep.url}</p>
+              {ep.protocol && ep.protocol !== 'http' ? (
+                <p className="pp-meta">协议 {ep.protocol}：规划中（仅保留类型位，发送回落 HTTP）</p>
+              ) : null}
+              <div style={{ marginTop: 'var(--sp-2)' }}><Markdown text={ep.description} /></div>
+              <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
+                <button className="pp-btn pp-btn-sm" onClick={copyCurl}>复制为 cURL</button>
+                {copied ? (
+                  <span className={'pp-note ' + (copied === '已复制' ? 'pp-note-ok' : 'pp-note-bad')}>{copied}</span>
                 ) : null}
               </div>
-            )}
-          </section>
+            </section>
 
-          <section id="sec-code" className="pp-doc-section">
-            <h2 className="pp-card-title">代码生成（cURL）</h2>
-            <pre className="pp-pre">{buildCurl(ep, baseUrl)}</pre>
-          </section>
+            <section id="sec-path" className="pp-doc-section">
+              <h2 className="pp-doc-h2">Path 参数</h2>
+              <ParamTable rows={ep.pathParams} readOnly emptyText="无 Path 参数" emptyHint="路径里没有 {var} 占位符" />
+            </section>
+
+            <section id="sec-params" className="pp-doc-section">
+              <h2 className="pp-doc-h2">Query 参数</h2>
+              <ParamTable rows={ep.params} readOnly emptyText="无 Query 参数" />
+            </section>
+
+            <section id="sec-headers" className="pp-doc-section">
+              <h2 className="pp-doc-h2">请求头</h2>
+              <ParamTable rows={ep.headers} readOnly emptyText="无请求头" />
+            </section>
+
+            <section id="sec-cookies" className="pp-doc-section">
+              <h2 className="pp-doc-h2">Cookies</h2>
+              <ParamTable rows={ep.cookies} readOnly emptyText="无 Cookies" />
+            </section>
+
+            <section id="sec-body" className="pp-doc-section">
+              <h2 className="pp-doc-h2">请求体（{ep.body && ep.body.type ? ep.body.type : 'none'}）</h2>
+              {ep.body && ep.body.content ? (
+                <JsonEditor value={ep.body.content} readOnly rows={8} />
+              ) : (
+                <EmptyState text="无请求体" />
+              )}
+              {ep.body && ep.body.type && BODY_TYPES.indexOf(ep.body.type) < 0 ? (
+                <p className="pp-meta">未知 body 类型：{ep.body.type}</p>
+              ) : null}
+            </section>
+
+            <section id="sec-auth" className="pp-doc-section">
+              <h2 className="pp-doc-h2">认证</h2>
+              <p className="pp-muted">{AUTH_LABEL[(ep.auth && ep.auth.type) || 'none'] || (ep.auth && ep.auth.type)}</p>
+              {ep.auth && ep.auth.type === 'apikey' ? (
+                <p className="pp-mono">{(ep.auth.key || 'key') + ' → ' + (ep.auth.addTo === 'query' ? 'query' : 'header')}</p>
+              ) : null}
+            </section>
+
+            <section id="sec-response" className="pp-doc-section">
+              <h2 className="pp-doc-h2">响应</h2>
+              {responses.length === 0 ? (
+                <EmptyState text="尚未定义响应" hint="在调试页发送后保存为接口，或新增响应" />
+              ) : (
+                <div>
+                  <div className="pp-tabs">
+                    {responses.map((r) => (
+                      <button
+                        key={r.id}
+                        className="pp-tab"
+                        data-active={Boolean(activeResponse) && r.id === activeResponse.id}
+                        onClick={() => setResponseId(r.id)}
+                      >
+                        {r.code} {r.name || ''}
+                      </button>
+                    ))}
+                  </div>
+                  {activeResponse ? (
+                    <div style={{ marginTop: 'var(--sp-2)' }}>
+                      <div className="pp-toolbar-inline" style={{ marginBottom: 'var(--sp-2)' }}>
+                        <StatusPill status={activeResponse.code} text={activeResponse.name || ''} />
+                        <span className="pp-meta">{activeResponse.contentType || 'application/json'}</span>
+                        {activeResponse.isDefault ? <span className="pp-pill pp-pill-accent">默认</span> : null}
+                        {canSaveResponse ? (
+                          <button className="pp-btn pp-btn-sm" onClick={saveResponse}>保存响应</button>
+                        ) : (
+                          <span className="pp-meta">只读：storage.saveResponse 不可用</span>
+                        )}
+                      </div>
+                      <JsonEditor
+                        value={activeResponse.body}
+                        rows={10}
+                        readOnly={!canSaveResponse}
+                        onChange={(next) => patchResponse({ body: next })}
+                      />
+                      {Array.isArray(activeResponse.headers) && activeResponse.headers.length > 0 ? (
+                        <div style={{ marginTop: 'var(--sp-2)' }}>
+                          <h3 className="pp-doc-h2">响应头</h3>
+                          <ParamTable rows={activeResponse.headers} readOnly columns={['key', 'value']} emptyText="无响应头" />
+                        </div>
+                      ) : null}
+                    </div>
+                  ) : null}
+                </div>
+              )}
+            </section>
+
+            <section id="sec-code" className="pp-doc-section">
+              <h2 className="pp-doc-h2">代码生成（cURL）</h2>
+              <pre className="pp-pre pp-pre-scroll">{buildCurl(ep, baseUrl)}</pre>
+            </section>
+          </div>
         </main>
 
-        <aside style={{ position: 'sticky', top: 'var(--sp-6)' }}>
-          <div className="pp-card-title">本页目录</div>
-          {TOC.map((t) => (
-            <a
-              key={t.id}
-              className="pp-toc-item"
-              data-active={activeSec === t.id}
-              onClick={(e) => { e.preventDefault(); jump(t.id) }}
-              href={'#/doc/' + encodeURIComponent(ep.id)}
-            >
-              {t.label}
-            </a>
-          ))}
-        </aside>
+        <aside className="pp-col pp-col-right">{toc}</aside>
       </div>
     </div>
   )

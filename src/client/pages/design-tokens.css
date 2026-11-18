@@ -23,6 +23,8 @@
   --fw-semibold: 600;
 
   /* —— 行高（Apifox 固定值，不用倍数）—— */
+  /* 图表专用字阶：SVG 里的小字（图例/标记）比正文更小，但仍走 token 不写字面量 */
+  --fs-chart: 10px;
   --lh-18: 18px;
   --lh-20: 20px;
   --lh-22: 22px;
@@ -73,6 +75,7 @@
   --fg-strong: #101828;
   --fg-secondary: #667085;
   --fg-tertiary: #98a2b3;
+  --fg-on-accent: #ffffff;
   --border: #eaecf0;
   --border-strong: #d0d5dd;
   --accent: #9373ee;
@@ -158,6 +161,10 @@
 }
 .pp-topbar-spacer {
   flex: 1;
+}
+.pp-topbar-search {
+  width: var(--nav-w);
+  flex: none;
 }
 .pp-body-3col {
   display: grid;
@@ -259,17 +266,17 @@
   cursor: not-allowed;
 }
 .pp-btn-primary {
-  color: #ffffff;
+  color: var(--fg-on-accent);
   background: var(--accent);
   border-color: var(--accent);
 }
 .pp-btn-primary:hover {
-  color: #ffffff;
+  color: var(--fg-on-accent);
   background: var(--accent-hover);
   border-color: var(--accent-hover);
 }
 .pp-btn-primary:disabled {
-  color: #ffffff;
+  color: var(--fg-on-accent);
   background: var(--border-strong);
   border-color: var(--border-strong);
 }
@@ -333,7 +340,7 @@
 }
 .pp-table th {
   height: var(--row-h);
-  padding: 0 var(--sp-3);
+  padding: 0 var(--sp-2);
   text-align: left;
   font-weight: var(--fw-medium);
   font-size: var(--fs-13);
@@ -344,8 +351,13 @@
 }
 .pp-table td {
   height: var(--row-h);
-  padding: 0 var(--sp-3);
+  padding: 0 var(--sp-2);
   border-bottom: 1px solid var(--border);
+  /* Apifox 表格不折行：窄容器里靠横向滚动，中文逐字断行会把「查询」竖排 */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 0;
 }
 .pp-table tbody tr:hover {
   background: var(--bg-hover);
@@ -400,7 +412,7 @@
   line-height: var(--lh-18);
   letter-spacing: 0.02em;
   text-transform: uppercase;
-  color: #ffffff;
+  color: var(--fg-on-accent);
   background: var(--fg-tertiary);
   border: none;
   border-radius: var(--radius-sm);
@@ -485,6 +497,8 @@
   padding: 0 var(--sp-2);
   font-size: var(--fs-14);
   color: var(--fg);
+  /* 左树条目在骨架里是 <a>：必须显式去掉链接下划线与继承色，否则整列都是带下划线的链接 */
+  text-decoration: none;
   border-radius: var(--radius-ctl);
   cursor: pointer;
   white-space: nowrap;
@@ -568,6 +582,13 @@
   font-weight: var(--fw-semibold);
   color: var(--fg-strong);
   margin: 0 0 var(--sp-2) 0;
+}
+.pp-doc-h3 {
+  font-size: var(--fs-12);
+  line-height: var(--lh-18);
+  font-weight: var(--fw-semibold);
+  color: var(--fg-secondary);
+  margin: 0 0 var(--sp-1) 0;
 }
 
 /* —— 工具条 —— */
@@ -722,6 +743,8 @@
   min-height: var(--row-h);
   padding: 0 var(--sp-2);
   font-size: var(--fs-14);
+  color: var(--fg);
+  text-decoration: none;
   border-radius: var(--radius-ctl);
   cursor: pointer;
 }
@@ -768,6 +791,14 @@
   overflow: auto;
   min-height: calc(var(--row-h) * 0);
 }
+/* 表格容器：窄栏里横向滚动，保持列宽可读 */
+.pp-table-wrap {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+.pp-table-wrap .pp-table {
+  min-width: 100%;
+}
 .pp-aside-sticky {
   position: sticky;
   top: var(--sp-4);
@@ -780,23 +811,29 @@
 /* —— 统计块 —— */
 .pp-stats {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: var(--sp-3);
+  /* 侧边栏可用宽约 500px：96px 起跳可稳定排 4 列（Apifox 统计条是一行四块） */
+  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+  gap: var(--sp-2);
 }
 .pp-stat {
   display: flex;
   flex-direction: column;
   gap: var(--sp-1);
-  padding: var(--sp-3) var(--sp-4);
+  padding: var(--sp-2) var(--sp-3);
+  min-width: 0;
   background: var(--bg-surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-card);
 }
 .pp-stat-value {
-  font-size: var(--fs-24);
+  /* 统计数字在窄栏里不能用 24px（会换行把四块撑成两行），18px 与 Apifox 面板内数值同档 */
+  font-size: var(--fs-16);
   line-height: var(--lh-24);
   font-weight: var(--fw-semibold);
   color: var(--fg-strong);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .pp-stat-label {
   font-size: var(--fs-12);

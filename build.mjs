@@ -51,7 +51,9 @@ await esbuild.build({
   jsxFactory: 'createElement',
   jsxFragment: 'Fragment',
   inject: [path.join(here, 'src/client/jsx-shim.js')],
-  loader: { '.js': 'jsx' },
+  // .css 以纯文本打进产物（loader: text），由 client 在 apply 时注入 <style>：
+  // 宿主 __ModuleLoader__ 只吃 CJS 模块、没有 CSS 入口，样式表必须自己注入。
+  loader: { '.js': 'jsx', '.css': 'text' },
   external: ['react', 'react-dom', '@deepseek-ai/*'],
   banner: {
     js: [
@@ -187,7 +189,9 @@ for (const m of STORAGE_METHODS) {
 }
 assert(typeof sandboxWindow.__postapiApi.request.send === 'function', '__postapiApi.request.send 应为桥方法函数')
 const effects = calls.filter(c => c[0] === 'effect')
-assert(effects.length === 6, 'apply 应恰好 6 个 ctx.effect 注册，实际 ' + effects.length)
+assert(effects.length === 7, 'apply 应恰好 7 个 ctx.effect 注册（含样式注入），实际 ' + effects.length)
+assert(effects.some(c => c[1] === 'dsh-postapi: design tokens'), '应注册样式注入 effect（缺它则全部 .pp-* 类不生效）')
+assert(code.includes('--ctl-h'), '产物应内联 design-tokens.css 文本（缺它样式表不会注入）')
 
 console.log('')
-console.log('smoke 通过：ModuleLoader 形态 / apply / inject（内置 face）/ 6 个 effect / 席位 key=postapi / __postapiPages / __postapiApi 桥形态（9 storage + request.send）全部断言成功')
+console.log('smoke 通过：ModuleLoader 形态 / apply / inject（内置 face）/ 7 个 effect（含样式注入）/ 席位 key=postapi / __postapiPages / __postapiApi 桥形态（9 storage + request.send）全部断言成功')

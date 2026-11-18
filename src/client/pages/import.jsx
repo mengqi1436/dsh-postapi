@@ -1,7 +1,8 @@
-// import.jsx — 导入导出 + 代码生成页
+// import.jsx — 导入导出 + 代码生成页（Apifox 工作台：导入卡片 + 导出按钮组 + 结果 pre）
 // 自注册：模块求值期入队 __postapiQueue
 // 数据：api.import.{openapi,postman,har,curl} / api.export.{openapi,postman,har,markdown} / api.codegen.run
 // 失败页面内显示错误文案（不弹窗）；结果统一渲染到可复制的 pre 块
+// 视觉基线：docs/apifox-design-spec.md —— .pp-card / .pp-btn 按钮组 / .pp-pre / .pp-select
 import React, { useEffect, useRef, useState } from 'react'
 import { applyTheme } from './theme.js'
 
@@ -214,50 +215,54 @@ export function ImportPage(props) {
   return (
     <div className="pp-scope pp-page" data-page="import" ref={rootRef}>
       <h1 className="pp-page-title">导入导出与代码生成</h1>
-      <p className="pp-muted">
-        {isMock ? '示例数据 — api 桥不可用，操作按钮会提示缺失的方法' : '数据来源：api.import / api.export / api.codegen'}
-      </p>
-      {error ? <p className="pp-error-text">{error}</p> : null}
-      {notice ? <p className="pp-muted">{notice}</p> : null}
-
-      <div className="pp-form-row">
-        <label className="pp-form-label">项目</label>
+      <div className="pp-toolbar">
+        <span className="pp-meta">
+          {isMock ? '示例数据 — api 桥不可用，操作按钮会提示缺失的方法' : '数据来源：api.import / api.export / api.codegen'}
+        </span>
+        <span className="pp-toolbar-spacer" />
+        <label className="pp-meta">项目</label>
         <select className="pp-select" value={projectId} onChange={(e) => setProjectId(e.target.value)}>
           {projects.map((p) => <option key={p.id} value={p.id}>{p.name || p.id}</option>)}
         </select>
       </div>
+      {error ? <p className="pp-error-text">{error}</p> : null}
+      {notice ? <p className="pp-muted">{notice}</p> : null}
 
-      <h2 className="pp-card-title">导入</h2>
-      <div className="pp-card">
-        <div className="pp-tabs">
-          {IMPORT_KINDS.map((k) => (
-            <button key={k.id} className="pp-tab" data-active={importKind === k.id ? 'true' : 'false'}
-              onClick={() => pickImportKind(k.id)}>{k.label}</button>
-          ))}
+      <div className="pp-cols-2">
+        <div className="pp-card pp-card-hover">
+          <div className="pp-card-title">导入</div>
+          <div className="pp-tabs">
+            {IMPORT_KINDS.map((k) => (
+              <button key={k.id} className="pp-tab" data-active={importKind === k.id ? 'true' : 'false'}
+                onClick={() => pickImportKind(k.id)}>{k.label}</button>
+            ))}
+          </div>
+          <div className="pp-note" style={{ marginTop: 'var(--sp-2)' }}>{currentImport.hint}</div>
+          <textarea className="pp-textarea" rows={8} value={importText}
+            onChange={(e) => setImportText(e.target.value)} />
+          <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
+            <button className="pp-btn pp-btn-primary" onClick={runImport} disabled={busy}>开始导入</button>
+            <button className="pp-btn" onClick={() => copy(importOut, '导入结果')}>复制结果</button>
+          </div>
+          {importOut ? <pre className="pp-pre pp-pre-scroll" style={{ marginTop: 'var(--sp-2)' }}>{importOut}</pre> : null}
         </div>
-        <p className="pp-muted" style={{ marginTop: 'var(--sp-2)' }}>{currentImport.hint}</p>
-        <textarea className="pp-input pp-input-mono" style={{ width: '100%', minHeight: 'var(--ctl-h)' }}
-          rows={8} value={importText} onChange={(e) => setImportText(e.target.value)} />
-        <div style={{ display: 'flex', gap: 'var(--sp-2)', marginTop: 'var(--sp-2)' }}>
-          <button className="pp-btn pp-btn-primary" onClick={runImport} disabled={busy}>开始导入</button>
-          <button className="pp-btn" onClick={() => copy(importOut, '导入结果')}>复制结果</button>
+
+        <div className="pp-card pp-card-hover">
+          <div className="pp-card-title">导出</div>
+          <div className="pp-note">导出读取当前项目对象后交给 api.export，结果可直接复制。</div>
+          <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
+            {EXPORT_KINDS.map((k) => (
+              <button key={k.id} className="pp-btn" onClick={() => runExport(k.id)} disabled={busy}>{k.label}</button>
+            ))}
+            <button className="pp-btn" onClick={() => copy(exportOut, '导出结果')}>复制结果</button>
+          </div>
+          <div className="pp-meta" style={{ marginTop: 'var(--sp-2)' }}>当前导出格式：{exportKind}</div>
+          {exportOut ? <pre className="pp-pre pp-pre-scroll" style={{ marginTop: 'var(--sp-2)' }}>{exportOut}</pre> : null}
         </div>
-        {importOut ? <pre className="pp-pre" style={{ marginTop: 'var(--sp-2)' }}>{importOut}</pre> : null}
       </div>
 
-      <h2 className="pp-card-title" style={{ marginTop: 'var(--sp-6)' }}>导出</h2>
-      <div className="pp-card">
-        <div style={{ display: 'flex', gap: 'var(--sp-2)', flexWrap: 'wrap' }}>
-          {EXPORT_KINDS.map((k) => (
-            <button key={k.id} className="pp-btn" onClick={() => runExport(k.id)} disabled={busy}>{k.label}</button>
-          ))}
-          <button className="pp-btn" onClick={() => copy(exportOut, '导出结果')}>复制结果</button>
-        </div>
-        {exportOut ? <pre className="pp-pre" style={{ marginTop: 'var(--sp-2)' }}>{exportOut}</pre> : null}
-      </div>
-
-      <h2 className="pp-card-title" style={{ marginTop: 'var(--sp-6)' }}>代码生成</h2>
-      <div className="pp-card">
+      <div className="pp-card" style={{ marginTop: 'var(--sp-4)' }}>
+        <div className="pp-card-title">代码生成</div>
         <div className="pp-form-row">
           <label className="pp-form-label">语言</label>
           <select className="pp-select" value={lang} onChange={(e) => setLang(e.target.value)}>
@@ -266,10 +271,12 @@ export function ImportPage(props) {
           <button className="pp-btn pp-btn-primary" onClick={runCodegen} disabled={busy}>生成代码</button>
           <button className="pp-btn" onClick={() => copy(codeOut, '生成代码')}>复制代码</button>
         </div>
-        <p className="pp-muted">
-          示例接口：{MOCK_ENDPOINT.method} {MOCK_ENDPOINT.url}
-        </p>
-        {codeOut ? <pre className="pp-pre">{codeOut}</pre> : null}
+        <div className="pp-meta" style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-2)' }}>
+          示例接口：
+          <span className="pp-method" data-method={MOCK_ENDPOINT.method}>{MOCK_ENDPOINT.method}</span>
+          <span className="pp-mono">{MOCK_ENDPOINT.url}</span>
+        </div>
+        {codeOut ? <pre className="pp-pre pp-pre-scroll" style={{ marginTop: 'var(--sp-2)' }}>{codeOut}</pre> : null}
       </div>
     </div>
   )

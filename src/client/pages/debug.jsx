@@ -1,6 +1,6 @@
-// debug.jsx — 调试发送页（紧凑三栏：接口列表 / 请求编辑 / 响应面板）
-// 自注册；发送走 window.__postapiApi.request.send，接口与环境走 storage；
-// 未注入 api 时用文件内 mock 并可见标注「示例数据」。
+// debug.jsx — 调试发送页（Apifox 调试台：左接口树 + 中 URL 行/页签请求编辑 + 右响应面板）
+// 布局类全部来自 design-tokens.css：.pp-url-row / .pp-tabs + .pp-tab / .pp-pane / .pp-pill / .pp-pre / .pp-table。
+// 发送走 window.__postapiApi.request.send，接口与环境走 storage；未注入 api 时用文件内 mock 并标注「示例数据」。
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { applyTheme } from './theme.js'
 import { ParamTable } from './components/ParamTable.jsx'
@@ -307,22 +307,22 @@ export function DebugPage({ route, api }) {
       <div className="pp-card-title">响应</div>
       {!resp ? <EmptyState text="尚未发送请求" hint="填写 URL 后点「发送」" /> : null}
       {resp && resp.error ? (
-        <p className="pp-muted">错误：{resp.error.message || String(resp.error)}</p>
+        <p className="pp-note pp-note-bad">错误：{resp.error.message || String(resp.error)}</p>
       ) : null}
       {resp && !resp.error ? (
         <div>
-          <div style={{ display: 'flex', gap: 'var(--sp-2)', alignItems: 'center', flexWrap: 'wrap' }}>
+          <div className="pp-toolbar-inline">
             <StatusPill status={resp.status} text={resp.statusText || ''} />
-            <span className="pp-muted">{resp.timeMs == null ? '-' : resp.timeMs} ms</span>
-            <span className="pp-muted">{resp.bodySize == null ? '-' : resp.bodySize} B</span>
-            {resp.truncated ? <span className="pp-pill">已截断</span> : null}
+            <span className="pp-meta">{resp.timeMs == null ? '-' : resp.timeMs} ms</span>
+            <span className="pp-meta">{resp.bodySize == null ? '-' : resp.bodySize} B</span>
+            {resp.truncated ? <span className="pp-pill pp-pill-warn">已截断</span> : null}
           </div>
 
           <div className="pp-tabs" style={{ marginTop: 'var(--sp-2)' }}>
             <button className="pp-tab" data-active={bodyView === 'pretty'} onClick={() => setBodyView('pretty')}>美化</button>
             <button className="pp-tab" data-active={bodyView === 'raw'} onClick={() => setBodyView('raw')}>原文</button>
           </div>
-          <pre className="pp-pre" style={{ marginTop: 'var(--sp-2)' }}>{respBodyText}</pre>
+          <pre className="pp-pre pp-pre-scroll" style={{ marginTop: 'var(--sp-2)' }}>{respBodyText}</pre>
 
           {respHeaders.length > 0 ? (
             <div style={{ marginTop: 'var(--sp-2)' }}>
@@ -340,21 +340,21 @@ export function DebugPage({ route, api }) {
                   {resp.tests.map((t, i) => (
                     <tr key={i}>
                       <td>{t.name}</td>
-                      <td>{t.passed ? '通过' : '失败'}</td>
+                      <td className={t.passed ? 'pp-ok' : 'pp-bad'}>{t.passed ? '通过' : '失败'}</td>
                       <td className="pp-muted">{t.error || '-'}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             ) : (
-              <p className="pp-muted">无断言</p>
+              <p className="pp-meta">无断言</p>
             )}
           </div>
 
           {Array.isArray(resp.logs) && resp.logs.length > 0 ? (
             <div style={{ marginTop: 'var(--sp-2)' }}>
               <div className="pp-card-title">脚本日志</div>
-              <pre className="pp-pre">{resp.logs.join('\n')}</pre>
+              <pre className="pp-pre pp-pre-scroll">{resp.logs.join('\n')}</pre>
             </div>
           ) : null}
         </div>
@@ -363,40 +363,34 @@ export function DebugPage({ route, api }) {
   )
 
   return (
-    <div className="pp-scope pp-page" data-page="debug" ref={rootRef}>
-      <h1 className="pp-page-title">调试</h1>
-      <p className="pp-muted">
-        {isMock
-          ? '示例数据 — window.__postapiApi 未注入或读取失败，发送将返回 mock 响应'
-          : '数据来源：postapi.storage + postapi.request'}
-      </p>
-      {error ? <p className="pp-muted">{error}</p> : null}
-
-      <div className="pp-debug-layout">
-        {/* 左：接口列表 */}
+    <div className="pp-scope pp-page-flush" data-page="debug" ref={rootRef}>
+      <div className="pp-debug-layout" style={{ margin: 'var(--sp-3)' }}>
+        {/* 左：接口树 */}
         <nav className="pp-pane" style={{ padding: 'var(--sp-2)' }}>
-          <div className="pp-card-title" style={{ padding: '0 var(--sp-2)' }}>接口</div>
-          {endpoints.length === 0 ? <EmptyState text="暂无接口" /> : null}
-          {endpoints.map((ep) => (
-            <div key={ep.id} className="pp-tree-row" data-active={ep.id === draft.id} onClick={() => loadEndpoint(ep)}>
-              <span className="pp-method" data-method={ep.method}>{ep.method}</span>
-              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{ep.name}</span>
-            </div>
-          ))}
+          <div className="pp-tree">
+            <div className="pp-tree-group">接口</div>
+            {endpoints.length === 0 ? <EmptyState text="暂无接口" /> : null}
+            {endpoints.map((ep) => (
+              <div key={ep.id} className="pp-tree-row" data-active={ep.id === draft.id} onClick={() => loadEndpoint(ep)}>
+                <span className="pp-method" data-method={ep.method}>{ep.method}</span>
+                <span className="pp-ellipsis">{ep.name}</span>
+              </div>
+            ))}
+          </div>
           <div style={{ marginTop: 'var(--sp-3)' }}>
             <a className="pp-toc-item" href="#/history">请求历史 / 回放</a>
           </div>
         </nav>
 
-        {/* 中：请求编辑 */}
+        {/* 中：URL 行 + 页签请求编辑 */}
         <section className="pp-pane">
-          <div style={{ display: 'flex', gap: 'var(--sp-2)', alignItems: 'center', marginBottom: 'var(--sp-2)' }}>
-            <span className="pp-muted">环境</span>
+          <div className="pp-toolbar-inline" style={{ marginBottom: 'var(--sp-2)' }}>
+            <span className="pp-form-label">环境</span>
             <select className="pp-select" value={envId} onChange={(e) => setEnvId(e.target.value)}>
               {envs.length === 0 ? <option value="">（无环境）</option> : null}
               {envs.map((e) => <option key={e.id} value={e.id}>{e.name}</option>)}
             </select>
-            <span className="pp-muted">{env && env.baseUrl ? env.baseUrl : '未配置 baseUrl'}</span>
+            <span className="pp-meta">{env && env.baseUrl ? env.baseUrl : '未配置 baseUrl'}</span>
           </div>
 
           <div className="pp-url-row">
@@ -415,15 +409,17 @@ export function DebugPage({ route, api }) {
             <button className="pp-btn" onClick={cancel} disabled={!sending}>取消</button>
           </div>
 
-          <p className="pp-muted pp-table-mono" style={{ marginTop: 'var(--sp-2)' }}>
+          <p className="pp-mono pp-meta" style={{ margin: 'var(--sp-2) 0 0 0' }}>
             实际地址：{finalUrl || '（未填写 URL）'}
           </p>
           {varRefs.length > 0 ? (
-            <p className="pp-muted">
+            <p className="pp-meta">
               变量 {varRefs.join('、')}
               {missingVars.length > 0 ? '（未定义：' + missingVars.join('、') + '）' : '（均已定义）'}
             </p>
           ) : null}
+          {isMock ? <p className="pp-note pp-note-warn">示例数据 — window.__postapiApi 未注入或读取失败，发送将返回 mock 响应</p> : null}
+          {error ? <p className="pp-note pp-note-bad">{error}</p> : null}
 
           <div className="pp-tabs" style={{ marginTop: 'var(--sp-3)' }}>
             {TABS.map((t) => (
@@ -457,7 +453,7 @@ export function DebugPage({ route, api }) {
                   </select>
                 </div>
                 {draft.body.type === 'none' ? (
-                  <EmptyState text="无请求体" />
+                  <EmptyState text="无请求体" hint="Body 类型选 none 时不发送请求体" />
                 ) : (
                   <JsonEditor
                     value={draft.body.content}
@@ -512,12 +508,12 @@ export function DebugPage({ route, api }) {
                     </div>
                   </div>
                 ) : null}
-                {draft.auth.type === 'none' ? <p className="pp-muted">无认证</p> : null}
+                {draft.auth.type === 'none' ? <p className="pp-meta">无认证</p> : null}
               </div>
             ) : null}
           </div>
 
-          <div style={{ display: 'flex', gap: 'var(--sp-2)', alignItems: 'center', marginTop: 'var(--sp-3)' }}>
+          <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
             <input
               className="pp-input"
               style={{ flex: 1 }}
@@ -526,7 +522,9 @@ export function DebugPage({ route, api }) {
               onChange={(e) => patch('name', e.target.value)}
             />
             <button className="pp-btn" onClick={saveAsEndpoint}>保存为接口</button>
-            {savedHint ? <span className="pp-muted">{savedHint}</span> : null}
+            {savedHint ? (
+              <span className={'pp-note ' + (savedHint.indexOf('已保存') === 0 ? 'pp-note-ok' : 'pp-note-bad')}>{savedHint}</span>
+            ) : null}
           </div>
         </section>
 

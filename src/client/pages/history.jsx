@@ -1,6 +1,7 @@
-// history.jsx — 请求历史页（历史表 + 详情 + 回放到调试 + 清空）
+// history.jsx — 请求历史页（Apifox 工作台：历史表 + 状态胶囊 + 详情面板 + 回放）
 // 自注册：模块求值期入队 __postapiQueue
 // 数据：api.storage.listProjects / getProject / getHistory / clearHistory
+// 视觉基线：docs/apifox-design-spec.md —— .pp-table / .pp-pill（三档）/ .pp-meta / .pp-pane
 import React, { useEffect, useRef, useState } from 'react'
 import { applyTheme } from './theme.js'
 
@@ -44,6 +45,13 @@ export function statusTone(status) {
   if (s >= 200 && s < 300) return 'success'
   if (s >= 400 && s < 500) return 'warning'
   return 'error'
+}
+
+/** 胶囊类名：三档状态色映射到 .pp-pill-ok / -warn / -bad（Apifox 胶囊无底色，仅同色边框文字）。 */
+export function pillClass(tone) {
+  if (tone === 'success') return 'pp-pill pp-pill-ok'
+  if (tone === 'warning') return 'pp-pill pp-pill-warn'
+  return 'pp-pill pp-pill-bad'
 }
 
 /** 回放载荷：把历史条目折算成 debug 页可用的请求快照。 */
@@ -151,21 +159,21 @@ export function HistoryPage(props) {
   return (
     <div className="pp-scope pp-page" data-page="history" ref={rootRef}>
       <h1 className="pp-page-title">请求历史</h1>
-      <p className="pp-muted">
-        {isMock ? '示例数据 — api.storage.getHistory 不可用，以下为文件内 mock' : '数据来源：api.storage（getHistory / clearHistory）'}
-      </p>
-      {error ? <p className="pp-error-text">{error}</p> : null}
-      {notice ? <p className="pp-muted">{notice}</p> : null}
-
-      <div className="pp-form-row">
-        <label className="pp-form-label">项目</label>
+      <div className="pp-toolbar">
+        <span className="pp-meta">
+          {isMock ? '示例数据 — api.storage.getHistory 不可用，以下为文件内 mock' : '数据来源：api.storage（getHistory / clearHistory）'}
+        </span>
+        <span className="pp-toolbar-spacer" />
+        <label className="pp-meta">项目</label>
         <select className="pp-select" value={projectId}
           onChange={(e) => { setProjectId(e.target.value); load(e.target.value) }}>
           {projects.map((p) => <option key={p.id} value={p.id}>{p.name || p.id}</option>)}
         </select>
         <button className="pp-btn" onClick={() => load(projectId)}>刷新</button>
-        <button className="pp-btn" onClick={clear}>{pendingClear ? '确认清空' : '清空历史'}</button>
+        <button className="pp-btn pp-btn-danger" onClick={clear}>{pendingClear ? '确认清空' : '清空历史'}</button>
       </div>
+      {error ? <p className="pp-error-text">{error}</p> : null}
+      {notice ? <p className="pp-muted">{notice}</p> : null}
 
       <div className="pp-card">
         <table className="pp-table">
@@ -182,16 +190,16 @@ export function HistoryPage(props) {
           </thead>
           <tbody>
             {entries.map((e) => (
-              <tr key={e.id}>
-                <td className="pp-muted">{fmtDateTime(e.at)}</td>
+              <tr key={e.id} data-active={detailId === e.id ? 'true' : 'false'}>
+                <td className="pp-meta">{fmtDateTime(e.at)}</td>
                 <td><span className="pp-method" data-method={e.method}>{e.method}</span></td>
-                <td className="pp-table-mono">{e.url}</td>
-                <td><span className="pp-pill" data-tone={statusTone(e.status)}>{e.status}</span></td>
-                <td className="pp-muted">{e.timeMs} ms</td>
-                <td className="pp-muted">{fmtSize(e.bodySize)}</td>
+                <td className="pp-table-mono pp-ellipsis">{e.url}</td>
+                <td><span className={pillClass(statusTone(e.status))}>{e.status}</span></td>
+                <td className="pp-meta">{e.timeMs} ms</td>
+                <td className="pp-meta">{fmtSize(e.bodySize)}</td>
                 <td>
-                  <button className="pp-btn" onClick={() => setDetailId(detailId === e.id ? '' : e.id)}>详情</button>{' '}
-                  <button className="pp-btn" onClick={() => replay(e)}>回放</button>
+                  <button className="pp-btn pp-btn-sm" onClick={() => setDetailId(detailId === e.id ? '' : e.id)}>详情</button>{' '}
+                  <button className="pp-btn pp-btn-sm" onClick={() => replay(e)}>回放</button>
                 </td>
               </tr>
             ))}
@@ -203,12 +211,18 @@ export function HistoryPage(props) {
       </div>
 
       {detail ? (
-        <div className="pp-card" style={{ marginTop: 'var(--sp-3)' }}>
+        <div className="pp-pane" style={{ marginTop: 'var(--sp-3)' }}>
           <div className="pp-card-title">详情 · {detail.id}</div>
-          <div className="pp-muted">请求</div>
-          <pre className="pp-pre">{JSON.stringify(detail.request || {}, null, 2)}</pre>
-          <div className="pp-muted" style={{ marginTop: 'var(--sp-2)' }}>响应</div>
-          <pre className="pp-pre">{JSON.stringify(detail.response || {}, null, 2)}</pre>
+          <div className="pp-toolbar-inline">
+            <span className="pp-meta">状态</span>
+            <span className={pillClass(statusTone(detail.status))}>{detail.status}</span>
+            <span className="pp-meta">耗时 {detail.timeMs} ms</span>
+            <span className="pp-meta">大小 {fmtSize(detail.bodySize)}</span>
+          </div>
+          <div className="pp-meta" style={{ marginTop: 'var(--sp-2)' }}>请求</div>
+          <pre className="pp-pre pp-pre-scroll">{JSON.stringify(detail.request || {}, null, 2)}</pre>
+          <div className="pp-meta" style={{ marginTop: 'var(--sp-2)' }}>响应</div>
+          <pre className="pp-pre pp-pre-scroll">{JSON.stringify(detail.response || {}, null, 2)}</pre>
         </div>
       ) : null}
     </div>

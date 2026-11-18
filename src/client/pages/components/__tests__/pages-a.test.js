@@ -7,6 +7,9 @@ import { fileURLToPath } from 'node:url'
 import { dirname, join, resolve } from 'node:path'
 import { createRequire } from 'node:module'
 import vm from 'node:vm'
+// Apifox 化专项用例（doc/debug 两页 + 四组件）：独立文件便于单跑，这里拼进同一套件，
+// 使 tests/run.js 的 pages-a 收录点自动覆盖（run.js 属 lead 范围，不新增收录行）。
+import { tests as apifoxUiTests } from './apifox-ui.test.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const COMPONENTS_DIR = resolve(__dirname, '..')
@@ -113,7 +116,7 @@ const PAGE_SPECS = [
   { name: 'mock', exportName: 'MockPage' },
 ]
 
-export const tests = [
+const pagesATests = [
   {
     name: 'pages-a: 三页文件存在且首部自注册到 __postapiQueue',
     fn() {
@@ -134,7 +137,9 @@ export const tests = [
     fn() {
       for (const spec of PAGE_SPECS) {
         const src = read(PAGE_FILES[spec.name])
-        assert(src.includes('className="pp-scope pp-page"'), spec.name + '.jsx 根元素缺 pp-scope pp-page')
+        // 根类必须是 pp-scope 起头，且带 pp-page 或 pp-page-flush
+        // （doc/debug 是 Apifox 三段式/调试台，用 pp-page-flush 取消外层内边距，排版交给 .pp-body-3col / .pp-debug-layout）
+        assert(/className="pp-scope pp-page(-flush)?(\s[^"]*)?"/.test(src), spec.name + '.jsx 根元素缺 pp-scope pp-page(-flush)')
         assert(src.includes('data-page="' + spec.name + '"'), spec.name + '.jsx 根元素缺 data-page')
         assert(/useEffect\(\(\) => applyTheme\(rootRef\.current\)/.test(src), spec.name + '.jsx 未调用 applyTheme')
       }
@@ -346,6 +351,8 @@ export const tests = [
     },
   },
 ]
+
+export const tests = [...pagesATests, ...apifoxUiTests]
 
 /* ---------------- mini runner ---------------- */
 

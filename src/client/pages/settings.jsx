@@ -1,6 +1,7 @@
-// settings.jsx — 设置页（存储路径只读 + 主题 / 语言 / Mock 端口 / 代理 / 超时 / 历史条数）
+// settings.jsx — 设置页（Apifox 工作台：表单行 + 只读存储路径 + 保存提示条）
 // 自注册：模块求值期入队 __postapiQueue
 // 存储路径由 host 构造参数注入（页面只读展示）；后四项经 api.storage.saveProjectSettings 落盘
+// 视觉基线：docs/apifox-design-spec.md —— .pp-form-row / .pp-form-label / .pp-input / .pp-note-ok
 import React, { useEffect, useRef, useState } from 'react'
 import { applyTheme, readLocale, readTheme, saveLocale, saveTheme } from './theme.js'
 
@@ -127,72 +128,77 @@ export function SettingsPage(props) {
   return (
     <div className="pp-scope pp-page" data-page="settings" ref={rootRef}>
       <h1 className="pp-page-title">设置</h1>
-      <p className="pp-muted">
-        {isMock
-          ? '示例数据 — api.storage 不可用，项目设置项为文件内默认值'
-          : '数据来源：api.storage（getProject / saveProjectSettings）'}
-      </p>
+      <div className="pp-toolbar">
+        <span className="pp-meta">
+          {isMock
+            ? '示例数据 — api.storage 不可用，项目设置项为文件内默认值'
+            : '数据来源：api.storage（getProject / saveProjectSettings）'}
+        </span>
+      </div>
       {error ? <p className="pp-error-text">{error}</p> : null}
-      {notice ? <p className="pp-muted">{notice}</p> : null}
+      {notice ? <div className="pp-note pp-note-ok">{notice}</div> : null}
 
-      <div className="pp-card" style={{ maxWidth: '640px' }}>
-        <div className="pp-form-row">
-          <label className="pp-form-label">存储路径</label>
-          <input className="pp-input pp-input-mono" style={{ flex: 1 }} readOnly value={storeRoot} />
+      <div className="pp-cols-2">
+        <div className="pp-pane">
+          <div className="pp-card-title">外观与存储</div>
+          <div className="pp-form-row">
+            <label className="pp-form-label">存储路径</label>
+            <input className="pp-input pp-input-mono" style={{ flex: 1 }} readOnly value={storeRoot} />
+          </div>
+          <div className="pp-form-row">
+            <label className="pp-form-label">主题</label>
+            <select className="pp-select" value={theme} onChange={(e) => applyThemeChoice(e.target.value)}>
+              <option value="light">浅色</option>
+              <option value="dark">深色</option>
+            </select>
+          </div>
+          <div className="pp-form-row">
+            <label className="pp-form-label">语言</label>
+            <select className="pp-select" value={locale} onChange={(e) => applyLocaleChoice(e.target.value)}>
+              <option value="zh-CN">简体中文</option>
+              <option value="en">English</option>
+            </select>
+          </div>
+          <div className="pp-note">
+            存储根目录由 host 构造参数注入（createStorageService(basePath)），页面只读展示，不可修改。
+          </div>
         </div>
-        <p className="pp-muted">
-          存储根目录由 host 构造参数注入（createStorageService(basePath)），页面只读展示，不可修改。
-        </p>
-        <div className="pp-form-row">
-          <label className="pp-form-label">主题</label>
-          <select className="pp-select" value={theme} onChange={(e) => applyThemeChoice(e.target.value)}>
-            <option value="light">浅色</option>
-            <option value="dark">深色</option>
-          </select>
-        </div>
-        <div className="pp-form-row">
-          <label className="pp-form-label">语言</label>
-          <select className="pp-select" value={locale} onChange={(e) => applyLocaleChoice(e.target.value)}>
-            <option value="zh-CN">简体中文</option>
-            <option value="en">English</option>
-          </select>
+
+        <div className="pp-pane">
+          <div className="pp-card-title">项目设置</div>
+          <div className="pp-form-row">
+            <label className="pp-form-label">项目</label>
+            <select className="pp-select" value={projectId}
+              onChange={(e) => { setProjectId(e.target.value); reloadProject(e.target.value) }}>
+              {projects.map((p) => <option key={p.id} value={p.id}>{p.name || p.id}</option>)}
+            </select>
+          </div>
+          <div className="pp-form-row">
+            <label className="pp-form-label">Mock 端口</label>
+            <input className="pp-input pp-input-mono" style={{ width: '120px' }} value={settings.mockPort}
+              onChange={(e) => patch({ mockPort: e.target.value })} />
+          </div>
+          <div className="pp-form-row">
+            <label className="pp-form-label">代理</label>
+            <input className="pp-input pp-input-mono" style={{ flex: 1 }} placeholder="http://127.0.0.1:7890（留空为直连）"
+              value={settings.proxyUrl} onChange={(e) => patch({ proxyUrl: e.target.value })} />
+          </div>
+          <div className="pp-form-row">
+            <label className="pp-form-label">超时 (ms)</label>
+            <input className="pp-input pp-input-mono" style={{ width: '120px' }} value={settings.requestTimeoutMs}
+              onChange={(e) => patch({ requestTimeoutMs: e.target.value })} />
+          </div>
+          <div className="pp-form-row">
+            <label className="pp-form-label">历史条数</label>
+            <input className="pp-input pp-input-mono" style={{ width: '120px' }} value={settings.historyLimit}
+              onChange={(e) => patch({ historyLimit: e.target.value })} />
+          </div>
+          <button className="pp-btn pp-btn-primary" onClick={persist}>保存项目设置</button>
         </div>
       </div>
 
-      <h2 className="pp-card-title" style={{ marginTop: 'var(--sp-6)' }}>项目设置</h2>
-      <div className="pp-card" style={{ maxWidth: '640px' }}>
-        <div className="pp-form-row">
-          <label className="pp-form-label">项目</label>
-          <select className="pp-select" value={projectId}
-            onChange={(e) => { setProjectId(e.target.value); reloadProject(e.target.value) }}>
-            {projects.map((p) => <option key={p.id} value={p.id}>{p.name || p.id}</option>)}
-          </select>
-        </div>
-        <div className="pp-form-row">
-          <label className="pp-form-label">Mock 端口</label>
-          <input className="pp-input pp-input-mono" style={{ width: '120px' }} value={settings.mockPort}
-            onChange={(e) => patch({ mockPort: e.target.value })} />
-        </div>
-        <div className="pp-form-row">
-          <label className="pp-form-label">代理</label>
-          <input className="pp-input pp-input-mono" style={{ flex: 1 }} placeholder="http://127.0.0.1:7890（留空为直连）"
-            value={settings.proxyUrl} onChange={(e) => patch({ proxyUrl: e.target.value })} />
-        </div>
-        <div className="pp-form-row">
-          <label className="pp-form-label">超时 (ms)</label>
-          <input className="pp-input pp-input-mono" style={{ width: '120px' }} value={settings.requestTimeoutMs}
-            onChange={(e) => patch({ requestTimeoutMs: e.target.value })} />
-        </div>
-        <div className="pp-form-row">
-          <label className="pp-form-label">历史条数</label>
-          <input className="pp-input pp-input-mono" style={{ width: '120px' }} value={settings.historyLimit}
-            onChange={(e) => patch({ historyLimit: e.target.value })} />
-        </div>
-        <button className="pp-btn pp-btn-primary" onClick={persist}>保存项目设置</button>
-      </div>
-
-      <h2 className="pp-card-title" style={{ marginTop: 'var(--sp-6)' }}>协作（规划中）</h2>
-      <div className="pp-card" style={{ maxWidth: '640px' }}>
+      <div className="pp-card" style={{ marginTop: 'var(--sp-5)' }}>
+        <div className="pp-card-title">协作（规划中）</div>
         <p className="pp-muted">
           成员管理与变更历史为 P2 占位：本插件无服务端，不做云端账号 / 团队同步 / 审计日志。
         </p>

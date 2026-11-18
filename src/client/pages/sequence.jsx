@@ -20,11 +20,11 @@ const FRAME_PAD_BOTTOM = 24
 const BOTTOM_PAD = 28
 const LEGEND_H = 44
 
-// —— 颜色角色（paste tokens：paper #fafafa / ink #000 / accent #0070f3 / 次级 #666）——
+// —— 颜色角色：全部引用 Apifox token（见 docs/apifox-design-spec.md §1）——
 const INK = 'var(--fg)'
 const MUTED = 'var(--fg-secondary)'
 const ACCENT = 'var(--accent)'
-const PAPER = 'var(--paper)'
+const PAPER = 'var(--bg-app)'
 const FONT_SANS = 'var(--font-sans)'
 const FONT_MONO = 'var(--font-mono)'
 
@@ -125,7 +125,7 @@ export function exportSequenceSvg(svgEl, filename = 'flow-sequence.svg') {
   const cs = typeof getComputedStyle === 'function' ? getComputedStyle(svgEl) : null
   const raw = new XMLSerializer().serializeToString(clone)
   const resolved = cs
-    ? raw.replace(/var\((--[\w-]+)\)/g, (_, name) => cs.getPropertyValue(name).trim() || '#000000')
+    ? raw.replace(/var\((--[\w-]+)\)/g, (_, name) => cs.getPropertyValue(name).trim() || 'currentColor')
     : raw
   const blob = new Blob([resolved], { type: 'image/svg+xml;charset=utf-8' })
   const url = URL.createObjectURL(blob)
@@ -191,7 +191,7 @@ export function SequenceDiagram({ steps, idPrefix = 'flow-seq', title = '时序�
         <g key={'m-' + i}>
           <rect x={cx - 60} y={y - 12} width={120} height={20} rx="4" fill={PAPER}
             stroke={INK} strokeOpacity="0.22" strokeWidth="1" />
-          <text x={cx} y={y + 2} fill={MUTED} fontSize="8" fontFamily={FONT_MONO}
+          <text x={cx} y={y + 2} fill={MUTED} fontSize="var(--fs-chart)" fontFamily={FONT_MONO}
             textAnchor="middle" letterSpacing="0.04em">{(s.message || '').toUpperCase()}</text>
         </g>
       )
@@ -204,7 +204,7 @@ export function SequenceDiagram({ steps, idPrefix = 'flow-seq', title = '时序�
           <path d={`M ${cx} ${y} h 28 v 20 h -28`} fill="none" stroke={MUTED} strokeWidth="1"
             markerEnd={`url(#${idPrefix}-arrow)`} />
           <rect x={cx + 36} y={y - 6} width={maskWidth(label)} height={12} rx="2" fill={PAPER} />
-          <text x={cx + 36 + maskWidth(label) / 2} y={y + 3} fill={MUTED} fontSize="8"
+          <text x={cx + 36 + maskWidth(label) / 2} y={y + 3} fill={MUTED} fontSize="var(--fs-chart)"
             fontFamily={FONT_MONO} textAnchor="middle" letterSpacing="0.06em">{label}</text>
         </g>
       )
@@ -229,7 +229,7 @@ export function SequenceDiagram({ steps, idPrefix = 'flow-seq', title = '时序�
           markerEnd={`url(#${marker})`} />
         {/* 标签 mask：底边距箭头 8px（skill 规则 6-10px） */}
         <rect x={(left + right) / 2 - mw / 2} y={y - 20} width={mw} height={12} rx="2" fill={PAPER} />
-        <text x={(left + right) / 2} y={y - 11} fill={MUTED} fontSize="8" fontFamily={FONT_MONO}
+        <text x={(left + right) / 2} y={y - 11} fill={MUTED} fontSize="var(--fs-chart)" fontFamily={FONT_MONO}
           textAnchor="middle" letterSpacing="0.06em">{label}</text>
       </g>
     )
@@ -242,10 +242,10 @@ export function SequenceDiagram({ steps, idPrefix = 'flow-seq', title = '时序�
         fill={INK} fillOpacity="0.02" stroke={INK} strokeOpacity="0.22" strokeWidth="1" />
       <rect x={f.x} y={f.y} width="40" height="16" rx="2" fill={PAPER}
         stroke={INK} strokeOpacity="0.22" strokeWidth="1" />
-      <text x={f.x + 20} y={f.y + 12} fill={MUTED} fontSize="8" fontFamily={FONT_MONO}
+      <text x={f.x + 20} y={f.y + 12} fill={MUTED} fontSize="var(--fs-chart)" fontFamily={FONT_MONO}
         textAnchor="middle" letterSpacing="0.12em">{f.op.toUpperCase()}</text>
       {f.guards.map((g, gi) => (
-        <text key={'g-' + gi} x={f.x + 12} y={g.y} fill={MUTED} fontSize="8"
+        <text key={'g-' + gi} x={f.x + 12} y={g.y} fill={MUTED} fontSize="var(--fs-chart)"
           fontFamily={FONT_MONO} letterSpacing="0.04em">{g.text}</text>
       ))}
       {f.dividers.map((dy, di) => (
@@ -260,7 +260,7 @@ export function SequenceDiagram({ steps, idPrefix = 'flow-seq', title = '时序�
     <g key={'a-' + name}>
       <rect x={centers[i] - ACTOR_W / 2} y={TOP_Y} width={ACTOR_W} height={ACTOR_H} rx="6"
         fill={PAPER} stroke={INK} strokeWidth="1" />
-      <text x={centers[i]} y={TOP_Y + 23} fill={INK} fontSize="12" fontWeight="600"
+      <text x={centers[i]} y={TOP_Y + 23} fill={INK} fontSize="var(--fs-12)" fontWeight="600"
         fontFamily={FONT_SANS} textAnchor="middle">{name}</text>
     </g>
   ))
@@ -271,12 +271,12 @@ export function SequenceDiagram({ steps, idPrefix = 'flow-seq', title = '时序�
     <g>
       <line x1={MARGIN_X} y1={legendY - 8} x2={width - MARGIN_X} y2={legendY - 8}
         stroke={INK} strokeOpacity="0.1" strokeWidth="0.8" />
-      <text x={MARGIN_X} y={legendY + 8} fill={MUTED} fontSize="8" fontFamily={FONT_MONO}
+      <text x={MARGIN_X} y={legendY + 8} fill={MUTED} fontSize="var(--fs-chart)" fontFamily={FONT_MONO}
         letterSpacing="0.14em">LEGEND</text>
-      <text x={MARGIN_X + 80} y={legendY + 8} fill={MUTED} fontSize="8" fontFamily={FONT_MONO}>SOLID = CALL</text>
-      <text x={MARGIN_X + 200} y={legendY + 8} fill={MUTED} fontSize="8" fontFamily={FONT_MONO}>DASHED = RETURN</text>
-      <text x={MARGIN_X + 340} y={legendY + 8} fill={ACCENT} fontSize="8" fontFamily={FONT_MONO}>ACCENT = HEADLINE</text>
-      <text x={MARGIN_X + 520} y={legendY + 8} fill={MUTED} fontSize="8" fontFamily={FONT_MONO}>FRAME = BRANCH</text>
+      <text x={MARGIN_X + 80} y={legendY + 8} fill={MUTED} fontSize="var(--fs-chart)" fontFamily={FONT_MONO}>SOLID = CALL</text>
+      <text x={MARGIN_X + 200} y={legendY + 8} fill={MUTED} fontSize="var(--fs-chart)" fontFamily={FONT_MONO}>DASHED = RETURN</text>
+      <text x={MARGIN_X + 340} y={legendY + 8} fill={ACCENT} fontSize="var(--fs-chart)" fontFamily={FONT_MONO}>ACCENT = HEADLINE</text>
+      <text x={MARGIN_X + 520} y={legendY + 8} fill={MUTED} fontSize="var(--fs-chart)" fontFamily={FONT_MONO}>FRAME = BRANCH</text>
     </g>
   )
 

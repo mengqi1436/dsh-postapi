@@ -1,7 +1,8 @@
-// overview.jsx — 项目总览页（项目卡片网格 + 最近接口表 + 快捷入口）
+// overview.jsx — 项目总览页（Apifox 工作台：统计条 + 项目卡片网格 + 最近接口表 + 快捷入口）
 // 自注册：模块求值期入队 __postapiQueue，ensureGlobals 统一重放（注册表就绪顺序无关）
 // 数据：api.storage.listProjects / getProject / createProject / renameProject / deleteProject
 // 失败一律页面内显示错误文案（不弹窗）；api 缺失时渲染文件内 mock 并标注「示例数据」
+// 视觉基线：docs/apifox-design-spec.md —— .pp-stats / .pp-overview-grid / .pp-card-hover
 import React, { useEffect, useRef, useState } from 'react'
 import { applyTheme } from './theme.js'
 
@@ -15,6 +16,7 @@ const MOCK_PROJECTS = [
 const MOCK_PROJECT = {
   id: 'proj_demo01',
   name: '订单中心',
+  environments: [{ id: 'env_dev', name: '开发环境' }, { id: 'env_prod', name: '生产环境' }],
   endpoints: [
     { id: 'ep_1001', name: '查询订单列表', method: 'GET', url: '/api/v1/orders', updatedAt: '2026-11-17T10:20:00.000Z' },
     { id: 'ep_1002', name: '创建订单', method: 'POST', url: '/api/v1/orders', updatedAt: '2026-11-17T09:05:00.000Z' },
@@ -45,6 +47,24 @@ export function recentEndpoints(project, limit = RECENT_LIMIT) {
   const list = Array.isArray(project && project.endpoints) ? project.endpoints.slice() : []
   list.sort((a, b) => String(b.updatedAt || '').localeCompare(String(a.updatedAt || '')))
   return list.slice(0, limit)
+}
+
+/** 顶部统计条四块：项目数 / 接口数 / 环境数 / 最近更新时间（取项目与接口的最晚时间）。 */
+export function overviewStats(projects, project) {
+  const list = Array.isArray(projects) ? projects : []
+  const endpoints = Array.isArray(project && project.endpoints) ? project.endpoints : []
+  const envs = Array.isArray(project && project.environments) ? project.environments : []
+  let latest = ''
+  for (const item of endpoints.concat(list)) {
+    const at = item && item.updatedAt ? String(item.updatedAt) : ''
+    if (at && at > latest) latest = at
+  }
+  return {
+    projectCount: list.length,
+    endpointCount: endpoints.length,
+    envCount: envs.length,
+    latestUpdated: latest,
+  }
 }
 
 function errText(err) {
@@ -196,6 +216,7 @@ export function OverviewPage(props) {
 
   const recent = recentEndpoints(project)
   const cards = projectCards(projects)
+  const stats = overviewStats(projects, project)
 
   return (
     <div className="pp-scope pp-page" data-page="overview" ref={rootRef}>
@@ -208,33 +229,47 @@ export function OverviewPage(props) {
       {error ? <p className="pp-error-text">{error}</p> : null}
       {notice ? <p className="pp-muted">{notice}</p> : null}
 
-      <h2 className="pp-card-title">项目</h2>
-      <div className="pp-card" style={{ marginBottom: 'var(--sp-3)' }}>
-        <div className="pp-form-row">
-          <label className="pp-form-label">新建项目</label>
-          <input className="pp-input" style={{ flex: 1 }} placeholder="项目名"
-            value={newName} onChange={(e) => { setNewName(e.target.value); setNotice('') }} />
-          <button className="pp-btn pp-btn-primary" onClick={createProject}>新建</button>
+      <div className="pp-stats">
+        <div className="pp-stat">
+          <span className="pp-stat-value">{stats.projectCount}</span>
+          <span className="pp-stat-label">项目数</span>
         </div>
-        <div className="pp-form-row">
-          <label className="pp-form-label">当前项目</label>
-          <input className="pp-input pp-input-mono" style={{ flex: 1 }} readOnly value={currentId || '-'} />
-          <input className="pp-input" style={{ flex: 1 }} placeholder="重命名"
-            value={renameName} onChange={(e) => { setRenameName(e.target.value); setNotice('') }} />
-          <button className="pp-btn" onClick={renameProject}>重命名</button>
+        <div className="pp-stat">
+          <span className="pp-stat-value">{stats.endpointCount}</span>
+          <span className="pp-stat-label">接口数</span>
         </div>
+        <div className="pp-stat">
+          <span className="pp-stat-value">{stats.envCount}</span>
+          <span className="pp-stat-label">环境数</span>
+        </div>
+        <div className="pp-stat">
+          <span className="pp-stat-value">{fmtTime(stats.latestUpdated)}</span>
+          <span className="pp-stat-label">最近更新</span>
+        </div>
+      </div>
+
+      <div className="pp-toolbar" style={{ marginTop: 'var(--sp-4)' }}>
+        <input className="pp-input" style={{ width: '200px' }} placeholder="项目名"
+          value={newName} onChange={(e) => { setNewName(e.target.value); setNotice('') }} />
+        <button className="pp-btn pp-btn-primary" onClick={createProject}>新建</button>
+        <span className="pp-toolbar-spacer" />
+        <span className="pp-meta">当前项目</span>
+        <input className="pp-input pp-input-mono" style={{ width: '180px' }} readOnly value={currentId || '-'} />
+        <input className="pp-input" style={{ width: '180px' }} placeholder="重命名"
+          value={renameName} onChange={(e) => { setRenameName(e.target.value); setNotice('') }} />
+        <button className="pp-btn" onClick={renameProject}>重命名</button>
       </div>
 
       <div className="pp-overview-grid">
         {cards.map((p) => (
-          <div key={p.id} className="pp-card">
-            <div className="pp-card-title">{p.name}</div>
-            <div className="pp-muted">
+          <div key={p.id} className="pp-card pp-card-hover" data-active={currentId === p.id ? 'true' : 'false'}>
+            <div className="pp-card-title pp-ellipsis">{p.name}</div>
+            <div className="pp-meta">
               {p.endpointCount === undefined ? '接口数未知' : p.endpointCount + ' 个接口'} · 更新于 {fmtTime(p.updatedAt)}
             </div>
-            <div style={{ display: 'flex', gap: 'var(--sp-2)', marginTop: 'var(--sp-2)' }}>
+            <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
               <button className="pp-btn" onClick={() => openProject(p.id)}>打开</button>
-              <button className="pp-btn" onClick={() => deleteProject(p.id)}>
+              <button className="pp-btn pp-btn-danger" onClick={() => deleteProject(p.id)}>
                 {pendingDelete === p.id ? '确认删除' : '删除'}
               </button>
             </div>
@@ -243,8 +278,8 @@ export function OverviewPage(props) {
         {cards.length === 0 ? <div className="pp-empty">暂无项目，先在上方新建一个</div> : null}
       </div>
 
-      <h2 className="pp-card-title" style={{ marginTop: 'var(--sp-6)' }}>最近接口</h2>
-      <div className="pp-card">
+      <div className="pp-card" style={{ marginTop: 'var(--sp-5)' }}>
+        <div className="pp-card-title">最近接口</div>
         <table className="pp-table">
           <thead>
             <tr>
@@ -256,8 +291,7 @@ export function OverviewPage(props) {
           </thead>
           <tbody>
             {recent.map((e) => (
-              <tr key={e.id} onClick={() => { window.location.hash = '#/doc/' + encodeURIComponent(e.id) }}
-                style={{ cursor: 'pointer' }}>
+              <tr key={e.id} onClick={() => { window.location.hash = '#/doc/' + encodeURIComponent(e.id) }}>
                 <td><span className="pp-method" data-method={e.method}>{e.method}</span></td>
                 <td>{e.name || '-'}</td>
                 <td className="pp-table-mono pp-muted">{e.url || '-'}</td>
@@ -271,12 +305,11 @@ export function OverviewPage(props) {
         </table>
       </div>
 
-      <h2 className="pp-card-title" style={{ marginTop: 'var(--sp-6)' }}>快捷入口</h2>
-      <div className="pp-card" style={{ display: 'flex', gap: 'var(--sp-2)', flexWrap: 'wrap' }}>
+      <div className="pp-toolbar" style={{ marginTop: 'var(--sp-5)' }}>
+        <span className="pp-card-title" style={{ margin: 0 }}>快捷入口</span>
+        <span className="pp-toolbar-spacer" />
         {SHORTCUTS.map((s) => (
-          <a key={s.hash} className="pp-btn" style={{ display: 'inline-flex', alignItems: 'center', textDecoration: 'none' }} href={s.hash}>
-            {s.label}
-          </a>
+          <a key={s.hash} className="pp-btn" href={s.hash}>{s.label}</a>
         ))}
       </div>
     </div>

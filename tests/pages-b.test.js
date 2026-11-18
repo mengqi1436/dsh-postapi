@@ -43,6 +43,22 @@ function loadEsbuild() {
 const esbuild = loadEsbuild()
 
 const PAGE_NAMES = ['overview', 'env', 'schema', 'history', 'test', 'import', 'flow', 'settings', 'search']
+
+/**
+ * Apifox 外观硬指标：每页必须出现的 .pp-* 类（docs/apifox-design-spec.md 的组件规格）。
+ * 缺任一即视为外观未复刻，用例直接失败。
+ */
+const PAGE_CLASSES = {
+  overview: ['pp-stats', 'pp-stat', 'pp-overview-grid', 'pp-card-hover', 'pp-table'],
+  env: ['pp-tree-row', 'pp-table', 'pp-toolbar', 'pp-note'],
+  schema: ['pp-tree-row', 'pp-json-editor', 'pp-note-ok', 'pp-note-bad'],
+  history: ['pp-table', 'pp-pill', 'pp-meta', 'pp-pane'],
+  test: ['pp-tree-row', 'pp-table', 'pp-result-row', 'pp-pill'],
+  import: ['pp-card', 'pp-btn', 'pp-pre', 'pp-select'],
+  flow: ['pp-seq-wrap', 'pp-table', 'pp-split-hint'],
+  settings: ['pp-form-row', 'pp-form-label', 'pp-input', 'pp-note-ok'],
+  search: ['pp-input', 'pp-tree-group', 'pp-list-row'],
+}
 const PAGE_TITLE_RE = /总览|环境|数据模型|历史|测试|导入|流程|设置|搜索/
 
 const TOKEN_HEIGHT_RE = /^var\(--(ctl|row|pill)-h\)$/
@@ -76,6 +92,25 @@ function staticChecks(name, src) {
   while ((m = H.exec(src))) {
     const err = checkHeightValue(m[2])
     if (err) fails.push('内联 ' + m[1] + ': ' + m[2] + ' — ' + err)
+  }
+  // Apifox 外观：每页必需的 .pp-* 类必须出现（缺任一 = 外观未复刻）
+  for (const cls of PAGE_CLASSES[name] || []) {
+    if (!src.includes(cls)) fails.push('缺少 Apifox 类 .' + cls)
+  }
+  // 类名一律 .pp- 前缀（禁止引入未在 design-tokens.css 定义的私有类名）
+  const classAttrs = src.match(/className="([^"]*)"/g) || []
+  for (const attr of classAttrs) {
+    const names = attr.replace(/className="|"$/g, '').split(/\s+/).filter(Boolean)
+    for (const one of names) {
+      if (!/^pp-[a-z0-9-]+$/.test(one)) fails.push('类名未使用 pp- 前缀：' + one)
+    }
+  }
+  // 内联 style 只允许 layout：出现颜色/字号/字重键即违规
+  const styleBlocks = src.match(/style=\{\{[^}]*\}\}/g) || []
+  for (const block of styleBlocks) {
+    if (/\b(color|background|backgroundColor|borderColor|fontSize|fontWeight|fontFamily)\s*:/.test(block)) {
+      fails.push('内联样式含颜色/字号键：' + block.slice(0, 60))
+    }
   }
   if (!/export function \w+Page/.test(src)) fails.push('缺少页面组件导出')
   if (!/api\.(storage|request|import|export|codegen|test|schema)/.test(src) && !/props\.api/.test(src)) {
@@ -330,6 +365,28 @@ async function pageOf(name) {
   return loaded[name]
 }
 
+t('Apifox 纪律：九页类名全部 pp- 前缀且无内联颜色/字号（design-tokens 唯一视觉基线）', () => {
+  const fails = []
+  for (const name of PAGE_NAMES) {
+    const src = readFileSync(path.join(PAGES, name + '.jsx'), 'utf8')
+    const classAttrs = src.match(/className="([^"]*)"/g) || []
+    for (const attr of classAttrs) {
+      const names = attr.replace(/className="|"$/g, '').split(/\s+/).filter(Boolean)
+      for (const one of names) {
+        if (!/^pp-[a-z0-9-]+$/.test(one)) fails.push(name + ': 类名 ' + one + ' 未使用 pp- 前缀')
+      }
+    }
+    for (const block of src.match(/style=\{\{[^}]*\}\}/g) || []) {
+      if (/\b(color|background|backgroundColor|borderColor|fontSize|fontWeight|fontFamily)\s*:/.test(block)) {
+        fails.push(name + ': 内联样式含颜色/字号 ' + block.slice(0, 48))
+      }
+    }
+    // 九页必须消费 design-tokens 的 .pp-scope 作用域根，保证 token 生效
+    if (!/className="pp-scope/.test(src)) fails.push(name + ': 根节点缺 .pp-scope 作用域')
+  }
+  if (fails.length) throw new Error(fails.join(' | '))
+})
+
 t('九页文件齐全', () => {
   for (const n of PAGE_NAMES) {
     const p = path.join(PAGES, n + '.jsx')
@@ -403,6 +460,42 @@ t('overview.projectCards：补接口计数与名称回落', async () => {
   if (f(undefined).length !== 0) throw new Error('非数组未返回空数组')
 })
 
+t('overview.overviewStats：四块统计（项目/接口/环境/最近更新取最晚时间）', async () => {
+  const f = await ex('overview', 'overviewStats')
+  const got = f(
+    [{ id: 'p1', updatedAt: '2026-11-01T00:00:00Z' }, { id: 'p2', updatedAt: '2026-11-05T00:00:00Z' }],
+    {
+      environments: [{ id: 'e1' }, { id: 'e2' }],
+      endpoints: [
+        { id: 'ep1', updatedAt: '2026-11-03T00:00:00Z' },
+        { id: 'ep2', updatedAt: '2026-11-09T00:00:00Z' },
+      ],
+    },
+  )
+  if (got.projectCount !== 2) throw new Error('项目数错误：' + got.projectCount)
+  if (got.endpointCount !== 2) throw new Error('接口数错误：' + got.endpointCount)
+  if (got.envCount !== 2) throw new Error('环境数错误：' + got.envCount)
+  if (got.latestUpdated !== '2026-11-09T00:00:00Z') throw new Error('最近更新取值错误：' + got.latestUpdated)
+  const empty = f(undefined, undefined)
+  if (empty.projectCount !== 0 || empty.endpointCount !== 0 || empty.envCount !== 0 || empty.latestUpdated !== '') {
+    throw new Error('空入参未回落零值：' + JSON.stringify(empty))
+  }
+})
+
+t('overview 渲染：.pp-stats 四块统计 + .pp-overview-grid 卡片 + .pp-card-hover', async () => {
+  const a = okStorage()
+  const r = await drive('overview', { storage: a.storage })
+  const nodes = collectNodes(r.tree)
+  const stats = nodes.filter((n) => n.props && String(n.props.className || '').includes('pp-stat'))
+  if (stats.length < 4) throw new Error('.pp-stat 块数不足 4：' + stats.length)
+  const labels = stats.map((n) => collectText(n)).join('|')
+  for (const word of ['项目数', '接口数', '环境数', '最近更新']) {
+    if (!labels.includes(word)) throw new Error('统计块缺标签 ' + word + '：' + labels)
+  }
+  if (!nodes.some((n) => String(n.props.className || '') === 'pp-overview-grid')) throw new Error('缺 .pp-overview-grid')
+  if (!nodes.some((n) => String(n.props.className || '').includes('pp-card-hover'))) throw new Error('缺 .pp-card-hover')
+})
+
 t('env.normalizeVars：补 enabled/secret 默认值并丢弃非法项', async () => {
   const f = await ex('env', 'normalizeVars')
   const got = f([{ key: 'a', value: 1 }, null, { key: 'b', enabled: false, secret: true }])
@@ -424,6 +517,22 @@ t('env.envSummary：摘要含名称/baseUrl/变量数/默认标记', async () =>
   const got = f([{ id: 'e1', name: 'dev', baseUrl: 'http://x', isDefault: true, variables: [{}, {}] }])
   if (got[0].varCount !== 2 || got[0].isDefault !== true || got[0].baseUrl !== 'http://x') throw new Error('摘要字段错误')
   if (f(null).length !== 0) throw new Error('非数组未返回空数组')
+})
+
+t('env 渲染：左环境列表 .pp-tree-row + 变量表 .pp-table + 工具条 .pp-toolbar + 说明 .pp-note', async () => {
+  const r = await drive('env', { storage: {
+    listProjects: async () => [{ id: 'p1', name: 'P1' }],
+    getProject: async () => ({
+      id: 'p1',
+      environments: [{ id: 'e1', name: 'dev', baseUrl: 'http://x', variables: [{ key: 'k', value: 'v' }] }],
+      globals: { variables: [] },
+    }),
+  } })
+  const nodes = collectNodes(r.tree)
+  if (!nodes.some((n) => String(n.props.className || '').includes('pp-tree-row'))) throw new Error('环境列表未使用 .pp-tree-row')
+  if (!nodes.some((n) => String(n.props.className || '') === 'pp-table')) throw new Error('变量表未使用 .pp-table')
+  if (!nodes.some((n) => String(n.props.className || '') === 'pp-toolbar')) throw new Error('缺 .pp-toolbar')
+  if (!nodes.some((n) => String(n.props.className || '').includes('pp-note'))) throw new Error('缺 .pp-note 说明')
 })
 
 t('schema.localValidateSchema：非法 JSON/非对象/缺 shape/未知 type 均报错，合法通过', async () => {
@@ -461,12 +570,66 @@ t('history.statusTone：2xx success / 4xx warning / 其他 error', async () => {
   if (f(200) !== 'success' || f(404) !== 'warning' || f(500) !== 'error' || f(0) !== 'error') throw new Error('分组错误')
 })
 
+t('history.pillClass：三档状态映射到 .pp-pill-ok/-warn/-bad（胶囊无底色）', async () => {
+  const f = await ex('history', 'pillClass')
+  if (f('success') !== 'pp-pill pp-pill-ok') throw new Error('success 档错误：' + f('success'))
+  if (f('warning') !== 'pp-pill pp-pill-warn') throw new Error('warning 档错误：' + f('warning'))
+  if (f('error') !== 'pp-pill pp-pill-bad') throw new Error('error 档错误：' + f('error'))
+  if (f('unknown') !== 'pp-pill pp-pill-bad') throw new Error('未知档未回落 bad：' + f('unknown'))
+})
+
+t('history 渲染：状态胶囊带三档类、耗时/大小用 .pp-meta、详情面板用 .pp-pane', async () => {
+  const r = await drive('history', { storage: {
+    listProjects: async () => [{ id: 'p1', name: 'P1' }],
+    getHistory: async () => ({ entries: [
+      { id: 'h1', at: '2026-11-17T10:00:00Z', method: 'GET', url: '/a', status: 200, timeMs: 5, bodySize: 10 },
+      { id: 'h2', at: '2026-11-17T10:00:01Z', method: 'POST', url: '/b', status: 404, timeMs: 6, bodySize: 20 },
+      { id: 'h3', at: '2026-11-17T10:00:02Z', method: 'PUT', url: '/c', status: 500, timeMs: 7, bodySize: 30 },
+    ] }),
+  } }, null, async (tree) => {
+    const btn = collectNodes(tree).find((n) => n.type === 'button' && collectText(n) === '详情')
+    await btn.props.onClick()
+  })
+  const nodes = collectNodes(r.tree)
+  const pillClasses = nodes.map((n) => String(n.props.className || '')).filter((c) => c.includes('pp-pill'))
+  for (const cls of ['pp-pill-ok', 'pp-pill-warn', 'pp-pill-bad']) {
+    if (!pillClasses.some((c) => c.includes(cls))) throw new Error('缺胶囊档 ' + cls + '：' + pillClasses.join('|'))
+  }
+  if (!nodes.some((n) => String(n.props.className || '') === 'pp-pane')) throw new Error('详情未使用 .pp-pane')
+  if (!collectText(r.tree).includes('详情 · h1')) throw new Error('详情面板未渲染')
+})
+
 t('history.replayPayload：折算成 debug 请求快照', async () => {
   const f = await ex('history', 'replayPayload')
   const got = f({ method: 'POST', url: 'http://x/a', request: { method: 'PUT', url: '/b', headers: [{ key: 'a' }], body: '{"k":1}' } })
   if (got.method !== 'PUT' || got.url !== '/b' || got.body !== '{"k":1}') throw new Error('折算错误：' + JSON.stringify(got))
   const bare = f({ method: 'GET', url: '/c' })
   if (bare.method !== 'GET' || bare.headers.length !== 0 || bare.body !== '') throw new Error('缺 request 时未回落')
+})
+
+t('schema 渲染：.pp-json-editor 编辑器 + 校验结果用 .pp-note-ok/.pp-note-bad', async () => {
+  const ok = await drive('schema', {
+    storage: { listProjects: async () => [{ id: 'p1', name: 'P1' }], getProject: async () => ({ id: 'p1', schemas: [] }) },
+  }, null, async (tree) => { await buttonByText(tree, '校验').props.onClick() })
+  const okNodes = collectNodes(ok.tree)
+  if (!okNodes.some((n) => n.type === 'textarea' && String(n.props.className || '').includes('pp-json-editor'))) {
+    throw new Error('JSON 编辑区未使用 .pp-json-editor')
+  }
+  if (!okNodes.some((n) => String(n.props.className || '').includes('pp-note-ok'))) {
+    throw new Error('校验通过未使用 .pp-note-ok：' + okNodes.map((n) => n.props.className).filter(Boolean).join('|'))
+  }
+
+  const bad = await drive('schema', {
+    storage: { listProjects: async () => [{ id: 'p1', name: 'P1' }], getProject: async () => ({ id: 'p1', schemas: [] }) },
+  }, null, async (tree, stub, rerender) => {
+    const ta = collectNodes(tree).find((n) => n.type === 'textarea')
+    ta.props.onChange({ target: { value: '{bad' } })
+    const tree2 = await rerender()
+    await buttonByText(tree2, '校验').props.onClick()
+  })
+  if (!collectNodes(bad.tree).some((n) => String(n.props.className || '').includes('pp-note-bad'))) {
+    throw new Error('校验失败未使用 .pp-note-bad')
+  }
 })
 
 t('test.normalizeAssertions：补默认 source/op 并过滤非法项', async () => {
@@ -506,6 +669,21 @@ t('test.casesOf / scenariosOf：顶层优先，回落 settings 子键，过滤�
   if (s.length !== 1 || s[0].id !== 's1') throw new Error('场景回落失败')
 })
 
+t('test 渲染：断言表 .pp-table + 运行结果 .pp-result-row/.pp-pill', async () => {
+  const r = await drive('test', {
+    storage: okStorage().storage,
+    test: { runCase: async () => ({ passed: true, results: [{ name: 'a', passed: true }, { name: 'b', passed: false, error: 'x' }], durationMs: 7 }) },
+  }, null, async (tree) => { await buttonByText(tree, '运行用例').props.onClick() })
+  const nodes = collectNodes(r.tree)
+  if (!nodes.some((n) => String(n.props.className || '').includes('pp-table'))) throw new Error('断言表未使用 .pp-table')
+  const rows = nodes.filter((n) => String(n.props.className || '').includes('pp-result-row'))
+  if (rows.length < 2) throw new Error('.pp-result-row 明细行不足：' + rows.length)
+  const pills = nodes.map((n) => String(n.props.className || '')).filter((c) => c.includes('pp-pill'))
+  if (!pills.some((c) => c.includes('pp-pill-ok')) || !pills.some((c) => c.includes('pp-pill-bad'))) {
+    throw new Error('结果胶囊未按三档着色：' + pills.join('|'))
+  }
+})
+
 t('import.resultText：字符串原样、对象 JSON 美化、空值空串', async () => {
   const f = await ex('import', 'resultText')
   if (f('abc') !== 'abc') throw new Error('字符串未原样')
@@ -536,6 +714,34 @@ t('search.hasKeyword：空白视为无关键字', async () => {
   if (f(' a ') !== true) throw new Error('非空未通过')
 })
 
+t('search 渲染：搜索框 .pp-input + 分组 .pp-tree-group + 结果行 .pp-list-row', async () => {
+  const r = await drive('search', { storage: {
+    listProjects: async () => [{ id: 'p1', name: 'P1' }],
+    search: async () => ({ endpoints: [{ id: 'e1', name: 'A', method: 'GET' }], schemas: [], folders: [] }),
+  } }, { name: 'search', arg: '', query: 'q=order' }, async (tree) => { await buttonByText(tree, '搜索').props.onClick() })
+  const nodes = collectNodes(r.tree)
+  if (!nodes.some((n) => n.type === 'input' && String(n.props.className || '').includes('pp-input'))) {
+    throw new Error('搜索框未使用 .pp-input')
+  }
+  const groups = nodes.filter((n) => String(n.props.className || '') === 'pp-tree-group')
+  if (groups.length < 3) throw new Error('.pp-tree-group 分组数不足 3：' + groups.length)
+  if (!nodes.some((n) => String(n.props.className || '') === 'pp-list-row')) throw new Error('结果行未使用 .pp-list-row')
+})
+
+t('settings 渲染：表单 .pp-form-row/.pp-form-label，保存提示用 .pp-note-ok', async () => {
+  const r = await drive('settings', { storage: {
+    listProjects: async () => [{ id: 'p1', name: 'P1' }],
+    getProject: async () => ({ id: 'p1', settings: { mockPort: 4010, proxyUrl: '', requestTimeoutMs: 30000, historyLimit: 200 } }),
+    saveProjectSettings: async (_pid, s) => s,
+  } }, null, async (tree) => { await buttonByText(tree, '保存项目设置').props.onClick() })
+  const nodes = collectNodes(r.tree)
+  if (!nodes.some((n) => String(n.props.className || '') === 'pp-form-row')) throw new Error('缺 .pp-form-row')
+  if (!nodes.some((n) => String(n.props.className || '') === 'pp-form-label')) throw new Error('缺 .pp-form-label')
+  const ok = nodes.filter((n) => String(n.props.className || '').includes('pp-note-ok'))
+  if (ok.length === 0) throw new Error('保存提示未使用 .pp-note-ok')
+  if (!collectText(r.tree).includes('已保存项目设置')) throw new Error('保存提示文案缺失')
+})
+
 t('settings.normalizeSettings：数字夹取区间、代理字符串化、缺省回落默认值', async () => {
   const f = await ex('settings', 'normalizeSettings')
   const got = f({ mockPort: 99999, requestTimeoutMs: 10, historyLimit: 0, proxyUrl: 123 })
@@ -564,6 +770,28 @@ t('flow.normalizeSteps：补 action 默认、丢弃非法项、保留扩展字�
   if (got[0].op !== 'alt' || got[0].guard !== '[x]' || got[0].divider !== true) throw new Error('扩展字段丢失')
   if (got[1].headline !== true) throw new Error('headline 丢失')
   if ('op' in got[1]) throw new Error('无 op 时不应带 op 字段')
+})
+
+t('flow 渲染：时序容器 .pp-seq-wrap + 编排表 .pp-table + 超 9 步拆分提示 .pp-split-hint', async () => {
+  const ten = Array.from({ length: 10 }, (_, i) => ({ actor: 'A', action: 'call', target: 'B', message: 'm' + i }))
+  const r = await drive('flow', { storage: {
+    listProjects: async () => [{ id: 'p1', name: 'P1' }],
+    getProject: async () => ({ id: 'p1', flow: { name: 'F', steps: ten } }),
+  } })
+  const nodes = collectNodes(r.tree)
+  if (!nodes.some((n) => String(n.props.className || '') === 'pp-seq-wrap')) throw new Error('缺 .pp-seq-wrap')
+  if (!nodes.some((n) => String(n.props.className || '') === 'pp-table')) throw new Error('编排表未使用 .pp-table')
+  if (!nodes.some((n) => String(n.props.className || '').includes('pp-split-hint'))) {
+    throw new Error('10 步时未显示 .pp-split-hint 拆分提示')
+  }
+
+  const few = await drive('flow', { storage: {
+    listProjects: async () => [{ id: 'p1', name: 'P1' }],
+    getProject: async () => ({ id: 'p1', flow: { name: 'F', steps: [{ actor: 'A', action: 'call', target: 'B', message: 'm' }] } }),
+  } })
+  if (collectNodes(few.tree).some((n) => String(n.props.className || '').includes('pp-split-hint'))) {
+    throw new Error('1 步时不应显示拆分提示')
+  }
 })
 
 t('flow.flowPayload：载荷结构 name + 规整 steps', async () => {
@@ -735,6 +963,18 @@ t('import 真接 api：api.import.openapi 缺失报错，存在时接已解析 J
   if (got.length !== 1) throw new Error('import.openapi 调用次数 ' + got.length)
   if (typeof got[0] !== 'object' || got[0].openapi !== '3.0.0') throw new Error('未按已解析 JSON 传入：' + JSON.stringify(got[0]))
   if (!stateTexts(r2.stub).join('|').includes('接口 2 条')) throw new Error('计数摘要缺失')
+})
+
+t('import 渲染：导入导出卡片 .pp-card + 按钮组 .pp-btn + 结果 .pp-pre + 语言 .pp-select', async () => {
+  const r = await drive('import', {
+    storage: { listProjects: async () => [{ id: 'p1', name: 'P1' }], getProject: async () => ({ id: 'p1' }) },
+    export: { markdown: async () => '# doc' },
+  }, null, async (tree) => { await buttonByText(tree, 'Markdown').props.onClick() })
+  const nodes = collectNodes(r.tree)
+  if (!nodes.some((n) => String(n.props.className || '').includes('pp-card'))) throw new Error('缺 .pp-card')
+  if (!nodes.some((n) => n.type === 'button' && String(n.props.className || '').includes('pp-btn'))) throw new Error('按钮未使用 .pp-btn')
+  if (!nodes.some((n) => n.type === 'pre' && String(n.props.className || '').includes('pp-pre'))) throw new Error('结果未使用 .pp-pre')
+  if (!nodes.some((n) => n.type === 'select' && String(n.props.className || '').includes('pp-select'))) throw new Error('语言下拉未使用 .pp-select')
 })
 
 t('import 真接 api：非法 JSON 在页面内报错且不调用 import', async () => {

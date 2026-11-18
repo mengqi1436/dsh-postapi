@@ -12,7 +12,28 @@ import { POSTAPI_NS, zh, en } from './shell/locales.js'
 import { PostApiBody } from './shell/Body.js'
 import { ApiTitle } from './shell/ApiTitle.js'
 import { ensureGlobals, installApi } from './shell/registry.js'
+import designTokensCss from './pages/design-tokens.css'
 import './pages-entry.js'
+
+/**
+ * 把 design-tokens.css 注入页面。
+ *
+ * 宿主 __ModuleLoader__ 只加载 CJS 模块、没有 CSS 入口，样式表必须以文本形式打进产物
+ * 再由 client 自己插 <style>（带 data-plugin 标记，宿主卸载插件时会一并清掉）。
+ * 缺这一步所有 .pp-* 类都不生效，页面退化成无样式裸 HTML。
+ * @returns 卸载函数（移除本插件注入的 style 节点）。
+ */
+function installStyles() {
+  if (typeof document === 'undefined') return () => {}
+  const existing = document.querySelector('style[data-plugin="dsh-postapi"]')
+  if (existing) return () => { existing.remove() }
+  const el = document.createElement('style')
+  el.setAttribute('data-plugin', 'dsh-postapi')
+  el.setAttribute('data-plugin-css', 'design-tokens')
+  el.textContent = designTokensCss
+  document.head.append(el)
+  return () => { el.remove() }
+}
 
 /** 客户端依赖的宿主 face：全部为内置 face（宿主总线不提供插件自定义 face）。 */
 export const inject = ['slots', 'locale', 'sidebarRightTabs']
@@ -46,7 +67,7 @@ function ComposerBadge() {
   return createElement('svg', {
     viewBox: '0 0 64 64', width: 16, height: 16, 'aria-hidden': true,
     style: { display: 'block', pointerEvents: 'none' },
-  }, createElement('path', { d: 'M6 50 L54 26 L6 8 L6 24 L36 26 L6 28 Z', fill: '#247bbf' }))
+  }, createElement('path', { d: 'M6 50 L54 26 L6 8 L6 24 L36 26 L6 28 Z', fill: 'currentColor' }))
 }
 
 /**
@@ -66,6 +87,8 @@ export function apply(ctx) {
   // locale 为内置 face，正常必在；缺失时回落中文原文，不让文案取用拖垮注册链。
   const t = ctx.locale ? ctx.locale.bind(POSTAPI_NS) : (key) => zh[key] ?? key
 
+  // 0. 样式表注入：先于任何注册执行，保证页面首次渲染就带样式。
+  safeEffect(ctx, 'dsh-postapi: design tokens', () => installStyles())
   // 1. 页签类型声明：keepMounted + guide 单入口直开（契约 §4）。
   safeEffect(ctx, 'dsh-postapi: postapi tab type', () => ctx.sidebarRightTabs.register(postapiDefinition(t)))
   // 2. 'postapi' 命名空间字典。

@@ -66,6 +66,34 @@ var zh = {
   "nav.flow": "\u6D41\u7A0B\u56FE",
   "nav.search": "\u641C\u7D22",
   "nav.settings": "\u8BBE\u7F6E",
+  // —— 顶栏（Apifox 工作台骨架 §3）——
+  "topbar.search": "\u5168\u5C40\u641C\u7D22",
+  "topbar.searchPlaceholder": "\u641C\u7D22\u63A5\u53E3 / \u76EE\u5F55 / \u6A21\u578B",
+  "topbar.newEndpoint": "\u65B0\u5EFA\u63A5\u53E3",
+  "topbar.env": "\u73AF\u5883",
+  "topbar.envDefault": "\u9ED8\u8BA4\u73AF\u5883",
+  "topbar.theme": "\u4E3B\u9898",
+  "topbar.themeDark": "\u6DF1\u8272",
+  "topbar.themeLight": "\u6D45\u8272",
+  "topbar.themeHint": "\u5207\u6362\u6D45\u8272 / \u6DF1\u8272\u76AE\u80A4",
+  "topbar.settings": "\u8BBE\u7F6E",
+  // —— 左树 / 右栏 ——
+  "aside.nav": "\u5BFC\u822A",
+  "aside.about": "\u5F53\u524D\u9875\u9762",
+  "aside.shortcuts": "\u5FEB\u6377\u5165\u53E3",
+  "aside.noContext": "\u6682\u65E0\u4E0A\u4E0B\u6587\u4FE1\u606F",
+  "aside.page.overview": "\u9879\u76EE\u603B\u89C8\uFF1A\u9879\u76EE\u5361\u7247\u3001\u6700\u8FD1\u63A5\u53E3\u4E0E\u5FEB\u6377\u5165\u53E3\u3002",
+  "aside.page.doc": "\u63A5\u53E3\u6587\u6863\uFF1A\u76EE\u5F55\u6811\u3001\u53C2\u6570\u8868\u4E0E\u591A\u54CD\u5E94\u793A\u4F8B\u3002",
+  "aside.page.debug": "\u8C03\u8BD5\uFF1A\u7F16\u8F91\u8BF7\u6C42\u5E76\u67E5\u770B\u54CD\u5E94\u4E0E\u8017\u65F6\u3002",
+  "aside.page.mock": "Mock\uFF1A\u542F\u52A8\u672C\u5730 Mock \u670D\u52A1\u5E76\u7EF4\u62A4\u671F\u671B\u54CD\u5E94\u3002",
+  "aside.page.schema": "\u6570\u636E\u6A21\u578B\uFF1AJSON Schema \u5B9A\u4E49\u4E0E\u793A\u4F8B\u751F\u6210\u3002",
+  "aside.page.env": "\u73AF\u5883\uFF1A\u73AF\u5883\u53D8\u91CF\u3001\u5168\u5C40\u53D8\u91CF\u4E0E\u5BC6\u94A5\u3002",
+  "aside.page.history": "\u5386\u53F2\uFF1A\u8C03\u8BD5\u8BF7\u6C42\u8BB0\u5F55\u4E0E\u56DE\u653E\u3002",
+  "aside.page.test": "\u6D4B\u8BD5\uFF1A\u7528\u4F8B\u3001\u573A\u666F\u4E0E\u65AD\u8A00\u7ED3\u679C\u3002",
+  "aside.page.import": "\u5BFC\u5165\u5BFC\u51FA\uFF1AOpenAPI / Postman / HAR / cURL\u3002",
+  "aside.page.flow": "\u6D41\u7A0B\u56FE\uFF1A\u63A5\u53E3\u8C03\u7528\u987A\u5E8F\u4E0E\u65F6\u5E8F\u3002",
+  "aside.page.search": "\u641C\u7D22\uFF1A\u6309\u5173\u952E\u5B57\u68C0\u7D22\u63A5\u53E3\u3001\u76EE\u5F55\u4E0E\u6A21\u578B\u3002",
+  "aside.page.settings": "\u8BBE\u7F6E\uFF1A\u4E3B\u9898\u3001\u8BED\u8A00\u4E0E\u9879\u76EE\u53C2\u6570\u3002",
   "placeholder.title": "\u9875\u9762\u672A\u6CE8\u518C",
   "placeholder.body": "\u8BE5\u9875\u9762\u5C1A\u672A\u6CE8\u518C\uFF1A\u9875\u9762\u7531 src/client/pages/ \u81EA\u6CE8\u518C\uFF08window.__postapiPages.register\uFF09\u3002",
   "placeholder.hint": "\u9875\u9762\u6CE8\u518C\u540E\u6B64\u5904\u6E32\u67D3\u5BF9\u5E94\u5185\u5BB9\u3002",
@@ -87,6 +115,32 @@ var en = {
   "nav.flow": "Flow",
   "nav.search": "Search",
   "nav.settings": "Settings",
+  "topbar.search": "Global search",
+  "topbar.searchPlaceholder": "Search endpoints / folders / schemas",
+  "topbar.newEndpoint": "New endpoint",
+  "topbar.env": "Environment",
+  "topbar.envDefault": "Default env",
+  "topbar.theme": "Theme",
+  "topbar.themeDark": "Dark",
+  "topbar.themeLight": "Light",
+  "topbar.themeHint": "Toggle light / dark skin",
+  "topbar.settings": "Settings",
+  "aside.nav": "Navigation",
+  "aside.about": "This page",
+  "aside.shortcuts": "Shortcuts",
+  "aside.noContext": "No context for this page",
+  "aside.page.overview": "Project overview: cards, recent endpoints and shortcuts.",
+  "aside.page.doc": "Endpoint doc: tree, parameter tables and response examples.",
+  "aside.page.debug": "Debug: edit a request and inspect the response.",
+  "aside.page.mock": "Mock: start the local mock server and maintain expectations.",
+  "aside.page.schema": "Schemas: JSON Schema definitions and example generation.",
+  "aside.page.env": "Environments: env vars, globals and secrets.",
+  "aside.page.history": "History: debug request records and replay.",
+  "aside.page.test": "Tests: cases, scenarios and assertion results.",
+  "aside.page.import": "Import/Export: OpenAPI / Postman / HAR / cURL.",
+  "aside.page.flow": "Flow: endpoint call order and timing.",
+  "aside.page.search": "Search: keyword lookup across endpoints, folders and schemas.",
+  "aside.page.settings": "Settings: theme, language and project options.",
   "placeholder.title": "Page not registered",
   "placeholder.body": "This page is not registered yet: pages self-register from src/client/pages/ (window.__postapiPages.register).",
   "placeholder.hint": "The page renders here once registered.",
@@ -624,6 +678,8 @@ function installApi() {
 }
 
 // src/client/shell/Body.js
+var THEME_KEY = "postapi.settings.theme";
+var ENV_KEY = "postapi.settings.env";
 var ROUTES = [
   { name: "overview", hash: "#/overview", labelKey: "nav.overview" },
   { name: "doc", hash: "#/doc", labelKey: "nav.doc" },
@@ -639,9 +695,16 @@ var ROUTES = [
   { name: "settings", hash: "#/settings", labelKey: "nav.settings" }
 ];
 var PARAM_ROUTES = ["doc", "schema"];
-function parseHash() {
-  const raw = typeof location !== "undefined" ? location.hash : "";
-  const clean = String(raw || "#/overview").replace(/^#\/?/, "");
+var TWO_COL_ROUTES = ["debug", "mock"];
+var SHORTCUTS = [
+  { name: "debug", hash: "#/debug", labelKey: "nav.debug" },
+  { name: "doc", hash: "#/doc", labelKey: "nav.doc" },
+  { name: "test", hash: "#/test", labelKey: "nav.test" },
+  { name: "settings", hash: "#/settings", labelKey: "nav.settings" }
+];
+function parseHash(raw) {
+  const source = raw === void 0 ? typeof location !== "undefined" ? location.hash : "" : raw;
+  const clean = String(source || "#/overview").replace(/^#\/?/, "");
   const qAt = clean.indexOf("?");
   const pathPart = qAt >= 0 ? clean.slice(0, qAt) : clean;
   const query = qAt >= 0 ? clean.slice(qAt + 1) : "";
@@ -652,86 +715,197 @@ function parseHash() {
   if (ROUTES.some((r) => r.name === first)) return { name: first, arg: "", query };
   return { name: "overview", arg: "", query };
 }
+function routeHref(item, route) {
+  if (PARAM_ROUTES.indexOf(item.name) >= 0 && route && route.arg) {
+    return item.hash + "/" + encodeURIComponent(route.arg);
+  }
+  return item.hash;
+}
+function searchHash(keyword) {
+  const q = String(keyword === void 0 || keyword === null ? "" : keyword).trim();
+  return q === "" ? "#/search" : "#/search?q=" + encodeURIComponent(q);
+}
+function readSetting(key, fallback) {
+  try {
+    if (typeof localStorage === "undefined") return fallback;
+    const value = localStorage.getItem(key);
+    return value === null || value === void 0 || value === "" ? fallback : value;
+  } catch {
+    return fallback;
+  }
+}
+function writeSetting(key, value) {
+  try {
+    if (typeof localStorage !== "undefined") localStorage.setItem(key, value);
+  } catch {
+  }
+}
+function nextTheme(theme) {
+  return theme === "dark" ? "light" : "dark";
+}
+function syncTheme(theme) {
+  if (typeof document === "undefined" || typeof document.querySelectorAll !== "function") return;
+  const nodes = document.querySelectorAll(".pp-scope");
+  for (const el of nodes) {
+    if (el && typeof el.setAttribute === "function") el.setAttribute("data-theme", theme);
+  }
+}
 function useHashRoute() {
-  const [route, setRoute] = (0, import_react3.useState)(parseHash);
+  const [route, setRoute] = (0, import_react3.useState)(() => parseHash());
   (0, import_react3.useEffect)(() => {
     const onChange = () => setRoute(parseHash());
-    window.addEventListener("hashchange", onChange);
-    return () => window.removeEventListener("hashchange", onChange);
+    if (typeof window !== "undefined" && typeof window.addEventListener === "function") {
+      window.addEventListener("hashchange", onChange);
+      return () => window.removeEventListener("hashchange", onChange);
+    }
+    return void 0;
   }, []);
   return route;
 }
 function Placeholder({ route }) {
-  return /* @__PURE__ */ (0, import_react.createElement)("div", { style: { padding: 24, fontSize: 13, lineHeight: 1.45, color: "#666" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { style: { fontWeight: 600, marginBottom: 8, color: "#000" } }, zh["placeholder.title"], ": ", route.name, route.arg ? "/" + route.arg : ""), /* @__PURE__ */ (0, import_react.createElement)("div", null, zh["placeholder.body"]), /* @__PURE__ */ (0, import_react.createElement)("div", { style: { marginTop: 8 } }, zh["placeholder.hint"]));
+  const title = zh["placeholder.title"] + ": " + route.name + (route.arg ? "/" + route.arg : "");
+  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-page" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-empty" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, title), /* @__PURE__ */ (0, import_react.createElement)("div", null, zh["placeholder.body"]), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-meta" }, zh["placeholder.hint"])));
+}
+function ContextAside({ route }) {
+  const about = zh["aside.page." + route.name];
+  return /* @__PURE__ */ (0, import_react.createElement)("aside", { className: "pp-col pp-col-right pp-toc", "aria-label": zh["aside.about"] }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tree-group" }, zh["aside.about"]), about ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, about) : /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-empty" }, zh["aside.noContext"]), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tree-group" }, zh["aside.shortcuts"]), SHORTCUTS.map((item) => /* @__PURE__ */ (0, import_react.createElement)("a", { key: item.name, className: "pp-toc-item", href: item.hash }, zh[item.labelKey])));
 }
 function PostApiBody({ useTabInfo }) {
   const route = useHashRoute();
+  const [theme, setTheme] = (0, import_react3.useState)(() => readSetting(THEME_KEY, "light"));
+  const [env, setEnv] = (0, import_react3.useState)(() => readSetting(ENV_KEY, ""));
+  const [keyword, setKeyword] = (0, import_react3.useState)("");
   const Page = pageRegistry.get(route.name);
-  const navStyle = {
-    display: "flex",
-    gap: 4,
-    padding: "6px 10px",
-    borderBottom: "1px solid #eaeaea",
-    flexWrap: "wrap",
-    position: "sticky",
-    top: 0,
-    background: "#ffffff",
-    zIndex: 2
+  const active = ROUTES.find((r) => r.name === route.name) || ROUTES[0];
+  const twoCol = TWO_COL_ROUTES.indexOf(route.name) >= 0;
+  const api = typeof window !== "undefined" ? window.__postapiApi : void 0;
+  const toggleTheme = () => {
+    const next = nextTheme(theme);
+    writeSetting(THEME_KEY, next);
+    syncTheme(next);
+    setTheme(next);
   };
-  const linkStyle = {
-    padding: "0 8px",
-    height: 24,
-    display: "inline-flex",
-    alignItems: "center",
-    borderRadius: 6,
-    fontSize: 12,
-    lineHeight: "24px",
-    textDecoration: "none",
-    color: "#666"
+  const pickEnv = (event) => {
+    const value = event && event.target ? event.target.value : "";
+    writeSetting(ENV_KEY, value);
+    setEnv(value);
   };
-  return /* @__PURE__ */ (0, import_react.createElement)("div", { style: { display: "flex", flexDirection: "column", height: "100%", minHeight: 0 } }, /* @__PURE__ */ (0, import_react.createElement)("nav", { style: navStyle }, ROUTES.map((item) => /* @__PURE__ */ (0, import_react.createElement)(
+  const goto = (hash) => {
+    if (typeof location !== "undefined") location.hash = hash;
+  };
+  const onSearchKey = (event) => {
+    if (!event || event.key !== "Enter") return;
+    const q = String(keyword === void 0 || keyword === null ? "" : keyword).trim();
+    if (q === "") return;
+    goto(searchHash(q));
+  };
+  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-workbench", "data-theme": theme, "data-route": route.name }, /* @__PURE__ */ (0, import_react.createElement)("header", { className: "pp-topbar" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-topbar-title" }, zh[active.labelKey]), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-topbar-spacer" }), /* @__PURE__ */ (0, import_react.createElement)(
+    "input",
+    {
+      className: "pp-input pp-input-sm",
+      type: "search",
+      value: keyword,
+      placeholder: zh["topbar.searchPlaceholder"],
+      "aria-label": zh["topbar.search"],
+      style: { width: "var(--nav-w)" },
+      onChange: (event) => setKeyword(event.target.value),
+      onKeyDown: onSearchKey
+    }
+  ), /* @__PURE__ */ (0, import_react.createElement)(
+    "button",
+    {
+      className: "pp-btn pp-btn-sm pp-btn-primary",
+      type: "button",
+      onClick: () => goto("#/doc")
+    },
+    zh["topbar.newEndpoint"]
+  ), /* @__PURE__ */ (0, import_react.createElement)(
+    "select",
+    {
+      className: "pp-select",
+      value: env,
+      onChange: pickEnv,
+      title: zh["topbar.env"],
+      "aria-label": zh["topbar.env"]
+    },
+    /* @__PURE__ */ (0, import_react.createElement)("option", { value: "" }, zh["topbar.envDefault"])
+  ), /* @__PURE__ */ (0, import_react.createElement)(
+    "button",
+    {
+      className: "pp-btn pp-btn-sm pp-btn-ghost",
+      type: "button",
+      onClick: toggleTheme,
+      title: zh["topbar.themeHint"]
+    },
+    theme === "dark" ? zh["topbar.themeLight"] : zh["topbar.themeDark"]
+  ), /* @__PURE__ */ (0, import_react.createElement)(
+    "button",
+    {
+      className: "pp-btn pp-btn-sm pp-btn-ghost",
+      type: "button",
+      onClick: () => goto("#/settings")
+    },
+    zh["topbar.settings"]
+  )), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tabs", role: "tablist", "aria-label": zh["aside.nav"] }, ROUTES.map((item) => /* @__PURE__ */ (0, import_react.createElement)(
+    "button",
+    {
+      key: item.name,
+      type: "button",
+      className: "pp-tab",
+      role: "tab",
+      "data-active": route.name === item.name ? "true" : "false",
+      "aria-selected": route.name === item.name ? "true" : "false",
+      onClick: () => goto(routeHref(item, route))
+    },
+    zh[item.labelKey]
+  ))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: twoCol ? "pp-body-2col" : "pp-body-3col" }, /* @__PURE__ */ (0, import_react.createElement)("nav", { className: "pp-col pp-col-left pp-tree", "aria-label": zh["aside.nav"] }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tree-group" }, zh["aside.nav"]), ROUTES.map((item) => /* @__PURE__ */ (0, import_react.createElement)(
     "a",
     {
       key: item.name,
-      href: item.name === "doc" && route.arg ? "#/doc/" + encodeURIComponent(route.arg) : item.hash,
-      style: { ...linkStyle, fontWeight: route.name === item.name ? 600 : 400, color: route.name === item.name ? "#000" : "#666", background: route.name === item.name ? "#f5f5f5" : "transparent" }
+      className: "pp-tree-row",
+      href: routeHref(item, route),
+      "data-active": route.name === item.name ? "true" : "false"
     },
     zh[item.labelKey]
-  ))), /* @__PURE__ */ (0, import_react.createElement)("div", { style: { flex: 1, minHeight: 0, overflow: "auto" } }, Page ? /* @__PURE__ */ (0, import_react.createElement)(Page, { route, api: typeof window !== "undefined" ? window.__postapiApi : void 0 }) : /* @__PURE__ */ (0, import_react.createElement)(Placeholder, { route })));
+  ))), /* @__PURE__ */ (0, import_react.createElement)("main", { className: "pp-main" }, Page ? /* @__PURE__ */ (0, import_react.createElement)(Page, { route, api }) : /* @__PURE__ */ (0, import_react.createElement)(Placeholder, { route })), twoCol ? null : /* @__PURE__ */ (0, import_react.createElement)(ContextAside, { route })));
 }
 
 // src/client/shell/ApiTitle.js
 function ApiTitle({ useTabInfo }) {
   const { tab } = useTabInfo();
-  return /* @__PURE__ */ (0, import_react.createElement)("span", { style: { display: "inline-flex", alignItems: "center", gap: 6 } }, /* @__PURE__ */ (0, import_react.createElement)(
+  return /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-topbar-title", style: { display: "inline-flex", alignItems: "center", gap: "var(--sp-1)" } }, /* @__PURE__ */ (0, import_react.createElement)(
     "svg",
     {
       viewBox: "0 0 64 64",
       width: 14,
       height: 14,
       "aria-hidden": "true",
+      className: "pp-accent",
       style: { display: "block", flexShrink: 0 }
     },
     /* @__PURE__ */ (0, import_react.createElement)("path", { d: "M6 50 L54 26 L6 8 L6 24 L36 26 L6 28 Z", fill: "currentColor" })
-  ), /* @__PURE__ */ (0, import_react.createElement)("span", null, tab.title));
+  ), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ellipsis" }, tab.title));
 }
+
+// src/client/pages/design-tokens.css
+var design_tokens_default = '/* ============================================================\n   dsh-postapi \u8BBE\u8BA1 token \u2014 Apifox 2.8.55 \u590D\u523B\n   \u4F9D\u636E docs/apifox-design-spec.md\uFF08165 \u4E2A CSS chunk \u7EDF\u8BA1\uFF09\n   \u5C3A\u5BF8\u7EDF\u4E00\u5728 token \u5C42\uFF1A\u63A7\u4EF6 --ctl-h / \u8868\u884C --row-h / \u80F6\u56CA --pill-h\n   \u9875\u9762\u6837\u5F0F\u6240\u6709\u9AD8\u5EA6\u58F0\u660E\u5FC5\u987B\u5F15\u7528\u4E0A\u8FF0 token\uFF08__tests__/heights.test.js \u9759\u6001\u68C0\u67E5\uFF09\n   \u5BC6\u5EA6\u57FA\u8C03\uFF1AApifox \u5DE5\u4F5C\u53F0\u2014\u20141px \u8FB9\u6846\u5206\u533A\u3001\u5361\u7247\u5316\u3001\u6D6E\u5C42\u624D\u6295\u9634\u5F71\n   ============================================================ */\n\n.pp-scope {\n  /* \u2014\u2014 \u5B57\u4F53\uFF08Apifox: -apple-system,"BlinkMacSystemFont","Segoe UI",roboto,...\uFF09\u2014\u2014 */\n  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;\n  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;\n\n  /* \u2014\u2014 \u5B57\u9636\uFF0812/13/14/16/20/24\uFF0CApifox \u9AD8\u9891\u503C\uFF09\u2014\u2014 */\n  --fs-12: 12px;\n  --fs-13: 13px;\n  --fs-14: 14px;\n  --fs-16: 16px;\n  --fs-20: 20px;\n  --fs-24: 24px;\n  --fw-regular: 400;\n  --fw-medium: 500;\n  --fw-semibold: 600;\n\n  /* \u2014\u2014 \u884C\u9AD8\uFF08Apifox \u56FA\u5B9A\u503C\uFF0C\u4E0D\u7528\u500D\u6570\uFF09\u2014\u2014 */\n  /* \u56FE\u8868\u4E13\u7528\u5B57\u9636\uFF1ASVG \u91CC\u7684\u5C0F\u5B57\uFF08\u56FE\u4F8B/\u6807\u8BB0\uFF09\u6BD4\u6B63\u6587\u66F4\u5C0F\uFF0C\u4F46\u4ECD\u8D70 token \u4E0D\u5199\u5B57\u9762\u91CF */\n  --fs-chart: 10px;\n  --lh-18: 18px;\n  --lh-20: 20px;\n  --lh-22: 22px;\n  --lh-24: 24px;\n\n  /* \u2014\u2014 \u5C3A\u5BF8\u7EDF\u4E00 token \u2014\u2014 */\n  --ctl-h: 32px;\n  --ctl-h-sm: 24px;\n  --ctl-h-lg: 40px;\n  --row-h: 36px;\n  --pill-h: 22px;\n  --topbar-h: 48px;\n  --nav-w: 240px;\n  --toc-w: 240px;\n  --card-pad: 16px;\n  --popover-w: 400px;\n  --scrollbar: 6px;\n\n  /* \u2014\u2014 \u56FE\u6807\u5C3A\u5BF8 \u2014\u2014 */\n  --icon-sm: 14px;\n  --icon: 16px;\n  --icon-lg: 20px;\n  --icon-xl: 24px;\n\n  /* \u2014\u2014 \u95F4\u8DDD\u523B\u5EA6 4/8/12/16/20/24 \u2014\u2014 */\n  --sp-1: 4px;\n  --sp-2: 8px;\n  --sp-3: 12px;\n  --sp-4: 16px;\n  --sp-5: 20px;\n  --sp-6: 24px;\n\n  /* \u2014\u2014 \u5706\u89D2\uFF1A4/6/8/12/\u5168\u5706 \u2014\u2014 */\n  --radius-sm: 4px;\n  --radius-ctl: 6px;\n  --radius-card: 8px;\n  --radius-lg: 12px;\n  --radius-pill: 999px;\n\n  /* \u2014\u2014 light \u76AE\u80A4\uFF08Apifox \u9AD8\u9891\u8272\uFF09\u2014\u2014 */\n  --bg-app: #f9fafb;\n  --bg-surface: #ffffff;\n  --bg-subtle: #f2f4f7;\n  --bg-hover: #f2f4f7;\n  --bg-selected: #f4f1fe;\n  --bg-stripe: #f5f5f5;\n  --fg: #344054;\n  --fg-strong: #101828;\n  --fg-secondary: #667085;\n  --fg-tertiary: #98a2b3;\n  --fg-on-accent: #ffffff;\n  --border: #eaecf0;\n  --border-strong: #d0d5dd;\n  --accent: #9373ee;\n  --accent-hover: #8276c9;\n  --accent-tint: rgba(147, 115, 238, 0.10);\n  --link: #6172f3;\n  --info: #2e90fa;\n  --success: #17b26a;\n  --warning: #f79009;\n  --error: #f04438;\n  --shadow-popover: 0 4px 16px rgba(16, 24, 40, 0.08);\n\n  /* \u2014\u2014 \u65B9\u6CD5\u5FBD\u6807\uFF08\u767D\u5B57\u5F69\u5E95\uFF0Cmono 12px \u7C97\u4F53\uFF09\u2014\u2014 */\n  --method-fs: 12px;\n  --method-get: #17b26a;\n  --method-post: #2e90fa;\n  --method-put: #f79009;\n  --method-delete: #f04438;\n  --method-patch: #ee46bc;\n  --method-other: #06aed4;\n}\n\n.pp-scope[data-theme="dark"] {\n  --bg-app: #101828;\n  --bg-surface: #1d2939;\n  --bg-subtle: #1d2939;\n  --bg-hover: #26334a;\n  --bg-selected: #2b2647;\n  --bg-stripe: #232f42;\n  --fg: #f9fafb;\n  --fg-strong: #ffffff;\n  --fg-secondary: #98a2b3;\n  --fg-tertiary: #667085;\n  --border: #344054;\n  --border-strong: #475467;\n  --accent-tint: rgba(147, 115, 238, 0.18);\n  --shadow-popover: 0 4px 16px rgba(0, 0, 0, 0.4);\n}\n\n/* \u2014\u2014 \u57FA\u7840 \u2014\u2014 */\n.pp-scope,\n.pp-scope * {\n  box-sizing: border-box;\n}\n.pp-scope {\n  font-family: var(--font-sans);\n  font-size: var(--fs-14);\n  line-height: var(--lh-22);\n  color: var(--fg);\n  background: var(--bg-app);\n}\n.pp-scope ::-webkit-scrollbar {\n  width: var(--scrollbar);\n  /* \u6EDA\u52A8\u6761\u9AD8\u5EA6\u4E0E\u5BBD\u5EA6\u540C\u6E90\uFF1A\u7528 calc \u5305\u4E00\u5C42\uFF0C\u9AD8\u5EA6\u7EAA\u5F8B\u68C0\u67E5\u53EA\u63A5\u53D7 token \u8868\u8FBE\u5F0F */\n  height: calc(var(--scrollbar) * 1);\n}\n.pp-scope ::-webkit-scrollbar-thumb {\n  background: var(--border-strong);\n  border-radius: var(--radius-pill);\n}\n\n/* \u2014\u2014 \u5DE5\u4F5C\u53F0\u9AA8\u67B6\uFF1A\u9876\u680F + \u4E09\u6BB5\u5F0F \u2014\u2014 */\n.pp-workbench {\n  display: grid;\n  grid-template-rows: var(--topbar-h) minmax(0, 1fr);\n  height: 100%;\n  min-height: 0;\n}\n.pp-topbar {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  height: var(--topbar-h);\n  padding: 0 var(--sp-4);\n  background: var(--bg-surface);\n  border-bottom: 1px solid var(--border);\n}\n.pp-topbar-title {\n  font-size: var(--fs-14);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-strong);\n  white-space: nowrap;\n}\n.pp-topbar-spacer {\n  flex: 1;\n}\n.pp-topbar-search {\n  width: var(--nav-w);\n  flex: none;\n}\n.pp-body-3col {\n  display: grid;\n  grid-template-columns: var(--nav-w) minmax(0, 1fr) var(--toc-w);\n  min-height: 0;\n}\n.pp-body-2col {\n  display: grid;\n  grid-template-columns: var(--nav-w) minmax(0, 1fr);\n  min-height: 0;\n}\n.pp-col {\n  min-width: 0;\n  min-height: 0;\n  overflow: auto;\n  background: var(--bg-surface);\n}\n.pp-col-left {\n  border-right: 1px solid var(--border);\n}\n.pp-col-right {\n  border-left: 1px solid var(--border);\n}\n.pp-main {\n  min-width: 0;\n  min-height: 0;\n  overflow: auto;\n  background: var(--bg-surface);\n}\n\n/* \u2014\u2014 \u9875\u9762\u9AA8\u67B6 \u2014\u2014 */\n.pp-page {\n  padding: var(--sp-5) var(--sp-6);\n  min-height: 100%;\n}\n.pp-page-flush {\n  padding: 0;\n  height: 100%;\n  min-height: 0;\n}\n.pp-page-title {\n  font-size: var(--fs-20);\n  line-height: var(--lh-24);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-strong);\n  margin: 0 0 var(--sp-3) 0;\n}\n.pp-muted {\n  color: var(--fg-secondary);\n}\n.pp-faint {\n  color: var(--fg-tertiary);\n}\n\n/* \u2014\u2014 \u5361\u7247\uFF1A1px \u8FB9\u6846\u30018px \u5706\u89D2\u300116px \u5185\u8FB9\u8DDD\u3001\u65E0\u9634\u5F71 \u2014\u2014 */\n.pp-card {\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  padding: var(--card-pad);\n}\n.pp-card-title {\n  font-size: var(--fs-14);\n  line-height: var(--lh-22);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-strong);\n  margin: 0 0 var(--sp-2) 0;\n}\n.pp-card-hover:hover {\n  border-color: var(--accent);\n  box-shadow: var(--shadow-popover);\n}\n\n/* \u2014\u2014 \u63A7\u4EF6\uFF1A\u9AD8\u5EA6\u4E00\u5F8B var(--ctl-h) \u2014\u2014 */\n.pp-btn {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  gap: var(--sp-1);\n  height: var(--ctl-h);\n  padding: 0 var(--sp-4);\n  font-family: var(--font-sans);\n  font-size: var(--fs-14);\n  line-height: var(--lh-22);\n  color: var(--fg);\n  background: var(--bg-surface);\n  border: 1px solid var(--border-strong);\n  border-radius: var(--radius-ctl);\n  cursor: pointer;\n  white-space: nowrap;\n}\n.pp-btn:hover {\n  border-color: var(--accent);\n  color: var(--accent);\n}\n.pp-btn:disabled {\n  color: var(--fg-tertiary);\n  border-color: var(--border);\n  cursor: not-allowed;\n}\n.pp-btn-primary {\n  color: var(--fg-on-accent);\n  background: var(--accent);\n  border-color: var(--accent);\n}\n.pp-btn-primary:hover {\n  color: var(--fg-on-accent);\n  background: var(--accent-hover);\n  border-color: var(--accent-hover);\n}\n.pp-btn-primary:disabled {\n  color: var(--fg-on-accent);\n  background: var(--border-strong);\n  border-color: var(--border-strong);\n}\n.pp-btn-sm {\n  height: var(--ctl-h-sm);\n  padding: 0 var(--sp-2);\n  font-size: var(--fs-12);\n}\n.pp-btn-ghost {\n  border-color: transparent;\n  background: transparent;\n}\n.pp-btn-ghost:hover {\n  background: var(--bg-hover);\n  border-color: transparent;\n  color: var(--fg);\n}\n.pp-btn-danger:hover {\n  border-color: var(--error);\n  color: var(--error);\n}\n\n.pp-input,\n.pp-select {\n  height: var(--ctl-h);\n  padding: 0 var(--sp-3);\n  font-family: var(--font-sans);\n  font-size: var(--fs-14);\n  line-height: var(--lh-22);\n  color: var(--fg);\n  background: var(--bg-surface);\n  border: 1px solid var(--border-strong);\n  border-radius: var(--radius-ctl);\n  min-width: 0;\n}\n.pp-input::placeholder {\n  color: var(--fg-tertiary);\n}\n.pp-input:focus,\n.pp-select:focus,\n.pp-btn:focus-visible {\n  outline: none;\n  border-color: var(--accent);\n  box-shadow: 0 0 0 2px var(--accent-tint);\n}\n.pp-input-mono {\n  font-family: var(--font-mono);\n  font-size: var(--fs-13);\n}\n.pp-input-sm {\n  height: var(--ctl-h-sm);\n  font-size: var(--fs-12);\n  padding: 0 var(--sp-2);\n}\n\n/* \u2014\u2014 \u8868\u683C\uFF1A\u884C\u9AD8\u4E00\u5F8B var(--row-h) \u2014\u2014 */\n.pp-table {\n  width: 100%;\n  border-collapse: collapse;\n  font-size: var(--fs-14);\n}\n.pp-table th {\n  height: var(--row-h);\n  padding: 0 var(--sp-2);\n  text-align: left;\n  font-weight: var(--fw-medium);\n  font-size: var(--fs-13);\n  color: var(--fg-secondary);\n  background: var(--bg-subtle);\n  border-bottom: 1px solid var(--border);\n  white-space: nowrap;\n}\n.pp-table td {\n  height: var(--row-h);\n  padding: 0 var(--sp-2);\n  border-bottom: 1px solid var(--border);\n  /* Apifox \u8868\u683C\u4E0D\u6298\u884C\uFF1A\u7A84\u5BB9\u5668\u91CC\u9760\u6A2A\u5411\u6EDA\u52A8\uFF0C\u4E2D\u6587\u9010\u5B57\u65AD\u884C\u4F1A\u628A\u300C\u67E5\u8BE2\u300D\u7AD6\u6392 */\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  max-width: 0;\n}\n.pp-table tbody tr:hover {\n  background: var(--bg-hover);\n}\n.pp-table tbody tr[data-active="true"] {\n  background: var(--bg-selected);\n}\n.pp-table-mono {\n  font-family: var(--font-mono);\n  font-size: var(--fs-13);\n}\n\n/* \u2014\u2014 \u80F6\u56CA / \u65B9\u6CD5\u5FBD\u6807\uFF1A\u9AD8\u5EA6\u4E00\u5F8B var(--pill-h) \u2014\u2014 */\n.pp-pill {\n  display: inline-flex;\n  align-items: center;\n  height: var(--pill-h);\n  padding: 0 var(--sp-2);\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-secondary);\n  border: 1px solid var(--border-strong);\n  border-radius: var(--radius-pill);\n  white-space: nowrap;\n}\n.pp-pill-ok {\n  color: var(--success);\n  border-color: var(--success);\n}\n.pp-pill-warn {\n  color: var(--warning);\n  border-color: var(--warning);\n}\n.pp-pill-bad {\n  color: var(--error);\n  border-color: var(--error);\n}\n.pp-pill-accent {\n  color: var(--accent);\n  border-color: var(--accent);\n}\n.pp-method {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  height: var(--pill-h);\n  min-width: 44px;\n  padding: 0 var(--sp-2);\n  font-family: var(--font-mono);\n  font-size: var(--method-fs);\n  font-weight: var(--fw-semibold);\n  line-height: var(--lh-18);\n  letter-spacing: 0.02em;\n  text-transform: uppercase;\n  color: var(--fg-on-accent);\n  background: var(--fg-tertiary);\n  border: none;\n  border-radius: var(--radius-sm);\n}\n.pp-method[data-method="GET"] { background: var(--method-get); }\n.pp-method[data-method="POST"] { background: var(--method-post); }\n.pp-method[data-method="PUT"] { background: var(--method-put); }\n.pp-method[data-method="DELETE"] { background: var(--method-delete); }\n.pp-method[data-method="PATCH"] { background: var(--method-patch); }\n.pp-method[data-method="HEAD"],\n.pp-method[data-method="OPTIONS"],\n.pp-method[data-method="TRACE"] { background: var(--method-other); }\n\n/* \u2014\u2014 \u9875\u7B7E\u6761 + \u9875\u7B7E \u2014\u2014 */\n.pp-tabs {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-1);\n  height: var(--ctl-h-lg);\n  padding: 0 var(--sp-3);\n  background: var(--bg-surface);\n  border-bottom: 1px solid var(--border);\n}\n.pp-tab {\n  display: inline-flex;\n  align-items: center;\n  height: var(--ctl-h);\n  padding: 0 var(--sp-3);\n  font-family: var(--font-sans);\n  font-size: var(--fs-14);\n  color: var(--fg-secondary);\n  background: transparent;\n  border: none;\n  border-bottom: 2px solid transparent;\n  cursor: pointer;\n}\n.pp-tab:hover {\n  color: var(--fg);\n}\n.pp-tab[data-active="true"] {\n  color: var(--accent);\n  font-weight: var(--fw-medium);\n  border-bottom-color: var(--accent);\n}\n\n/* \u2014\u2014 \u5206\u6BB5\u63A7\u4EF6 \u2014\u2014 */\n.pp-seg {\n  display: inline-flex;\n  border: 1px solid var(--border-strong);\n  border-radius: var(--radius-ctl);\n  overflow: hidden;\n}\n.pp-seg > button {\n  height: var(--ctl-h-sm);\n  padding: 0 var(--sp-3);\n  font-family: var(--font-sans);\n  font-size: var(--fs-13);\n  color: var(--fg-secondary);\n  background: var(--bg-surface);\n  border: none;\n  border-right: 1px solid var(--border);\n  cursor: pointer;\n}\n.pp-seg > button:last-child {\n  border-right: none;\n}\n.pp-seg > button[data-active="true"] {\n  color: var(--accent);\n  background: var(--accent-tint);\n  font-weight: var(--fw-medium);\n}\n\n/* \u2014\u2014 \u5DE6\u6811 \u2014\u2014 */\n.pp-tree {\n  padding: var(--sp-2);\n}\n.pp-tree-row {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  height: var(--ctl-h);\n  padding: 0 var(--sp-2);\n  font-size: var(--fs-14);\n  color: var(--fg);\n  /* \u5DE6\u6811\u6761\u76EE\u5728\u9AA8\u67B6\u91CC\u662F <a>\uFF1A\u5FC5\u987B\u663E\u5F0F\u53BB\u6389\u94FE\u63A5\u4E0B\u5212\u7EBF\u4E0E\u7EE7\u627F\u8272\uFF0C\u5426\u5219\u6574\u5217\u90FD\u662F\u5E26\u4E0B\u5212\u7EBF\u7684\u94FE\u63A5 */\n  text-decoration: none;\n  border-radius: var(--radius-ctl);\n  cursor: pointer;\n  white-space: nowrap;\n  overflow: hidden;\n}\n.pp-tree-row:hover {\n  background: var(--bg-hover);\n}\n.pp-tree-row[data-active="true"] {\n  background: var(--bg-selected);\n  color: var(--accent);\n  font-weight: var(--fw-medium);\n}\n.pp-tree-row-count {\n  margin-left: auto;\n  font-size: var(--fs-12);\n  color: var(--fg-tertiary);\n}\n.pp-tree-group {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-1);\n  height: var(--ctl-h-sm);\n  padding: 0 var(--sp-2);\n  margin-top: var(--sp-2);\n  font-size: var(--fs-12);\n  font-weight: var(--fw-medium);\n  color: var(--fg-tertiary);\n  text-transform: none;\n}\n\n/* \u2014\u2014 \u53F3 TOC \u2014\u2014 */\n.pp-toc {\n  padding: var(--sp-3);\n}\n.pp-toc-item {\n  display: block;\n  height: var(--ctl-h-sm);\n  line-height: var(--ctl-h-sm);\n  padding: 0 var(--sp-2);\n  font-size: var(--fs-13);\n  color: var(--fg-secondary);\n  text-decoration: none;\n  border-left: 2px solid transparent;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.pp-toc-item:hover {\n  color: var(--fg);\n}\n.pp-toc-item[data-active="true"] {\n  color: var(--accent);\n  border-left-color: var(--accent);\n}\n\n/* \u2014\u2014 \u6587\u6863\u6B63\u6587\u5206\u533A \u2014\u2014 */\n.pp-doc-section {\n  padding-top: var(--sp-4);\n  margin-top: var(--sp-4);\n  border-top: 1px solid var(--border);\n}\n.pp-doc-section:first-child {\n  padding-top: 0;\n  margin-top: 0;\n  border-top: none;\n}\n.pp-doc-h1 {\n  font-size: var(--fs-20);\n  line-height: var(--lh-24);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-strong);\n  margin: 0 0 var(--sp-2) 0;\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n}\n.pp-doc-h2 {\n  font-size: var(--fs-16);\n  line-height: var(--lh-24);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-strong);\n  margin: 0 0 var(--sp-2) 0;\n}\n.pp-doc-h3 {\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-secondary);\n  margin: 0 0 var(--sp-1) 0;\n}\n\n/* \u2014\u2014 \u5DE5\u5177\u6761 \u2014\u2014 */\n.pp-toolbar {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  flex-wrap: wrap;\n  margin-bottom: var(--sp-3);\n}\n.pp-toolbar-inline {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  flex-wrap: wrap;\n}\n.pp-toolbar-spacer {\n  flex: 1;\n}\n\n/* \u2014\u2014 \u53CC\u680F / \u5B57\u6BB5\u884C \u2014\u2014 */\n.pp-cols-2 {\n  display: grid;\n  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);\n  gap: var(--sp-4);\n  align-items: start;\n}\n.pp-field {\n  display: grid;\n  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.6fr) auto auto;\n  gap: var(--sp-2);\n  align-items: center;\n  min-height: var(--ctl-h);\n}\n.pp-field-head {\n  font-size: var(--fs-12);\n  color: var(--fg-tertiary);\n  border-bottom: 1px solid var(--border);\n}\n.pp-form-row {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-3);\n  min-height: var(--ctl-h);\n  margin-bottom: var(--sp-3);\n}\n.pp-form-label {\n  width: 104px;\n  flex: none;\n  font-size: var(--fs-14);\n  color: var(--fg-secondary);\n}\n\n/* \u2014\u2014 \u4EE3\u7801 / \u9884\u89C8\u5757 \u2014\u2014 */\n.pp-pre {\n  margin: 0;\n  padding: var(--sp-3);\n  font-family: var(--font-mono);\n  font-size: var(--fs-13);\n  line-height: var(--lh-20);\n  color: var(--fg);\n  background: var(--bg-subtle);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-ctl);\n  overflow: auto;\n}\n.pp-pre-scroll {\n  max-height: calc(var(--row-h) * 12);\n}\n.pp-json-editor {\n  width: 100%;\n  min-height: calc(var(--row-h) * 6);\n  padding: var(--sp-3);\n  font-family: var(--font-mono);\n  font-size: var(--fs-13);\n  line-height: var(--lh-20);\n  color: var(--fg);\n  background: var(--bg-surface);\n  border: 1px solid var(--border-strong);\n  border-radius: var(--radius-ctl);\n  resize: vertical;\n}\n.pp-json-editor:focus {\n  outline: none;\n  border-color: var(--accent);\n  box-shadow: 0 0 0 2px var(--accent-tint);\n}\n.pp-textarea {\n  width: 100%;\n  min-height: calc(var(--row-h) * 6);\n  padding: var(--sp-3);\n  font-family: var(--font-mono);\n  font-size: var(--fs-13);\n  line-height: var(--lh-20);\n  color: var(--fg);\n  background: var(--bg-surface);\n  border: 1px solid var(--border-strong);\n  border-radius: var(--radius-ctl);\n  resize: vertical;\n}\n.pp-textarea:focus {\n  outline: none;\n  border-color: var(--accent);\n  box-shadow: 0 0 0 2px var(--accent-tint);\n}\n\n/* \u2014\u2014 \u63D0\u793A\u6761 \u2014\u2014 */\n.pp-note {\n  display: flex;\n  align-items: flex-start;\n  gap: var(--sp-2);\n  padding: var(--sp-2) var(--sp-3);\n  font-size: var(--fs-13);\n  line-height: var(--lh-20);\n  color: var(--fg);\n  background: var(--bg-subtle);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-ctl);\n}\n.pp-note-bad {\n  color: var(--error);\n  border-color: var(--error);\n  background: var(--bg-surface);\n}\n.pp-note-warn {\n  color: var(--warning);\n  border-color: var(--warning);\n  background: var(--bg-surface);\n}\n.pp-note-ok {\n  color: var(--success);\n  border-color: var(--success);\n  background: var(--bg-surface);\n}\n.pp-error-text {\n  color: var(--error);\n  font-size: var(--fs-13);\n  line-height: var(--lh-20);\n  margin: var(--sp-1) 0;\n}\n\n/* \u2014\u2014 \u5217\u8868 / \u7ED3\u679C\u884C \u2014\u2014 */\n.pp-list {\n  display: flex;\n  flex-direction: column;\n  gap: 1px;\n}\n.pp-list-row {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  min-height: var(--row-h);\n  padding: 0 var(--sp-2);\n  font-size: var(--fs-14);\n  color: var(--fg);\n  text-decoration: none;\n  border-radius: var(--radius-ctl);\n  cursor: pointer;\n}\n.pp-list-row:hover {\n  background: var(--bg-hover);\n}\n.pp-list-row[data-active="true"] {\n  background: var(--bg-selected);\n  color: var(--accent);\n}\n.pp-result-row {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  min-height: var(--ctl-h);\n  padding: 0 var(--sp-2);\n  font-size: var(--fs-13);\n  border-bottom: 1px solid var(--border);\n}\n\n/* \u2014\u2014 \u72B6\u6001\u8272\u6587\u672C \u2014\u2014 */\n.pp-ok { color: var(--success); }\n.pp-warn { color: var(--warning); }\n.pp-bad { color: var(--error); }\n.pp-accent { color: var(--accent); }\n\n/* \u2014\u2014 \u5143\u4FE1\u606F / \u7701\u7565 \u2014\u2014 */\n.pp-meta {\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-tertiary);\n}\n.pp-mono {\n  font-family: var(--font-mono);\n  font-size: var(--fs-13);\n}\n.pp-ellipsis {\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  min-width: 0;\n}\n.pp-scroll {\n  overflow: auto;\n  min-height: calc(var(--row-h) * 0);\n}\n/* \u8868\u683C\u5BB9\u5668\uFF1A\u7A84\u680F\u91CC\u6A2A\u5411\u6EDA\u52A8\uFF0C\u4FDD\u6301\u5217\u5BBD\u53EF\u8BFB */\n.pp-table-wrap {\n  overflow-x: auto;\n  overflow-y: hidden;\n}\n.pp-table-wrap .pp-table {\n  min-width: 100%;\n}\n.pp-aside-sticky {\n  position: sticky;\n  top: var(--sp-4);\n}\n.pp-md-list {\n  margin: 0 0 var(--sp-2) 0;\n  padding-left: var(--sp-5);\n}\n\n/* \u2014\u2014 \u7EDF\u8BA1\u5757 \u2014\u2014 */\n.pp-stats {\n  display: grid;\n  /* \u4FA7\u8FB9\u680F\u53EF\u7528\u5BBD\u7EA6 500px\uFF1A96px \u8D77\u8DF3\u53EF\u7A33\u5B9A\u6392 4 \u5217\uFF08Apifox \u7EDF\u8BA1\u6761\u662F\u4E00\u884C\u56DB\u5757\uFF09 */\n  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));\n  gap: var(--sp-2);\n}\n.pp-stat {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-1);\n  padding: var(--sp-2) var(--sp-3);\n  min-width: 0;\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n}\n.pp-stat-value {\n  /* \u7EDF\u8BA1\u6570\u5B57\u5728\u7A84\u680F\u91CC\u4E0D\u80FD\u7528 24px\uFF08\u4F1A\u6362\u884C\u628A\u56DB\u5757\u6491\u6210\u4E24\u884C\uFF09\uFF0C18px \u4E0E Apifox \u9762\u677F\u5185\u6570\u503C\u540C\u6863 */\n  font-size: var(--fs-16);\n  line-height: var(--lh-24);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-strong);\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.pp-stat-label {\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-secondary);\n}\n\n/* \u2014\u2014 \u603B\u89C8\uFF1A\u9879\u76EE\u5361\u7247\u7F51\u683C \u2014\u2014 */\n.pp-overview-grid {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));\n  gap: var(--sp-4);\n}\n\n/* \u2014\u2014 \u8C03\u8BD5\uFF1A\u7D27\u51D1\u4E09\u680F \u2014\u2014 */\n.pp-debug-layout {\n  display: grid;\n  grid-template-columns: var(--nav-w) minmax(0, 1.4fr) minmax(0, 1fr);\n  gap: var(--sp-3);\n  align-items: start;\n}\n.pp-pane {\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  padding: var(--card-pad);\n  min-width: 0;\n}\n.pp-url-row {\n  display: flex;\n  gap: var(--sp-2);\n}\n.pp-url-row .pp-select {\n  width: 104px;\n  flex: none;\n}\n.pp-url-row .pp-input {\n  flex: 1;\n}\n\n/* \u2014\u2014 \u6D41\u7A0B\u56FE\u5BB9\u5668 \u2014\u2014 */\n.pp-seq-wrap {\n  overflow-x: auto;\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  background: var(--bg-surface);\n  padding: var(--sp-4);\n}\n.pp-seq-wrap svg {\n  min-width: 100%;\n  display: block;\n}\n.pp-split-hint {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  padding: var(--sp-2) var(--sp-3);\n  font-size: var(--fs-13);\n  line-height: var(--lh-20);\n  color: var(--warning);\n  border: 1px solid var(--warning);\n  border-radius: var(--radius-ctl);\n  background: var(--bg-surface);\n}\n\n/* \u2014\u2014 \u7A7A\u6001 \u2014\u2014 */\n.pp-empty {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  gap: var(--sp-2);\n  padding: var(--sp-6);\n  text-align: center;\n  font-size: var(--fs-14);\n  color: var(--fg-tertiary);\n  border: 1px dashed var(--border-strong);\n  border-radius: var(--radius-card);\n}\n';
 
 // src/client/pages/overview.jsx
 var import_react4 = __toESM(require("react"), 1);
 
 // src/client/pages/theme.js
-var THEME_KEY = "postapi.settings.theme";
+var THEME_KEY2 = "postapi.settings.theme";
 var LOCALE_KEY = "postapi.settings.locale";
 function readTheme() {
   try {
-    return typeof localStorage !== "undefined" ? localStorage.getItem(THEME_KEY) || "light" : "light";
+    return typeof localStorage !== "undefined" ? localStorage.getItem(THEME_KEY2) || "light" : "light";
   } catch {
     return "light";
   }
 }
 function saveTheme(value) {
   try {
-    localStorage.setItem(THEME_KEY, value);
+    localStorage.setItem(THEME_KEY2, value);
   } catch {
   }
 }
@@ -761,6 +935,7 @@ var MOCK_PROJECTS = [
 var MOCK_PROJECT = {
   id: "proj_demo01",
   name: "\u8BA2\u5355\u4E2D\u5FC3",
+  environments: [{ id: "env_dev", name: "\u5F00\u53D1\u73AF\u5883" }, { id: "env_prod", name: "\u751F\u4EA7\u73AF\u5883" }],
   endpoints: [
     { id: "ep_1001", name: "\u67E5\u8BE2\u8BA2\u5355\u5217\u8868", method: "GET", url: "/api/v1/orders", updatedAt: "2026-11-17T10:20:00.000Z" },
     { id: "ep_1002", name: "\u521B\u5EFA\u8BA2\u5355", method: "POST", url: "/api/v1/orders", updatedAt: "2026-11-17T09:05:00.000Z" },
@@ -785,10 +960,26 @@ function recentEndpoints(project, limit = RECENT_LIMIT) {
   list.sort((a, b) => String(b.updatedAt || "").localeCompare(String(a.updatedAt || "")));
   return list.slice(0, limit);
 }
+function overviewStats(projects, project) {
+  const list = Array.isArray(projects) ? projects : [];
+  const endpoints = Array.isArray(project && project.endpoints) ? project.endpoints : [];
+  const envs = Array.isArray(project && project.environments) ? project.environments : [];
+  let latest = "";
+  for (const item of endpoints.concat(list)) {
+    const at = item && item.updatedAt ? String(item.updatedAt) : "";
+    if (at && at > latest) latest = at;
+  }
+  return {
+    projectCount: list.length,
+    endpointCount: endpoints.length,
+    envCount: envs.length,
+    latestUpdated: latest
+  };
+}
 function errText(err) {
   return err && err.message ? err.message : String(err);
 }
-var SHORTCUTS = [
+var SHORTCUTS2 = [
   { hash: "#/debug", label: "\u8C03\u8BD5\u53D1\u9001" },
   { hash: "#/doc", label: "\u63A5\u53E3\u6587\u6863" },
   { hash: "#/env", label: "\u73AF\u5883\u4E0E\u53D8\u91CF" },
@@ -924,11 +1115,12 @@ function OverviewPage(props) {
   };
   const recent = recentEndpoints(project);
   const cards = projectCards(projects);
-  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page", "data-page": "overview", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("h1", { className: "pp-page-title" }, "\u9879\u76EE\u603B\u89C8"), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, isMock ? "\u793A\u4F8B\u6570\u636E \u2014 api.storage \u672A\u6CE8\u5165\u6216\u4E0D\u53EF\u7528\uFF0C\u4EE5\u4E0B\u4E3A\u6587\u4EF6\u5185 mock" : "\u6570\u636E\u6765\u6E90\uFF1Aapi.storage\uFF08listProjects / getProject\uFF09"), error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-error-text" }, error) : null, notice ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, notice) : null, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-card-title" }, "\u9879\u76EE"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card", style: { marginBottom: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u65B0\u5EFA\u9879\u76EE"), /* @__PURE__ */ (0, import_react.createElement)(
+  const stats = overviewStats(projects, project);
+  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page", "data-page": "overview", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("h1", { className: "pp-page-title" }, "\u9879\u76EE\u603B\u89C8"), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, isMock ? "\u793A\u4F8B\u6570\u636E \u2014 api.storage \u672A\u6CE8\u5165\u6216\u4E0D\u53EF\u7528\uFF0C\u4EE5\u4E0B\u4E3A\u6587\u4EF6\u5185 mock" : "\u6570\u636E\u6765\u6E90\uFF1Aapi.storage\uFF08listProjects / getProject\uFF09"), error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-error-text" }, error) : null, notice ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, notice) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-stats" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-stat" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-stat-value" }, stats.projectCount), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-stat-label" }, "\u9879\u76EE\u6570")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-stat" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-stat-value" }, stats.endpointCount), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-stat-label" }, "\u63A5\u53E3\u6570")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-stat" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-stat-value" }, stats.envCount), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-stat-label" }, "\u73AF\u5883\u6570")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-stat" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-stat-value" }, fmtTime(stats.latestUpdated)), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-stat-label" }, "\u6700\u8FD1\u66F4\u65B0"))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar", style: { marginTop: "var(--sp-4)" } }, /* @__PURE__ */ (0, import_react.createElement)(
     "input",
     {
       className: "pp-input",
-      style: { flex: 1 },
+      style: { width: "200px" },
       placeholder: "\u9879\u76EE\u540D",
       value: newName,
       onChange: (e) => {
@@ -936,11 +1128,11 @@ function OverviewPage(props) {
         setNotice("");
       }
     }
-  ), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: createProject }, "\u65B0\u5EFA")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u5F53\u524D\u9879\u76EE"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { flex: 1 }, readOnly: true, value: currentId || "-" }), /* @__PURE__ */ (0, import_react.createElement)(
+  ), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: createProject }, "\u65B0\u5EFA"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-toolbar-spacer" }), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, "\u5F53\u524D\u9879\u76EE"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { width: "180px" }, readOnly: true, value: currentId || "-" }), /* @__PURE__ */ (0, import_react.createElement)(
     "input",
     {
       className: "pp-input",
-      style: { flex: 1 },
+      style: { width: "180px" },
       placeholder: "\u91CD\u547D\u540D",
       value: renameName,
       onChange: (e) => {
@@ -948,20 +1140,9 @@ function OverviewPage(props) {
         setNotice("");
       }
     }
-  ), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: renameProject }, "\u91CD\u547D\u540D"))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-grid" }, cards.map((p) => /* @__PURE__ */ (0, import_react.createElement)("div", { key: p.id, className: "pp-card" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, p.name), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-muted" }, p.endpointCount === void 0 ? "\u63A5\u53E3\u6570\u672A\u77E5" : p.endpointCount + " \u4E2A\u63A5\u53E3", " \xB7 \u66F4\u65B0\u4E8E ", fmtTime(p.updatedAt)), /* @__PURE__ */ (0, import_react.createElement)("div", { style: { display: "flex", gap: "var(--sp-2)", marginTop: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: () => openProject(p.id) }, "\u6253\u5F00"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: () => deleteProject(p.id) }, pendingDelete === p.id ? "\u786E\u8BA4\u5220\u9664" : "\u5220\u9664")))), cards.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-empty" }, "\u6682\u65E0\u9879\u76EE\uFF0C\u5148\u5728\u4E0A\u65B9\u65B0\u5EFA\u4E00\u4E2A") : null), /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-card-title", style: { marginTop: "var(--sp-6)" } }, "\u6700\u8FD1\u63A5\u53E3"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card" }, /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table" }, /* @__PURE__ */ (0, import_react.createElement)("thead", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "90px" } }, "\u65B9\u6CD5"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "\u540D\u79F0"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "URL"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "150px" } }, "\u66F4\u65B0\u65F6\u95F4"))), /* @__PURE__ */ (0, import_react.createElement)("tbody", null, recent.map((e) => /* @__PURE__ */ (0, import_react.createElement)(
-    "tr",
-    {
-      key: e.id,
-      onClick: () => {
-        window.location.hash = "#/doc/" + encodeURIComponent(e.id);
-      },
-      style: { cursor: "pointer" }
-    },
-    /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": e.method }, e.method)),
-    /* @__PURE__ */ (0, import_react.createElement)("td", null, e.name || "-"),
-    /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-table-mono pp-muted" }, e.url || "-"),
-    /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-muted" }, fmtTime(e.updatedAt))
-  )), recent.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { colSpan: 4, className: "pp-muted" }, "\u5F53\u524D\u9879\u76EE\u6682\u65E0\u63A5\u53E3")) : null))), /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-card-title", style: { marginTop: "var(--sp-6)" } }, "\u5FEB\u6377\u5165\u53E3"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card", style: { display: "flex", gap: "var(--sp-2)", flexWrap: "wrap" } }, SHORTCUTS.map((s) => /* @__PURE__ */ (0, import_react.createElement)("a", { key: s.hash, className: "pp-btn", style: { display: "inline-flex", alignItems: "center", textDecoration: "none" }, href: s.hash }, s.label))));
+  ), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: renameProject }, "\u91CD\u547D\u540D")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-grid" }, cards.map((p) => /* @__PURE__ */ (0, import_react.createElement)("div", { key: p.id, className: "pp-card pp-card-hover", "data-active": currentId === p.id ? "true" : "false" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title pp-ellipsis" }, p.name), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-meta" }, p.endpointCount === void 0 ? "\u63A5\u53E3\u6570\u672A\u77E5" : p.endpointCount + " \u4E2A\u63A5\u53E3", " \xB7 \u66F4\u65B0\u4E8E ", fmtTime(p.updatedAt)), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: () => openProject(p.id) }, "\u6253\u5F00"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-danger", onClick: () => deleteProject(p.id) }, pendingDelete === p.id ? "\u786E\u8BA4\u5220\u9664" : "\u5220\u9664")))), cards.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-empty" }, "\u6682\u65E0\u9879\u76EE\uFF0C\u5148\u5728\u4E0A\u65B9\u65B0\u5EFA\u4E00\u4E2A") : null), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card", style: { marginTop: "var(--sp-5)" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u6700\u8FD1\u63A5\u53E3"), /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table" }, /* @__PURE__ */ (0, import_react.createElement)("thead", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "90px" } }, "\u65B9\u6CD5"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "\u540D\u79F0"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "URL"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "150px" } }, "\u66F4\u65B0\u65F6\u95F4"))), /* @__PURE__ */ (0, import_react.createElement)("tbody", null, recent.map((e) => /* @__PURE__ */ (0, import_react.createElement)("tr", { key: e.id, onClick: () => {
+    window.location.hash = "#/doc/" + encodeURIComponent(e.id);
+  } }, /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": e.method }, e.method)), /* @__PURE__ */ (0, import_react.createElement)("td", null, e.name || "-"), /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-table-mono pp-muted" }, e.url || "-"), /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-muted" }, fmtTime(e.updatedAt)))), recent.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { colSpan: 4, className: "pp-muted" }, "\u5F53\u524D\u9879\u76EE\u6682\u65E0\u63A5\u53E3")) : null))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar", style: { marginTop: "var(--sp-5)" } }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-card-title", style: { margin: 0 } }, "\u5FEB\u6377\u5165\u53E3"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-toolbar-spacer" }), SHORTCUTS2.map((s) => /* @__PURE__ */ (0, import_react.createElement)("a", { key: s.hash, className: "pp-btn", href: s.hash }, s.label))));
 }
 
 // src/client/pages/doc.jsx
@@ -969,7 +1150,7 @@ var import_react6 = require("react");
 
 // src/client/pages/components/EmptyState.jsx
 function EmptyState({ text = "\u6682\u65E0\u6570\u636E", hint = "" }) {
-  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-empty" }, /* @__PURE__ */ (0, import_react.createElement)("div", null, text), hint ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-muted" }, hint) : null);
+  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-empty" }, /* @__PURE__ */ (0, import_react.createElement)("div", null, text), hint ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-meta" }, hint) : null);
 }
 
 // src/client/pages/components/ParamTable.jsx
@@ -1005,7 +1186,7 @@ function renderCell(col, row, index, editable, patch) {
   return /* @__PURE__ */ (0, import_react.createElement)(
     "input",
     {
-      className: "pp-input pp-input-mono",
+      className: "pp-input-sm" + (col === "key" || col === "value" ? " pp-input-mono" : ""),
       style: { width: "100%" },
       value: value == null ? "" : String(value),
       onChange: (e) => patch(index, col, e.target.value)
@@ -1018,6 +1199,7 @@ function ParamTable({
   readOnly = false,
   columns = DEFAULT_COLUMNS,
   emptyText = "\u65E0",
+  emptyHint = "",
   addLabel = "+ \u6DFB\u52A0"
 }) {
   const list = Array.isArray(rows) ? rows : [];
@@ -1032,7 +1214,7 @@ function ParamTable({
     next.splice(index, 1);
     onChange(next);
   };
-  if (list.length === 0 && !editable) return /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: emptyText });
+  if (list.length === 0 && !editable) return /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: emptyText, hint: emptyHint });
   return /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table" }, /* @__PURE__ */ (0, import_react.createElement)("thead", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, columns.map((col) => /* @__PURE__ */ (0, import_react.createElement)(
     "th",
     {
@@ -1040,7 +1222,7 @@ function ParamTable({
       style: COLUMN_META[col] && COLUMN_META[col].width ? { width: COLUMN_META[col].width } : void 0
     },
     COLUMN_META[col] ? COLUMN_META[col].title : col
-  )), editable ? /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "64px" } }, "\u64CD\u4F5C") : null)), /* @__PURE__ */ (0, import_react.createElement)("tbody", null, list.map((row, index) => /* @__PURE__ */ (0, import_react.createElement)("tr", { key: index }, columns.map((col) => /* @__PURE__ */ (0, import_react.createElement)("td", { key: col }, renderCell(col, row, index, editable, patch))), editable ? /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: () => remove(index) }, "\u5220\u9664")) : null)), editable ? /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { colSpan: columns.length + 1 }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: () => onChange(list.concat([blankParamRow()])) }, addLabel))) : null));
+  )), editable ? /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "64px" } }, "\u64CD\u4F5C") : null)), /* @__PURE__ */ (0, import_react.createElement)("tbody", null, list.map((row, index) => /* @__PURE__ */ (0, import_react.createElement)("tr", { key: index }, columns.map((col) => /* @__PURE__ */ (0, import_react.createElement)("td", { key: col }, renderCell(col, row, index, editable, patch))), editable ? /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm", onClick: () => remove(index) }, "\u5220\u9664")) : null)), editable ? /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { colSpan: columns.length + 1 }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm", onClick: () => onChange(list.concat([blankParamRow()])) }, addLabel))) : null));
 }
 
 // src/client/pages/components/JsonEditor.jsx
@@ -1057,33 +1239,33 @@ function JsonEditor({ value = "", onChange, readOnly = false, rows = 8, placehol
       setError(label + "\u5931\u8D25\uFF1A" + (err && err.message ? err.message : String(err)));
     }
   };
-  return /* @__PURE__ */ (0, import_react.createElement)("div", null, readOnly ? null : /* @__PURE__ */ (0, import_react.createElement)("div", { style: { display: "flex", gap: "var(--sp-2)", marginBottom: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: () => transform((v) => JSON.stringify(v, null, 2), "\u683C\u5F0F\u5316") }, "\u683C\u5F0F\u5316"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: () => transform((v) => JSON.stringify(v), "\u538B\u7F29") }, "\u538B\u7F29")), /* @__PURE__ */ (0, import_react.createElement)(
+  return /* @__PURE__ */ (0, import_react.createElement)("div", null, readOnly ? null : /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginBottom: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm", onClick: () => transform((v) => JSON.stringify(v, null, 2), "\u683C\u5F0F\u5316") }, "\u683C\u5F0F\u5316"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm", onClick: () => transform((v) => JSON.stringify(v), "\u538B\u7F29") }, "\u538B\u7F29")), /* @__PURE__ */ (0, import_react.createElement)(
     "textarea",
     {
-      className: "pp-input pp-input-mono",
+      className: "pp-json-editor",
       rows,
       readOnly,
       placeholder,
-      style: { width: "100%", height: "auto", padding: "var(--sp-2)", resize: "vertical" },
       value: text,
       onChange: (e) => {
         if (typeof onChange === "function") onChange(e.target.value);
       }
     }
-  ), error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, error) : null);
+  ), error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-error-text" }, error) : null);
 }
 
 // src/client/pages/components/StatusPill.jsx
-function statusTone(status) {
+function statusToneClass(status) {
   const code = Number(status);
-  if (!Number.isFinite(code) || code <= 0) return "var(--error)";
-  if (code < 300) return "var(--success)";
-  if (code < 400) return "var(--warning)";
-  return "var(--error)";
+  if (!Number.isFinite(code) || code <= 0) return "pp-pill-bad";
+  if (code < 300) return "pp-pill-ok";
+  if (code < 400) return "pp-pill-warn";
+  return "pp-pill-bad";
 }
+var TONE_ALIAS = { ok: "pp-pill-ok", warn: "pp-pill-warn", bad: "pp-pill-bad", accent: "pp-pill-accent" };
 function StatusPill({ status, text = "", tone }) {
-  const color = tone || statusTone(status);
-  return /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-pill", style: { color, borderColor: color } }, status == null || status === "" ? "-" : String(status), text ? " " + text : "");
+  const cls = tone ? TONE_ALIAS[tone] || (String(tone).indexOf("pp-pill") === 0 ? String(tone) : statusToneClass(status)) : statusToneClass(status);
+  return /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-pill " + cls }, status == null || status === "" ? "-" : String(status), text ? " " + text : "");
 }
 
 // src/client/pages/doc.jsx
@@ -1278,7 +1460,7 @@ function renderInline(text, keyPrefix) {
     if (m.index > last) nodes.push(text.slice(last, m.index));
     const token = m[0];
     const key = keyPrefix + "-" + i++;
-    if (token.charAt(0) === "`") nodes.push(/* @__PURE__ */ (0, import_react.createElement)("code", { key, className: "pp-table-mono" }, token.slice(1, -1)));
+    if (token.charAt(0) === "`") nodes.push(/* @__PURE__ */ (0, import_react.createElement)("code", { key, className: "pp-mono" }, token.slice(1, -1)));
     else if (token.slice(0, 2) === "**") nodes.push(/* @__PURE__ */ (0, import_react.createElement)("strong", { key }, token.slice(2, -2)));
     else {
       const link = /^\[([^\]]+)\]\(([^)]+)\)$/.exec(token);
@@ -1297,13 +1479,13 @@ function Markdown({ text }) {
   let inFence = false;
   let listItems = [];
   const flushFence = (key) => {
-    blocks.push(/* @__PURE__ */ (0, import_react.createElement)("pre", { key, className: "pp-pre" }, buffer.join("\n")));
+    blocks.push(/* @__PURE__ */ (0, import_react.createElement)("pre", { key, className: "pp-pre pp-pre-scroll" }, buffer.join("\n")));
     buffer = [];
   };
   const flushList = (key) => {
     if (listItems.length === 0) return;
     blocks.push(
-      /* @__PURE__ */ (0, import_react.createElement)("ul", { key, style: { margin: "0 0 var(--sp-2) 0", paddingLeft: "var(--sp-4)" } }, listItems.map((item, idx) => /* @__PURE__ */ (0, import_react.createElement)("li", { key: idx }, renderInline(item, key + "-li" + idx))))
+      /* @__PURE__ */ (0, import_react.createElement)("ul", { key, className: "pp-md-list" }, listItems.map((item, idx) => /* @__PURE__ */ (0, import_react.createElement)("li", { key: idx }, renderInline(item, key + "-li" + idx))))
     );
     listItems = [];
   };
@@ -1326,7 +1508,7 @@ function Markdown({ text }) {
     const heading = /^(#{1,6})\s+(.*)$/.exec(line);
     if (heading) {
       flushList(key + "-l");
-      blocks.push(/* @__PURE__ */ (0, import_react.createElement)("div", { key, className: "pp-card-title" }, renderInline(heading[2], key)));
+      blocks.push(/* @__PURE__ */ (0, import_react.createElement)("div", { key, className: "pp-doc-h2" }, renderInline(heading[2], key)));
       return;
     }
     if (/^\s*[-*]\s+/.test(line)) {
@@ -1463,36 +1645,40 @@ function DocPage({ route, api }) {
     if (!storage || typeof storage.saveResponse !== "function" || !ep || !activeResponse) return;
     Promise.resolve().then(() => storage.saveResponse(project.id, ep.id, activeResponse)).then(() => setError("")).catch((err) => setError("\u4FDD\u5B58\u54CD\u5E94\u5931\u8D25\uFF1A" + (err && err.message ? err.message : String(err))));
   };
-  const tree = /* @__PURE__ */ (0, import_react.createElement)("nav", { className: "pp-pane", style: { padding: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title", style: { padding: "0 var(--sp-2)" } }, project.name || "\u672A\u547D\u540D\u9879\u76EE"), folders.map((folder) => {
+  const tree = /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tree" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tree-group" }, project.name || "\u672A\u547D\u540D\u9879\u76EE"), folders.map((folder) => {
     const inFolder = endpoints.filter((e) => e.folderId === folder.id);
     const isCollapsed = Boolean(collapsed[folder.id]);
-    return /* @__PURE__ */ (0, import_react.createElement)("div", { key: folder.id }, /* @__PURE__ */ (0, import_react.createElement)(
-      "div",
-      {
-        className: "pp-tree-row pp-muted",
-        "data-active": false,
-        onClick: () => setCollapsed((prev) => ({ ...prev, [folder.id]: !prev[folder.id] }))
-      },
-      /* @__PURE__ */ (0, import_react.createElement)("span", null, isCollapsed ? "\u25B8" : "\u25BE"),
-      /* @__PURE__ */ (0, import_react.createElement)("span", { style: { overflow: "hidden", textOverflow: "ellipsis" } }, folder.name),
-      /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-muted" }, inFolder.length)
-    ), isCollapsed ? null : inFolder.map((e) => /* @__PURE__ */ (0, import_react.createElement)(
+    return /* @__PURE__ */ (0, import_react.createElement)("div", { key: folder.id }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tree-row", onClick: () => setCollapsed((prev) => ({ ...prev, [folder.id]: !prev[folder.id] })) }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-faint" }, isCollapsed ? "\u25B8" : "\u25BE"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ellipsis" }, folder.name), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-tree-row-count" }, inFolder.length)), isCollapsed ? null : inFolder.map((e) => /* @__PURE__ */ (0, import_react.createElement)(
       "div",
       {
         key: e.id,
         className: "pp-tree-row",
         "data-active": Boolean(ep) && e.id === ep.id,
         onClick: () => pick(e.id),
-        style: { paddingLeft: "var(--sp-4)" }
+        style: { paddingLeft: "var(--sp-5)" }
       },
       /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": e.method }, e.method),
-      /* @__PURE__ */ (0, import_react.createElement)("span", { style: { overflow: "hidden", textOverflow: "ellipsis" } }, e.name)
+      /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ellipsis" }, e.name)
     )));
-  }), endpoints.filter((e) => !e.folderId).length > 0 ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tree-row pp-muted" }, "\u672A\u5F52\u7C7B"), endpoints.filter((e) => !e.folderId).map((e) => /* @__PURE__ */ (0, import_react.createElement)("div", { key: e.id, className: "pp-tree-row", "data-active": Boolean(ep) && e.id === ep.id, onClick: () => pick(e.id) }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": e.method }, e.method), /* @__PURE__ */ (0, import_react.createElement)("span", { style: { overflow: "hidden", textOverflow: "ellipsis" } }, e.name)))) : null, endpoints.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u6682\u65E0\u63A5\u53E3", hint: "\u5148\u5728\u603B\u89C8\u9875\u521B\u5EFA\u9879\u76EE\u4E0E\u63A5\u53E3" }) : null);
+  }), endpoints.filter((e) => !e.folderId).length > 0 ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tree-group" }, "\u672A\u5F52\u7C7B"), endpoints.filter((e) => !e.folderId).map((e) => /* @__PURE__ */ (0, import_react.createElement)("div", { key: e.id, className: "pp-tree-row", "data-active": Boolean(ep) && e.id === ep.id, onClick: () => pick(e.id) }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": e.method }, e.method), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ellipsis" }, e.name)))) : null, endpoints.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u6682\u65E0\u63A5\u53E3", hint: "\u5148\u5728\u603B\u89C8\u9875\u521B\u5EFA\u9879\u76EE\u4E0E\u63A5\u53E3" }) : null);
+  const toc = /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toc" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tree-group" }, "\u672C\u9875\u76EE\u5F55"), TOC.map((t) => /* @__PURE__ */ (0, import_react.createElement)(
+    "a",
+    {
+      key: t.id,
+      className: "pp-toc-item",
+      "data-active": activeSec === t.id,
+      onClick: (e) => {
+        e.preventDefault();
+        jump(t.id);
+      },
+      href: "#/doc/" + encodeURIComponent(ep ? ep.id : "")
+    },
+    t.label
+  )));
   if (!ep) {
-    return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page", "data-page": "doc", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("h1", { className: "pp-page-title" }, "\u63A5\u53E3\u6587\u6863"), tree);
+    return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page-flush", "data-page": "doc", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-body-2col", style: { height: "100%" } }, /* @__PURE__ */ (0, import_react.createElement)("nav", { className: "pp-col pp-col-left" }, tree), /* @__PURE__ */ (0, import_react.createElement)("main", { className: "pp-main" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-page" }, /* @__PURE__ */ (0, import_react.createElement)("h1", { className: "pp-doc-h1" }, "\u63A5\u53E3\u6587\u6863"), /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u6682\u65E0\u63A5\u53E3", hint: "\u5148\u5728\u603B\u89C8\u9875\u521B\u5EFA\u9879\u76EE\u4E0E\u63A5\u53E3" })))));
   }
-  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page", "data-page": "doc", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-doc-layout" }, tree, /* @__PURE__ */ (0, import_react.createElement)("main", { style: { minWidth: 0 } }, isMock ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, "\u793A\u4F8B\u6570\u636E \u2014 window.__postapiApi \u672A\u6CE8\u5165\u6216\u8BFB\u53D6\u5931\u8D25\uFF0C\u4EE5\u4E0B\u4E3A\u6587\u4EF6\u5185 mock") : null, error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, error) : null, /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-info" }, /* @__PURE__ */ (0, import_react.createElement)("h1", { className: "pp-page-title" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": ep.method }, ep.method), " ", ep.name), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-table-mono" }, ep.method, " ", ep.url), ep.protocol && ep.protocol !== "http" ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, "\u534F\u8BAE ", ep.protocol, "\uFF1A\u89C4\u5212\u4E2D\uFF08\u4EC5\u4FDD\u7559\u7C7B\u578B\u4F4D\uFF0C\u53D1\u9001\u56DE\u843D HTTP\uFF09") : null, /* @__PURE__ */ (0, import_react.createElement)("div", { style: { marginTop: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)(Markdown, { text: ep.description })), /* @__PURE__ */ (0, import_react.createElement)("div", { style: { display: "flex", gap: "var(--sp-2)", alignItems: "center", marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: copyCurl }, "\u590D\u5236\u4E3A cURL"), copied ? /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-muted" }, copied) : null)), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-path", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-card-title" }, "Path \u53C2\u6570"), /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: ep.pathParams, readOnly: true, emptyText: "\u65E0 Path \u53C2\u6570" })), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-params", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-card-title" }, "Query \u53C2\u6570"), /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: ep.params, readOnly: true, emptyText: "\u65E0 Query \u53C2\u6570" })), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-headers", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-card-title" }, "\u8BF7\u6C42\u5934"), /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: ep.headers, readOnly: true, emptyText: "\u65E0\u8BF7\u6C42\u5934" })), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-cookies", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-card-title" }, "Cookies"), /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: ep.cookies, readOnly: true, emptyText: "\u65E0 Cookies" })), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-body", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-card-title" }, "\u8BF7\u6C42\u4F53\uFF08", ep.body && ep.body.type ? ep.body.type : "none", "\uFF09"), ep.body && ep.body.content ? /* @__PURE__ */ (0, import_react.createElement)(JsonEditor, { value: ep.body.content, readOnly: true, rows: 8 }) : /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u65E0\u8BF7\u6C42\u4F53" }), ep.body && ep.body.type && BODY_TYPES.indexOf(ep.body.type) < 0 ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, "\u672A\u77E5 body \u7C7B\u578B\uFF1A", ep.body.type) : null), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-auth", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-card-title" }, "\u8BA4\u8BC1"), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, AUTH_LABEL[ep.auth && ep.auth.type || "none"] || ep.auth && ep.auth.type), ep.auth && ep.auth.type === "apikey" ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-table-mono" }, (ep.auth.key || "key") + " \u2192 " + (ep.auth.addTo === "query" ? "query" : "header")) : null), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-response", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-card-title" }, "\u54CD\u5E94"), responses.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u5C1A\u672A\u5B9A\u4E49\u54CD\u5E94", hint: "\u5728\u8C03\u8BD5\u9875\u53D1\u9001\u540E\u4FDD\u5B58\u4E3A\u63A5\u53E3\uFF0C\u6216\u65B0\u589E\u54CD\u5E94" }) : /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tabs" }, responses.map((r) => /* @__PURE__ */ (0, import_react.createElement)(
+  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page-flush", "data-page": "doc", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-body-3col", style: { height: "100%" } }, /* @__PURE__ */ (0, import_react.createElement)("nav", { className: "pp-col pp-col-left" }, tree), /* @__PURE__ */ (0, import_react.createElement)("main", { className: "pp-main" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-page" }, isMock ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-note pp-note-warn" }, "\u793A\u4F8B\u6570\u636E \u2014 window.__postapiApi \u672A\u6CE8\u5165\u6216\u8BFB\u53D6\u5931\u8D25\uFF0C\u4EE5\u4E0B\u4E3A\u6587\u4EF6\u5185 mock") : null, error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-note pp-note-bad" }, error) : null, /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-info" }, /* @__PURE__ */ (0, import_react.createElement)("h1", { className: "pp-doc-h1" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": ep.method }, ep.method), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ellipsis" }, ep.name)), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-mono pp-muted", style: { margin: "0 0 var(--sp-2) 0" } }, ep.method, " ", ep.url), ep.protocol && ep.protocol !== "http" ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-meta" }, "\u534F\u8BAE ", ep.protocol, "\uFF1A\u89C4\u5212\u4E2D\uFF08\u4EC5\u4FDD\u7559\u7C7B\u578B\u4F4D\uFF0C\u53D1\u9001\u56DE\u843D HTTP\uFF09") : null, /* @__PURE__ */ (0, import_react.createElement)("div", { style: { marginTop: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)(Markdown, { text: ep.description })), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm", onClick: copyCurl }, "\u590D\u5236\u4E3A cURL"), copied ? /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-note " + (copied === "\u5DF2\u590D\u5236" ? "pp-note-ok" : "pp-note-bad") }, copied) : null)), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-path", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-doc-h2" }, "Path \u53C2\u6570"), /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: ep.pathParams, readOnly: true, emptyText: "\u65E0 Path \u53C2\u6570", emptyHint: "\u8DEF\u5F84\u91CC\u6CA1\u6709 {var} \u5360\u4F4D\u7B26" })), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-params", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-doc-h2" }, "Query \u53C2\u6570"), /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: ep.params, readOnly: true, emptyText: "\u65E0 Query \u53C2\u6570" })), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-headers", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-doc-h2" }, "\u8BF7\u6C42\u5934"), /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: ep.headers, readOnly: true, emptyText: "\u65E0\u8BF7\u6C42\u5934" })), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-cookies", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-doc-h2" }, "Cookies"), /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: ep.cookies, readOnly: true, emptyText: "\u65E0 Cookies" })), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-body", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-doc-h2" }, "\u8BF7\u6C42\u4F53\uFF08", ep.body && ep.body.type ? ep.body.type : "none", "\uFF09"), ep.body && ep.body.content ? /* @__PURE__ */ (0, import_react.createElement)(JsonEditor, { value: ep.body.content, readOnly: true, rows: 8 }) : /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u65E0\u8BF7\u6C42\u4F53" }), ep.body && ep.body.type && BODY_TYPES.indexOf(ep.body.type) < 0 ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-meta" }, "\u672A\u77E5 body \u7C7B\u578B\uFF1A", ep.body.type) : null), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-auth", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-doc-h2" }, "\u8BA4\u8BC1"), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, AUTH_LABEL[ep.auth && ep.auth.type || "none"] || ep.auth && ep.auth.type), ep.auth && ep.auth.type === "apikey" ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-mono" }, (ep.auth.key || "key") + " \u2192 " + (ep.auth.addTo === "query" ? "query" : "header")) : null), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-response", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-doc-h2" }, "\u54CD\u5E94"), responses.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u5C1A\u672A\u5B9A\u4E49\u54CD\u5E94", hint: "\u5728\u8C03\u8BD5\u9875\u53D1\u9001\u540E\u4FDD\u5B58\u4E3A\u63A5\u53E3\uFF0C\u6216\u65B0\u589E\u54CD\u5E94" }) : /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tabs" }, responses.map((r) => /* @__PURE__ */ (0, import_react.createElement)(
     "button",
     {
       key: r.id,
@@ -1503,7 +1689,7 @@ function DocPage({ route, api }) {
     r.code,
     " ",
     r.name || ""
-  ))), activeResponse ? /* @__PURE__ */ (0, import_react.createElement)("div", { style: { marginTop: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { style: { display: "flex", gap: "var(--sp-2)", alignItems: "center", marginBottom: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)(StatusPill, { status: activeResponse.code, text: activeResponse.name || "" }), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-muted" }, activeResponse.contentType || "application/json"), activeResponse.isDefault ? /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-pill" }, "\u9ED8\u8BA4") : null, canSaveResponse ? /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: saveResponse }, "\u4FDD\u5B58\u54CD\u5E94") : /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-muted" }, "\u53EA\u8BFB\uFF1Astorage.saveResponse \u4E0D\u53EF\u7528")), /* @__PURE__ */ (0, import_react.createElement)(
+  ))), activeResponse ? /* @__PURE__ */ (0, import_react.createElement)("div", { style: { marginTop: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginBottom: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)(StatusPill, { status: activeResponse.code, text: activeResponse.name || "" }), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, activeResponse.contentType || "application/json"), activeResponse.isDefault ? /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-pill pp-pill-accent" }, "\u9ED8\u8BA4") : null, canSaveResponse ? /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm", onClick: saveResponse }, "\u4FDD\u5B58\u54CD\u5E94") : /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, "\u53EA\u8BFB\uFF1Astorage.saveResponse \u4E0D\u53EF\u7528")), /* @__PURE__ */ (0, import_react.createElement)(
     JsonEditor,
     {
       value: activeResponse.body,
@@ -1511,20 +1697,7 @@ function DocPage({ route, api }) {
       readOnly: !canSaveResponse,
       onChange: (next) => patchResponse({ body: next })
     }
-  ), Array.isArray(activeResponse.headers) && activeResponse.headers.length > 0 ? /* @__PURE__ */ (0, import_react.createElement)("div", { style: { marginTop: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u54CD\u5E94\u5934"), /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: activeResponse.headers, readOnly: true, columns: ["key", "value"], emptyText: "\u65E0\u54CD\u5E94\u5934" })) : null) : null)), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-code", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-card-title" }, "\u4EE3\u7801\u751F\u6210\uFF08cURL\uFF09"), /* @__PURE__ */ (0, import_react.createElement)("pre", { className: "pp-pre" }, buildCurl(ep, baseUrl)))), /* @__PURE__ */ (0, import_react.createElement)("aside", { style: { position: "sticky", top: "var(--sp-6)" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u672C\u9875\u76EE\u5F55"), TOC.map((t) => /* @__PURE__ */ (0, import_react.createElement)(
-    "a",
-    {
-      key: t.id,
-      className: "pp-toc-item",
-      "data-active": activeSec === t.id,
-      onClick: (e) => {
-        e.preventDefault();
-        jump(t.id);
-      },
-      href: "#/doc/" + encodeURIComponent(ep.id)
-    },
-    t.label
-  )))));
+  ), Array.isArray(activeResponse.headers) && activeResponse.headers.length > 0 ? /* @__PURE__ */ (0, import_react.createElement)("div", { style: { marginTop: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)("h3", { className: "pp-doc-h2" }, "\u54CD\u5E94\u5934"), /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: activeResponse.headers, readOnly: true, columns: ["key", "value"], emptyText: "\u65E0\u54CD\u5E94\u5934" })) : null) : null)), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-code", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-doc-h2" }, "\u4EE3\u7801\u751F\u6210\uFF08cURL\uFF09"), /* @__PURE__ */ (0, import_react.createElement)("pre", { className: "pp-pre pp-pre-scroll" }, buildCurl(ep, baseUrl))))), /* @__PURE__ */ (0, import_react.createElement)("aside", { className: "pp-col pp-col-right" }, toc)));
 }
 
 // src/client/pages/debug.jsx
@@ -1836,8 +2009,8 @@ function DebugPage({ route, api }) {
     if (!h || typeof h !== "object") return [];
     return Object.keys(h).map((key) => ({ key, value: h[key] }));
   }, [resp]);
-  const responsePanel = /* @__PURE__ */ (0, import_react.createElement)("section", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u54CD\u5E94"), !resp ? /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u5C1A\u672A\u53D1\u9001\u8BF7\u6C42", hint: "\u586B\u5199 URL \u540E\u70B9\u300C\u53D1\u9001\u300D" }) : null, resp && resp.error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, "\u9519\u8BEF\uFF1A", resp.error.message || String(resp.error)) : null, resp && !resp.error ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { style: { display: "flex", gap: "var(--sp-2)", alignItems: "center", flexWrap: "wrap" } }, /* @__PURE__ */ (0, import_react.createElement)(StatusPill, { status: resp.status, text: resp.statusText || "" }), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-muted" }, resp.timeMs == null ? "-" : resp.timeMs, " ms"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-muted" }, resp.bodySize == null ? "-" : resp.bodySize, " B"), resp.truncated ? /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-pill" }, "\u5DF2\u622A\u65AD") : null), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tabs", style: { marginTop: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-tab", "data-active": bodyView === "pretty", onClick: () => setBodyView("pretty") }, "\u7F8E\u5316"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-tab", "data-active": bodyView === "raw", onClick: () => setBodyView("raw") }, "\u539F\u6587")), /* @__PURE__ */ (0, import_react.createElement)("pre", { className: "pp-pre", style: { marginTop: "var(--sp-2)" } }, respBodyText), respHeaders.length > 0 ? /* @__PURE__ */ (0, import_react.createElement)("div", { style: { marginTop: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u54CD\u5E94\u5934"), /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: respHeaders, readOnly: true, columns: ["key", "value"], emptyText: "\u65E0\u54CD\u5E94\u5934" })) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { style: { marginTop: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u65AD\u8A00 / \u811A\u672C\u7ED3\u679C"), Array.isArray(resp.tests) && resp.tests.length > 0 ? /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table" }, /* @__PURE__ */ (0, import_react.createElement)("thead", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("th", null, "\u540D\u79F0"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "72px" } }, "\u7ED3\u679C"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "160px" } }, "\u9519\u8BEF"))), /* @__PURE__ */ (0, import_react.createElement)("tbody", null, resp.tests.map((t, i) => /* @__PURE__ */ (0, import_react.createElement)("tr", { key: i }, /* @__PURE__ */ (0, import_react.createElement)("td", null, t.name), /* @__PURE__ */ (0, import_react.createElement)("td", null, t.passed ? "\u901A\u8FC7" : "\u5931\u8D25"), /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-muted" }, t.error || "-"))))) : /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, "\u65E0\u65AD\u8A00")), Array.isArray(resp.logs) && resp.logs.length > 0 ? /* @__PURE__ */ (0, import_react.createElement)("div", { style: { marginTop: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u811A\u672C\u65E5\u5FD7"), /* @__PURE__ */ (0, import_react.createElement)("pre", { className: "pp-pre" }, resp.logs.join("\n"))) : null) : null);
-  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page", "data-page": "debug", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("h1", { className: "pp-page-title" }, "\u8C03\u8BD5"), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, isMock ? "\u793A\u4F8B\u6570\u636E \u2014 window.__postapiApi \u672A\u6CE8\u5165\u6216\u8BFB\u53D6\u5931\u8D25\uFF0C\u53D1\u9001\u5C06\u8FD4\u56DE mock \u54CD\u5E94" : "\u6570\u636E\u6765\u6E90\uFF1Apostapi.storage + postapi.request"), error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, error) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-debug-layout" }, /* @__PURE__ */ (0, import_react.createElement)("nav", { className: "pp-pane", style: { padding: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title", style: { padding: "0 var(--sp-2)" } }, "\u63A5\u53E3"), endpoints.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u6682\u65E0\u63A5\u53E3" }) : null, endpoints.map((ep) => /* @__PURE__ */ (0, import_react.createElement)("div", { key: ep.id, className: "pp-tree-row", "data-active": ep.id === draft.id, onClick: () => loadEndpoint(ep) }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": ep.method }, ep.method), /* @__PURE__ */ (0, import_react.createElement)("span", { style: { overflow: "hidden", textOverflow: "ellipsis" } }, ep.name))), /* @__PURE__ */ (0, import_react.createElement)("div", { style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("a", { className: "pp-toc-item", href: "#/history" }, "\u8BF7\u6C42\u5386\u53F2 / \u56DE\u653E"))), /* @__PURE__ */ (0, import_react.createElement)("section", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { style: { display: "flex", gap: "var(--sp-2)", alignItems: "center", marginBottom: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-muted" }, "\u73AF\u5883"), /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: envId, onChange: (e) => setEnvId(e.target.value) }, envs.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("option", { value: "" }, "\uFF08\u65E0\u73AF\u5883\uFF09") : null, envs.map((e) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: e.id, value: e.id }, e.name))), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-muted" }, env && env.baseUrl ? env.baseUrl : "\u672A\u914D\u7F6E baseUrl")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-url-row" }, /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: draft.method, onChange: (e) => patch("method", e.target.value) }, METHODS.map((m) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: m, value: m }, m))), /* @__PURE__ */ (0, import_react.createElement)(
+  const responsePanel = /* @__PURE__ */ (0, import_react.createElement)("section", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u54CD\u5E94"), !resp ? /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u5C1A\u672A\u53D1\u9001\u8BF7\u6C42", hint: "\u586B\u5199 URL \u540E\u70B9\u300C\u53D1\u9001\u300D" }) : null, resp && resp.error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-note pp-note-bad" }, "\u9519\u8BEF\uFF1A", resp.error.message || String(resp.error)) : null, resp && !resp.error ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline" }, /* @__PURE__ */ (0, import_react.createElement)(StatusPill, { status: resp.status, text: resp.statusText || "" }), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, resp.timeMs == null ? "-" : resp.timeMs, " ms"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, resp.bodySize == null ? "-" : resp.bodySize, " B"), resp.truncated ? /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-pill pp-pill-warn" }, "\u5DF2\u622A\u65AD") : null), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tabs", style: { marginTop: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-tab", "data-active": bodyView === "pretty", onClick: () => setBodyView("pretty") }, "\u7F8E\u5316"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-tab", "data-active": bodyView === "raw", onClick: () => setBodyView("raw") }, "\u539F\u6587")), /* @__PURE__ */ (0, import_react.createElement)("pre", { className: "pp-pre pp-pre-scroll", style: { marginTop: "var(--sp-2)" } }, respBodyText), respHeaders.length > 0 ? /* @__PURE__ */ (0, import_react.createElement)("div", { style: { marginTop: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u54CD\u5E94\u5934"), /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: respHeaders, readOnly: true, columns: ["key", "value"], emptyText: "\u65E0\u54CD\u5E94\u5934" })) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { style: { marginTop: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u65AD\u8A00 / \u811A\u672C\u7ED3\u679C"), Array.isArray(resp.tests) && resp.tests.length > 0 ? /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table" }, /* @__PURE__ */ (0, import_react.createElement)("thead", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("th", null, "\u540D\u79F0"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "72px" } }, "\u7ED3\u679C"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "160px" } }, "\u9519\u8BEF"))), /* @__PURE__ */ (0, import_react.createElement)("tbody", null, resp.tests.map((t, i) => /* @__PURE__ */ (0, import_react.createElement)("tr", { key: i }, /* @__PURE__ */ (0, import_react.createElement)("td", null, t.name), /* @__PURE__ */ (0, import_react.createElement)("td", { className: t.passed ? "pp-ok" : "pp-bad" }, t.passed ? "\u901A\u8FC7" : "\u5931\u8D25"), /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-muted" }, t.error || "-"))))) : /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-meta" }, "\u65E0\u65AD\u8A00")), Array.isArray(resp.logs) && resp.logs.length > 0 ? /* @__PURE__ */ (0, import_react.createElement)("div", { style: { marginTop: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u811A\u672C\u65E5\u5FD7"), /* @__PURE__ */ (0, import_react.createElement)("pre", { className: "pp-pre pp-pre-scroll" }, resp.logs.join("\n"))) : null) : null);
+  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page-flush", "data-page": "debug", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-debug-layout", style: { margin: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("nav", { className: "pp-pane", style: { padding: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tree" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tree-group" }, "\u63A5\u53E3"), endpoints.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u6682\u65E0\u63A5\u53E3" }) : null, endpoints.map((ep) => /* @__PURE__ */ (0, import_react.createElement)("div", { key: ep.id, className: "pp-tree-row", "data-active": ep.id === draft.id, onClick: () => loadEndpoint(ep) }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": ep.method }, ep.method), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ellipsis" }, ep.name)))), /* @__PURE__ */ (0, import_react.createElement)("div", { style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("a", { className: "pp-toc-item", href: "#/history" }, "\u8BF7\u6C42\u5386\u53F2 / \u56DE\u653E"))), /* @__PURE__ */ (0, import_react.createElement)("section", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginBottom: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-form-label" }, "\u73AF\u5883"), /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: envId, onChange: (e) => setEnvId(e.target.value) }, envs.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("option", { value: "" }, "\uFF08\u65E0\u73AF\u5883\uFF09") : null, envs.map((e) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: e.id, value: e.id }, e.name))), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, env && env.baseUrl ? env.baseUrl : "\u672A\u914D\u7F6E baseUrl")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-url-row" }, /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: draft.method, onChange: (e) => patch("method", e.target.value) }, METHODS.map((m) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: m, value: m }, m))), /* @__PURE__ */ (0, import_react.createElement)(
     "input",
     {
       className: "pp-input pp-input-mono",
@@ -1845,14 +2018,14 @@ function DebugPage({ route, api }) {
       placeholder: "/api/v1/... \u6216 https://TARGET/endpoint\uFF0C\u652F\u6301 {{var}}",
       onChange: (e) => patch("url", e.target.value)
     }
-  ), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: send, disabled: sending }, sending ? "\u53D1\u9001\u4E2D\u2026" : "\u53D1\u9001"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: cancel, disabled: !sending }, "\u53D6\u6D88")), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted pp-table-mono", style: { marginTop: "var(--sp-2)" } }, "\u5B9E\u9645\u5730\u5740\uFF1A", finalUrl || "\uFF08\u672A\u586B\u5199 URL\uFF09"), varRefs.length > 0 ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, "\u53D8\u91CF ", varRefs.join("\u3001"), missingVars.length > 0 ? "\uFF08\u672A\u5B9A\u4E49\uFF1A" + missingVars.join("\u3001") + "\uFF09" : "\uFF08\u5747\u5DF2\u5B9A\u4E49\uFF09") : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tabs", style: { marginTop: "var(--sp-3)" } }, TABS.map((t) => /* @__PURE__ */ (0, import_react.createElement)("button", { key: t.id, className: "pp-tab", "data-active": tab === t.id, onClick: () => setTab(t.id) }, t.label))), /* @__PURE__ */ (0, import_react.createElement)("div", { style: { marginTop: "var(--sp-2)" } }, tab === "params" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "Path \u53C2\u6570"), /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: draft.pathParams, onChange: (rows) => patch("pathParams", rows), columns: PARAM_COLUMNS, emptyText: "\u65E0 Path \u53C2\u6570" }), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title", style: { marginTop: "var(--sp-3)" } }, "Query \u53C2\u6570"), /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: draft.params, onChange: (rows) => patch("params", rows), columns: PARAM_COLUMNS, emptyText: "\u65E0 Query \u53C2\u6570" })) : null, tab === "headers" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u8BF7\u6C42\u5934"), /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: draft.headers, onChange: (rows) => patch("headers", rows), columns: PARAM_COLUMNS, emptyText: "\u65E0\u8BF7\u6C42\u5934" }), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title", style: { marginTop: "var(--sp-3)" } }, "Cookies"), /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: draft.cookies, onChange: (rows) => patch("cookies", rows), columns: PARAM_COLUMNS, emptyText: "\u65E0 Cookies" })) : null, tab === "body" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u7C7B\u578B"), /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: draft.body.type, onChange: (e) => patch("body", { ...draft.body, type: e.target.value }) }, BODY_TYPES2.map((t) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: t, value: t }, t)))), draft.body.type === "none" ? /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u65E0\u8BF7\u6C42\u4F53" }) : /* @__PURE__ */ (0, import_react.createElement)(
+  ), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: send, disabled: sending }, sending ? "\u53D1\u9001\u4E2D\u2026" : "\u53D1\u9001"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: cancel, disabled: !sending }, "\u53D6\u6D88")), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-mono pp-meta", style: { margin: "var(--sp-2) 0 0 0" } }, "\u5B9E\u9645\u5730\u5740\uFF1A", finalUrl || "\uFF08\u672A\u586B\u5199 URL\uFF09"), varRefs.length > 0 ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-meta" }, "\u53D8\u91CF ", varRefs.join("\u3001"), missingVars.length > 0 ? "\uFF08\u672A\u5B9A\u4E49\uFF1A" + missingVars.join("\u3001") + "\uFF09" : "\uFF08\u5747\u5DF2\u5B9A\u4E49\uFF09") : null, isMock ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-note pp-note-warn" }, "\u793A\u4F8B\u6570\u636E \u2014 window.__postapiApi \u672A\u6CE8\u5165\u6216\u8BFB\u53D6\u5931\u8D25\uFF0C\u53D1\u9001\u5C06\u8FD4\u56DE mock \u54CD\u5E94") : null, error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-note pp-note-bad" }, error) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tabs", style: { marginTop: "var(--sp-3)" } }, TABS.map((t) => /* @__PURE__ */ (0, import_react.createElement)("button", { key: t.id, className: "pp-tab", "data-active": tab === t.id, onClick: () => setTab(t.id) }, t.label))), /* @__PURE__ */ (0, import_react.createElement)("div", { style: { marginTop: "var(--sp-2)" } }, tab === "params" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "Path \u53C2\u6570"), /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: draft.pathParams, onChange: (rows) => patch("pathParams", rows), columns: PARAM_COLUMNS, emptyText: "\u65E0 Path \u53C2\u6570" }), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title", style: { marginTop: "var(--sp-3)" } }, "Query \u53C2\u6570"), /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: draft.params, onChange: (rows) => patch("params", rows), columns: PARAM_COLUMNS, emptyText: "\u65E0 Query \u53C2\u6570" })) : null, tab === "headers" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u8BF7\u6C42\u5934"), /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: draft.headers, onChange: (rows) => patch("headers", rows), columns: PARAM_COLUMNS, emptyText: "\u65E0\u8BF7\u6C42\u5934" }), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title", style: { marginTop: "var(--sp-3)" } }, "Cookies"), /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: draft.cookies, onChange: (rows) => patch("cookies", rows), columns: PARAM_COLUMNS, emptyText: "\u65E0 Cookies" })) : null, tab === "body" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u7C7B\u578B"), /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: draft.body.type, onChange: (e) => patch("body", { ...draft.body, type: e.target.value }) }, BODY_TYPES2.map((t) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: t, value: t }, t)))), draft.body.type === "none" ? /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u65E0\u8BF7\u6C42\u4F53", hint: "Body \u7C7B\u578B\u9009 none \u65F6\u4E0D\u53D1\u9001\u8BF7\u6C42\u4F53" }) : /* @__PURE__ */ (0, import_react.createElement)(
     JsonEditor,
     {
       value: draft.body.content,
       rows: 8,
       onChange: (next) => patch("body", { ...draft.body, content: next })
     }
-  )) : null, tab === "auth" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u7C7B\u578B"), /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: draft.auth.type, onChange: (e) => patchAuth("type", e.target.value) }, AUTH_TYPES.map((t) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: t, value: t }, AUTH_LABEL2[t] || t)))), draft.auth.type === "bearer" ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "Token"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { flex: 1 }, value: draft.auth.token, onChange: (e) => patchAuth("token", e.target.value) })) : null, draft.auth.type === "basic" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u7528\u6237\u540D"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { flex: 1 }, value: draft.auth.username, onChange: (e) => patchAuth("username", e.target.value) })), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u5BC6\u7801"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { flex: 1 }, value: draft.auth.password, onChange: (e) => patchAuth("password", e.target.value) }))) : null, draft.auth.type === "apikey" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "Key"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { flex: 1 }, value: draft.auth.key, onChange: (e) => patchAuth("key", e.target.value) })), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "Value"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { flex: 1 }, value: draft.auth.value, onChange: (e) => patchAuth("value", e.target.value) })), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u4F4D\u7F6E"), /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: draft.auth.addTo, onChange: (e) => patchAuth("addTo", e.target.value) }, /* @__PURE__ */ (0, import_react.createElement)("option", { value: "header" }, "header"), /* @__PURE__ */ (0, import_react.createElement)("option", { value: "query" }, "query")))) : null, draft.auth.type === "none" ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, "\u65E0\u8BA4\u8BC1") : null) : null), /* @__PURE__ */ (0, import_react.createElement)("div", { style: { display: "flex", gap: "var(--sp-2)", alignItems: "center", marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)(
+  )) : null, tab === "auth" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u7C7B\u578B"), /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: draft.auth.type, onChange: (e) => patchAuth("type", e.target.value) }, AUTH_TYPES.map((t) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: t, value: t }, AUTH_LABEL2[t] || t)))), draft.auth.type === "bearer" ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "Token"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { flex: 1 }, value: draft.auth.token, onChange: (e) => patchAuth("token", e.target.value) })) : null, draft.auth.type === "basic" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u7528\u6237\u540D"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { flex: 1 }, value: draft.auth.username, onChange: (e) => patchAuth("username", e.target.value) })), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u5BC6\u7801"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { flex: 1 }, value: draft.auth.password, onChange: (e) => patchAuth("password", e.target.value) }))) : null, draft.auth.type === "apikey" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "Key"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { flex: 1 }, value: draft.auth.key, onChange: (e) => patchAuth("key", e.target.value) })), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "Value"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { flex: 1 }, value: draft.auth.value, onChange: (e) => patchAuth("value", e.target.value) })), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u4F4D\u7F6E"), /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: draft.auth.addTo, onChange: (e) => patchAuth("addTo", e.target.value) }, /* @__PURE__ */ (0, import_react.createElement)("option", { value: "header" }, "header"), /* @__PURE__ */ (0, import_react.createElement)("option", { value: "query" }, "query")))) : null, draft.auth.type === "none" ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-meta" }, "\u65E0\u8BA4\u8BC1") : null) : null), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)(
     "input",
     {
       className: "pp-input",
@@ -1861,7 +2034,7 @@ function DebugPage({ route, api }) {
       value: draft.name,
       onChange: (e) => patch("name", e.target.value)
     }
-  ), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: saveAsEndpoint }, "\u4FDD\u5B58\u4E3A\u63A5\u53E3"), savedHint ? /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-muted" }, savedHint) : null)), responsePanel));
+  ), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: saveAsEndpoint }, "\u4FDD\u5B58\u4E3A\u63A5\u53E3"), savedHint ? /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-note " + (savedHint.indexOf("\u5DF2\u4FDD\u5B58") === 0 ? "pp-note-ok" : "pp-note-bad") }, savedHint) : null)), responsePanel));
 }
 
 // src/client/pages/mock.jsx
@@ -2267,7 +2440,7 @@ function SchemaPage(props) {
       setError("\u5220\u9664\u6A21\u578B\u5931\u8D25\uFF1A" + errText2(err));
     }
   };
-  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page", "data-page": "schema", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("h1", { className: "pp-page-title" }, "\u6570\u636E\u6A21\u578B"), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, isMock ? "\u793A\u4F8B\u6570\u636E \u2014 api.storage \u4E0D\u53EF\u7528\uFF0C\u4EE5\u4E0B\u4E3A\u6587\u4EF6\u5185 mock" : "\u6570\u636E\u6765\u6E90\uFF1Aapi.storage\uFF08saveSchema / deleteSchema\uFF09"), error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-error-text" }, error) : null, notice ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, notice) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u9879\u76EE"), /* @__PURE__ */ (0, import_react.createElement)(
+  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page", "data-page": "schema", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("h1", { className: "pp-page-title" }, "\u6570\u636E\u6A21\u578B"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, isMock ? "\u793A\u4F8B\u6570\u636E \u2014 api.storage \u4E0D\u53EF\u7528\uFF0C\u4EE5\u4E0B\u4E3A\u6587\u4EF6\u5185 mock" : "\u6570\u636E\u6765\u6E90\uFF1Aapi.storage\uFF08saveSchema / deleteSchema\uFF09"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-toolbar-spacer" }), /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-meta" }, "\u9879\u76EE"), /* @__PURE__ */ (0, import_react.createElement)(
     "select",
     {
       className: "pp-select",
@@ -2278,11 +2451,10 @@ function SchemaPage(props) {
       }
     },
     projects.map((p) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: p.id, value: p.id }, p.name || p.id))
-  )), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-debug-layout" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u6A21\u578B\u5217\u8868"), schemas.map((s) => /* @__PURE__ */ (0, import_react.createElement)("div", { key: s.id, className: "pp-tree-row", "data-active": s.id === currentId ? "true" : "false", onClick: () => pick(s) }, /* @__PURE__ */ (0, import_react.createElement)("span", null, s.name || s.id))), schemas.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-empty" }, "\u6682\u65E0\u6A21\u578B") : null, /* @__PURE__ */ (0, import_react.createElement)("div", { style: { marginTop: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: blank }, "\u65B0\u5EFA\u6A21\u578B"))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u7F16\u8F91"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u540D\u79F0"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input", style: { flex: 1 }, value: name, onChange: (e) => setName(e.target.value) })), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u8BF4\u660E"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input", style: { flex: 1 }, value: description, onChange: (e) => setDescription(e.target.value) })), /* @__PURE__ */ (0, import_react.createElement)(
+  )), error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-error-text" }, error) : null, notice ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, notice) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-debug-layout" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u6A21\u578B"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tree" }, schemas.map((s) => /* @__PURE__ */ (0, import_react.createElement)("div", { key: s.id, className: "pp-tree-row", "data-active": s.id === currentId ? "true" : "false", onClick: () => pick(s) }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ellipsis" }, s.name || s.id)))), schemas.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-empty" }, "\u6682\u65E0\u6A21\u578B") : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm", onClick: blank }, "\u65B0\u5EFA\u6A21\u578B"))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u7F16\u8F91"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u540D\u79F0"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input", style: { flex: 1 }, value: name, onChange: (e) => setName(e.target.value) })), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u8BF4\u660E"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input", style: { flex: 1 }, value: description, onChange: (e) => setDescription(e.target.value) })), /* @__PURE__ */ (0, import_react.createElement)(
     "textarea",
     {
-      className: "pp-input pp-input-mono",
-      style: { width: "100%", minHeight: "var(--ctl-h)" },
+      className: "pp-json-editor",
       rows: 14,
       value: text,
       onChange: (e) => {
@@ -2290,7 +2462,7 @@ function SchemaPage(props) {
         setCheckResult(null);
       }
     }
-  ), /* @__PURE__ */ (0, import_react.createElement)("div", { style: { display: "flex", gap: "var(--sp-2)", marginTop: "var(--sp-2)", flexWrap: "wrap" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: validate }, "\u6821\u9A8C"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: makeExample }, "\u751F\u6210\u793A\u4F8B"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: save }, "\u4FDD\u5B58"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: remove }, "\u5220\u9664")), checkResult ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: checkResult.ok ? "pp-muted" : "pp-error-text" }, checkResult.ok ? "\u901A\u8FC7\uFF1A" : "\u5931\u8D25\uFF1A", checkResult.message) : null), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u793A\u4F8B\u6570\u636E"), /* @__PURE__ */ (0, import_react.createElement)("pre", { className: "pp-pre" }, example || "\uFF08\u70B9\u300C\u751F\u6210\u793A\u4F8B\u300D\u6309\u5F53\u524D JSON Schema \u751F\u6210\uFF09"))));
+  ), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: validate }, "\u6821\u9A8C"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: makeExample }, "\u751F\u6210\u793A\u4F8B"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: save }, "\u4FDD\u5B58"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-danger", onClick: remove }, "\u5220\u9664")), checkResult ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: checkResult.ok ? "pp-note pp-note-ok" : "pp-note pp-note-bad", style: { marginTop: "var(--sp-3)" } }, checkResult.ok ? "\u901A\u8FC7\uFF1A" : "\u5931\u8D25\uFF1A", checkResult.message) : null), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u793A\u4F8B\u6570\u636E"), /* @__PURE__ */ (0, import_react.createElement)("pre", { className: "pp-pre pp-pre-scroll" }, example || "\uFF08\u70B9\u300C\u751F\u6210\u793A\u4F8B\u300D\u6309\u5F53\u524D JSON Schema \u751F\u6210\uFF09"))));
 }
 function safeParse(text) {
   try {
@@ -2479,7 +2651,7 @@ function EnvPage(props) {
   const varTable2 = (rows, onChange, onRemove) => /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table" }, /* @__PURE__ */ (0, import_react.createElement)("thead", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, VAR_COLUMNS.map((c) => /* @__PURE__ */ (0, import_react.createElement)("th", { key: c }, c)))), /* @__PURE__ */ (0, import_react.createElement)("tbody", null, rows.map((v, i) => /* @__PURE__ */ (0, import_react.createElement)("tr", { key: i }, /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)(
     "input",
     {
-      className: "pp-input pp-input-mono",
+      className: "pp-input pp-input-sm pp-input-mono",
       style: { width: "100%" },
       value: v.key,
       onChange: (e) => onChange(i, { key: e.target.value })
@@ -2487,14 +2659,14 @@ function EnvPage(props) {
   )), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)(
     "input",
     {
-      className: "pp-input pp-input-mono",
+      className: "pp-input pp-input-sm pp-input-mono",
       style: { width: "100%" },
       type: v.secret ? "password" : "text",
       value: v.value,
       onChange: (e) => onChange(i, { value: e.target.value })
     }
-  )), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("input", { type: "checkbox", checked: v.enabled, onChange: (e) => onChange(i, { enabled: e.target.checked }) })), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("input", { type: "checkbox", checked: v.secret, onChange: (e) => onChange(i, { secret: e.target.checked }) })), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: () => onRemove(i) }, "\u5220\u9664")))), rows.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { colSpan: VAR_COLUMNS.length, className: "pp-muted" }, "\u6682\u65E0\u53D8\u91CF")) : null));
-  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page", "data-page": "env", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("h1", { className: "pp-page-title" }, "\u73AF\u5883\u4E0E\u53D8\u91CF"), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, isMock ? "\u793A\u4F8B\u6570\u636E \u2014 api.storage \u4E0D\u53EF\u7528\uFF0C\u4EE5\u4E0B\u4E3A\u6587\u4EF6\u5185 mock" : "\u6570\u636E\u6765\u6E90\uFF1Aapi.storage\uFF08saveEnvironment / saveGlobals\uFF09"), error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-error-text" }, error) : null, notice ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, notice) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u9879\u76EE"), /* @__PURE__ */ (0, import_react.createElement)(
+  )), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("input", { type: "checkbox", checked: v.enabled, onChange: (e) => onChange(i, { enabled: e.target.checked }) })), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("input", { type: "checkbox", checked: v.secret, onChange: (e) => onChange(i, { secret: e.target.checked }) })), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm pp-btn-danger", onClick: () => onRemove(i) }, "\u5220\u9664")))), rows.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { colSpan: VAR_COLUMNS.length, className: "pp-muted" }, "\u6682\u65E0\u53D8\u91CF")) : null));
+  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page", "data-page": "env", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("h1", { className: "pp-page-title" }, "\u73AF\u5883\u4E0E\u53D8\u91CF"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, isMock ? "\u793A\u4F8B\u6570\u636E \u2014 api.storage \u4E0D\u53EF\u7528\uFF0C\u4EE5\u4E0B\u4E3A\u6587\u4EF6\u5185 mock" : "\u6570\u636E\u6765\u6E90\uFF1Aapi.storage\uFF08saveEnvironment / saveGlobals\uFF09"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-toolbar-spacer" }), /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-meta" }, "\u9879\u76EE"), /* @__PURE__ */ (0, import_react.createElement)(
     "select",
     {
       className: "pp-select",
@@ -2505,7 +2677,7 @@ function EnvPage(props) {
       }
     },
     projects.map((p) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: p.id, value: p.id }, p.name || p.id))
-  )), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-debug-layout" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u73AF\u5883\u5217\u8868"), envSummary(envs).map((e) => /* @__PURE__ */ (0, import_react.createElement)(
+  )), error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-error-text" }, error) : null, notice ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, notice) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-debug-layout" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u73AF\u5883"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tree" }, envSummary(envs).map((e) => /* @__PURE__ */ (0, import_react.createElement)(
     "div",
     {
       key: e.id,
@@ -2513,9 +2685,9 @@ function EnvPage(props) {
       "data-active": draft && draft.id === e.id ? "true" : "false",
       onClick: () => pickEnv(envs.find((x) => x.id === e.id) || blankEnv())
     },
-    /* @__PURE__ */ (0, import_react.createElement)("span", null, e.name, e.isDefault ? " \xB7 \u9ED8\u8BA4" : ""),
-    /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-muted", style: { marginLeft: "auto" } }, e.varCount)
-  )), /* @__PURE__ */ (0, import_react.createElement)("div", { style: { display: "flex", gap: "var(--sp-2)", marginTop: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: () => pickEnv(blankEnv()) }, "\u65B0\u5EFA\u73AF\u5883"))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u73AF\u5883\u7F16\u8F91"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u540D\u79F0"), /* @__PURE__ */ (0, import_react.createElement)(
+    /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ellipsis" }, e.name, e.isDefault ? " \xB7 \u9ED8\u8BA4" : ""),
+    /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-tree-row-count" }, e.varCount)
+  )), envs.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-empty" }, "\u6682\u65E0\u73AF\u5883") : null), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm", onClick: () => pickEnv(blankEnv()) }, "\u65B0\u5EFA\u73AF\u5883"))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u73AF\u5883\u53D8\u91CF"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u540D\u79F0"), /* @__PURE__ */ (0, import_react.createElement)(
     "input",
     {
       className: "pp-input",
@@ -2538,7 +2710,7 @@ function EnvPage(props) {
       checked: draft.isDefault === true,
       onChange: (e) => patchDraft({ isDefault: e.target.checked })
     }
-  )), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u73AF\u5883\u53D8\u91CF"), varTable2(draftVars, setVarAt, removeVar), /* @__PURE__ */ (0, import_react.createElement)("div", { style: { display: "flex", gap: "var(--sp-2)", marginTop: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: addVar }, "\u65B0\u589E\u53D8\u91CF"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: saveEnv }, "\u4FDD\u5B58\u73AF\u5883"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: () => removeEnv(draft.id || "") }, "\u5220\u9664\u73AF\u5883"))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u5168\u5C40\u53D8\u91CF"), varTable2(globals, setGlobalAt, removeGlobal), /* @__PURE__ */ (0, import_react.createElement)("div", { style: { display: "flex", gap: "var(--sp-2)", marginTop: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: addGlobal }, "\u65B0\u589E\u53D8\u91CF"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: saveGlobals }, "\u4FDD\u5B58\u5168\u5C40")))), /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-card-title", style: { marginTop: "var(--sp-6)" } }, "\u53D8\u91CF\u4F18\u5148\u7EA7"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card" }, /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table" }, /* @__PURE__ */ (0, import_react.createElement)("thead", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "110px" } }, "\u4F18\u5148\u7EA7"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "160px" } }, "\u4F5C\u7528\u57DF"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "\u8BF4\u660E"))), /* @__PURE__ */ (0, import_react.createElement)("tbody", null, priorityRows().map((r) => /* @__PURE__ */ (0, import_react.createElement)("tr", { key: r.level }, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-muted" }, r.level), /* @__PURE__ */ (0, import_react.createElement)("td", null, r.scope), /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-muted" }, r.note)))))));
+  )), varTable2(draftVars, setVarAt, removeVar), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: addVar }, "\u65B0\u589E\u53D8\u91CF"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: saveEnv }, "\u4FDD\u5B58\u73AF\u5883"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-danger", onClick: () => removeEnv(draft.id || "") }, "\u5220\u9664\u73AF\u5883")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-note", style: { marginTop: "var(--sp-3)" } }, "enabled \u4E3A true \u7684\u53D8\u91CF\u624D\u53C2\u4E0E ", "{{key}}", " \u66FF\u6362\uFF1Bsecret \u4E3A true \u65F6\u503C\u4EE5\u5BC6\u7801\u5F62\u5F0F\u663E\u793A\u3002")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u5168\u5C40\u53D8\u91CF"), varTable2(globals, setGlobalAt, removeGlobal), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: addGlobal }, "\u65B0\u589E\u53D8\u91CF"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: saveGlobals }, "\u4FDD\u5B58\u5168\u5C40")))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card", style: { marginTop: "var(--sp-5)" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u53D8\u91CF\u4F18\u5148\u7EA7"), /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table" }, /* @__PURE__ */ (0, import_react.createElement)("thead", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "110px" } }, "\u4F18\u5148\u7EA7"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "160px" } }, "\u4F5C\u7528\u57DF"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "\u8BF4\u660E"))), /* @__PURE__ */ (0, import_react.createElement)("tbody", null, priorityRows().map((r) => /* @__PURE__ */ (0, import_react.createElement)("tr", { key: r.level }, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-muted" }, r.level), /* @__PURE__ */ (0, import_react.createElement)("td", null, r.scope), /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-muted" }, r.note)))))));
 }
 
 // src/client/pages/history.jsx
@@ -2580,11 +2752,16 @@ function fmtSize(bytes) {
   if (n < 1024 * 1024) return (n / 1024).toFixed(1) + " KB";
   return (n / (1024 * 1024)).toFixed(1) + " MB";
 }
-function statusTone2(status) {
+function statusTone(status) {
   const s = Number(status);
   if (s >= 200 && s < 300) return "success";
   if (s >= 400 && s < 500) return "warning";
   return "error";
+}
+function pillClass(tone) {
+  if (tone === "success") return "pp-pill pp-pill-ok";
+  if (tone === "warning") return "pp-pill pp-pill-warn";
+  return "pp-pill pp-pill-bad";
 }
 function replayPayload(entry) {
   const req = entry && entry.request || {};
@@ -2677,7 +2854,7 @@ function HistoryPage(props) {
     }
   };
   const detail = entries.find((e) => e.id === detailId);
-  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page", "data-page": "history", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("h1", { className: "pp-page-title" }, "\u8BF7\u6C42\u5386\u53F2"), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, isMock ? "\u793A\u4F8B\u6570\u636E \u2014 api.storage.getHistory \u4E0D\u53EF\u7528\uFF0C\u4EE5\u4E0B\u4E3A\u6587\u4EF6\u5185 mock" : "\u6570\u636E\u6765\u6E90\uFF1Aapi.storage\uFF08getHistory / clearHistory\uFF09"), error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-error-text" }, error) : null, notice ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, notice) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u9879\u76EE"), /* @__PURE__ */ (0, import_react.createElement)(
+  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page", "data-page": "history", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("h1", { className: "pp-page-title" }, "\u8BF7\u6C42\u5386\u53F2"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, isMock ? "\u793A\u4F8B\u6570\u636E \u2014 api.storage.getHistory \u4E0D\u53EF\u7528\uFF0C\u4EE5\u4E0B\u4E3A\u6587\u4EF6\u5185 mock" : "\u6570\u636E\u6765\u6E90\uFF1Aapi.storage\uFF08getHistory / clearHistory\uFF09"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-toolbar-spacer" }), /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-meta" }, "\u9879\u76EE"), /* @__PURE__ */ (0, import_react.createElement)(
     "select",
     {
       className: "pp-select",
@@ -2688,7 +2865,7 @@ function HistoryPage(props) {
       }
     },
     projects.map((p) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: p.id, value: p.id }, p.name || p.id))
-  ), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: () => load(projectId) }, "\u5237\u65B0"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: clear }, pendingClear ? "\u786E\u8BA4\u6E05\u7A7A" : "\u6E05\u7A7A\u5386\u53F2")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card" }, /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table" }, /* @__PURE__ */ (0, import_react.createElement)("thead", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "150px" } }, "\u65F6\u95F4"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "80px" } }, "\u65B9\u6CD5"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "URL"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "70px" } }, "\u72B6\u6001"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "80px" } }, "\u8017\u65F6"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "90px" } }, "\u5927\u5C0F"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "130px" } }, "\u64CD\u4F5C"))), /* @__PURE__ */ (0, import_react.createElement)("tbody", null, entries.map((e) => /* @__PURE__ */ (0, import_react.createElement)("tr", { key: e.id }, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-muted" }, fmtDateTime(e.at)), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": e.method }, e.method)), /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-table-mono" }, e.url), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-pill", "data-tone": statusTone2(e.status) }, e.status)), /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-muted" }, e.timeMs, " ms"), /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-muted" }, fmtSize(e.bodySize)), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: () => setDetailId(detailId === e.id ? "" : e.id) }, "\u8BE6\u60C5"), " ", /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: () => replay(e) }, "\u56DE\u653E")))), entries.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { colSpan: 7, className: "pp-muted" }, "\u6682\u65E0\u5386\u53F2\u8BB0\u5F55")) : null))), detail ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u8BE6\u60C5 \xB7 ", detail.id), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-muted" }, "\u8BF7\u6C42"), /* @__PURE__ */ (0, import_react.createElement)("pre", { className: "pp-pre" }, JSON.stringify(detail.request || {}, null, 2)), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-muted", style: { marginTop: "var(--sp-2)" } }, "\u54CD\u5E94"), /* @__PURE__ */ (0, import_react.createElement)("pre", { className: "pp-pre" }, JSON.stringify(detail.response || {}, null, 2))) : null);
+  ), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: () => load(projectId) }, "\u5237\u65B0"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-danger", onClick: clear }, pendingClear ? "\u786E\u8BA4\u6E05\u7A7A" : "\u6E05\u7A7A\u5386\u53F2")), error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-error-text" }, error) : null, notice ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, notice) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card" }, /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table" }, /* @__PURE__ */ (0, import_react.createElement)("thead", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "150px" } }, "\u65F6\u95F4"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "80px" } }, "\u65B9\u6CD5"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "URL"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "70px" } }, "\u72B6\u6001"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "80px" } }, "\u8017\u65F6"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "90px" } }, "\u5927\u5C0F"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "130px" } }, "\u64CD\u4F5C"))), /* @__PURE__ */ (0, import_react.createElement)("tbody", null, entries.map((e) => /* @__PURE__ */ (0, import_react.createElement)("tr", { key: e.id, "data-active": detailId === e.id ? "true" : "false" }, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, fmtDateTime(e.at)), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": e.method }, e.method)), /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-table-mono pp-ellipsis" }, e.url), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("span", { className: pillClass(statusTone(e.status)) }, e.status)), /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, e.timeMs, " ms"), /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, fmtSize(e.bodySize)), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm", onClick: () => setDetailId(detailId === e.id ? "" : e.id) }, "\u8BE6\u60C5"), " ", /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm", onClick: () => replay(e) }, "\u56DE\u653E")))), entries.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { colSpan: 7, className: "pp-muted" }, "\u6682\u65E0\u5386\u53F2\u8BB0\u5F55")) : null))), detail ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u8BE6\u60C5 \xB7 ", detail.id), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, "\u72B6\u6001"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: pillClass(statusTone(detail.status)) }, detail.status), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, "\u8017\u65F6 ", detail.timeMs, " ms"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, "\u5927\u5C0F ", fmtSize(detail.bodySize))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-meta", style: { marginTop: "var(--sp-2)" } }, "\u8BF7\u6C42"), /* @__PURE__ */ (0, import_react.createElement)("pre", { className: "pp-pre pp-pre-scroll" }, JSON.stringify(detail.request || {}, null, 2)), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-meta", style: { marginTop: "var(--sp-2)" } }, "\u54CD\u5E94"), /* @__PURE__ */ (0, import_react.createElement)("pre", { className: "pp-pre pp-pre-scroll" }, JSON.stringify(detail.response || {}, null, 2))) : null);
 }
 
 // src/client/pages/test.jsx
@@ -2920,8 +3097,8 @@ function TestPage(props) {
     }
   };
   const caseAssertions = normalizeAssertions(activeCase && activeCase.assertions);
-  const resultPanel = (emptyHint) => /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u8FD0\u884C\u7ED3\u679C"), result ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("p", { className: result.passed ? "pp-muted" : "pp-error-text" }, result.passed ? "\u901A\u8FC7" : "\u5931\u8D25", " \xB7 ", result.passedCount, "/", result.total, " \xB7 ", result.durationMs, " ms"), result.error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-error-text" }, result.error) : null, /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table" }, /* @__PURE__ */ (0, import_react.createElement)("thead", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("th", null, "\u540D\u79F0"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "70px" } }, "\u7ED3\u679C"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "\u9519\u8BEF"))), /* @__PURE__ */ (0, import_react.createElement)("tbody", null, result.rows.map((r, i) => /* @__PURE__ */ (0, import_react.createElement)("tr", { key: i }, /* @__PURE__ */ (0, import_react.createElement)("td", null, r.name || r.id || "-"), /* @__PURE__ */ (0, import_react.createElement)("td", { className: r.passed ? "pp-muted" : "pp-error-text" }, r.passed ? "\u901A\u8FC7" : "\u5931\u8D25"), /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-muted" }, r.error || "-"))), result.rows.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { colSpan: 3, className: "pp-muted" }, "\u65E0\u65AD\u8A00\u7ED3\u679C")) : null))) : /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-empty" }, emptyHint));
-  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page", "data-page": "test", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("h1", { className: "pp-page-title" }, "\u81EA\u52A8\u5316\u6D4B\u8BD5"), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, isMock ? "\u793A\u4F8B\u6570\u636E \u2014 api.storage \u4E0D\u53EF\u7528\uFF0C\u4EE5\u4E0B\u4E3A\u6587\u4EF6\u5185 mock" : "\u6570\u636E\u6765\u6E90\uFF1Aapi.storage.getProject\uFF08\u7528\u4F8B\u4E0E\u573A\u666F\u5B58 project.settings.testCases / testScenarios\uFF09\uFF1B\u8FD0\u884C\u8D70 api.test.runCase / runScenario"), error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-error-text" }, error) : null, notice ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, notice) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u9879\u76EE"), /* @__PURE__ */ (0, import_react.createElement)(
+  const resultPanel = (emptyHint) => /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u8FD0\u884C\u7ED3\u679C"), result ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: result.passed ? "pp-pill pp-pill-ok" : "pp-pill pp-pill-bad" }, result.passed ? "\u901A\u8FC7" : "\u5931\u8D25"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, result.passedCount, "/", result.total), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, result.durationMs, " ms")), result.error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-error-text" }, result.error) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-list", style: { marginTop: "var(--sp-2)" } }, result.rows.map((r, i) => /* @__PURE__ */ (0, import_react.createElement)("div", { key: i, className: "pp-result-row" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ellipsis" }, r.name || r.id || "-"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: r.passed ? "pp-pill pp-pill-ok" : "pp-pill pp-pill-bad", style: { marginLeft: "auto" } }, r.passed ? "\u901A\u8FC7" : "\u5931\u8D25"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta pp-ellipsis" }, r.error || "-"))), result.rows.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-result-row pp-meta" }, "\u65E0\u65AD\u8A00\u7ED3\u679C") : null)) : /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-empty" }, emptyHint));
+  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page", "data-page": "test", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("h1", { className: "pp-page-title" }, "\u81EA\u52A8\u5316\u6D4B\u8BD5"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, isMock ? "\u793A\u4F8B\u6570\u636E \u2014 api.storage \u4E0D\u53EF\u7528\uFF0C\u4EE5\u4E0B\u4E3A\u6587\u4EF6\u5185 mock" : "\u6570\u636E\u6765\u6E90\uFF1Aapi.storage.getProject\uFF08\u7528\u4F8B\u4E0E\u573A\u666F\u5B58 project.settings.testCases / testScenarios\uFF09\uFF1B\u8FD0\u884C\u8D70 api.test.runCase / runScenario"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-toolbar-spacer" }), /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-meta" }, "\u9879\u76EE"), /* @__PURE__ */ (0, import_react.createElement)(
     "select",
     {
       className: "pp-select",
@@ -2932,7 +3109,7 @@ function TestPage(props) {
       }
     },
     projects.map((p) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: p.id, value: p.id }, p.name || p.id))
-  ), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: persist }, "\u4FDD\u5B58\u7528\u4F8B\u4E0E\u573A\u666F")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tabs" }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-tab", "data-active": tab === "cases" ? "true" : "false", onClick: () => setTab("cases") }, "\u6D4B\u8BD5\u7528\u4F8B"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-tab", "data-active": tab === "scenarios" ? "true" : "false", onClick: () => setTab("scenarios") }, "\u6D4B\u8BD5\u573A\u666F")), tab === "cases" ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-debug-layout", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u7528\u4F8B\u5217\u8868"), cases.map((c) => /* @__PURE__ */ (0, import_react.createElement)(
+  ), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: persist }, "\u4FDD\u5B58\u7528\u4F8B\u4E0E\u573A\u666F")), error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-error-text" }, error) : null, notice ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, notice) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tabs" }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-tab", "data-active": tab === "cases" ? "true" : "false", onClick: () => setTab("cases") }, "\u6D4B\u8BD5\u7528\u4F8B"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-tab", "data-active": tab === "scenarios" ? "true" : "false", onClick: () => setTab("scenarios") }, "\u6D4B\u8BD5\u573A\u666F")), tab === "cases" ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-debug-layout", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u7528\u4F8B"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tree" }, cases.map((c) => /* @__PURE__ */ (0, import_react.createElement)(
     "div",
     {
       key: c.id,
@@ -2944,8 +3121,8 @@ function TestPage(props) {
         setError("");
       }
     },
-    /* @__PURE__ */ (0, import_react.createElement)("span", null, c.name || c.id)
-  )), cases.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-empty" }, "\u6682\u65E0\u7528\u4F8B") : null), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u7528\u4F8B\u7F16\u8F91"), activeCase ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u540D\u79F0"), /* @__PURE__ */ (0, import_react.createElement)(
+    /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ellipsis" }, c.name || c.id)
+  ))), cases.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-empty" }, "\u6682\u65E0\u7528\u4F8B") : null), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u65AD\u8A00"), activeCase ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u540D\u79F0"), /* @__PURE__ */ (0, import_react.createElement)(
     "input",
     {
       className: "pp-input",
@@ -2963,18 +3140,18 @@ function TestPage(props) {
     },
     /* @__PURE__ */ (0, import_react.createElement)("option", { value: "" }, "\uFF08\u672A\u7ED1\u5B9A\uFF09"),
     endpoints.map((ep) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: ep.id, value: ep.id }, ep.method, " ", ep.url))
-  )), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u65AD\u8A00"), /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table" }, /* @__PURE__ */ (0, import_react.createElement)("thead", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "90px" } }, "\u6765\u6E90"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "\u8DEF\u5F84"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "110px" } }, "\u64CD\u4F5C"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "\u671F\u671B\u503C"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "\u8BF4\u660E"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "70px" } }, "\u64CD\u4F5C"))), /* @__PURE__ */ (0, import_react.createElement)("tbody", null, caseAssertions.map((a, i) => /* @__PURE__ */ (0, import_react.createElement)("tr", { key: i }, /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: a.source, onChange: (e) => patchAssertion(i, { source: e.target.value }) }, SOURCES.map((s) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: s, value: s }, s)))), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)(
+  )), /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table" }, /* @__PURE__ */ (0, import_react.createElement)("thead", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "90px" } }, "\u6765\u6E90"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "\u8DEF\u5F84"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "110px" } }, "\u64CD\u4F5C"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "\u671F\u671B\u503C"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "\u8BF4\u660E"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "70px" } }, "\u64CD\u4F5C"))), /* @__PURE__ */ (0, import_react.createElement)("tbody", null, caseAssertions.map((a, i) => /* @__PURE__ */ (0, import_react.createElement)("tr", { key: i }, /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select pp-input-sm", value: a.source, onChange: (e) => patchAssertion(i, { source: e.target.value }) }, SOURCES.map((s) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: s, value: s }, s)))), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)(
     "input",
     {
-      className: "pp-input pp-input-mono",
+      className: "pp-input pp-input-sm pp-input-mono",
       style: { width: "100%" },
       value: a.path,
       onChange: (e) => patchAssertion(i, { path: e.target.value })
     }
-  )), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: a.op, onChange: (e) => patchAssertion(i, { op: e.target.value }) }, OPS.map((o) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: o, value: o }, o)))), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)(
+  )), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select pp-input-sm", value: a.op, onChange: (e) => patchAssertion(i, { op: e.target.value }) }, OPS.map((o) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: o, value: o }, o)))), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)(
     "input",
     {
-      className: "pp-input pp-input-mono",
+      className: "pp-input pp-input-sm pp-input-mono",
       style: { width: "100%" },
       value: a.value,
       onChange: (e) => patchAssertion(i, { value: e.target.value })
@@ -2982,12 +3159,12 @@ function TestPage(props) {
   )), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)(
     "input",
     {
-      className: "pp-input",
+      className: "pp-input pp-input-sm",
       style: { width: "100%" },
       value: a.message,
       onChange: (e) => patchAssertion(i, { message: e.target.value })
     }
-  )), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: () => removeAssertion(i) }, "\u5220\u9664")))), caseAssertions.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { colSpan: 6, className: "pp-muted" }, "\u6682\u65E0\u65AD\u8A00")) : null)), /* @__PURE__ */ (0, import_react.createElement)("div", { style: { display: "flex", gap: "var(--sp-2)", marginTop: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: addAssertion }, "\u65B0\u589E\u65AD\u8A00"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: runCase, disabled: running }, "\u8FD0\u884C\u7528\u4F8B"))) : /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-empty" }, "\u5DE6\u4FA7\u9009\u62E9\u4E00\u4E2A\u7528\u4F8B")), resultPanel("\u5C1A\u672A\u8FD0\u884C")) : /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-debug-layout", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u573A\u666F\u5217\u8868"), scenarios.map((s) => /* @__PURE__ */ (0, import_react.createElement)(
+  )), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm pp-btn-danger", onClick: () => removeAssertion(i) }, "\u5220\u9664")))), caseAssertions.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { colSpan: 6, className: "pp-muted" }, "\u6682\u65E0\u65AD\u8A00")) : null)), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: addAssertion }, "\u65B0\u589E\u65AD\u8A00"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: runCase, disabled: running }, "\u8FD0\u884C\u7528\u4F8B"))) : /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-empty" }, "\u5DE6\u4FA7\u9009\u62E9\u4E00\u4E2A\u7528\u4F8B")), resultPanel("\u5C1A\u672A\u8FD0\u884C")) : /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-debug-layout", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u573A\u666F"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tree" }, scenarios.map((s) => /* @__PURE__ */ (0, import_react.createElement)(
     "div",
     {
       key: s.id,
@@ -2999,9 +3176,9 @@ function TestPage(props) {
         setError("");
       }
     },
-    /* @__PURE__ */ (0, import_react.createElement)("span", null, s.name || s.id),
-    /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-muted", style: { marginLeft: "auto" } }, (s.steps || []).length)
-  )), scenarios.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-empty" }, "\u6682\u65E0\u573A\u666F") : null), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u6B65\u9AA4\u7F16\u6392"), activeScenario ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u573A\u666F\u540D"), /* @__PURE__ */ (0, import_react.createElement)(
+    /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ellipsis" }, s.name || s.id),
+    /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-tree-row-count" }, (s.steps || []).length)
+  ))), scenarios.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-empty" }, "\u6682\u65E0\u573A\u666F") : null), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u6B65\u9AA4\u7F16\u6392"), activeScenario ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u573A\u666F\u540D"), /* @__PURE__ */ (0, import_react.createElement)(
     "input",
     {
       className: "pp-input",
@@ -3009,10 +3186,10 @@ function TestPage(props) {
       value: activeScenario.name || "",
       onChange: (e) => patchScenario({ name: e.target.value })
     }
-  )), /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table" }, /* @__PURE__ */ (0, import_react.createElement)("thead", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "40px" } }, "#"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "\u6B65\u9AA4\u540D"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "\u63A5\u53E3"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "140px" } }, "\u64CD\u4F5C"))), /* @__PURE__ */ (0, import_react.createElement)("tbody", null, (activeScenario.steps || []).map((s, i) => /* @__PURE__ */ (0, import_react.createElement)("tr", { key: s.id || i }, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-muted" }, i + 1), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)(
+  )), /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table" }, /* @__PURE__ */ (0, import_react.createElement)("thead", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "40px" } }, "#"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "\u6B65\u9AA4\u540D"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "\u63A5\u53E3"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "140px" } }, "\u64CD\u4F5C"))), /* @__PURE__ */ (0, import_react.createElement)("tbody", null, (activeScenario.steps || []).map((s, i) => /* @__PURE__ */ (0, import_react.createElement)("tr", { key: s.id || i }, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, i + 1), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)(
     "input",
     {
-      className: "pp-input",
+      className: "pp-input pp-input-sm",
       style: { width: "100%" },
       value: s.name || "",
       onChange: (e) => patchStep(i, { name: e.target.value })
@@ -3020,14 +3197,14 @@ function TestPage(props) {
   )), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)(
     "select",
     {
-      className: "pp-select",
+      className: "pp-select pp-input-sm",
       style: { width: "100%" },
       value: s.endpointId || "",
       onChange: (e) => patchStep(i, { endpointId: e.target.value })
     },
     /* @__PURE__ */ (0, import_react.createElement)("option", { value: "" }, "\uFF08\u672A\u7ED1\u5B9A\uFF09"),
     endpoints.map((ep) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: ep.id, value: ep.id }, ep.method, " ", ep.url))
-  )), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: () => moveStep(i, -1), title: "\u4E0A\u79FB" }, "\u2191"), " ", /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: () => moveStep(i, 1), title: "\u4E0B\u79FB" }, "\u2193"), " ", /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: () => removeStep(i), title: "\u5220\u9664" }, "\xD7")))), (activeScenario.steps || []).length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { colSpan: 4, className: "pp-muted" }, "\u6682\u65E0\u6B65\u9AA4")) : null)), /* @__PURE__ */ (0, import_react.createElement)("div", { style: { display: "flex", gap: "var(--sp-2)", marginTop: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: addStep }, "\u6DFB\u52A0\u6B65\u9AA4"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: runScenario, disabled: running }, "\u8FD0\u884C\u573A\u666F"))) : /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-empty" }, "\u5DE6\u4FA7\u9009\u62E9\u4E00\u4E2A\u573A\u666F")), resultPanel("\u5C1A\u672A\u8FD0\u884C")));
+  ), s.endpointId ? /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": (endpoints.find((ep) => ep.id === s.endpointId) || {}).method || "GET" }, (endpoints.find((ep) => ep.id === s.endpointId) || {}).method || "GET") : null), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm", onClick: () => moveStep(i, -1), title: "\u4E0A\u79FB" }, "\u2191"), " ", /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm", onClick: () => moveStep(i, 1), title: "\u4E0B\u79FB" }, "\u2193"), " ", /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm pp-btn-danger", onClick: () => removeStep(i), title: "\u5220\u9664" }, "\xD7")))), (activeScenario.steps || []).length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { colSpan: 4, className: "pp-muted" }, "\u6682\u65E0\u6B65\u9AA4")) : null)), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: addStep }, "\u6DFB\u52A0\u6B65\u9AA4"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: runScenario, disabled: running }, "\u8FD0\u884C\u573A\u666F"))) : /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-empty" }, "\u5DE6\u4FA7\u9009\u62E9\u4E00\u4E2A\u573A\u666F")), resultPanel("\u5C1A\u672A\u8FD0\u884C")));
 }
 
 // src/client/pages/import.jsx
@@ -3218,7 +3395,7 @@ function ImportPage(props) {
     }
   };
   const currentImport = IMPORT_KINDS.find((k) => k.id === importKind) || IMPORT_KINDS[0];
-  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page", "data-page": "import", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("h1", { className: "pp-page-title" }, "\u5BFC\u5165\u5BFC\u51FA\u4E0E\u4EE3\u7801\u751F\u6210"), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, isMock ? "\u793A\u4F8B\u6570\u636E \u2014 api \u6865\u4E0D\u53EF\u7528\uFF0C\u64CD\u4F5C\u6309\u94AE\u4F1A\u63D0\u793A\u7F3A\u5931\u7684\u65B9\u6CD5" : "\u6570\u636E\u6765\u6E90\uFF1Aapi.import / api.export / api.codegen"), error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-error-text" }, error) : null, notice ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, notice) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u9879\u76EE"), /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: projectId, onChange: (e) => setProjectId(e.target.value) }, projects.map((p) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: p.id, value: p.id }, p.name || p.id)))), /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-card-title" }, "\u5BFC\u5165"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tabs" }, IMPORT_KINDS.map((k) => /* @__PURE__ */ (0, import_react.createElement)(
+  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page", "data-page": "import", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("h1", { className: "pp-page-title" }, "\u5BFC\u5165\u5BFC\u51FA\u4E0E\u4EE3\u7801\u751F\u6210"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, isMock ? "\u793A\u4F8B\u6570\u636E \u2014 api \u6865\u4E0D\u53EF\u7528\uFF0C\u64CD\u4F5C\u6309\u94AE\u4F1A\u63D0\u793A\u7F3A\u5931\u7684\u65B9\u6CD5" : "\u6570\u636E\u6765\u6E90\uFF1Aapi.import / api.export / api.codegen"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-toolbar-spacer" }), /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-meta" }, "\u9879\u76EE"), /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: projectId, onChange: (e) => setProjectId(e.target.value) }, projects.map((p) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: p.id, value: p.id }, p.name || p.id)))), error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-error-text" }, error) : null, notice ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, notice) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-cols-2" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card pp-card-hover" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u5BFC\u5165"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tabs" }, IMPORT_KINDS.map((k) => /* @__PURE__ */ (0, import_react.createElement)(
     "button",
     {
       key: k.id,
@@ -3227,16 +3404,15 @@ function ImportPage(props) {
       onClick: () => pickImportKind(k.id)
     },
     k.label
-  ))), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted", style: { marginTop: "var(--sp-2)" } }, currentImport.hint), /* @__PURE__ */ (0, import_react.createElement)(
+  ))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-note", style: { marginTop: "var(--sp-2)" } }, currentImport.hint), /* @__PURE__ */ (0, import_react.createElement)(
     "textarea",
     {
-      className: "pp-input pp-input-mono",
-      style: { width: "100%", minHeight: "var(--ctl-h)" },
+      className: "pp-textarea",
       rows: 8,
       value: importText,
       onChange: (e) => setImportText(e.target.value)
     }
-  ), /* @__PURE__ */ (0, import_react.createElement)("div", { style: { display: "flex", gap: "var(--sp-2)", marginTop: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: runImport, disabled: busy }, "\u5F00\u59CB\u5BFC\u5165"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: () => copy(importOut, "\u5BFC\u5165\u7ED3\u679C") }, "\u590D\u5236\u7ED3\u679C")), importOut ? /* @__PURE__ */ (0, import_react.createElement)("pre", { className: "pp-pre", style: { marginTop: "var(--sp-2)" } }, importOut) : null), /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-card-title", style: { marginTop: "var(--sp-6)" } }, "\u5BFC\u51FA"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card" }, /* @__PURE__ */ (0, import_react.createElement)("div", { style: { display: "flex", gap: "var(--sp-2)", flexWrap: "wrap" } }, EXPORT_KINDS.map((k) => /* @__PURE__ */ (0, import_react.createElement)("button", { key: k.id, className: "pp-btn", onClick: () => runExport(k.id), disabled: busy }, k.label)), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: () => copy(exportOut, "\u5BFC\u51FA\u7ED3\u679C") }, "\u590D\u5236\u7ED3\u679C")), exportOut ? /* @__PURE__ */ (0, import_react.createElement)("pre", { className: "pp-pre", style: { marginTop: "var(--sp-2)" } }, exportOut) : null), /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-card-title", style: { marginTop: "var(--sp-6)" } }, "\u4EE3\u7801\u751F\u6210"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u8BED\u8A00"), /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: lang, onChange: (e) => setLang(e.target.value) }, LANGS.map((l) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: l.id, value: l.id }, l.label))), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: runCodegen, disabled: busy }, "\u751F\u6210\u4EE3\u7801"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: () => copy(codeOut, "\u751F\u6210\u4EE3\u7801") }, "\u590D\u5236\u4EE3\u7801")), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, "\u793A\u4F8B\u63A5\u53E3\uFF1A", MOCK_ENDPOINT.method, " ", MOCK_ENDPOINT.url), codeOut ? /* @__PURE__ */ (0, import_react.createElement)("pre", { className: "pp-pre" }, codeOut) : null));
+  ), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: runImport, disabled: busy }, "\u5F00\u59CB\u5BFC\u5165"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: () => copy(importOut, "\u5BFC\u5165\u7ED3\u679C") }, "\u590D\u5236\u7ED3\u679C")), importOut ? /* @__PURE__ */ (0, import_react.createElement)("pre", { className: "pp-pre pp-pre-scroll", style: { marginTop: "var(--sp-2)" } }, importOut) : null), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card pp-card-hover" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u5BFC\u51FA"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-note" }, "\u5BFC\u51FA\u8BFB\u53D6\u5F53\u524D\u9879\u76EE\u5BF9\u8C61\u540E\u4EA4\u7ED9 api.export\uFF0C\u7ED3\u679C\u53EF\u76F4\u63A5\u590D\u5236\u3002"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginTop: "var(--sp-3)" } }, EXPORT_KINDS.map((k) => /* @__PURE__ */ (0, import_react.createElement)("button", { key: k.id, className: "pp-btn", onClick: () => runExport(k.id), disabled: busy }, k.label)), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: () => copy(exportOut, "\u5BFC\u51FA\u7ED3\u679C") }, "\u590D\u5236\u7ED3\u679C")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-meta", style: { marginTop: "var(--sp-2)" } }, "\u5F53\u524D\u5BFC\u51FA\u683C\u5F0F\uFF1A", exportKind), exportOut ? /* @__PURE__ */ (0, import_react.createElement)("pre", { className: "pp-pre pp-pre-scroll", style: { marginTop: "var(--sp-2)" } }, exportOut) : null)), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card", style: { marginTop: "var(--sp-4)" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u4EE3\u7801\u751F\u6210"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u8BED\u8A00"), /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: lang, onChange: (e) => setLang(e.target.value) }, LANGS.map((l) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: l.id, value: l.id }, l.label))), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: runCodegen, disabled: busy }, "\u751F\u6210\u4EE3\u7801"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: () => copy(codeOut, "\u751F\u6210\u4EE3\u7801") }, "\u590D\u5236\u4EE3\u7801")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-meta", style: { display: "flex", alignItems: "center", gap: "var(--sp-2)" } }, "\u793A\u4F8B\u63A5\u53E3\uFF1A", /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": MOCK_ENDPOINT.method }, MOCK_ENDPOINT.method), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-mono" }, MOCK_ENDPOINT.url)), codeOut ? /* @__PURE__ */ (0, import_react.createElement)("pre", { className: "pp-pre pp-pre-scroll", style: { marginTop: "var(--sp-2)" } }, codeOut) : null));
 }
 
 // src/client/pages/flow.jsx
@@ -3262,7 +3438,7 @@ var LEGEND_H = 44;
 var INK = "var(--fg)";
 var MUTED = "var(--fg-secondary)";
 var ACCENT = "var(--accent)";
-var PAPER = "var(--paper)";
+var PAPER = "var(--bg-app)";
 var FONT_SANS = "var(--font-sans)";
 var FONT_MONO = "var(--font-mono)";
 function collectActors(steps) {
@@ -3352,7 +3528,7 @@ function exportSequenceSvg(svgEl, filename = "flow-sequence.svg") {
   clone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
   const cs = typeof getComputedStyle === "function" ? getComputedStyle(svgEl) : null;
   const raw = new XMLSerializer().serializeToString(clone);
-  const resolved = cs ? raw.replace(/var\((--[\w-]+)\)/g, (_, name) => cs.getPropertyValue(name).trim() || "#000000") : raw;
+  const resolved = cs ? raw.replace(/var\((--[\w-]+)\)/g, (_, name) => cs.getPropertyValue(name).trim() || "currentColor") : raw;
   const blob = new Blob([resolved], { type: "image/svg+xml;charset=utf-8" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
@@ -3432,7 +3608,7 @@ function SequenceDiagram({ steps, idPrefix = "flow-seq", title = "\u65F6\u5E8F\u
           x: cx,
           y: y + 2,
           fill: MUTED,
-          fontSize: "8",
+          fontSize: "var(--fs-chart)",
           fontFamily: FONT_MONO,
           textAnchor: "middle",
           letterSpacing: "0.04em"
@@ -3458,7 +3634,7 @@ function SequenceDiagram({ steps, idPrefix = "flow-seq", title = "\u65F6\u5E8F\u
           x: cx + 36 + maskWidth(label2) / 2,
           y: y + 3,
           fill: MUTED,
-          fontSize: "8",
+          fontSize: "var(--fs-chart)",
           fontFamily: FONT_MONO,
           textAnchor: "middle",
           letterSpacing: "0.06em"
@@ -3497,7 +3673,7 @@ function SequenceDiagram({ steps, idPrefix = "flow-seq", title = "\u65F6\u5E8F\u
         x: (left + right) / 2,
         y: y - 11,
         fill: MUTED,
-        fontSize: "8",
+        fontSize: "var(--fs-chart)",
         fontFamily: FONT_MONO,
         textAnchor: "middle",
         letterSpacing: "0.06em"
@@ -3538,7 +3714,7 @@ function SequenceDiagram({ steps, idPrefix = "flow-seq", title = "\u65F6\u5E8F\u
       x: f.x + 20,
       y: f.y + 12,
       fill: MUTED,
-      fontSize: "8",
+      fontSize: "var(--fs-chart)",
       fontFamily: FONT_MONO,
       textAnchor: "middle",
       letterSpacing: "0.12em"
@@ -3551,7 +3727,7 @@ function SequenceDiagram({ steps, idPrefix = "flow-seq", title = "\u65F6\u5E8F\u
       x: f.x + 12,
       y: g.y,
       fill: MUTED,
-      fontSize: "8",
+      fontSize: "var(--fs-chart)",
       fontFamily: FONT_MONO,
       letterSpacing: "0.04em"
     },
@@ -3588,7 +3764,7 @@ function SequenceDiagram({ steps, idPrefix = "flow-seq", title = "\u65F6\u5E8F\u
       x: centers[i],
       y: TOP_Y + 23,
       fill: INK,
-      fontSize: "12",
+      fontSize: "var(--fs-12)",
       fontWeight: "600",
       fontFamily: FONT_SANS,
       textAnchor: "middle"
@@ -3613,12 +3789,12 @@ function SequenceDiagram({ steps, idPrefix = "flow-seq", title = "\u65F6\u5E8F\u
       x: MARGIN_X,
       y: legendY + 8,
       fill: MUTED,
-      fontSize: "8",
+      fontSize: "var(--fs-chart)",
       fontFamily: FONT_MONO,
       letterSpacing: "0.14em"
     },
     "LEGEND"
-  ), /* @__PURE__ */ (0, import_react.createElement)("text", { x: MARGIN_X + 80, y: legendY + 8, fill: MUTED, fontSize: "8", fontFamily: FONT_MONO }, "SOLID = CALL"), /* @__PURE__ */ (0, import_react.createElement)("text", { x: MARGIN_X + 200, y: legendY + 8, fill: MUTED, fontSize: "8", fontFamily: FONT_MONO }, "DASHED = RETURN"), /* @__PURE__ */ (0, import_react.createElement)("text", { x: MARGIN_X + 340, y: legendY + 8, fill: ACCENT, fontSize: "8", fontFamily: FONT_MONO }, "ACCENT = HEADLINE"), /* @__PURE__ */ (0, import_react.createElement)("text", { x: MARGIN_X + 520, y: legendY + 8, fill: MUTED, fontSize: "8", fontFamily: FONT_MONO }, "FRAME = BRANCH"));
+  ), /* @__PURE__ */ (0, import_react.createElement)("text", { x: MARGIN_X + 80, y: legendY + 8, fill: MUTED, fontSize: "var(--fs-chart)", fontFamily: FONT_MONO }, "SOLID = CALL"), /* @__PURE__ */ (0, import_react.createElement)("text", { x: MARGIN_X + 200, y: legendY + 8, fill: MUTED, fontSize: "var(--fs-chart)", fontFamily: FONT_MONO }, "DASHED = RETURN"), /* @__PURE__ */ (0, import_react.createElement)("text", { x: MARGIN_X + 340, y: legendY + 8, fill: ACCENT, fontSize: "var(--fs-chart)", fontFamily: FONT_MONO }, "ACCENT = HEADLINE"), /* @__PURE__ */ (0, import_react.createElement)("text", { x: MARGIN_X + 520, y: legendY + 8, fill: MUTED, fontSize: "var(--fs-chart)", fontFamily: FONT_MONO }, "FRAME = BRANCH"));
   return /* @__PURE__ */ (0, import_react.createElement)(
     "svg",
     {
@@ -3805,7 +3981,7 @@ function FlowPage(props) {
     setError("\u5F53\u524D\u73AF\u5883\u65E0\u526A\u8D34\u677F\u6743\u9650\uFF0C\u8BF7\u624B\u52A8\u590D\u5236 JSON");
   };
   const exportSvg = () => exportSequenceSvg(svgRef.current, "flow-sequence.svg");
-  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page", "data-page": "flow", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("h1", { className: "pp-page-title" }, "\u6D41\u7A0B\u56FE"), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, isMock ? "\u793A\u4F8B\u6570\u636E \u2014 api.storage.saveFlow \u4E0D\u53EF\u7528\uFF0C\u7F16\u6392\u7ED3\u679C\u4EC5\u5B58\u672C\u5730\u8349\u7A3F\uFF08" + DRAFT_KEY + "\uFF09" : "\u6570\u636E\u6765\u6E90\uFF1Aapi.storage\uFF08getProject / saveFlow\uFF09"), error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-error-text" }, error) : null, notice ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, notice) : null, overBudget && /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-split-hint", style: { marginBottom: "var(--sp-3)" } }, "\u5F53\u524D ", steps.length, " \u6B65\uFF0C\u8D85\u8FC7 9 \u6B65\u5BC6\u5EA6\u9884\u7B97\uFF084/10\uFF09\u2014\u2014\u5EFA\u8BAE\u62C6\u5206\u4E3A\u300C\u4E3B\u6D41\u7A0B\u300D\u4E0E\u300C\u5206\u652F/\u5F02\u5E38\u300D\u4E24\u5F20\u56FE"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u9879\u76EE"), /* @__PURE__ */ (0, import_react.createElement)(
+  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page", "data-page": "flow", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("h1", { className: "pp-page-title" }, "\u6D41\u7A0B\u56FE"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, isMock ? "\u793A\u4F8B\u6570\u636E \u2014 api.storage.saveFlow \u4E0D\u53EF\u7528\uFF0C\u7F16\u6392\u7ED3\u679C\u4EC5\u5B58\u672C\u5730\u8349\u7A3F\uFF08" + DRAFT_KEY + "\uFF09" : "\u6570\u636E\u6765\u6E90\uFF1Aapi.storage\uFF08getProject / saveFlow\uFF09"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-toolbar-spacer" }), /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-meta" }, "\u9879\u76EE"), /* @__PURE__ */ (0, import_react.createElement)(
     "select",
     {
       className: "pp-select",
@@ -3816,18 +3992,18 @@ function FlowPage(props) {
       }
     },
     projects.map((p) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: p.id, value: p.id }, p.name || p.id))
-  ), /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u56FE\u540D"), /* @__PURE__ */ (0, import_react.createElement)(
+  ), /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-meta" }, "\u56FE\u540D"), /* @__PURE__ */ (0, import_react.createElement)(
     "input",
     {
       className: "pp-input",
-      style: { flex: 1 },
+      style: { width: "200px" },
       value: flowName,
       onChange: (e) => {
         setFlowName(e.target.value);
         setNotice("");
       }
     }
-  )), /* @__PURE__ */ (0, import_react.createElement)("div", { style: { display: "flex", gap: "var(--sp-2)", flexWrap: "wrap" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: persist }, "\u4FDD\u5B58\u5230\u9879\u76EE"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: exportSvg }, "\u5BFC\u51FA SVG"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: copyJson }, "\u590D\u5236 JSON"))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-seq-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(
+  ), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: persist }, "\u4FDD\u5B58\u5230\u9879\u76EE"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: exportSvg }, "\u5BFC\u51FA SVG"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: copyJson }, "\u590D\u5236 JSON")), error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-error-text" }, error) : null, notice ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, notice) : null, overBudget && /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-split-hint", style: { marginBottom: "var(--sp-3)" } }, "\u5F53\u524D ", steps.length, " \u6B65\uFF0C\u8D85\u8FC7 9 \u6B65\u5BC6\u5EA6\u9884\u7B97\uFF084/10\uFF09\u2014\u2014\u5EFA\u8BAE\u62C6\u5206\u4E3A\u300C\u4E3B\u6D41\u7A0B\u300D\u4E0E\u300C\u5206\u652F/\u5F02\u5E38\u300D\u4E24\u5F20\u56FE"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-seq-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(
     SequenceDiagram,
     {
       steps,
@@ -3836,10 +4012,10 @@ function FlowPage(props) {
       title: flowName || "\u63A5\u53E3\u8C03\u8BD5\u65F6\u5E8F",
       desc: "\u9875\u9762\u7ECF Storage \u8F7D\u5165\u9879\u76EE\u3001Request \u53D1\u8D77 HTTP \u8C03\u7528\uFF0C\u5E76\u6309\u54CD\u5E94\u72B6\u6001\u6E32\u67D3\u6216\u63D0\u793A\u9519\u8BEF\u7684\u65F6\u5E8F\u56FE"
     }
-  ))), /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-card-title", style: { marginTop: "var(--sp-6)" } }, "\u6B65\u9AA4\u7F16\u6392"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card" }, /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table" }, /* @__PURE__ */ (0, import_react.createElement)("thead", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "40px" } }, "#"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "110px" } }, "\u53D1\u8D77\u65B9"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "110px" } }, "\u52A8\u4F5C"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "110px" } }, "\u63A5\u6536\u65B9"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "\u6D88\u606F"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "140px" } }, "\u64CD\u4F5C"))), /* @__PURE__ */ (0, import_react.createElement)("tbody", null, steps.map((s, i) => /* @__PURE__ */ (0, import_react.createElement)("tr", { key: i }, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-muted" }, i + 1), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)(
+  )), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card", style: { marginTop: "var(--sp-4)" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u6B65\u9AA4\u7F16\u6392"), /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table" }, /* @__PURE__ */ (0, import_react.createElement)("thead", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "40px" } }, "#"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "110px" } }, "\u53D1\u8D77\u65B9"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "110px" } }, "\u52A8\u4F5C"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "110px" } }, "\u63A5\u6536\u65B9"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "\u6D88\u606F"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "140px" } }, "\u64CD\u4F5C"))), /* @__PURE__ */ (0, import_react.createElement)("tbody", null, steps.map((s, i) => /* @__PURE__ */ (0, import_react.createElement)("tr", { key: i }, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, i + 1), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)(
     "input",
     {
-      className: "pp-input",
+      className: "pp-input pp-input-sm",
       style: { width: "100%" },
       value: s.actor,
       onChange: (e) => update(i, { actor: e.target.value })
@@ -3847,7 +4023,7 @@ function FlowPage(props) {
   )), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)(
     "select",
     {
-      className: "pp-select",
+      className: "pp-select pp-input-sm",
       style: { width: "100%" },
       value: s.action,
       onChange: (e) => update(i, { action: e.target.value })
@@ -3856,7 +4032,7 @@ function FlowPage(props) {
   )), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)(
     "input",
     {
-      className: "pp-input",
+      className: "pp-input pp-input-sm",
       style: { width: "100%" },
       value: s.target || "",
       onChange: (e) => update(i, { target: e.target.value })
@@ -3864,12 +4040,12 @@ function FlowPage(props) {
   )), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)(
     "input",
     {
-      className: "pp-input",
+      className: "pp-input pp-input-sm",
       style: { width: "100%" },
       value: s.message || "",
       onChange: (e) => update(i, { message: e.target.value })
     }
-  )), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: () => move(i, -1), title: "\u4E0A\u79FB" }, "\u2191"), " ", /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: () => move(i, 1), title: "\u4E0B\u79FB" }, "\u2193"), " ", /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: () => remove(i), title: "\u5220\u9664" }, "\xD7")))))), /* @__PURE__ */ (0, import_react.createElement)("div", { style: { marginTop: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: add }, "+ \u6DFB\u52A0\u6B65\u9AA4"))));
+  )), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm", onClick: () => move(i, -1), title: "\u4E0A\u79FB" }, "\u2191"), " ", /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm", onClick: () => move(i, 1), title: "\u4E0B\u79FB" }, "\u2193"), " ", /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm pp-btn-danger", onClick: () => remove(i), title: "\u5220\u9664" }, "\xD7")))))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: add }, "+ \u6DFB\u52A0\u6B65\u9AA4"))));
 }
 
 // src/client/pages/search.jsx
@@ -3968,11 +4144,11 @@ function SearchPage(props) {
     window.location.hash = hash;
   };
   const total = GROUPS.reduce((n, g) => n + groups[g.key].length, 0);
-  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page", "data-page": "search", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("h1", { className: "pp-page-title" }, "\u5168\u5C40\u641C\u7D22"), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, isMock ? "\u793A\u4F8B\u6570\u636E \u2014 api.storage.search \u4E0D\u53EF\u7528\uFF0C\u4EE5\u4E0B\u4E3A\u6587\u4EF6\u5185 mock" : "\u6570\u636E\u6765\u6E90\uFF1Aapi.storage.search\uFF08\u540D\u79F0 / url / \u63CF\u8FF0\uFF0C\u5927\u5C0F\u5199\u4E0D\u654F\u611F\uFF09"), error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-error-text" }, error) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u9879\u76EE"), /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: projectId, onChange: (e) => setProjectId(e.target.value) }, projects.map((p) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: p.id, value: p.id }, p.name || p.id))), /* @__PURE__ */ (0, import_react.createElement)(
+  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page", "data-page": "search", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("h1", { className: "pp-page-title" }, "\u5168\u5C40\u641C\u7D22"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, isMock ? "\u793A\u4F8B\u6570\u636E \u2014 api.storage.search \u4E0D\u53EF\u7528\uFF0C\u4EE5\u4E0B\u4E3A\u6587\u4EF6\u5185 mock" : "\u6570\u636E\u6765\u6E90\uFF1Aapi.storage.search\uFF08\u540D\u79F0 / url / \u63CF\u8FF0\uFF0C\u5927\u5C0F\u5199\u4E0D\u654F\u611F\uFF09"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-toolbar-spacer" }), /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: projectId, onChange: (e) => setProjectId(e.target.value) }, projects.map((p) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: p.id, value: p.id }, p.name || p.id))), /* @__PURE__ */ (0, import_react.createElement)(
     "input",
     {
       className: "pp-input",
-      style: { flex: 1 },
+      style: { width: "260px" },
       placeholder: "\u5173\u952E\u5B57\uFF08\u56DE\u8F66\u641C\u7D22\uFF09",
       value: keyword,
       onChange: (e) => setKeyword(e.target.value),
@@ -3980,7 +4156,7 @@ function SearchPage(props) {
         if (e.key === "Enter") runSearch();
       }
     }
-  ), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: runSearch }, "\u641C\u7D22")), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, searched ? "\u547D\u4E2D " + total + " \u6761" : "\u5C1A\u672A\u641C\u7D22"), GROUPS.map((g) => /* @__PURE__ */ (0, import_react.createElement)("div", { key: g.key, className: "pp-card", style: { marginBottom: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, g.label, "\uFF08", groups[g.key].length, "\uFF09"), /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table" }, /* @__PURE__ */ (0, import_react.createElement)("thead", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "90px" } }, "\u65B9\u6CD5"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "\u540D\u79F0"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "URL / \u8BF4\u660E"))), /* @__PURE__ */ (0, import_react.createElement)("tbody", null, groups[g.key].map((item) => /* @__PURE__ */ (0, import_react.createElement)("tr", { key: g.key + "-" + item.id, onClick: () => jump(g.target(item.id)), style: { cursor: "pointer" } }, /* @__PURE__ */ (0, import_react.createElement)("td", null, item.method ? /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": item.method }, item.method) : /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-muted" }, "-")), /* @__PURE__ */ (0, import_react.createElement)("td", null, item.title), /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-table-mono pp-muted" }, item.url || item.description || "-"))), groups[g.key].length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { colSpan: 3, className: "pp-muted" }, "\u65E0\u5339\u914D")) : null)))));
+  ), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: runSearch }, "\u641C\u7D22"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, searched ? "\u547D\u4E2D " + total + " \u6761" : "\u5C1A\u672A\u641C\u7D22")), error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-error-text" }, error) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card" }, GROUPS.map((g) => /* @__PURE__ */ (0, import_react.createElement)("div", { key: g.key }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tree-group" }, g.label, "\uFF08", groups[g.key].length, "\uFF09"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-list" }, groups[g.key].map((item) => /* @__PURE__ */ (0, import_react.createElement)("div", { key: g.key + "-" + item.id, className: "pp-list-row", onClick: () => jump(g.target(item.id)) }, item.method ? /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": item.method }, item.method) : /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, "-"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ellipsis" }, item.title), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta pp-ellipsis", style: { marginLeft: "auto" } }, item.url || item.description || "-"))), groups[g.key].length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-list-row pp-meta" }, "\u65E0\u5339\u914D") : null)))));
 }
 
 // src/client/pages/settings.jsx
@@ -4093,7 +4269,7 @@ function SettingsPage(props) {
       setError("\u8F7D\u5165\u8BBE\u7F6E\u5931\u8D25\uFF1A" + errText9(err));
     }
   };
-  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page", "data-page": "settings", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("h1", { className: "pp-page-title" }, "\u8BBE\u7F6E"), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, isMock ? "\u793A\u4F8B\u6570\u636E \u2014 api.storage \u4E0D\u53EF\u7528\uFF0C\u9879\u76EE\u8BBE\u7F6E\u9879\u4E3A\u6587\u4EF6\u5185\u9ED8\u8BA4\u503C" : "\u6570\u636E\u6765\u6E90\uFF1Aapi.storage\uFF08getProject / saveProjectSettings\uFF09"), error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-error-text" }, error) : null, notice ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, notice) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card", style: { maxWidth: "640px" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u5B58\u50A8\u8DEF\u5F84"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { flex: 1 }, readOnly: true, value: storeRoot })), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, "\u5B58\u50A8\u6839\u76EE\u5F55\u7531 host \u6784\u9020\u53C2\u6570\u6CE8\u5165\uFF08createStorageService(basePath)\uFF09\uFF0C\u9875\u9762\u53EA\u8BFB\u5C55\u793A\uFF0C\u4E0D\u53EF\u4FEE\u6539\u3002"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u4E3B\u9898"), /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: theme, onChange: (e) => applyThemeChoice(e.target.value) }, /* @__PURE__ */ (0, import_react.createElement)("option", { value: "light" }, "\u6D45\u8272"), /* @__PURE__ */ (0, import_react.createElement)("option", { value: "dark" }, "\u6DF1\u8272"))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u8BED\u8A00"), /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: locale, onChange: (e) => applyLocaleChoice(e.target.value) }, /* @__PURE__ */ (0, import_react.createElement)("option", { value: "zh-CN" }, "\u7B80\u4F53\u4E2D\u6587"), /* @__PURE__ */ (0, import_react.createElement)("option", { value: "en" }, "English")))), /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-card-title", style: { marginTop: "var(--sp-6)" } }, "\u9879\u76EE\u8BBE\u7F6E"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card", style: { maxWidth: "640px" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u9879\u76EE"), /* @__PURE__ */ (0, import_react.createElement)(
+  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page", "data-page": "settings", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("h1", { className: "pp-page-title" }, "\u8BBE\u7F6E"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, isMock ? "\u793A\u4F8B\u6570\u636E \u2014 api.storage \u4E0D\u53EF\u7528\uFF0C\u9879\u76EE\u8BBE\u7F6E\u9879\u4E3A\u6587\u4EF6\u5185\u9ED8\u8BA4\u503C" : "\u6570\u636E\u6765\u6E90\uFF1Aapi.storage\uFF08getProject / saveProjectSettings\uFF09")), error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-error-text" }, error) : null, notice ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-note pp-note-ok" }, notice) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-cols-2" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u5916\u89C2\u4E0E\u5B58\u50A8"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u5B58\u50A8\u8DEF\u5F84"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { flex: 1 }, readOnly: true, value: storeRoot })), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u4E3B\u9898"), /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: theme, onChange: (e) => applyThemeChoice(e.target.value) }, /* @__PURE__ */ (0, import_react.createElement)("option", { value: "light" }, "\u6D45\u8272"), /* @__PURE__ */ (0, import_react.createElement)("option", { value: "dark" }, "\u6DF1\u8272"))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u8BED\u8A00"), /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: locale, onChange: (e) => applyLocaleChoice(e.target.value) }, /* @__PURE__ */ (0, import_react.createElement)("option", { value: "zh-CN" }, "\u7B80\u4F53\u4E2D\u6587"), /* @__PURE__ */ (0, import_react.createElement)("option", { value: "en" }, "English"))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-note" }, "\u5B58\u50A8\u6839\u76EE\u5F55\u7531 host \u6784\u9020\u53C2\u6570\u6CE8\u5165\uFF08createStorageService(basePath)\uFF09\uFF0C\u9875\u9762\u53EA\u8BFB\u5C55\u793A\uFF0C\u4E0D\u53EF\u4FEE\u6539\u3002")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u9879\u76EE\u8BBE\u7F6E"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u9879\u76EE"), /* @__PURE__ */ (0, import_react.createElement)(
     "select",
     {
       className: "pp-select",
@@ -4137,13 +4313,29 @@ function SettingsPage(props) {
       value: settings.historyLimit,
       onChange: (e) => patch({ historyLimit: e.target.value })
     }
-  )), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: persist }, "\u4FDD\u5B58\u9879\u76EE\u8BBE\u7F6E")), /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-card-title", style: { marginTop: "var(--sp-6)" } }, "\u534F\u4F5C\uFF08\u89C4\u5212\u4E2D\uFF09"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card", style: { maxWidth: "640px" } }, /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, "\u6210\u5458\u7BA1\u7406\u4E0E\u53D8\u66F4\u5386\u53F2\u4E3A P2 \u5360\u4F4D\uFF1A\u672C\u63D2\u4EF6\u65E0\u670D\u52A1\u7AEF\uFF0C\u4E0D\u505A\u4E91\u7AEF\u8D26\u53F7 / \u56E2\u961F\u540C\u6B65 / \u5BA1\u8BA1\u65E5\u5FD7\u3002")));
+  )), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: persist }, "\u4FDD\u5B58\u9879\u76EE\u8BBE\u7F6E"))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card", style: { marginTop: "var(--sp-5)" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u534F\u4F5C\uFF08\u89C4\u5212\u4E2D\uFF09"), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, "\u6210\u5458\u7BA1\u7406\u4E0E\u53D8\u66F4\u5386\u53F2\u4E3A P2 \u5360\u4F4D\uFF1A\u672C\u63D2\u4EF6\u65E0\u670D\u52A1\u7AEF\uFF0C\u4E0D\u505A\u4E91\u7AEF\u8D26\u53F7 / \u56E2\u961F\u540C\u6B65 / \u5BA1\u8BA1\u65E5\u5FD7\u3002")));
 }
 
 // src/client/pages-entry.js
 ensureGlobals();
 
 // src/client/index.js
+function installStyles() {
+  if (typeof document === "undefined") return () => {
+  };
+  const existing = document.querySelector('style[data-plugin="dsh-postapi"]');
+  if (existing) return () => {
+    existing.remove();
+  };
+  const el = document.createElement("style");
+  el.setAttribute("data-plugin", "dsh-postapi");
+  el.setAttribute("data-plugin-css", "design-tokens");
+  el.textContent = design_tokens_default;
+  document.head.append(el);
+  return () => {
+    el.remove();
+  };
+}
 var inject = ["slots", "locale", "sidebarRightTabs"];
 function safeEffect(ctx, label, body) {
   ctx.effect(() => {
@@ -4162,7 +4354,7 @@ function ComposerBadge() {
     height: 16,
     "aria-hidden": true,
     style: { display: "block", pointerEvents: "none" }
-  }, (0, import_react18.createElement)("path", { d: "M6 50 L54 26 L6 8 L6 24 L36 26 L6 28 Z", fill: "#247bbf" }));
+  }, (0, import_react18.createElement)("path", { d: "M6 50 L54 26 L6 8 L6 24 L36 26 L6 28 Z", fill: "currentColor" }));
 }
 function apply(ctx) {
   console.info("[dsh-postapi] client apply \u5DF2\u6267\u884C", { hasTabs: !!ctx.sidebarRightTabs, hasSlots: !!ctx.slots, hasLocale: !!ctx.locale });
@@ -4172,6 +4364,7 @@ function apply(ctx) {
     return;
   }
   const t = ctx.locale ? ctx.locale.bind(POSTAPI_NS) : (key) => zh[key] ?? key;
+  safeEffect(ctx, "dsh-postapi: design tokens", () => installStyles());
   safeEffect(ctx, "dsh-postapi: postapi tab type", () => ctx.sidebarRightTabs.register(postapiDefinition(t)));
   if (ctx.locale) {
     safeEffect(ctx, "dsh-postapi: dictionaries", () => ctx.locale.register(POSTAPI_NS, { zh, en }));

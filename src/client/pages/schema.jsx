@@ -1,6 +1,7 @@
-// schema.jsx — 数据模型页（JSON Schema 列表 + 编辑 + 校验 + 生成示例）
+// schema.jsx — 数据模型页（Apifox 工作台：左模型列表 + 右 JSON 编辑器 + 校验提示）
 // 自注册：模块求值期入队 __postapiQueue
 // 数据：api.storage.getProject / saveSchema / deleteSchema；校验与示例优先 api.schema.*，缺失走本文件本地降级
+// 视觉基线：docs/apifox-design-spec.md —— .pp-tree-row / .pp-json-editor / .pp-note-ok / .pp-note-bad
 import React, { useEffect, useRef, useState } from 'react'
 import { applyTheme } from './theme.js'
 
@@ -240,31 +241,33 @@ export function SchemaPage(props) {
   return (
     <div className="pp-scope pp-page" data-page="schema" ref={rootRef}>
       <h1 className="pp-page-title">数据模型</h1>
-      <p className="pp-muted">
-        {isMock ? '示例数据 — api.storage 不可用，以下为文件内 mock' : '数据来源：api.storage（saveSchema / deleteSchema）'}
-      </p>
-      {error ? <p className="pp-error-text">{error}</p> : null}
-      {notice ? <p className="pp-muted">{notice}</p> : null}
-
-      <div className="pp-form-row">
-        <label className="pp-form-label">项目</label>
+      <div className="pp-toolbar">
+        <span className="pp-meta">
+          {isMock ? '示例数据 — api.storage 不可用，以下为文件内 mock' : '数据来源：api.storage（saveSchema / deleteSchema）'}
+        </span>
+        <span className="pp-toolbar-spacer" />
+        <label className="pp-meta">项目</label>
         <select className="pp-select" value={projectId}
           onChange={(e) => { setProjectId(e.target.value); loadProject(e.target.value) }}>
           {projects.map((p) => <option key={p.id} value={p.id}>{p.name || p.id}</option>)}
         </select>
       </div>
+      {error ? <p className="pp-error-text">{error}</p> : null}
+      {notice ? <p className="pp-muted">{notice}</p> : null}
 
       <div className="pp-debug-layout">
         <div className="pp-pane">
-          <div className="pp-card-title">模型列表</div>
-          {schemas.map((s) => (
-            <div key={s.id} className="pp-tree-row" data-active={s.id === currentId ? 'true' : 'false'} onClick={() => pick(s)}>
-              <span>{s.name || s.id}</span>
-            </div>
-          ))}
+          <div className="pp-card-title">模型</div>
+          <div className="pp-tree">
+            {schemas.map((s) => (
+              <div key={s.id} className="pp-tree-row" data-active={s.id === currentId ? 'true' : 'false'} onClick={() => pick(s)}>
+                <span className="pp-ellipsis">{s.name || s.id}</span>
+              </div>
+            ))}
+          </div>
           {schemas.length === 0 ? <div className="pp-empty">暂无模型</div> : null}
-          <div style={{ marginTop: 'var(--sp-2)' }}>
-            <button className="pp-btn" onClick={blank}>新建模型</button>
+          <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
+            <button className="pp-btn pp-btn-sm" onClick={blank}>新建模型</button>
           </div>
         </div>
 
@@ -278,24 +281,24 @@ export function SchemaPage(props) {
             <label className="pp-form-label">说明</label>
             <input className="pp-input" style={{ flex: 1 }} value={description} onChange={(e) => setDescription(e.target.value)} />
           </div>
-          <textarea className="pp-input pp-input-mono" style={{ width: '100%', minHeight: 'var(--ctl-h)' }}
-            rows={14} value={text} onChange={(e) => { setText(e.target.value); setCheckResult(null) }} />
-          <div style={{ display: 'flex', gap: 'var(--sp-2)', marginTop: 'var(--sp-2)', flexWrap: 'wrap' }}>
+          <textarea className="pp-json-editor" rows={14} value={text}
+            onChange={(e) => { setText(e.target.value); setCheckResult(null) }} />
+          <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
             <button className="pp-btn" onClick={validate}>校验</button>
             <button className="pp-btn" onClick={makeExample}>生成示例</button>
             <button className="pp-btn pp-btn-primary" onClick={save}>保存</button>
-            <button className="pp-btn" onClick={remove}>删除</button>
+            <button className="pp-btn pp-btn-danger" onClick={remove}>删除</button>
           </div>
           {checkResult ? (
-            <p className={checkResult.ok ? 'pp-muted' : 'pp-error-text'}>
+            <div className={checkResult.ok ? 'pp-note pp-note-ok' : 'pp-note pp-note-bad'} style={{ marginTop: 'var(--sp-3)' }}>
               {checkResult.ok ? '通过：' : '失败：'}{checkResult.message}
-            </p>
+            </div>
           ) : null}
         </div>
 
         <div className="pp-pane">
           <div className="pp-card-title">示例数据</div>
-          <pre className="pp-pre">{example || '（点「生成示例」按当前 JSON Schema 生成）'}</pre>
+          <pre className="pp-pre pp-pre-scroll">{example || '（点「生成示例」按当前 JSON Schema 生成）'}</pre>
         </div>
       </div>
     </div>

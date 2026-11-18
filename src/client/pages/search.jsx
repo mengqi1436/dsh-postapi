@@ -1,6 +1,7 @@
-// search.jsx — 全局搜索页（关键字 + 分组结果 + 点击跳转）
+// search.jsx — 全局搜索页（Apifox 工作台：搜索框 + 分组结果列表）
 // 自注册：模块求值期入队 __postapiQueue
 // 数据：api.storage.listProjects / search(projectId, keyword) -> { endpoints, schemas, folders }
+// 视觉基线：docs/apifox-design-spec.md —— .pp-input / .pp-tree-group / .pp-list-row
 import React, { useEffect, useRef, useState } from 'react'
 import { applyTheme } from './theme.js'
 
@@ -116,50 +117,41 @@ export function SearchPage(props) {
   return (
     <div className="pp-scope pp-page" data-page="search" ref={rootRef}>
       <h1 className="pp-page-title">全局搜索</h1>
-      <p className="pp-muted">
-        {isMock ? '示例数据 — api.storage.search 不可用，以下为文件内 mock' : '数据来源：api.storage.search（名称 / url / 描述，大小写不敏感）'}
-      </p>
-      {error ? <p className="pp-error-text">{error}</p> : null}
-
-      <div className="pp-form-row">
-        <label className="pp-form-label">项目</label>
+      <div className="pp-toolbar">
+        <span className="pp-meta">
+          {isMock ? '示例数据 — api.storage.search 不可用，以下为文件内 mock' : '数据来源：api.storage.search（名称 / url / 描述，大小写不敏感）'}
+        </span>
+        <span className="pp-toolbar-spacer" />
         <select className="pp-select" value={projectId} onChange={(e) => setProjectId(e.target.value)}>
           {projects.map((p) => <option key={p.id} value={p.id}>{p.name || p.id}</option>)}
         </select>
-        <input className="pp-input" style={{ flex: 1 }} placeholder="关键字（回车搜索）" value={keyword}
+        <input className="pp-input" style={{ width: '260px' }} placeholder="关键字（回车搜索）" value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
           onKeyDown={(e) => { if (e.key === 'Enter') runSearch() }} />
         <button className="pp-btn pp-btn-primary" onClick={runSearch}>搜索</button>
+        <span className="pp-meta">{searched ? '命中 ' + total + ' 条' : '尚未搜索'}</span>
       </div>
+      {error ? <p className="pp-error-text">{error}</p> : null}
 
-      <p className="pp-muted">{searched ? '命中 ' + total + ' 条' : '尚未搜索'}</p>
-
-      {GROUPS.map((g) => (
-        <div key={g.key} className="pp-card" style={{ marginBottom: 'var(--sp-3)' }}>
-          <div className="pp-card-title">{g.label}（{groups[g.key].length}）</div>
-          <table className="pp-table">
-            <thead>
-              <tr>
-                <th style={{ width: '90px' }}>方法</th>
-                <th>名称</th>
-                <th>URL / 说明</th>
-              </tr>
-            </thead>
-            <tbody>
+      <div className="pp-card">
+        {GROUPS.map((g) => (
+          <div key={g.key}>
+            <div className="pp-tree-group">{g.label}（{groups[g.key].length}）</div>
+            <div className="pp-list">
               {groups[g.key].map((item) => (
-                <tr key={g.key + '-' + item.id} onClick={() => jump(g.target(item.id))} style={{ cursor: 'pointer' }}>
-                  <td>{item.method ? <span className="pp-method" data-method={item.method}>{item.method}</span> : <span className="pp-muted">-</span>}</td>
-                  <td>{item.title}</td>
-                  <td className="pp-table-mono pp-muted">{item.url || item.description || '-'}</td>
-                </tr>
+                <div key={g.key + '-' + item.id} className="pp-list-row" onClick={() => jump(g.target(item.id))}>
+                  {item.method
+                    ? <span className="pp-method" data-method={item.method}>{item.method}</span>
+                    : <span className="pp-meta">-</span>}
+                  <span className="pp-ellipsis">{item.title}</span>
+                  <span className="pp-meta pp-ellipsis" style={{ marginLeft: 'auto' }}>{item.url || item.description || '-'}</span>
+                </div>
               ))}
-              {groups[g.key].length === 0 ? (
-                <tr><td colSpan={3} className="pp-muted">无匹配</td></tr>
-              ) : null}
-            </tbody>
-          </table>
-        </div>
-      ))}
+              {groups[g.key].length === 0 ? <div className="pp-list-row pp-meta">无匹配</div> : null}
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   )
 }

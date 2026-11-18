@@ -1,5 +1,6 @@
 // ParamTable — 参数表（doc 页只读展示 / debug 页可编辑，四组参数共用一套列定义）
-// 列宽是 layout 内联，颜色与字号一律走 .pp-* 类与 token。
+// Apifox 表格规格：.pp-table 表头 bg-subtle + 行 hover + 行高 --row-h 全部由 CSS 承载；
+// 内联样式只放列宽（layout），可编辑单元格用 .pp-input-sm。
 import { EmptyState } from './EmptyState.jsx'
 
 const COLUMN_META = {
@@ -40,7 +41,7 @@ function renderCell(col, row, index, editable, patch) {
   }
   return (
     <input
-      className="pp-input pp-input-mono"
+      className={'pp-input-sm' + (col === 'key' || col === 'value' ? ' pp-input-mono' : '')}
       style={{ width: '100%' }}
       value={value == null ? '' : String(value)}
       onChange={(e) => patch(index, col, e.target.value)}
@@ -54,6 +55,7 @@ export function ParamTable({
   readOnly = false,
   columns = DEFAULT_COLUMNS,
   emptyText = '无',
+  emptyHint = '',
   addLabel = '+ 添加',
 }) {
   const list = Array.isArray(rows) ? rows : []
@@ -70,7 +72,7 @@ export function ParamTable({
     onChange(next)
   }
 
-  if (list.length === 0 && !editable) return <EmptyState text={emptyText} />
+  if (list.length === 0 && !editable) return <EmptyState text={emptyText} hint={emptyHint} />
 
   return (
     <table className="pp-table">
@@ -95,7 +97,7 @@ export function ParamTable({
             ))}
             {editable ? (
               <td>
-                <button className="pp-btn" onClick={() => remove(index)}>删除</button>
+                <button className="pp-btn pp-btn-sm" onClick={() => remove(index)}>删除</button>
               </td>
             ) : null}
           </tr>
@@ -103,7 +105,7 @@ export function ParamTable({
         {editable ? (
           <tr>
             <td colSpan={columns.length + 1}>
-              <button className="pp-btn" onClick={() => onChange(list.concat([blankParamRow()]))}>
+              <button className="pp-btn pp-btn-sm" onClick={() => onChange(list.concat([blankParamRow()]))}>
                 {addLabel}
               </button>
             </td>
