@@ -25,7 +25,9 @@ const here = path.dirname(fileURLToPath(import.meta.url))
 const REPO = path.join(here, '..')
 const PAGES = path.join(REPO, 'src', 'client', 'pages')
 const SHIM = path.join(REPO, 'src', 'client', 'jsx-shim.js')
-const TMP = path.join(os.tmpdir(), 'postapi-pages-b-test')
+// 临时产物放仓库内 .tmp：Windows 上 esbuild 子进程写 os.tmpdir() 会被拒绝（Access is denied），
+// 仓库内目录对构建子进程可写；.tmp 已列入 .gitignore。
+const TMP = path.join(REPO, '.tmp', 'pages-b-test')
 
 /** esbuild 解析：与 build.mjs 同款（工作区 node_modules 优先，回落 .research/sidebar）。 */
 function loadEsbuild() {

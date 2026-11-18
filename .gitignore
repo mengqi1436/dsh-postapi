@@ -1,2 +1,6 @@
 .research/
 node_modules/
+.tmp/
+# 权限受损目录的重建残留（Everyone 显式 DENY 阻止删除，只能忽略）
+.*_bak*/
+.*_bak2*
