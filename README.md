@@ -74,4 +74,5 @@ node src/client/pages/__tests__/heights.test.js   # 等高纪律静态检查 28 
 - client 经 `window.__postapiApi`（同源桥 + stub 兜底）取数，页面自注册 `window.__postapiQueue`（ensureGlobals 统一重放，模块求值顺序无关）
 - 尺寸一律引用 `design-tokens.css` 的 token（--ctl-h/--row-h/--pill-h），禁止控件各自撑高（heights.test 固化）
 - JSX 一律编译为 `createElement`（build.mjs 显式 jsxFactory + inject jsx-shim）；产物出现裸 `React.createElement` 即构建失败（宿主无 React 全局）
+- `ctx.effect` 的 body **只能**返回 disposer 函数 / null / Promise / 迭代器。返回业务对象（例如 `installApi()` 的 api 对象）会让 cordis 抛 `Invalid effect`，整个 apply 回滚、页签静默消失；统一走 `src/client/index.js` 的 `safeEffect` 包装，build.mjs 的 vm smoke 会断言该形态
 - 契约偏离必须标注进 `docs/interface-contract-v2.md` 或对应 docs
