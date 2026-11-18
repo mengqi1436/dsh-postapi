@@ -1,0 +1,7 @@
+{
+  "meta": {
+    "title": "PostAPI",
+    "description": "PostAPI plugin skeleton for DeepSeek Harness: minimal composer badge to verify the mount chain.",
+    "detail": "docs/DETAIL.md"
+  }
+}

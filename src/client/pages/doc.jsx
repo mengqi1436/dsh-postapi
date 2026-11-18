@@ -1,0 +1,543 @@
+// doc.jsx — 接口文档页（#/doc/:endpointId）
+// 左树（目录/接口，可折叠）+ 正文（Markdown 描述、Path/Query/Headers/Cookies 四组参数表、
+// 请求体、认证、多响应切换、响应示例）+ 右 TOC 锚点 + 「复制为 cURL」。
+// 数据走 window.__postapiApi.storage（listProjects / getProject / saveResponse），
+// 未注入时渲染文件内 mock 并可见标注「示例数据」。
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { applyTheme } from './theme.js'
+import { ParamTable } from './components/ParamTable.jsx'
+import { JsonEditor } from './components/JsonEditor.jsx'
+import { EmptyState } from './components/EmptyState.jsx'
+import { StatusPill } from './components/StatusPill.jsx'
+
+;(window.__postapiQueue = window.__postapiQueue || []).push(['doc', DocPage]) // 注册表就绪前入队，ensureGlobals 统一重放（模块求值顺序无关）
+
+const FENCE = '\x60\x60\x60' // 三个反引号：Markdown 代码围栏
+
+// —— mock 项目（契约 §2 project.json v2 结构，仅页面展示用）——
+const MOCK_PROJECT = {
+  id: 'proj_demo01',
+  name: '订单中心（示例数据）',
+  description: '演示项目：包含订单与支付两条业务线。',
+  folders: [
+    { id: 'fld_01', name: '订单管理', parentId: null, order: 0 },
+    { id: 'fld_02', name: '支付', parentId: null, order: 1 },
+  ],
+  environments: [
+    { id: 'env_01', name: '开发环境', baseUrl: 'https://api.example.test', isDefault: true, variables: [] },
+  ],
+  endpoints: [
+    {
+      id: 'ep_1001', name: '查询订单列表', folderId: 'fld_01', order: 0, protocol: 'http',
+      method: 'GET', url: '/api/v1/orders',
+      description: '分页查询当前用户的订单，支持按状态过滤。\n\n### 说明\n- 需要 Bearer 认证\n- 单页最多 100 条',
+      params: [
+        { key: 'page', value: '1', enabled: true, description: '页码', required: false, type: 'number' },
+        { key: 'pageSize', value: '20', enabled: true, description: '每页条数', required: false, type: 'number' },
+        { key: 'status', value: 'PAID', enabled: false, description: '订单状态', required: false, type: 'string' },
+      ],
+      pathParams: [],
+      headers: [
+        { key: 'Accept', value: 'application/json', enabled: true, description: '', required: false, type: 'string' },
+      ],
+      cookies: [],
+      body: { type: 'none', content: '', schema: null, examples: [] },
+      auth: { type: 'bearer', token: '{{token}}', username: '', password: '', key: '', value: '', addTo: 'header' },
+      responses: [
+        { id: 'res_1001a', name: '成功', code: 200, contentType: 'application/json',
+          body: '{\n  "code": 0,\n  "data": {\n    "total": 42,\n    "items": [\n      { "orderId": "ORD-001", "status": "PAID", "amount": 9900 }\n    ]\n  }\n}',
+          schema: null, headers: [{ key: 'content-type', value: 'application/json' }], enabled: true, isDefault: true },
+        { id: 'res_1001b', name: '未认证', code: 401, contentType: 'application/json',
+          body: '{\n  "code": 401,\n  "message": "unauthorized"\n}', schema: null, headers: [], enabled: true, isDefault: false },
+      ],
+      tags: ['订单'], status: 'developing',
+    },
+    {
+      id: 'ep_1002', name: '创建订单', folderId: 'fld_01', order: 1, protocol: 'http',
+      method: 'POST', url: '/api/v1/orders',
+      description: '根据商品条目创建订单。',
+      params: [], pathParams: [],
+      headers: [
+        { key: 'Content-Type', value: 'application/json', enabled: true, description: '', required: true, type: 'string' },
+      ],
+      cookies: [],
+      body: { type: 'json', content: '{\n  "skuId": "SKU-1001",\n  "quantity": 2\n}', schema: null, examples: [] },
+      auth: { type: 'bearer', token: '{{token}}', username: '', password: '', key: '', value: '', addTo: 'header' },
+      responses: [
+        { id: 'res_1002a', name: '创建成功', code: 201, contentType: 'application/json',
+          body: '{\n  "code": 0,\n  "data": { "orderId": "ORD-002", "status": "CREATED" }\n}', schema: null, headers: [], enabled: true, isDefault: true },
+      ],
+      tags: ['订单'], status: 'developing',
+    },
+    {
+      id: 'ep_1003', name: '取消订单', folderId: 'fld_01', order: 2, protocol: 'http',
+      method: 'DELETE', url: '/api/v1/orders/{orderId}',
+      description: '取消未支付的订单。',
+      params: [],
+      pathParams: [
+        { key: 'orderId', value: 'ORD-001', enabled: true, description: '订单号', required: true, type: 'string' },
+      ],
+      headers: [], cookies: [],
+      body: { type: 'none', content: '', schema: null, examples: [] },
+      auth: { type: 'none', token: '', username: '', password: '', key: '', value: '', addTo: 'header' },
+      responses: [
+        { id: 'res_1003a', name: '已取消', code: 204, contentType: 'application/json', body: '', schema: null, headers: [], enabled: true, isDefault: true },
+      ],
+      tags: ['订单'], status: 'developing',
+    },
+    {
+      id: 'ep_2001', name: '发起支付', folderId: 'fld_02', order: 0, protocol: 'http',
+      method: 'POST', url: '/api/v1/payments',
+      description: '对指定订单发起支付。',
+      params: [], pathParams: [],
+      headers: [
+        { key: 'Content-Type', value: 'application/json', enabled: true, description: '', required: true, type: 'string' },
+      ],
+      cookies: [{ key: 'session', value: '{{sessionId}}', enabled: false, description: '会话票据', required: false, type: 'string' }],
+      body: { type: 'json', content: '{\n  "orderId": "ORD-001",\n  "channel": "alipay"\n}', schema: null, examples: [] },
+      auth: { type: 'apikey', token: '', username: '', password: '', key: 'X-Api-Key', value: '{{apiKey}}', addTo: 'header' },
+      responses: [
+        { id: 'res_2001a', name: '成功', code: 200, contentType: 'application/json',
+          body: '{\n  "code": 0,\n  "data": { "paymentId": "PAY-001", "qrUrl": "https://example.test/qr" }\n}', schema: null, headers: [], enabled: true, isDefault: true },
+      ],
+      tags: ['支付'], status: 'developing',
+    },
+  ],
+}
+
+const TOC = [
+  { id: 'sec-info', label: '基本信息' },
+  { id: 'sec-path', label: 'Path 参数' },
+  { id: 'sec-params', label: 'Query 参数' },
+  { id: 'sec-headers', label: '请求头' },
+  { id: 'sec-cookies', label: 'Cookies' },
+  { id: 'sec-body', label: '请求体' },
+  { id: 'sec-auth', label: '认证' },
+  { id: 'sec-response', label: '响应' },
+  { id: 'sec-code', label: '代码生成' },
+]
+
+const BODY_TYPES = ['none', 'json', 'form', 'urlencoded', 'raw', 'binary', 'xml', 'graphql']
+const AUTH_LABEL = {
+  none: '无认证',
+  bearer: 'Bearer Token（Authorization: Bearer <token>）',
+  basic: 'Basic（用户名 / 密码）',
+  apikey: 'API Key（写入 header 或 query）',
+  oauth2: 'OAuth 2.0（规划中：仅保留类型位）',
+  digest: 'Digest（规划中：仅保留类型位）',
+}
+
+function resolveApi() {
+  return typeof window !== 'undefined' ? window.__postapiApi : null
+}
+
+function readEndpointIdFromHash() {
+  if (typeof window === 'undefined') return ''
+  const m = /^#\/doc\/([^/?#]+)/.exec(window.location.hash || '')
+  return m ? decodeURIComponent(m[1]) : ''
+}
+
+/** 极简行内 Markdown（行内 code / 粗体 / 链接），不引依赖。 */
+function renderInline(text, keyPrefix) {
+  const nodes = []
+  const re = /(\x60[^\x60]+\x60)|(\*\*[^*]+\*\*)|(\[[^\]]+\]\([^)]+\))/g
+  let last = 0
+  let m
+  let i = 0
+  while ((m = re.exec(text))) {
+    if (m.index > last) nodes.push(text.slice(last, m.index))
+    const token = m[0]
+    const key = keyPrefix + '-' + i++
+    if (token.charAt(0) === '\x60') nodes.push(<code key={key} className="pp-table-mono">{token.slice(1, -1)}</code>)
+    else if (token.slice(0, 2) === '**') nodes.push(<strong key={key}>{token.slice(2, -2)}</strong>)
+    else {
+      const link = /^\[([^\]]+)\]\(([^)]+)\)$/.exec(token)
+      nodes.push(<a key={key} href={link[2]}>{link[1]}</a>)
+    }
+    last = m.index + token.length
+  }
+  if (last < text.length) nodes.push(text.slice(last))
+  return nodes
+}
+
+/** 极简块级 Markdown（标题 / 列表 / 代码围栏 / 段落）。 */
+function Markdown({ text }) {
+  const src = text == null ? '' : String(text)
+  if (src.trim() === '') return <EmptyState text="（无描述）" />
+  const blocks = []
+  let buffer = []
+  let inFence = false
+  let listItems = []
+  const flushFence = (key) => {
+    blocks.push(<pre key={key} className="pp-pre">{buffer.join('\n')}</pre>)
+    buffer = []
+  }
+  const flushList = (key) => {
+    if (listItems.length === 0) return
+    blocks.push(
+      <ul key={key} style={{ margin: '0 0 var(--sp-2) 0', paddingLeft: 'var(--sp-4)' }}>
+        {listItems.map((item, idx) => <li key={idx}>{renderInline(item, key + '-li' + idx)}</li>)}
+      </ul>,
+    )
+    listItems = []
+  }
+  src.split('\n').forEach((line, index) => {
+    const key = 'md-' + index
+    if (line.trim().startsWith(FENCE)) {
+      if (inFence) { flushFence(key); inFence = false } else { flushList(key + '-l'); inFence = true }
+      return
+    }
+    if (inFence) { buffer.push(line); return }
+    const heading = /^(#{1,6})\s+(.*)$/.exec(line)
+    if (heading) {
+      flushList(key + '-l')
+      blocks.push(<div key={key} className="pp-card-title">{renderInline(heading[2], key)}</div>)
+      return
+    }
+    if (/^\s*[-*]\s+/.test(line)) { listItems.push(line.replace(/^\s*[-*]\s+/, '')); return }
+    flushList(key + '-l')
+    if (line.trim() === '') return
+    blocks.push(<p key={key} style={{ margin: '0 0 var(--sp-2) 0' }}>{renderInline(line, key)}</p>)
+  })
+  flushList('md-end-list')
+  if (inFence) flushFence('md-end-fence')
+  return <div>{blocks}</div>
+}
+
+function joinUrl(baseUrl, url) {
+  const raw = String(url || '')
+  if (/^https?:\/\//i.test(raw)) return raw
+  const base = String(baseUrl || '').replace(/\/+$/, '')
+  if (!base) return raw
+  return base + (raw.charAt(0) === '/' ? raw : '/' + raw)
+}
+
+/** 由接口定义生成 cURL（{{var}} 原样保留，交由环境变量替换）。 */
+export function buildCurl(ep, baseUrl) {
+  if (!ep) return ''
+  const enabled = (rows) => (Array.isArray(rows) ? rows : []).filter((r) => r && r.enabled !== false && r.key)
+  let url = joinUrl(baseUrl, ep.url)
+  for (const p of enabled(ep.pathParams)) url = url.replace('{' + p.key + '}', String(p.value == null ? '' : p.value))
+  const query = enabled(ep.params)
+    .map((p) => encodeURIComponent(p.key) + '=' + encodeURIComponent(p.value == null ? '' : p.value))
+    .join('&')
+  if (query) url += (url.indexOf('?') >= 0 ? '&' : '?') + query
+  const lines = ['curl -X ' + (ep.method || 'GET') + " '" + url + "'"]
+  for (const h of enabled(ep.headers)) lines.push("  -H '" + h.key + ': ' + (h.value == null ? '' : h.value) + "'")
+  const auth = ep.auth || {}
+  if (auth.type === 'bearer' && auth.token) lines.push("  -H 'Authorization: Bearer " + auth.token + "'")
+  if (auth.type === 'basic') lines.push("  -u '" + (auth.username || '') + ':' + (auth.password || '') + "'")
+  if (auth.type === 'apikey' && auth.key) {
+    if (auth.addTo === 'query') lines.push('  # query: ' + auth.key + '=' + (auth.value || ''))
+    else lines.push("  -H '" + auth.key + ': ' + (auth.value || '') + "'")
+  }
+  const body = ep.body || {}
+  if (body.type && body.type !== 'none' && body.content) {
+    lines.push("  --data-raw '" + String(body.content).replace(/'/g, "'\\''") + "'")
+  }
+  return lines.join(' \\\n')
+}
+
+export function DocPage({ route, api }) {
+  const rootRef = useRef(null)
+  useEffect(() => applyTheme(rootRef.current), [])
+  const apiRef = resolveApi() || api
+  const [project, setProject] = useState(MOCK_PROJECT)
+  const [isMock, setIsMock] = useState(true)
+  const [error, setError] = useState('')
+  const [selectedId, setSelectedId] = useState(() => (route && route.arg) || readEndpointIdFromHash())
+  const [collapsed, setCollapsed] = useState({})
+  const [activeSec, setActiveSec] = useState('sec-info')
+  const [responseId, setResponseId] = useState('')
+  const [copied, setCopied] = useState('')
+
+  // 载入项目：doc 路由只带 endpointId，取项目列表首个项目全量数据
+  useEffect(() => {
+    const storage = apiRef && apiRef.storage
+    if (!storage || typeof storage.listProjects !== 'function' || typeof storage.getProject !== 'function') return undefined
+    let cancelled = false
+    Promise.resolve()
+      .then(() => storage.listProjects())
+      .then((list) => {
+        const first = Array.isArray(list) && list.length ? list[0] : null
+        return first ? storage.getProject(first.id) : null
+      })
+      .then((data) => {
+        if (cancelled || !data) return
+        setProject(data)
+        setIsMock(false)
+        setError('')
+      })
+      .catch((err) => {
+        if (cancelled) return
+        setError('读取项目失败：' + (err && err.message ? err.message : String(err)))
+      })
+    return () => { cancelled = true }
+  }, [apiRef])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined
+    const onHash = () => setSelectedId(readEndpointIdFromHash())
+    window.addEventListener('hashchange', onHash)
+    return () => window.removeEventListener('hashchange', onHash)
+  }, [])
+
+  const endpoints = useMemo(() => (Array.isArray(project && project.endpoints) ? project.endpoints : []), [project])
+  const folders = useMemo(() => (Array.isArray(project && project.folders) ? project.folders : []), [project])
+  const ep = endpoints.find((e) => e.id === selectedId) || endpoints[0] || null
+
+  const responses = useMemo(() => {
+    const list = Array.isArray(ep && ep.responses) ? ep.responses.filter((r) => r && r.enabled !== false) : []
+    return list
+  }, [ep])
+  const activeResponse = useMemo(() => {
+    const found = responses.find((r) => r.id === responseId)
+    if (found) return found
+    return responses.find((r) => r.isDefault) || responses[0] || null
+  }, [responses, responseId])
+
+  const baseUrl = useMemo(() => {
+    const envs = Array.isArray(project && project.environments) ? project.environments : []
+    const def = envs.find((e) => e.isDefault) || envs[0]
+    return def && def.baseUrl ? def.baseUrl : ''
+  }, [project])
+
+  const canSaveResponse = Boolean(apiRef && apiRef.storage && typeof apiRef.storage.saveResponse === 'function')
+
+  const pick = (endpointId) => {
+    setSelectedId(endpointId)
+    setResponseId('')
+    if (typeof window !== 'undefined') window.location.hash = '#/doc/' + endpointId
+  }
+
+  const jump = (secId) => {
+    setActiveSec(secId)
+    if (typeof document === 'undefined') return
+    const el = document.getElementById(secId)
+    if (el && typeof el.scrollIntoView === 'function') el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
+  const copyCurl = () => {
+    const text = buildCurl(ep, baseUrl)
+    const fail = () => setCopied('复制失败：剪贴板不可用')
+    try {
+      if (typeof navigator !== 'undefined' && navigator.clipboard && navigator.clipboard.writeText) {
+        Promise.resolve(navigator.clipboard.writeText(text)).then(() => setCopied('已复制')).catch(fail)
+        return
+      }
+    } catch { /* 落到失败文案 */ }
+    fail()
+  }
+
+  const patchResponse = (patch) => {
+    if (!ep || !activeResponse) return
+    const next = { ...activeResponse, ...patch }
+    const list = (Array.isArray(ep.responses) ? ep.responses : []).map((r) => (r.id === next.id ? next : r))
+    setProject((prev) => ({
+      ...prev,
+      endpoints: (prev.endpoints || []).map((e) => (e.id === ep.id ? { ...e, responses: list } : e)),
+    }))
+  }
+
+  const saveResponse = () => {
+    const storage = apiRef && apiRef.storage
+    if (!storage || typeof storage.saveResponse !== 'function' || !ep || !activeResponse) return
+    Promise.resolve()
+      .then(() => storage.saveResponse(project.id, ep.id, activeResponse))
+      .then(() => setError(''))
+      .catch((err) => setError('保存响应失败：' + (err && err.message ? err.message : String(err))))
+  }
+
+  const tree = (
+    <nav className="pp-pane" style={{ padding: 'var(--sp-2)' }}>
+      <div className="pp-card-title" style={{ padding: '0 var(--sp-2)' }}>{project.name || '未命名项目'}</div>
+      {folders.map((folder) => {
+        const inFolder = endpoints.filter((e) => e.folderId === folder.id)
+        const isCollapsed = Boolean(collapsed[folder.id])
+        return (
+          <div key={folder.id}>
+            <div
+              className="pp-tree-row pp-muted"
+              data-active={false}
+              onClick={() => setCollapsed((prev) => ({ ...prev, [folder.id]: !prev[folder.id] }))}
+            >
+              <span>{isCollapsed ? '▸' : '▾'}</span>
+              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{folder.name}</span>
+              <span className="pp-muted">{inFolder.length}</span>
+            </div>
+            {isCollapsed ? null : inFolder.map((e) => (
+              <div
+                key={e.id}
+                className="pp-tree-row"
+                data-active={Boolean(ep) && e.id === ep.id}
+                onClick={() => pick(e.id)}
+                style={{ paddingLeft: 'var(--sp-4)' }}
+              >
+                <span className="pp-method" data-method={e.method}>{e.method}</span>
+                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{e.name}</span>
+              </div>
+            ))}
+          </div>
+        )
+      })}
+      {endpoints.filter((e) => !e.folderId).length > 0 ? (
+        <div>
+          <div className="pp-tree-row pp-muted">未归类</div>
+          {endpoints.filter((e) => !e.folderId).map((e) => (
+            <div key={e.id} className="pp-tree-row" data-active={Boolean(ep) && e.id === ep.id} onClick={() => pick(e.id)}>
+              <span className="pp-method" data-method={e.method}>{e.method}</span>
+              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{e.name}</span>
+            </div>
+          ))}
+        </div>
+      ) : null}
+      {endpoints.length === 0 ? <EmptyState text="暂无接口" hint="先在总览页创建项目与接口" /> : null}
+    </nav>
+  )
+
+  if (!ep) {
+    return (
+      <div className="pp-scope pp-page" data-page="doc" ref={rootRef}>
+        <h1 className="pp-page-title">接口文档</h1>
+        {tree}
+      </div>
+    )
+  }
+
+  return (
+    <div className="pp-scope pp-page" data-page="doc" ref={rootRef}>
+      <div className="pp-doc-layout">
+        {tree}
+
+        <main style={{ minWidth: 0 }}>
+          {isMock ? <p className="pp-muted">示例数据 — window.__postapiApi 未注入或读取失败，以下为文件内 mock</p> : null}
+          {error ? <p className="pp-muted">{error}</p> : null}
+
+          <section id="sec-info">
+            <h1 className="pp-page-title">
+              <span className="pp-method" data-method={ep.method}>{ep.method}</span>{' '}
+              {ep.name}
+            </h1>
+            <p className="pp-table-mono">{ep.method} {ep.url}</p>
+            {ep.protocol && ep.protocol !== 'http' ? (
+              <p className="pp-muted">协议 {ep.protocol}：规划中（仅保留类型位，发送回落 HTTP）</p>
+            ) : null}
+            <div style={{ marginTop: 'var(--sp-2)' }}><Markdown text={ep.description} /></div>
+            <div style={{ display: 'flex', gap: 'var(--sp-2)', alignItems: 'center', marginTop: 'var(--sp-3)' }}>
+              <button className="pp-btn" onClick={copyCurl}>复制为 cURL</button>
+              {copied ? <span className="pp-muted">{copied}</span> : null}
+            </div>
+          </section>
+
+          <section id="sec-path" className="pp-doc-section">
+            <h2 className="pp-card-title">Path 参数</h2>
+            <ParamTable rows={ep.pathParams} readOnly emptyText="无 Path 参数" />
+          </section>
+
+          <section id="sec-params" className="pp-doc-section">
+            <h2 className="pp-card-title">Query 参数</h2>
+            <ParamTable rows={ep.params} readOnly emptyText="无 Query 参数" />
+          </section>
+
+          <section id="sec-headers" className="pp-doc-section">
+            <h2 className="pp-card-title">请求头</h2>
+            <ParamTable rows={ep.headers} readOnly emptyText="无请求头" />
+          </section>
+
+          <section id="sec-cookies" className="pp-doc-section">
+            <h2 className="pp-card-title">Cookies</h2>
+            <ParamTable rows={ep.cookies} readOnly emptyText="无 Cookies" />
+          </section>
+
+          <section id="sec-body" className="pp-doc-section">
+            <h2 className="pp-card-title">请求体（{ep.body && ep.body.type ? ep.body.type : 'none'}）</h2>
+            {ep.body && ep.body.content ? (
+              <JsonEditor value={ep.body.content} readOnly rows={8} />
+            ) : (
+              <EmptyState text="无请求体" />
+            )}
+            {ep.body && ep.body.type && BODY_TYPES.indexOf(ep.body.type) < 0 ? (
+              <p className="pp-muted">未知 body 类型：{ep.body.type}</p>
+            ) : null}
+          </section>
+
+          <section id="sec-auth" className="pp-doc-section">
+            <h2 className="pp-card-title">认证</h2>
+            <p className="pp-muted">{AUTH_LABEL[(ep.auth && ep.auth.type) || 'none'] || (ep.auth && ep.auth.type)}</p>
+            {ep.auth && ep.auth.type === 'apikey' ? (
+              <p className="pp-table-mono">{(ep.auth.key || 'key') + ' → ' + (ep.auth.addTo === 'query' ? 'query' : 'header')}</p>
+            ) : null}
+          </section>
+
+          <section id="sec-response" className="pp-doc-section">
+            <h2 className="pp-card-title">响应</h2>
+            {responses.length === 0 ? (
+              <EmptyState text="尚未定义响应" hint="在调试页发送后保存为接口，或新增响应" />
+            ) : (
+              <div>
+                <div className="pp-tabs">
+                  {responses.map((r) => (
+                    <button
+                      key={r.id}
+                      className="pp-tab"
+                      data-active={Boolean(activeResponse) && r.id === activeResponse.id}
+                      onClick={() => setResponseId(r.id)}
+                    >
+                      {r.code} {r.name || ''}
+                    </button>
+                  ))}
+                </div>
+                {activeResponse ? (
+                  <div style={{ marginTop: 'var(--sp-2)' }}>
+                    <div style={{ display: 'flex', gap: 'var(--sp-2)', alignItems: 'center', marginBottom: 'var(--sp-2)' }}>
+                      <StatusPill status={activeResponse.code} text={activeResponse.name || ''} />
+                      <span className="pp-muted">{activeResponse.contentType || 'application/json'}</span>
+                      {activeResponse.isDefault ? <span className="pp-pill">默认</span> : null}
+                      {canSaveResponse ? (
+                        <button className="pp-btn" onClick={saveResponse}>保存响应</button>
+                      ) : (
+                        <span className="pp-muted">只读：storage.saveResponse 不可用</span>
+                      )}
+                    </div>
+                    <JsonEditor
+                      value={activeResponse.body}
+                      rows={10}
+                      readOnly={!canSaveResponse}
+                      onChange={(next) => patchResponse({ body: next })}
+                    />
+                    {Array.isArray(activeResponse.headers) && activeResponse.headers.length > 0 ? (
+                      <div style={{ marginTop: 'var(--sp-2)' }}>
+                        <div className="pp-card-title">响应头</div>
+                        <ParamTable rows={activeResponse.headers} readOnly columns={['key', 'value']} emptyText="无响应头" />
+                      </div>
+                    ) : null}
+                  </div>
+                ) : null}
+              </div>
+            )}
+          </section>
+
+          <section id="sec-code" className="pp-doc-section">
+            <h2 className="pp-card-title">代码生成（cURL）</h2>
+            <pre className="pp-pre">{buildCurl(ep, baseUrl)}</pre>
+          </section>
+        </main>
+
+        <aside style={{ position: 'sticky', top: 'var(--sp-6)' }}>
+          <div className="pp-card-title">本页目录</div>
+          {TOC.map((t) => (
+            <a
+              key={t.id}
+              className="pp-toc-item"
+              data-active={activeSec === t.id}
+              onClick={(e) => { e.preventDefault(); jump(t.id) }}
+              href={'#/doc/' + encodeURIComponent(ep.id)}
+            >
+              {t.label}
+            </a>
+          ))}
+        </aside>
+      </div>
+    </div>
+  )
+}

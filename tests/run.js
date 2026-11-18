@@ -1,0 +1,71 @@
+/** 简易测试 runner：node tests/run.js 直接执行并汇总通过/失败计数，无 vitest 依赖。 */
+import { existsSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
+import { dirname, join } from 'node:path'
+import { tests as storageTests } from './storage.test.js'
+import { tests as requestTests } from './request.test.js'
+import { tests as bridgeTests } from './bridge.test.js'
+
+const here = dirname(fileURLToPath(import.meta.url))
+
+/** 可选套件：文件不存在时跳过（并行开发期各 teammate 陆续落地）。 */
+async function optionalSuite(file, exportName) {
+  const full = join(here, file)
+  if (!existsSync(full)) return []
+  try {
+    const mod = await import('./' + file)
+    return mod[exportName] ?? []
+  } catch (err) {
+    console.log('  SKIP ' + file + '（导入失败：' + (err && err.message) + '）')
+    return []
+  }
+}
+
+const hostDataTests = await optionalSuite('host-data.test.js', 'tests')
+const hostRuntimeTests = await optionalSuite('host-runtime.test.js', 'tests')
+
+/** 页面套件在 src/ 下，用绝对路径动态导入。 */
+async function optionalPageSuite(relPath, exportName) {
+  const full = join(here, '..', relPath)
+  if (!existsSync(full)) return []
+  try {
+    const mod = await import('file://' + full.replace(/\\/g, '/'))
+    return mod[exportName] ?? []
+  } catch (err) {
+    console.log('  SKIP ' + relPath + '（导入失败：' + (err && err.message) + '）')
+    return []
+  }
+}
+
+const pagesATests = await optionalPageSuite('src/client/pages/components/__tests__/pages-a.test.js', 'tests')
+const pagesBTests = await optionalSuite('pages-b.test.js', 'tests')
+
+const suites = [
+  ['tests/storage.test.js', storageTests],
+  ['tests/request.test.js', requestTests],
+  ['tests/bridge.test.js', bridgeTests],
+  ['tests/host-data.test.js', hostDataTests],
+  ['tests/host-runtime.test.js', hostRuntimeTests],
+  ['src/client/pages/components/__tests__/pages-a.test.js', pagesATests],
+  ['tests/pages-b.test.js', pagesBTests],
+]
+
+let passed = 0
+let failed = 0
+for (const [file, tests] of suites) {
+  console.log(`\n== ${file} ==`)
+  for (const t of tests) {
+    try {
+      await t.fn()
+      passed += 1
+      console.log(`  PASS ${t.name}`)
+    } catch (err) {
+      failed += 1
+      console.log(`  FAIL ${t.name}`)
+      console.log(`       ${err && err.message ? err.message : err}`)
+    }
+  }
+}
+
+console.log(`\n结果：通过 ${passed}，失败 ${failed}，共 ${passed + failed}`)
+if (failed > 0) process.exitCode = 1

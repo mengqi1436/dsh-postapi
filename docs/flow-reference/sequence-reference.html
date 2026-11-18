@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>dsh-postapi · 接口调试请求时序</title>
+<!--
+  sequence-reference（diagram-design skill 移植底稿）
+  style-guide gate：(d) paste tokens — paper #fafafa / ink #000 / accent #0070f3 / border #eaeaea
+  （默认皮肤 #f5f5f5 / #2d3142 / #bf4520 已弃用）
+  密度 4/10：4 生命线、7 条消息 + alt 片段内 2 条自消息（≤12）；accent 仅 2 处
+  几何：4px 网格；相邻消息 y 间距 32px；激活条 w=8；frame 内嵌 ≥12px
+-->
+<style>
+  :root {
+    --paper: #fafafa;
+    --ink: #000000;
+    --muted: #666666;
+    --accent: #0070f3;
+    --border: #eaeaea;
+    --font-sans: -apple-system, "Segoe UI", Inter, system-ui, sans-serif;
+    --font-mono: ui-monospace, "Cascadia Code", Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 40px 24px 64px;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    line-height: 1.45;
+  }
+  main { max-width: 1000px; margin: 0 auto; }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 8px;
+  }
+  h1 { font-size: 24px; font-weight: 600; margin: 0 0 8px; }
+  .desc { color: var(--muted); margin: 0 0 24px; }
+  figure { margin: 0; }
+  .svg-wrap { overflow-x: auto; }
+  .svg-wrap svg { display: block; min-width: 960px; width: 100%; height: auto; }
+</style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">dsh-postapi · flow reference</p>
+  <h1>接口调试请求时序</h1>
+  <p class="desc">页面经 Storage 载入项目、Request 发起 HTTP 调用，并按响应状态渲染文档或提示错误。alt 片段表达 2xx / 异常分支。</p>
+
+  <figure>
+    <div class="svg-wrap">
+      <svg viewBox="0 0 960 600" role="img" aria-labelledby="sequence-reference-title sequence-reference-desc" xmlns="http://www.w3.org/2000/svg">
+        <title id="sequence-reference-title">接口调试请求时序</title>
+        <desc id="sequence-reference-desc">Client Page 向 Storage 载入项目，向 Request 发起调用，Request 经 HTTP Server 获取 200 响应并回传结果；页面在 alt 片段内按 2xx 或异常分支渲染或提示。</desc>
+        <defs>
+          <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#666666" />
+          </marker>
+          <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#0070f3" />
+          </marker>
+        </defs>
+
+        <!-- 背景：干净 paper（无点纹，产品内嵌场景） -->
+        <rect width="960" height="600" fill="#fafafa" />
+
+        <!-- alt/opt fragment frame（先画，处于最底层） -->
+        <rect x="104" y="378" width="160" height="154" rx="4" fill="rgba(0,0,0,0.02)" stroke="rgba(0,0,0,0.22)" stroke-width="1" />
+        <rect x="104" y="378" width="40" height="16" rx="2" fill="#fafafa" stroke="rgba(0,0,0,0.22)" stroke-width="1" />
+        <text x="124" y="390" fill="#666666" font-size="8" font-family="ui-monospace, 'Cascadia Code', Consolas, monospace" text-anchor="middle" letter-spacing="0.12em">ALT</text>
+        <text x="116" y="402" fill="#666666" font-size="8" font-family="ui-monospace, 'Cascadia Code', Consolas, monospace" letter-spacing="0.04em">[2xx]</text>
+        <line x1="112" y1="456" x2="256" y2="456" stroke="rgba(0,0,0,0.2)" stroke-width="1" stroke-dasharray="4,3" />
+        <text x="116" y="478" fill="#666666" font-size="8" font-family="ui-monospace, 'Cascadia Code', Consolas, monospace" letter-spacing="0.04em">[else]</text>
+
+        <!-- 生命线（dashed 3,3，ink@0.20） -->
+        <line x1="150" y1="76" x2="150" y2="548" stroke="rgba(0,0,0,0.2)" stroke-width="1" stroke-dasharray="3,3" />
+        <line x1="390" y1="76" x2="390" y2="548" stroke="rgba(0,0,0,0.2)" stroke-width="1" stroke-dasharray="3,3" />
+        <line x1="630" y1="76" x2="630" y2="548" stroke="rgba(0,0,0,0.2)" stroke-width="1" stroke-dasharray="3,3" />
+        <line x1="830" y1="76" x2="830" y2="548" stroke="rgba(0,0,0,0.2)" stroke-width="1" stroke-dasharray="3,3" />
+
+        <!-- 激活条（w=8，ink@0.06 填充，muted 0.8 描边） -->
+        <rect x="146" y="100" width="8" height="256" fill="rgba(0,0,0,0.06)" stroke="#666666" stroke-width="0.8" />
+        <rect x="386" y="100" width="8" height="56" fill="rgba(0,0,0,0.06)" stroke="#666666" stroke-width="0.8" />
+        <rect x="626" y="180" width="8" height="176" fill="rgba(0,0,0,0.06)" stroke="#666666" stroke-width="0.8" />
+        <rect x="826" y="220" width="8" height="56" fill="rgba(0,0,0,0.06)" stroke="#666666" stroke-width="0.8" />
+
+        <!-- 消息 1：LOAD PROJECT（call：solid + filled） -->
+        <line x1="154" y1="112" x2="386" y2="112" stroke="#666666" stroke-width="1" marker-end="url(#arrow)" />
+        <rect x="235" y="92" width="70" height="12" rx="2" fill="#fafafa" />
+        <text x="270" y="101" fill="#666666" font-size="8" font-family="ui-monospace, 'Cascadia Code', Consolas, monospace" text-anchor="middle" letter-spacing="0.06em">LOAD PROJECT</text>
+
+        <!-- 消息 2：PROJECT（return：dashed + filled） -->
+        <line x1="386" y1="152" x2="154" y2="152" stroke="#666666" stroke-width="1" stroke-dasharray="5,4" marker-end="url(#arrow)" />
+        <rect x="242" y="132" width="56" height="12" rx="2" fill="#fafafa" />
+        <text x="270" y="141" fill="#666666" font-size="8" font-family="ui-monospace, 'Cascadia Code', Consolas, monospace" text-anchor="middle" letter-spacing="0.06em">PROJECT</text>
+
+        <!-- 消息 3：SEND（call） -->
+        <line x1="154" y1="192" x2="626" y2="192" stroke="#666666" stroke-width="1" marker-end="url(#arrow)" />
+        <rect x="375" y="172" width="30" height="12" rx="2" fill="#fafafa" />
+        <text x="390" y="181" fill="#666666" font-size="8" font-family="ui-monospace, 'Cascadia Code', Consolas, monospace" text-anchor="middle" letter-spacing="0.06em">SEND</text>
+
+        <!-- 消息 4：GET /USERS（HTTP call：accent solid + filled，headline #1） -->
+        <line x1="634" y1="232" x2="826" y2="232" stroke="#0070f3" stroke-width="1" marker-end="url(#arrow-accent)" />
+        <rect x="700" y="212" width="60" height="12" rx="2" fill="#fafafa" />
+        <text x="730" y="221" fill="#666666" font-size="8" font-family="ui-monospace, 'Cascadia Code', Consolas, monospace" text-anchor="middle" letter-spacing="0.06em">GET /USERS</text>
+
+        <!-- 消息 5：200 OK（headline success：accent solid + filled，headline #2） -->
+        <line x1="826" y1="272" x2="634" y2="272" stroke="#0070f3" stroke-width="1" marker-end="url(#arrow-accent)" />
+        <rect x="710" y="252" width="40" height="12" rx="2" fill="#fafafa" />
+        <text x="730" y="261" fill="#666666" font-size="8" font-family="ui-monospace, 'Cascadia Code', Consolas, monospace" text-anchor="middle" letter-spacing="0.06em">200 OK</text>
+
+        <!-- 消息 6：SERIALIZE BODY（自消息：U 形环，label 右侧） -->
+        <path d="M 630 308 h 28 v 20 h -28" fill="none" stroke="#666666" stroke-width="1" marker-end="url(#arrow)" />
+        <rect x="666" y="302" width="80" height="12" rx="2" fill="#fafafa" />
+        <text x="706" y="311" fill="#666666" font-size="8" font-family="ui-monospace, 'Cascadia Code', Consolas, monospace" text-anchor="middle" letter-spacing="0.06em">SERIALIZE BODY</text>
+
+        <!-- 消息 7：RESULT（return：dashed + filled） -->
+        <line x1="626" y1="348" x2="154" y2="348" stroke="#666666" stroke-width="1" stroke-dasharray="5,4" marker-end="url(#arrow)" />
+        <rect x="360" y="328" width="60" height="12" rx="2" fill="#fafafa" />
+        <text x="390" y="337" fill="#666666" font-size="8" font-family="ui-monospace, 'Cascadia Code', Consolas, monospace" text-anchor="middle" letter-spacing="0.06em">RESULT</text>
+
+        <!-- alt region 1：RENDER（自消息，muted） -->
+        <path d="M 150 420 h 28 v 20 h -28" fill="none" stroke="#666666" stroke-width="1" marker-end="url(#arrow)" />
+        <rect x="186" y="414" width="60" height="12" rx="2" fill="#fafafa" />
+        <text x="216" y="423" fill="#666666" font-size="8" font-family="ui-monospace, 'Cascadia Code', Consolas, monospace" text-anchor="middle" letter-spacing="0.06em">RENDER</text>
+
+        <!-- alt region 2：TOAST（自消息，muted） -->
+        <path d="M 150 500 h 28 v 20 h -28" fill="none" stroke="#666666" stroke-width="1" marker-end="url(#arrow)" />
+        <rect x="186" y="494" width="50" height="12" rx="2" fill="#fafafa" />
+        <text x="211" y="503" fill="#666666" font-size="8" font-family="ui-monospace, 'Cascadia Code', Consolas, monospace" text-anchor="middle" letter-spacing="0.06em">TOAST</text>
+
+        <!-- actor 框（最后画，遮住生命线顶端） -->
+        <rect x="84" y="40" width="132" height="36" rx="6" fill="#fafafa" stroke="#000000" stroke-width="1" />
+        <text x="150" y="63" fill="#000000" font-size="12" font-weight="600" font-family="-apple-system, 'Segoe UI', Inter, system-ui, sans-serif" text-anchor="middle">Client Page</text>
+        <rect x="324" y="40" width="132" height="36" rx="6" fill="#fafafa" stroke="#000000" stroke-width="1" />
+        <text x="390" y="63" fill="#000000" font-size="12" font-weight="600" font-family="-apple-system, 'Segoe UI', Inter, system-ui, sans-serif" text-anchor="middle">Storage</text>
+        <rect x="564" y="40" width="132" height="36" rx="6" fill="#fafafa" stroke="#000000" stroke-width="1" />
+        <text x="630" y="63" fill="#000000" font-size="12" font-weight="600" font-family="-apple-system, 'Segoe UI', Inter, system-ui, sans-serif" text-anchor="middle">Request</text>
+        <rect x="764" y="40" width="132" height="36" rx="6" fill="#fafafa" stroke="#000000" stroke-width="1" />
+        <text x="830" y="63" fill="#000000" font-size="12" font-weight="600" font-family="-apple-system, 'Segoe UI', Inter, system-ui, sans-serif" text-anchor="middle">HTTP Server</text>
+
+        <!-- 图例：水平底条 -->
+        <line x1="64" y1="560" x2="896" y2="560" stroke="rgba(0,0,0,0.1)" stroke-width="0.8" />
+        <text x="64" y="580" fill="#666666" font-size="8" font-family="ui-monospace, 'Cascadia Code', Consolas, monospace" letter-spacing="0.14em">LEGEND</text>
+        <text x="144" y="580" fill="#666666" font-size="8" font-family="ui-monospace, 'Cascadia Code', Consolas, monospace">SOLID = CALL</text>
+        <text x="264" y="580" fill="#666666" font-size="8" font-family="ui-monospace, 'Cascadia Code', Consolas, monospace">DASHED = RETURN</text>
+        <text x="404" y="580" fill="#0070f3" font-size="8" font-family="ui-monospace, 'Cascadia Code', Consolas, monospace">ACCENT = HTTP + HEADLINE</text>
+        <text x="604" y="580" fill="#666666" font-size="8" font-family="ui-monospace, 'Cascadia Code', Consolas, monospace">FRAME = BRANCH</text>
+      </svg>
+    </div>
+    <figcaption style="color:#666;font-size:12px;margin-top:12px;">
+      移植说明：React 版组件见 src/client/pages/sequence.jsx（同几何、同消息种类映射，支持 SVG 导出与步骤数 &gt; 9 拆分提示）。
+    </figcaption>
+  </figure>
+</main>
+</body>
+</html>

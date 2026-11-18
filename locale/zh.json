@@ -1,0 +1,7 @@
+{
+  "meta": {
+    "title": "PostAPI",
+    "description": "DeepSeek Harness 的 PostAPI 插件骨架：以输入框底栏徽章验证挂载链路。",
+    "detail": "docs/DETAIL.md"
+  }
+}
