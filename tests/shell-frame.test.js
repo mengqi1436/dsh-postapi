@@ -219,7 +219,12 @@ t('12 条路由齐全且顺序与契约 §3 一致', async () => {
     assert(typeof r.labelKey === 'string' && r.labelKey.indexOf('nav.') === 0, r.name + ' 缺少 nav.* 文案键')
   }
   assert(ex.PARAM_ROUTES.join(',') === 'doc,schema', 'PARAM_ROUTES 应为 doc,schema')
-  assert(ex.TWO_COL_ROUTES.join(',') === 'debug,mock', 'TWO_COL_ROUTES 应为 debug,mock')
+  // v2 不再按页切换列数（TWO_COL_ROUTES 已移除），改为断言 5 个导航分组覆盖全部 12 条路由
+  assert(Array.isArray(ex.NAV_GROUPS) && ex.NAV_GROUPS.length === 5, 'NAV_GROUPS 应有 5 个分组')
+  const covered = ex.NAV_GROUPS.reduce((acc, g) => acc.concat(g.routes), [])
+  assert(covered.length === 12, '5 个分组应覆盖 12 条路由，实际 ' + covered.length)
+  const dup = covered.filter((name, i) => covered.indexOf(name) !== i)
+  assert(dup.length === 0, '路由不得重复出现在多个分组：' + dup.join(','))
 })
 
 t('静态纪律：只用 .pp-* 类且类都在 design-tokens.css 定义', async () => {
@@ -293,44 +298,111 @@ t('纯函数 nextTheme / readSetting / writeSetting：localStorage 读写与缺�
   store.delete('postapi.settings.probe')
 })
 
-t('骨架容器：.pp-workbench 包 .pp-topbar + 三段式（左 / 中 / 右）', async () => {
+t('骨架容器 v2：.pp-workbench-v2 包 .pp-topbar + .pp-shell（轨 + 主区）', async () => {
   loc.hash = '#/overview'
   const { tree } = await render()
   assert(cls(tree).split(/\s+/).includes('pp-scope'), '根元素应带 pp-scope')
-  assert(cls(tree).split(/\s+/).includes('pp-workbench'), '根元素应带 pp-workbench')
+  assert(cls(tree).split(/\s+/).includes('pp-workbench-v2'), '根元素应带 pp-workbench-v2')
   assert(byClass(tree, 'pp-topbar').length === 1, '应渲染 1 个 .pp-topbar')
-  assert(byClass(tree, 'pp-body-3col').length === 1, 'overview 应走 .pp-body-3col')
-  assert(byClass(tree, 'pp-body-2col').length === 0, 'overview 不应出现 .pp-body-2col')
-  assert(byClass(tree, 'pp-col-left').length === 1, '应有左列 .pp-col-left')
-  assert(byClass(tree, 'pp-main').length === 1, '应有主区 .pp-main')
-  assert(byClass(tree, 'pp-col-right').length === 1, '应有右栏 .pp-col-right')
+  assert(byClass(tree, 'pp-shell').length === 1, '应渲染 .pp-shell 容器')
+  assert(byClass(tree, 'pp-rail').length === 1, '应有图标轨 .pp-rail')
+  assert(byClass(tree, 'pp-main-v2').length === 1, '应有主区 .pp-main-v2')
+  // v1 的三段式骨架类必须彻底消失：它们会被导航挤压主区
+  assert(byClass(tree, 'pp-body-3col').length === 0, 'v2 不应再有 .pp-body-3col（会挤压主区）')
+  assert(byClass(tree, 'pp-col-right').length === 0, 'v2 不应再有右栏 .pp-col-right（信息已收进 ? 浮层）')
+  assert(byClass(tree, 'pp-col-left').length === 0, 'v2 不应再有通栏左列 .pp-col-left（改图标轨）')
+  // 水平全局页签条也必须消失（与轨重复且吃 40px 纵向）
+  assert(byClass(tree, 'pp-tabs').length === 0, 'v2 不应再有水平全局页签条')
+  assert(byClass(tree, 'pp-page-head').length === 1, '主区应有页头 .pp-page-head')
 })
 
-t('左树：12 条 .pp-tree-row，仅当前路由 data-active=true', async () => {
+t('图标轨：5 个分组按钮，当前分组 data-active=true，默认无浮层', async () => {
   loc.hash = '#/history'
   const { tree, mod } = await render()
-  const rows = byClass(tree, 'pp-tree-row')
-  assert(rows.length === 12, '左树应有 12 条路由，实际 ' + rows.length)
-  const actives = rows.filter((n) => String(n.props['data-active']) === 'true')
-  assert(actives.length === 1, '激活态应恰好 1 条，实际 ' + actives.length)
-  assert(collectText(actives[0]).includes(mod.exports.zh['nav.history']), '激活项应是「历史」')
-  for (const n of rows) assert(n.type === 'a', '树行应为 <a>（保留 hash 路由）')
+  const railBtns = byClass(tree, 'pp-rail-btn')
+  assert(railBtns.length === 5, '图标轨应有 5 个分组按钮，实际 ' + railBtns.length)
+  const actives = railBtns.filter((n) => String(n.props['data-active']) === 'true')
+  assert(actives.length === 1, '当前分组应恰好 1 个激活，实际 ' + actives.length)
+  // history 属于「质量」分组
+  const quality = mod.exports.NAV_GROUPS.find((g) => g.id === 'quality')
+  assert(quality && quality.routes.indexOf('history') >= 0, 'history 应归入 quality 分组')
+  // 图标是 SVG 组件（Icon），按组件 props.name 判定分组
+  const glyph = collectNodes(actives[0]).find((n) => n.type === 'svg' || (n.props && n.props.viewBox === '0 0 24 24'))
+  assert(glyph, '激活按钮应含 SVG 图标')
+  assert(quality.icon === 'check', 'quality 分组图标应为 check，实际 ' + quality.icon)
+  assert(byClass(tree, 'pp-flyout').length === 0, '默认不应展开浮层')
 })
 
-t('顶栏元素齐全：标题 / 搜索 / 新建接口 / 环境 / 主题 / 设置', async () => {
+t('浮层二级菜单：点分组展开，覆盖主区而不改变主区宽度', async () => {
+  loc.hash = '#/overview'
+  const first = await render()
+  const railBtns = byClass(first.tree, 'pp-rail-btn')
+  const apiBtn = railBtns[1] // 第二组 = 接口
+  assert(apiBtn, '未找到接口分组按钮')
+  apiBtn.props.onClick()
+  const second = await render(first.stub)
+  const flyouts = byClass(second.tree, 'pp-flyout')
+  assert(flyouts.length === 1, '点分组后应展开 1 个浮层，实际 ' + flyouts.length)
+  const items = byClass(flyouts[0], 'pp-flyout-item')
+  assert(items.length === 3, '接口分组应有 3 条路由（文档/调试/Mock），实际 ' + items.length)
+  for (const n of items) assert(n.type === 'a', '浮层条目应为 <a>（保留 hash 路由）')
+  // 主区仍在，且不是被浮层替换：浮层与主区并存
+  assert(byClass(second.tree, 'pp-main-v2').length === 1, '浮层展开时主区仍应存在')
+  // 再点同一分组应收起
+  const apiBtn2 = byClass(second.tree, 'pp-rail-btn')[1]
+  apiBtn2.props.onClick()
+  const third = await render(first.stub)
+  assert(byClass(third.tree, 'pp-flyout').length === 0, '再点同一分组应收起浮层')
+})
+
+t('浮层关闭：点浮层条目后收起（跳转即关）', async () => {
+  loc.hash = '#/overview'
+  const first = await render()
+  byClass(first.tree, 'pp-rail-btn')[2].props.onClick() // 数据分组
+  const second = await render(first.stub)
+  const item = byClass(second.tree, 'pp-flyout-item')[0]
+  assert(item, '数据分组应至少一条条目')
+  item.props.onClick()
+  const third = await render(first.stub)
+  assert(byClass(third.tree, 'pp-flyout').length === 0, '点条目后浮层应收起')
+})
+
+t('帮助浮层：? 按钮展开当前页说明与四条快捷入口', async () => {
+  loc.hash = '#/flow'
+  const first = await render()
+  // v2 帮助按钮是 SVG 图标按钮，按 title 定位（title 取 aside.about 文案）
+  const helpBtn = collectNodes(first.tree).find((n) => n.type === 'button'
+    && n.props.title === first.mod.exports.zh['aside.about'])
+  assert(helpBtn, '未找到帮助按钮')
+  helpBtn.props.onClick()
+  const second = await render(first.stub)
+  const flyout = byClass(second.tree, 'pp-flyout')[0]
+  assert(flyout, '? 应展开帮助浮层')
+  const text = collectText(flyout)
+  assert(text.includes(second.mod.exports.zh['aside.page.flow']), '帮助浮层应含当前页说明')
+  const links = byClass(flyout, 'pp-flyout-item')
+  assert(links.length === 4, '帮助浮层应有 4 条快捷入口，实际 ' + links.length)
+})
+
+t('顶栏 v2：面包屑 + 搜索 + 新建接口 + 环境 + 三个图标动作', async () => {
   loc.hash = '#/test'
   const { tree, mod } = await render()
   const bar = byClass(tree, 'pp-topbar')[0]
   const nodes = collectNodes(bar)
   const title = nodes.find((n) => cls(n).split(/\s+/).includes('pp-topbar-title'))
   assert(title && collectText(title).includes(mod.exports.zh['nav.test']), '顶栏标题应取当前路由 labelKey')
+  // 面包屑显示当前分组
+  const crumb = nodes.find((n) => cls(n).split(/\s+/).includes('pp-crumb'))
+  assert(crumb && collectText(crumb).includes(mod.exports.zh['group.quality']), '面包屑应显示当前分组（test 属质量组）')
   const input = nodes.find((n) => n.type === 'input')
   assert(input, '顶栏应有搜索输入框')
-  assert(cls(input).split(/\s+/).includes('pp-input'), '搜索框应带 .pp-input')
+  assert(cls(input).split(/\s+/).includes('pp-topbar-search'), '搜索框应带 .pp-topbar-search')
   assert(input.props.placeholder === mod.exports.zh['topbar.searchPlaceholder'], '搜索框占位文案应取字典')
   const buttons = nodes.filter((n) => n.type === 'button')
-  assert(buttons.length >= 3, '顶栏至少 3 个按钮（新建接口 / 主题 / 设置），实际 ' + buttons.length)
-  for (const b of buttons) assert(cls(b).split(/\s+/).includes('pp-btn'), '按钮应带 .pp-btn')
+  assert(buttons.length >= 4, '顶栏至少 4 个按钮（新建接口 + 主题/设置/帮助），实际 ' + buttons.length)
+  // 主按钮保留 .pp-btn，图标动作走 .pp-icon-btn（28px 命中区，不再挤压窄栏）
+  const iconBtns = buttons.filter((b) => cls(b).split(/\s+/).includes('pp-icon-btn'))
+  assert(iconBtns.length === 3, '应有 3 个图标按钮（主题 / 设置 / 帮助），实际 ' + iconBtns.length)
   const sel = nodes.find((n) => n.type === 'select')
   assert(sel && cls(sel).split(/\s+/).includes('pp-select'), '顶栏应有环境选择 .pp-select')
 })
@@ -365,14 +437,18 @@ t('主题切换：写 localStorage postapi.settings.theme、切 data-theme、同
   loc.hash = '#/overview'
   const first = await render()
   assert(first.tree.props['data-theme'] === 'light', '默认主题应为 light，实际 ' + first.tree.props['data-theme'])
-  const themeBtn = collectNodes(first.tree).find((n) => n.type === 'button' && /深色/.test(collectText(n)))
+  // v2 主题按钮是图标（☀/☾），文案在 title 上，按 title 定位
+  const themeBtn = collectNodes(first.tree).find((n) => n.type === 'button'
+    && n.props.title === first.mod.exports.zh['topbar.themeHint'])
   assert(themeBtn, '未找到主题切换按钮')
   themeBtn.props.onClick()
   assert(store.get('postapi.settings.theme') === 'dark', '应写入 localStorage，实际 ' + store.get('postapi.settings.theme'))
   assert(el.attrs['data-theme'] === 'dark', '应同步已挂载 .pp-scope 的 data-theme')
   const second = await render(first.stub)
   assert(second.tree.props['data-theme'] === 'dark', '重渲染后 data-theme 应为 dark')
-  const back = collectNodes(second.tree).find((n) => n.type === 'button' && /浅色/.test(collectText(n)))
+  const back = collectNodes(second.tree).find((n) => n.type === 'button'
+    && n.props.title === second.mod.exports.zh['topbar.themeHint'])
+  assert(back, '重渲染后未找到主题切换按钮')
   back.props.onClick()
   assert(store.get('postapi.settings.theme') === 'light', '再切回应写回 light')
   const third = await render(first.stub)
@@ -380,14 +456,14 @@ t('主题切换：写 localStorage postapi.settings.theme、切 data-theme、同
   store.clear()
 })
 
-t('两段式：debug / mock 走 .pp-body-2col 且无右栏', async () => {
-  for (const name of ['debug', 'mock']) {
-    loc.hash = '#/' + name
+t('所有路由都用同一 v2 骨架（无按页切换列数）', async () => {
+  for (const item of ['overview', 'doc', 'debug', 'mock', 'schema', 'env', 'history', 'test', 'import', 'flow', 'search', 'settings']) {
+    loc.hash = '#/' + item
     const { tree } = await render()
-    assert(byClass(tree, 'pp-body-2col').length === 1, name + ' 应走 .pp-body-2col')
-    assert(byClass(tree, 'pp-body-3col').length === 0, name + ' 不应出现 .pp-body-3col')
-    assert(byClass(tree, 'pp-col-right').length === 0, name + ' 不应有右栏')
-    assert(byClass(tree, 'pp-main').length === 1, name + ' 应有主区')
+    assert(byClass(tree, 'pp-rail').length === 1, item + ' 应有图标轨')
+    assert(byClass(tree, 'pp-main-v2').length === 1, item + ' 应有主区')
+    assert(byClass(tree, 'pp-body-3col').length === 0, item + ' 不应有 v1 三段式')
+    assert(byClass(tree, 'pp-body-2col').length === 0, item + ' 不应有 v1 两段式')
   }
 })
 
@@ -414,15 +490,12 @@ t('页面渲染：从注册表取组件，props 为 { route, api }；未注册�
   assert(collectText(second.tree).includes(ex.zh['placeholder.title']), '占位应带「页面未注册」文案')
 })
 
-t('右栏：当前页面说明取 aside.page.<route>，快捷入口四条', async () => {
+t('页头描述：主区页头取 aside.page.<route> 文案', async () => {
   loc.hash = '#/flow'
   const { tree, mod } = await render()
-  const aside = byClass(tree, 'pp-col-right')[0]
-  const text = collectText(aside)
-  assert(text.includes(mod.exports.zh['aside.page.flow']), '右栏应展示当前页面说明，实际：' + text.slice(0, 120))
-  assert(text.includes(mod.exports.zh['aside.shortcuts']), '右栏应有快捷入口分组')
-  const links = byClass(aside, 'pp-toc-item')
-  assert(links.length === 4, '快捷入口应 4 条，实际 ' + links.length)
+  const head = byClass(tree, 'pp-page-head')[0]
+  const text = collectText(head)
+  assert(text.includes(mod.exports.zh['aside.page.flow']), '页头应展示当前页面说明，实际：' + text.slice(0, 120))
 })
 
 t('locales：zh/en 键集对齐，topbar / aside 文案齐全', async () => {

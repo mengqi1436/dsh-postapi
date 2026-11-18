@@ -81,7 +81,17 @@ export const SPEC_SIZE_TOKENS = {
   '--ctl-h-lg': '40px',
   '--row-h': '36px',
   '--pill-h': '22px',
-  '--topbar-h': '48px',
+  // v2（docs/nav-layout-v2-spec.md）：顶栏压到 44px，把纵向让给内容
+  '--topbar-h': '44px',
+  // v2 导航 token
+  '--rail-w': '48px',
+  '--flyout-w': '200px',
+  '--flyout-w-sm': '176px',
+  '--panel-w': '200px',
+  '--hit': '28px',
+  '--rail-icon': '20px',
+  '--z-flyout': '30',
+  '--motion-fast': '120ms',
   '--fs-12': '12px',
   '--fs-13': '13px',
   '--fs-14': '14px',
@@ -468,10 +478,10 @@ export function collectMethodBadges() {
   return { checks, issues }
 }
 
-/** 布局骨架：Body.js 必须含 .pp-workbench / .pp-topbar / .pp-body-3col / .pp-tabs。 */
+/** 布局骨架：Body.js 必须含 v2 骨架（.pp-workbench-v2 / .pp-topbar / .pp-shell / .pp-rail / .pp-main-v2 / .pp-page-head）。 */
 export function collectShellSkeleton() {
   const issues = []
-  const targets = ['pp-workbench', 'pp-topbar', 'pp-body-3col', 'pp-tabs']
+  const targets = ['pp-workbench-v2', 'pp-topbar', 'pp-shell', 'pp-rail', 'pp-main-v2', 'pp-page-head']
   const body = readText(path.join(SHELL, 'Body.js'))
   if (body === null) {
     return {
@@ -486,7 +496,7 @@ export function collectShellSkeleton() {
         file: 'src/client/shell/Body.js',
         line: 0,
         detail: '缺少 ' + t,
-        suggestion: '按 spec §3：顶栏 48px + grid(var(--nav-w) minmax(0,1fr) var(--toc-w)) + 40px 页签条',
+        suggestion: '按 docs/nav-layout-v2-spec.md：顶栏 44px + .pp-shell(grid: var(--rail-w) minmax(0,1fr)) + 浮层导航',
       })
     }
   }
@@ -690,7 +700,7 @@ export const tests = [
     },
   },
   {
-    name: 'SOFT 布局骨架：Body.js 含 .pp-workbench/.pp-topbar/.pp-body-3col/.pp-tabs',
+    name: 'SOFT 布局骨架：Body.js 含 .pp-workbench-v2/.pp-topbar/.pp-shell/.pp-rail/.pp-main-v2/.pp-page-head',
     fn: async () => {
       const r = collectShellSkeleton()
       console.log('       [收集] 骨架缺失 ' + r.issues.length + ' 处')

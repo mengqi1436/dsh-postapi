@@ -24,7 +24,7 @@ const REGISTERED_PAGES = [
 
 // 允许的高度值：尺寸 token 引用 / 含 token 或 100% 的 calc / 自适应关键字
 // 尺寸 token 家族：主控件 / 小控件 / 大控件 / 行 / 胶囊 / 顶栏（Apifox 版新增三档控件高）
-const TOKEN_HEIGHT_RE = /^var\(--(ctl-h|ctl-h-sm|ctl-h-lg|row-h|pill-h|topbar-h)\)$/
+const TOKEN_HEIGHT_RE = /^var\(--(ctl-h|ctl-h-sm|ctl-h-lg|row-h|pill-h|topbar-h|hit|rail-w|rail-icon)\)$/
 const AUTO_VALUES = new Set(['100%', 'auto', 'inherit', 'fit-content', 'min-content', 'max-content'])
 
 function checkHeightValue(value) {
@@ -58,7 +58,9 @@ export function run() {
     '--ctl-h-lg': /--ctl-h-lg:\s*40px/.test(css),
     '--row-h': /--row-h:\s*36px/.test(css),
     '--pill-h': /--pill-h:\s*22px/.test(css),
-    '--topbar-h': /--topbar-h:\s*48px/.test(css),
+    '--topbar-h': /--topbar-h:\s*44px/.test(css),
+    '--rail-w': /--rail-w:\s*48px/.test(css),
+    '--hit': /--hit:\s*28px/.test(css),
   }
   for (const [name, ok] of Object.entries(tokenDefs)) {
     checks++

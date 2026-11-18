@@ -36,9 +36,18 @@
   --ctl-h-lg: 40px;
   --row-h: 36px;
   --pill-h: 22px;
-  --topbar-h: 48px;
+  --topbar-h: 44px;
   --nav-w: 240px;
   --toc-w: 240px;
+  /* —— 导航 v2（图标轨 + 浮层二级菜单，见 docs/nav-layout-v2-spec.md）—— */
+  --rail-w: 48px;
+  --flyout-w: 200px;
+  --flyout-w-sm: 176px;
+  --panel-w: 200px;
+  --hit: 28px;
+  --rail-icon: 20px;
+  --z-flyout: 30;
+  --motion-fast: 120ms;
   --card-pad: 16px;
   --popover-w: 400px;
   --scrollbar: 6px;
@@ -913,3 +922,241 @@
   border: 1px dashed var(--border-strong);
   border-radius: var(--radius-card);
 }
+
+
+/* ============================================================
+   导航 v2：图标轨 + 浮层二级菜单 + 面板化实体树
+   规范：docs/nav-layout-v2-spec.md
+   要点：浮层绝对定位覆盖主区，主区宽度永不被导航挤压。
+   ============================================================ */
+
+/* —— 工作台：顶栏 + 轨/主区 两行两列 —— */
+.pp-workbench-v2 {
+  display: grid;
+  grid-template-rows: var(--topbar-h) minmax(0, 1fr);
+  height: 100%;
+  min-height: 0;
+}
+.pp-shell {
+  display: grid;
+  grid-template-columns: var(--rail-w) minmax(0, 1fr);
+  min-height: 0;
+  position: relative;
+}
+
+/* —— 一级：图标轨 —— */
+.pp-rail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-1);
+  padding: var(--sp-2) 0;
+  background: var(--bg-app);
+  border-right: 1px solid var(--border);
+  min-height: 0;
+  overflow: hidden;
+}
+.pp-rail-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(var(--rail-w) - var(--sp-3));
+  height: calc(var(--rail-w) - var(--sp-3));
+  padding: 0;
+  color: var(--fg-secondary);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-ctl);
+  cursor: pointer;
+}
+.pp-rail-btn:hover {
+  color: var(--fg);
+  background: var(--bg-hover);
+}
+.pp-rail-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.pp-rail-btn[data-active="true"] {
+  color: var(--accent);
+  background: var(--accent-tint);
+}
+.pp-rail-spacer {
+  flex: 1;
+}
+.pp-rail-glyph {
+  font-size: var(--fs-16);
+  line-height: 1;
+}
+
+/* —— 二级：浮层菜单（覆盖主区，不挤压）—— */
+.pp-flyout {
+  position: absolute;
+  top: var(--sp-2);
+  left: var(--rail-w);
+  z-index: var(--z-flyout);
+  width: var(--flyout-w);
+  max-height: calc(100% - var(--sp-4));
+  overflow: auto;
+  padding: var(--sp-2);
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-popover);
+  animation: pp-flyout-in var(--motion-fast) ease-out;
+}
+@keyframes pp-flyout-in {
+  from { opacity: 0; transform: translateX(-4px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pp-flyout { animation: none; }
+}
+.pp-flyout-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-2);
+  height: var(--ctl-h-sm);
+  padding: 0 var(--sp-2);
+  font-size: var(--fs-12);
+  font-weight: var(--fw-medium);
+  color: var(--fg-tertiary);
+}
+.pp-flyout-item {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  height: var(--ctl-h);
+  padding: 0 var(--sp-2);
+  font-size: var(--fs-14);
+  color: var(--fg);
+  text-decoration: none;
+  border-radius: var(--radius-ctl);
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.pp-flyout-item:hover {
+  background: var(--bg-hover);
+}
+.pp-flyout-item[data-active="true"] {
+  color: var(--accent);
+  background: var(--bg-selected);
+  font-weight: var(--fw-medium);
+}
+.pp-flyout-item-key {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: var(--fs-12);
+  color: var(--fg-tertiary);
+}
+/* 窄容器：浮层收窄 */
+@media (max-width: 420px) {
+  .pp-flyout { width: var(--flyout-w-sm); }
+}
+
+/* —— 主区（v2：占满剩余宽度）—— */
+.pp-main-v2 {
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+  background: var(--bg-app);
+}
+
+/* —— 页头 —— */
+.pp-page-head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-2) var(--sp-5);
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border);
+}
+.pp-page-head-main {
+  min-width: 0;
+  flex: 1;
+}
+.pp-page-head .pp-page-title {
+  margin: 0 0 var(--sp-1) 0;
+}
+.pp-page-desc {
+  font-size: var(--fs-13);
+  line-height: var(--lh-20);
+  color: var(--fg-secondary);
+  margin: 0;
+}
+.pp-page-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex: none;
+}
+
+/* —— 面板化实体树（替代通栏 .pp-col-left）—— */
+.pp-panel {
+  width: var(--panel-w);
+  flex: none;
+  min-height: 0;
+  overflow: auto;
+  padding: var(--sp-2);
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+}
+.pp-split {
+  display: grid;
+  grid-template-columns: var(--panel-w) minmax(0, 1fr);
+  gap: var(--sp-4);
+  align-items: start;
+  padding: var(--sp-4) var(--sp-5);
+  min-height: 0;
+}
+.pp-split-wide {
+  grid-template-columns: var(--panel-w) minmax(0, 1.4fr) minmax(0, 1fr);
+}
+
+/* —— 顶栏 v2：面包屑 + 图标动作 —— */
+.pp-crumb {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  font-size: var(--fs-12);
+  color: var(--fg-tertiary);
+  white-space: nowrap;
+}
+.pp-crumb-sep {
+  color: var(--border-strong);
+}
+.pp-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--hit);
+  height: var(--hit);
+  padding: 0;
+  color: var(--fg-secondary);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-ctl);
+  cursor: pointer;
+}
+.pp-icon-btn:hover {
+  color: var(--fg);
+  background: var(--bg-hover);
+}
+.pp-icon-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.pp-icon-btn[data-active="true"] {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.pp-help {
+  padding: var(--sp-2);
+  font-size: var(--fs-13);
+  line-height: var(--lh-20);
+  color: var(--fg-secondary);
+}
+
