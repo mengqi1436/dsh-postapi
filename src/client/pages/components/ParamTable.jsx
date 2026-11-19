@@ -58,11 +58,10 @@ function renderCell(col, row, index, editable, patch) {
     )
   }
   if (!editable) {
-    return (
-      <span className={meta.mono ? 'pp-table-mono' : undefined}>
-        {value == null || value === '' ? '-' : String(value)}
-      </span>
-    )
+    // 只读态与可编辑态口径一致：type 空值按 string 展示（Apifox 从不显示裸 '-'），其它列仍用 '-'。
+    const blank = value == null || value === ''
+    const text = blank ? (col === 'type' ? 'string' : '-') : String(value)
+    return <span className={meta.mono ? 'pp-table-mono' : undefined}>{text}</span>
   }
   if (col === 'type') {
     return (
@@ -110,7 +109,7 @@ export function ParamTable({
   if (list.length === 0 && !editable) return <EmptyState text={emptyText} hint={emptyHint} />
 
   return (
-    <table className="pp-table" data-param-table style={{ minWidth: tableMinWidth(columns, editable) }}>
+    <table className="pp-table pp-table-params" data-param-table style={{ minWidth: tableMinWidth(columns, editable) }}>
       <thead>
         <tr>
           {columns.map((col) => (

@@ -1,18 +1,32 @@
 // FolderTree — 多级分组树（递归渲染 project.folders 的 parentId 层级）
-// 观感对齐 Apifox 左侧目录树，供 doc / debug / schema 页共用。
+// 观感对齐 Apifox 左侧目录树（spec §12.3），供 doc / debug / schema 页共用。
 // 纪律：类名只用 design-tokens.css 既有 .pp-tree / .pp-tree-row / .pp-tree-group / .pp-tree-row-count /
-// .pp-method / .pp-ellipsis / .pp-faint / .pp-empty；颜色/字号/高度全部由 CSS 承载，
-// 内联样式只放缩进（layout）。不引图标库：展开箭头用 ▸ / ▾ 文本。
+// .pp-tree-switcher / .pp-tree-icon / .pp-method / .pp-ellipsis / .pp-empty；
+// 颜色/字号/高度全部由 CSS 承载，内联样式只放缩进（layout）。
+// 不引图标库：展开箭头用 ▸ / ▾ 文本，目录图标用 ▦ 文本。
+// 行内顺序（Apifox 实测，docs/apifox-visual-parity-spec.md §4 §12.3）：
+//   目录行 switcher → icon → 名称 → 计数；接口行 方法徽标 → 名称（无 switcher / icon，靠 paddingLeft 负补偿对齐）。
 // 数据契约（契约 §2）：folders[{ id, name, parentId, order }]，endpoints[{ id, name, method, folderId, order }]。
 import { EmptyState } from './EmptyState.jsx'
 
-/** 缩进基准/步长：0 层沿用 .pp-tree-row 自带 padding，深层用 calc 累加（纯 layout）。 */
-const INDENT_BASE = 'var(--sp-2)'
-const INDENT_STEP = 'var(--sp-3)'
+/** 缩进步长：0 层沿用 .pp-tree-row 自带内边距，深层按 calc(var(--sp-1) * depth) 累加（纯 layout）。 */
+const INDENT_STEP = 'var(--sp-1)'
 
+/** 目录行缩进：depth 级目录各占一个步长。 */
 function indentStyle(depth) {
   if (!depth) return undefined
-  return { paddingLeft: 'calc(' + INDENT_BASE + ' + ' + INDENT_STEP + ' * ' + depth + ')' }
+  return { paddingLeft: 'calc(' + INDENT_STEP + ' * ' + depth + ')' }
+}
+
+/**
+ * 接口行缩进：接口行没有 switcher + icon（那两格共 20px + 两个 4px gap = 28px 占位带），
+ * 方法徽标 .pp-method 的 min-width 44px 恰好顶住这格占位带，所以接口行比同层目录行少一个步长，
+ * 否则接口名会随层级累积右移、与目录名错位。depth 参数仍是「所在层级」（≥1），
+ * 用 calc(... - var(--sp-1)) 表达负补偿，不额外引入 state。
+ */
+function endpointIndentStyle(depth) {
+  if (!depth) return undefined
+  return { paddingLeft: 'calc(' + INDENT_STEP + ' * ' + depth + ' - ' + INDENT_STEP + ')' }
 }
 
 /** order 升序；缺省按 0（sort 稳定，同序保持入参顺序）。 */
@@ -42,7 +56,7 @@ export function FolderTree({ project, activeEndpointId, onPick, onToggle, collap
       className="pp-tree-row"
       data-active={Boolean(activeEndpointId) && ep.id === activeEndpointId}
       onClick={() => pick(ep.id)}
-      style={indentStyle(depth)}
+      style={endpointIndentStyle(depth)}
     >
       <span className="pp-method" data-method={ep.method}>{ep.method}</span>
       <span className="pp-ellipsis">{ep.name || '未命名接口'}</span>
@@ -60,7 +74,8 @@ export function FolderTree({ project, activeEndpointId, onPick, onToggle, collap
     return (
       <div key={folder.id}>
         <div className="pp-tree-row" style={indentStyle(depth)} onClick={() => toggle(folder.id)}>
-          <span className="pp-faint">{isCollapsed ? '▸' : '▾'}</span>
+          <span className="pp-tree-switcher">{isCollapsed ? '▸' : '▾'}</span>
+          <span className="pp-tree-icon">▦</span>
           <span className="pp-ellipsis">{folder.name || '未命名目录'}</span>
           <span className="pp-tree-row-count">{own.length}</span>
         </div>

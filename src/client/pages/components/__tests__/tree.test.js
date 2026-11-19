@@ -1,4 +1,7 @@
 // tree.test.js — FolderTree（多级分组树）静态纪律 + 行为断言
+// 结构基线：docs/apifox-visual-parity-spec.md §4（左侧目录树实测）+ §12.3（类名契约）。
+// 目录行 = switcher(.pp-tree-switcher) → 图标(.pp-tree-icon) → 名称(.pp-ellipsis) → 计数(.pp-tree-row-count)；
+// 接口行 = 方法徽标(.pp-method) → 名称，无 switcher/icon，靠 paddingLeft 负补偿与同层目录名左对齐。
 // 形态照抄 apifox-ui.test.js：读源文本断言 + esbuild 打成 cjs 后用假 react 直接调组件函数，
 // 断言返回的 element 树（不引 react-dom、不渲染）。
 import { readFileSync, existsSync } from 'node:fs'
@@ -22,7 +25,8 @@ const assert = (cond, message) => { if (!cond) throw new Error(message) }
 /** 允许出现的类名：只限 design-tokens.css 已定义的 .pp-* 集合（本次不改样式表）。 */
 const ALLOWED_CLASSES = new Set([
   'pp-tree', 'pp-tree-row', 'pp-tree-group', 'pp-tree-row-count',
-  'pp-method', 'pp-ellipsis', 'pp-faint', 'pp-empty', 'pp-meta',
+  'pp-tree-switcher', 'pp-tree-icon',
+  'pp-method', 'pp-ellipsis', 'pp-empty', 'pp-meta',
 ])
 
 const BANNED_APIS = [/\balert\s*\(/, /\bconfirm\s*\(/, /\bprompt\s*\(/]
@@ -121,11 +125,11 @@ const componentNodes = (root) => collect(root).filter((el) => typeof el.type ===
 const byClass = (root, name) => collect(root).filter((el) => cls(el).split(/\s+/).includes(name))
 const allText = (root) => texts(root).join('|')
 
-/** 目录行 = .pp-tree-row 且首个子节点是箭头 span。 */
+/** 目录行 = .pp-tree-row 且首个子节点是 .pp-tree-switcher 箭头 span（接口行没有 switcher）。 */
 function folderRows(root) {
   return byClass(root, 'pp-tree-row').filter((row) => {
     const kids = flatten(row.children || [])
-    return kids.some((k) => k && typeof k === 'object' && cls(k) === 'pp-faint')
+    return kids.some((k) => k && typeof k === 'object' && cls(k) === 'pp-tree-switcher')
   })
 }
 /** 接口行 = .pp-tree-row 且含 .pp-method 徽标。 */
@@ -182,7 +186,7 @@ export const tests = [
       assert(!HARDCODED_COLOR.test(src), 'FolderTree.jsx 出现颜色字面量（应用 var(--*) token）')
       assert(!HARDCODED_FONT.test(src), 'FolderTree.jsx 出现字号字面量（应用 var(--fs-*) token）')
       assert(/paddingLeft/.test(src), 'FolderTree.jsx 缩进应使用内联 paddingLeft')
-      assert(/var\(--sp-3\)/.test(src), 'FolderTree.jsx 缩进步长应为 var(--sp-3)')
+      assert(/var\(--sp-1\)/.test(src), 'FolderTree.jsx 缩进步长应为 var(--sp-1)')
       for (const re of BANNED_APIS) assert(!re.test(src), 'FolderTree.jsx 使用了禁用 API（alert/confirm/prompt）')
     },
   },
@@ -204,7 +208,30 @@ export const tests = [
       assert(pad(rows[2]).includes('* 2'), '三级目录缩进应为 2 个步长，实际 ' + pad(rows[2]))
       const eps = endpointRows(root)
       assert(eps.length === 1, '接口行应为 1 个，实际 ' + eps.length)
-      assert(String(eps[0].props.style.paddingLeft).includes('* 3'), '深层接口缩进应为 3 个步长')
+      // 接口行没有 switcher/icon 两格，按规格用负补偿与同层目录名左对齐（见用例「接口名与目录名左对齐」）
+      assert(String(eps[0].props.style.paddingLeft).includes('* 3'), '深层接口缩进应含 3 个步长基数')
+      assert(String(eps[0].props.style.paddingLeft).includes('- var(--sp-1)'), '接口行缩进应含 - var(--sp-1) 负补偿')
+    },
+  },
+  {
+    name: 'folder-tree: 接口行无 switcher/icon 占位，靠负补偿与同层目录名左对齐',
+    async fn() {
+      const { FolderTree } = await loadModule(FILE.tree)
+      const project = deepProject()
+      const root = FolderTree({ project, activeEndpointId: '', onPick() {}, onToggle() {}, collapsed: {} })
+      const ep = endpointRows(root)[0]
+      const kids = flatten(ep.children || []).filter((k) => k && typeof k === 'object')
+      assert(!kids.some((k) => cls(k) === 'pp-tree-switcher'), '接口行不应有 pp-tree-switcher')
+      assert(!kids.some((k) => cls(k) === 'pp-tree-icon'), '接口行不应留 pp-tree-icon 空白占位')
+      assert(kids.length === 2, '接口行应只有方法徽标 + 名称两格，实际 ' + kids.length)
+      // 深层接口挂在 f3 下：f3 目录行 depth=2（缩进 * 2），接口行 depth=3 且减一个步长 → 同为 * 2。
+      // 两边 paddingLeft 相等时，目录的 switcher(12+4+4) + icon(16) + 2 个 gap(4) = 44px 与
+      // 接口的 .pp-method min-width 44px 等宽，故名称左边缘严格对齐。
+      const folderPad = String(folderRows(root)[2].props.style.paddingLeft)
+      const epPad = String(ep.props.style.paddingLeft)
+      assert(folderPad === 'calc(var(--sp-1) * 2)', '三级目录缩进不符：' + folderPad)
+      assert(epPad === 'calc(var(--sp-1) * 3 - var(--sp-1))', '接口行缩进不符：' + epPad)
+      assert(epPad.replace(' * 3 - var(--sp-1)', ' * 2') === folderPad, '接口行与同层目录行缩进未对齐')
     },
   },
   {

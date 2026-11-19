@@ -156,7 +156,7 @@ export const tests = [
     name: 'apifox-ui: ParamTable 走 .pp-table 且可编辑单元格用 .pp-input-sm',
     fn() {
       const src = read(FILE.paramTable)
-      assert(src.includes('className="pp-table"'), 'ParamTable.jsx 未用 .pp-table')
+      assert(/className="pp-table[ "]/.test(src), 'ParamTable.jsx 未用 .pp-table')
       assert(src.includes('pp-input-sm'), 'ParamTable.jsx 可编辑单元格未用 .pp-input-sm')
       assert(!src.includes('className="pp-input pp-input-mono"'), 'ParamTable.jsx 仍在用旧 pp-input 编辑单元格')
       assert(src.includes('EmptyState'), 'ParamTable.jsx 空态未走 EmptyState')
@@ -226,7 +226,7 @@ export const tests = [
     async fn() {
       const exports = await loadModule(FILE.paramTable)
       const table = exports.ParamTable({ rows: [{ key: 'page', value: '1', type: 'number', required: false, enabled: true, description: '' }], readOnly: true })
-      assert(table.props.className === 'pp-table', 'ParamTable 根不是 .pp-table')
+      assert(String(table.props.className).split(/\s+/).includes('pp-table'), 'ParamTable 根缺 .pp-table')
       const thead = table.children[0]
       assert(thead.type === 'thead', '第一子节点不是 thead')
       // columns.map 作为单个 JSX 子表达式传入，children 里是一层数组，需要 flat 展开
