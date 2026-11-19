@@ -2,18 +2,6 @@
 
 本项目版本遵循语义化版本；发布包见 https://www.npmjs.com/package/dsh-postapi 。
 
-## 0.0.3 — 纯 OIDC 发布
-
-- 发布步骤不再注入 `NODE_AUTH_TOKEN`，改为完全由 OIDC trusted publisher 授权并生成 provenance。
-- `NPM_TOKEN` 仅保留为手动回退（需仓库变量 `FORCE_TOKEN_PUBLISH=true` 才启用）。
-- workflow 升 `actions/checkout@v5` / `actions/setup-node@v5`，消除 Node 20 弃用告警。
-
-## 0.0.2 — OIDC 自动发布
-
-- GitHub Actions 打通：推 tag `v*` 或 master 版本变更时自动发布。
-- 发布认证切换为 npm trusted publishing（OIDC），不再依赖长期 token。
-- 功能与 0.0.1 一致，本版用于验证自动化发布链路。
-
 ## 0.0.1 — 首个 Demo 版本
 
 **定位**：DeepSeek Harness 插件，在官方右侧栏内复刻 Apifox 的接口工作区。数据以 JSON 落盘本地，不依赖云端账号。
@@ -34,6 +22,12 @@ dsh plugin --profile desktop add dsh-postapi@0.0.1 --registry=https://registry.n
 ```
 
 前置：官方右栏组件 `@deepseek-ai/dsh-client-ui-sidebar-right`（0.2.2-rc.3 起）。
+
+### 发布
+
+- GitHub Actions 自动发布：推 tag `v*` 或 master 版本变更时构建 → 328 用例 → 27 项宿主冒烟 → 发布。
+- 认证走 npm trusted publishing（OIDC / SLSA provenance），不需要长期 token；`NPM_TOKEN` 仅在仓库变量 `FORCE_TOKEN_PUBLISH=true` 时作为回退。
+- workflow 使用 `actions/checkout@v5` / `actions/setup-node@v5`。
 
 ### 已知边界（Demo 范围）
 
