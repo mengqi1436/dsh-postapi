@@ -189,97 +189,109 @@ export function FlowPage(props) {
 
   return (
     <div className="pp-scope pp-page" data-page="flow" ref={rootRef}>
-      <div className="pp-overview-head" style={{ margin: 'calc(var(--sp-5) * -1) calc(var(--sp-6) * -1) var(--sp-4)' }}>
+      <div className="pp-overview-head">
         <span className="pp-overview-title">流程图</span>
+        {/* 页头只留主动作；项目选择、图名与导出复制移进内容区工具条，
+            否则 528px 宽的主区里 7 个控件会把页头顶出 248px。 */}
         <div className="pp-overview-actions">
-          <label className="pp-meta">项目</label>
-          <select className="pp-select" value={projectId}
-            onChange={(e) => { setProjectId(e.target.value); reloadProject(e.target.value) }}>
-            {projects.map((p) => <option key={p.id} value={p.id}>{p.name || p.id}</option>)}
-          </select>
-          <label className="pp-meta">图名</label>
-          <input className="pp-input" style={{ width: '200px' }} value={flowName}
-            onChange={(e) => { setFlowName(e.target.value); setNotice('') }} />
           <button className="pp-btn pp-btn-primary" onClick={persist}>保存到项目</button>
-          <button className="pp-btn" onClick={exportSvg}>导出 SVG</button>
-          <button className="pp-btn" onClick={copyJson}>复制 JSON</button>
         </div>
       </div>
-      <div className="pp-toolbar">
-        <span className="pp-meta">
-          {isMock
-            ? '示例数据 — api.storage.saveFlow 不可用，编排结果仅存本地草稿（' + DRAFT_KEY + '）'
-            : '数据来源：api.storage（getProject / saveFlow）'}
-        </span>
-      </div>
-      {error ? <p className="pp-error-text">{error}</p> : null}
-      {notice ? <p className="pp-muted">{notice}</p> : null}
-
-      {overBudget && (
-        <div className="pp-split-hint" style={{ marginBottom: 'var(--sp-3)' }}>
-          当前 {steps.length} 步，超过 9 步密度预算（4/10）——建议拆分为「主流程」与「分支/异常」两张图
+      <div className="pp-overview-content">
+        <div className="pp-card">
+          <div className="pp-card-title">图配置</div>
+          <div className="pp-form-grid">
+            <label className="pp-form-label">项目</label>
+            <select className="pp-select" value={projectId}
+              onChange={(e) => { setProjectId(e.target.value); reloadProject(e.target.value) }}>
+              {projects.map((p) => <option key={p.id} value={p.id}>{p.name || p.id}</option>)}
+            </select>
+            <label className="pp-form-label">图名</label>
+            <input className="pp-input" value={flowName}
+              onChange={(e) => { setFlowName(e.target.value); setNotice('') }} />
+          </div>
+          <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
+            <button className="pp-btn" onClick={exportSvg}>导出 SVG</button>
+            <button className="pp-btn" onClick={copyJson}>复制 JSON</button>
+          </div>
         </div>
-      )}
-
-      <div className="pp-seq-wrap">
-        <SequenceDiagram
-          steps={steps}
-          svgRef={svgRef}
-          idPrefix="flow-page-seq"
-          title={flowName || '接口调试时序'}
-          desc="页面经 Storage 载入项目、Request 发起 HTTP 调用，并按响应状态渲染或提示错误的时序图"
-        />
-      </div>
-
-      <div className="pp-card" style={{ marginTop: 'var(--sp-4)' }}>
-        <div className="pp-card-title">步骤编排</div>
-        <div className="pp-table-wrap">
-        <table className="pp-table">
-          <thead>
-            <tr>
-              <th style={{ width: '40px' }}>#</th>
-              <th style={{ width: '110px' }}>发起方</th>
-              <th style={{ width: '110px' }}>动作</th>
-              <th style={{ width: '110px' }}>接收方</th>
-              <th>消息</th>
-              <th style={{ width: '140px' }}>操作</th>
-            </tr>
-          </thead>
-          <tbody>
-            {steps.map((s, i) => (
-              <tr key={i}>
-                <td className="pp-meta">{i + 1}</td>
-                <td>
-                  <input className="pp-input pp-input-sm" style={{ width: '100%' }} value={s.actor}
-                    onChange={(e) => update(i, { actor: e.target.value })} />
-                </td>
-                <td>
-                  <select className="pp-select pp-input-sm" style={{ width: '100%' }} value={s.action}
-                    onChange={(e) => update(i, { action: e.target.value })}>
-                    {ACTIONS.map((a) => <option key={a} value={a}>{a}</option>)}
-                  </select>
-                </td>
-                <td>
-                  <input className="pp-input pp-input-sm" style={{ width: '100%' }} value={s.target || ''}
-                    onChange={(e) => update(i, { target: e.target.value })} />
-                </td>
-                <td>
-                  <input className="pp-input pp-input-sm" style={{ width: '100%' }} value={s.message || ''}
-                    onChange={(e) => update(i, { message: e.target.value })} />
-                </td>
-                <td>
-                  <button className="pp-btn pp-btn-sm" onClick={() => move(i, -1)} title="上移">↑</button>{' '}
-                  <button className="pp-btn pp-btn-sm" onClick={() => move(i, 1)} title="下移">↓</button>{' '}
-                  <button className="pp-btn pp-btn-sm pp-btn-danger" onClick={() => remove(i)} title="删除">×</button>
-                </td>
+        <div className="pp-toolbar">
+          <span className="pp-meta">
+            {isMock
+              ? '示例数据 — api.storage.saveFlow 不可用，编排结果仅存本地草稿（' + DRAFT_KEY + '）'
+              : '数据来源：api.storage（getProject / saveFlow）'}
+          </span>
+        </div>
+        {error ? <p className="pp-error-text">{error}</p> : null}
+        {notice ? <p className="pp-muted">{notice}</p> : null}
+  
+        {overBudget && (
+          <div className="pp-split-hint" style={{ marginBottom: 'var(--sp-3)' }}>
+            当前 {steps.length} 步，超过 9 步密度预算（4/10）——建议拆分为「主流程」与「分支/异常」两张图
+          </div>
+        )}
+  
+        <div className="pp-seq-wrap">
+          <SequenceDiagram
+            steps={steps}
+            svgRef={svgRef}
+            idPrefix="flow-page-seq"
+            title={flowName || '接口调试时序'}
+            desc="页面经 Storage 载入项目、Request 发起 HTTP 调用，并按响应状态渲染或提示错误的时序图"
+          />
+        </div>
+  
+        <div className="pp-card" style={{ marginTop: 'var(--sp-4)' }}>
+          <div className="pp-card-title">步骤编排</div>
+          <div className="pp-table-wrap">
+          <table className="pp-table">
+            <thead>
+              <tr>
+                <th style={{ width: '40px' }}>#</th>
+                <th style={{ width: '110px' }}>发起方</th>
+                <th style={{ width: '110px' }}>动作</th>
+                <th style={{ width: '110px' }}>接收方</th>
+                <th>消息</th>
+                <th style={{ width: '140px' }}>操作</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {steps.map((s, i) => (
+                <tr key={i}>
+                  <td className="pp-meta">{i + 1}</td>
+                  <td>
+                    <input className="pp-input pp-input-sm" style={{ width: '100%' }} value={s.actor}
+                      onChange={(e) => update(i, { actor: e.target.value })} />
+                  </td>
+                  <td>
+                    <select className="pp-select pp-input-sm" style={{ width: '100%' }} value={s.action}
+                      onChange={(e) => update(i, { action: e.target.value })}>
+                      {ACTIONS.map((a) => <option key={a} value={a}>{a}</option>)}
+                    </select>
+                  </td>
+                  <td>
+                    <input className="pp-input pp-input-sm" style={{ width: '100%' }} value={s.target || ''}
+                      onChange={(e) => update(i, { target: e.target.value })} />
+                  </td>
+                  <td>
+                    <input className="pp-input pp-input-sm" style={{ width: '100%' }} value={s.message || ''}
+                      onChange={(e) => update(i, { message: e.target.value })} />
+                  </td>
+                  <td>
+                    <button className="pp-btn pp-btn-sm" onClick={() => move(i, -1)} title="上移">↑</button>{' '}
+                    <button className="pp-btn pp-btn-sm" onClick={() => move(i, 1)} title="下移">↓</button>{' '}
+                    <button className="pp-btn pp-btn-sm pp-btn-danger" onClick={() => remove(i)} title="删除">×</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          </div>
+          <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
+            <button className="pp-btn pp-btn-primary" onClick={add}>+ 添加步骤</button>
+          </div>
         </div>
-        <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
-          <button className="pp-btn pp-btn-primary" onClick={add}>+ 添加步骤</button>
-        </div>
+      
       </div>
     </div>
   )

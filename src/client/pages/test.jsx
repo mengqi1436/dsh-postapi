@@ -284,7 +284,7 @@ export function TestPage(props) {
 
   return (
     <div className="pp-scope pp-page" data-page="test" ref={rootRef}>
-      <div className="pp-overview-head" style={{ margin: 'calc(var(--sp-5) * -1) calc(var(--sp-6) * -1) var(--sp-4)' }}>
+      <div className="pp-overview-head">
         <span className="pp-overview-title">自动化测试</span>
         <div className="pp-overview-actions">
           <label className="pp-meta">项目</label>
@@ -295,170 +295,173 @@ export function TestPage(props) {
           <button className="pp-btn" onClick={persist}>保存用例与场景</button>
         </div>
       </div>
-      <div className="pp-toolbar">
-        <span className="pp-meta">
-          {isMock
-            ? '示例数据 — api.storage 不可用，以下为文件内 mock'
-            : '数据来源：api.storage.getProject（用例与场景存 project.settings.testCases / testScenarios）；运行走 api.test.runCase / runScenario'}
-        </span>
-      </div>
-      {error ? <p className="pp-error-text">{error}</p> : null}
-      {notice ? <p className="pp-muted">{notice}</p> : null}
-
-      <div className="pp-tabs">
-        <button className="pp-tab" data-active={tab === 'cases' ? 'true' : 'false'} onClick={() => setTab('cases')}>测试用例</button>
-        <button className="pp-tab" data-active={tab === 'scenarios' ? 'true' : 'false'} onClick={() => setTab('scenarios')}>测试场景</button>
-      </div>
-
-      {tab === 'cases' ? (
-        <div className="pp-debug-layout" style={{ marginTop: 'var(--sp-3)' }}>
-          <div className="pp-pane">
-            <div className="pp-card-title">用例</div>
-            <div className="pp-tree">
-              {cases.map((c) => (
-                <div key={c.id} className="pp-tree-row" data-active={c.id === activeCaseId ? 'true' : 'false'}
-                  onClick={() => { setActiveCaseId(c.id); setResult(null); setError('') }}>
-                  <span className="pp-ellipsis">{c.name || c.id}</span>
-                </div>
-              ))}
-            </div>
-            {cases.length === 0 ? <div className="pp-empty">暂无用例</div> : null}
-          </div>
-          <div className="pp-pane">
-            <div className="pp-card-title">断言</div>
-            {activeCase ? (
-              <div>
-                <div className="pp-form-grid" style={{ marginBottom: 'var(--sp-3)' }}>
-                  <label className="pp-form-label">名称</label>
-                  <input className="pp-input" value={activeCase.name || ''}
-                    onChange={(e) => patchCase({ name: e.target.value })} />
-                  <label className="pp-form-label">接口</label>
-                  <select className="pp-select" value={activeCase.endpointId || ''}
-                    onChange={(e) => patchCase({ endpointId: e.target.value })}>
-                    <option value="">（未绑定）</option>
-                    {endpoints.map((ep) => <option key={ep.id} value={ep.id}>{ep.method} {ep.url}</option>)}
-                  </select>
-                </div>
-                <div className="pp-table-wrap">
-                <table className="pp-table">
-                  <thead>
-                    <tr>
-                      <th style={{ width: '90px' }}>来源</th>
-                      <th>路径</th>
-                      <th style={{ width: '110px' }}>操作</th>
-                      <th>期望值</th>
-                      <th>说明</th>
-                      <th style={{ width: '70px' }}>操作</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {caseAssertions.map((a, i) => (
-                      <tr key={i}>
-                        <td>
-                          <select className="pp-select pp-input-sm" value={a.source} onChange={(e) => patchAssertion(i, { source: e.target.value })}>
-                            {SOURCES.map((s) => <option key={s} value={s}>{s}</option>)}
-                          </select>
-                        </td>
-                        <td><input className="pp-input pp-input-sm pp-input-mono" style={{ width: '100%' }} value={a.path}
-                          onChange={(e) => patchAssertion(i, { path: e.target.value })} /></td>
-                        <td>
-                          <select className="pp-select pp-input-sm" value={a.op} onChange={(e) => patchAssertion(i, { op: e.target.value })}>
-                            {OPS.map((o) => <option key={o} value={o}>{o}</option>)}
-                          </select>
-                        </td>
-                        <td><input className="pp-input pp-input-sm pp-input-mono" style={{ width: '100%' }} value={a.value}
-                          onChange={(e) => patchAssertion(i, { value: e.target.value })} /></td>
-                        <td><input className="pp-input pp-input-sm" style={{ width: '100%' }} value={a.message}
-                          onChange={(e) => patchAssertion(i, { message: e.target.value })} /></td>
-                        <td><button className="pp-btn pp-btn-sm pp-btn-danger" onClick={() => removeAssertion(i)}>删除</button></td>
-                      </tr>
-                    ))}
-                    {caseAssertions.length === 0 ? <tr><td colSpan={6} className="pp-muted">暂无断言</td></tr> : null}
-                  </tbody>
-                </table>
-                </div>
-                <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
-                  <button className="pp-btn" onClick={addAssertion}>新增断言</button>
-                  <button className="pp-btn pp-btn-primary" onClick={runCase} disabled={running}>运行用例</button>
-                </div>
-              </div>
-            ) : <div className="pp-empty">左侧选择一个用例</div>}
-          </div>
-          {resultPanel('尚未运行')}
+      <div className="pp-overview-content">
+        <div className="pp-toolbar">
+          <span className="pp-meta">
+            {isMock
+              ? '示例数据 — api.storage 不可用，以下为文件内 mock'
+              : '数据来源：api.storage.getProject（用例与场景存 project.settings.testCases / testScenarios）；运行走 api.test.runCase / runScenario'}
+          </span>
         </div>
-      ) : (
-        <div className="pp-debug-layout" style={{ marginTop: 'var(--sp-3)' }}>
-          <div className="pp-pane">
-            <div className="pp-card-title">场景</div>
-            <div className="pp-tree">
-              {scenarios.map((s) => (
-                <div key={s.id} className="pp-tree-row" data-active={s.id === activeScenarioId ? 'true' : 'false'}
-                  onClick={() => { setActiveScenarioId(s.id); setResult(null); setError('') }}>
-                  <span className="pp-ellipsis">{s.name || s.id}</span>
-                  <span className="pp-tree-row-count">{(s.steps || []).length}</span>
-                </div>
-              ))}
-            </div>
-            {scenarios.length === 0 ? <div className="pp-empty">暂无场景</div> : null}
-          </div>
-          <div className="pp-pane">
-            <div className="pp-card-title">步骤编排</div>
-            {activeScenario ? (
-              <div>
-                <div className="pp-form-grid" style={{ marginBottom: 'var(--sp-3)' }}>
-                  <label className="pp-form-label">场景名</label>
-                  <input className="pp-input" value={activeScenario.name || ''}
-                    onChange={(e) => patchScenario({ name: e.target.value })} />
-                </div>
-                <div className="pp-table-wrap">
-                <table className="pp-table">
-                  <thead>
-                    <tr>
-                      <th style={{ width: '40px' }}>#</th>
-                      <th>步骤名</th>
-                      <th>接口</th>
-                      <th style={{ width: '140px' }}>操作</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {(activeScenario.steps || []).map((s, i) => (
-                      <tr key={s.id || i}>
-                        <td className="pp-meta">{i + 1}</td>
-                        <td><input className="pp-input pp-input-sm" style={{ width: '100%' }} value={s.name || ''}
-                          onChange={(e) => patchStep(i, { name: e.target.value })} /></td>
-                        <td>
-                          <select className="pp-select pp-input-sm" style={{ width: '100%' }} value={s.endpointId || ''}
-                            onChange={(e) => patchStep(i, { endpointId: e.target.value })}>
-                            <option value="">（未绑定）</option>
-                            {endpoints.map((ep) => <option key={ep.id} value={ep.id}>{ep.method} {ep.url}</option>)}
-                          </select>
-                          {s.endpointId ? (
-                            <span className="pp-method" data-method={(endpoints.find((ep) => ep.id === s.endpointId) || {}).method || 'GET'}>
-                              {(endpoints.find((ep) => ep.id === s.endpointId) || {}).method || 'GET'}
-                            </span>
-                          ) : null}
-                        </td>
-                        <td>
-                          <button className="pp-btn pp-btn-sm" onClick={() => moveStep(i, -1)} title="上移">↑</button>{' '}
-                          <button className="pp-btn pp-btn-sm" onClick={() => moveStep(i, 1)} title="下移">↓</button>{' '}
-                          <button className="pp-btn pp-btn-sm pp-btn-danger" onClick={() => removeStep(i)} title="删除">×</button>
-                        </td>
-                      </tr>
-                    ))}
-                    {(activeScenario.steps || []).length === 0 ? <tr><td colSpan={4} className="pp-muted">暂无步骤</td></tr> : null}
-                  </tbody>
-                </table>
-                </div>
-                <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
-                  <button className="pp-btn" onClick={addStep}>添加步骤</button>
-                  <button className="pp-btn pp-btn-primary" onClick={runScenario} disabled={running}>运行场景</button>
-                </div>
-              </div>
-            ) : <div className="pp-empty">左侧选择一个场景</div>}
-          </div>
-          {resultPanel('尚未运行')}
+        {error ? <p className="pp-error-text">{error}</p> : null}
+        {notice ? <p className="pp-muted">{notice}</p> : null}
+  
+        <div className="pp-tabs">
+          <button className="pp-tab" data-active={tab === 'cases' ? 'true' : 'false'} onClick={() => setTab('cases')}>测试用例</button>
+          <button className="pp-tab" data-active={tab === 'scenarios' ? 'true' : 'false'} onClick={() => setTab('scenarios')}>测试场景</button>
         </div>
-      )}
+  
+        {tab === 'cases' ? (
+          <div className="pp-debug-layout" style={{ marginTop: 'var(--sp-3)' }}>
+            <div className="pp-pane">
+              <div className="pp-card-title">用例</div>
+              <div className="pp-tree">
+                {cases.map((c) => (
+                  <div key={c.id} className="pp-tree-row" data-active={c.id === activeCaseId ? 'true' : 'false'}
+                    onClick={() => { setActiveCaseId(c.id); setResult(null); setError('') }}>
+                    <span className="pp-ellipsis">{c.name || c.id}</span>
+                  </div>
+                ))}
+              </div>
+              {cases.length === 0 ? <div className="pp-empty">暂无用例</div> : null}
+            </div>
+            <div className="pp-pane">
+              <div className="pp-card-title">断言</div>
+              {activeCase ? (
+                <div>
+                  <div className="pp-form-grid" style={{ marginBottom: 'var(--sp-3)' }}>
+                    <label className="pp-form-label">名称</label>
+                    <input className="pp-input" value={activeCase.name || ''}
+                      onChange={(e) => patchCase({ name: e.target.value })} />
+                    <label className="pp-form-label">接口</label>
+                    <select className="pp-select" value={activeCase.endpointId || ''}
+                      onChange={(e) => patchCase({ endpointId: e.target.value })}>
+                      <option value="">（未绑定）</option>
+                      {endpoints.map((ep) => <option key={ep.id} value={ep.id}>{ep.method} {ep.url}</option>)}
+                    </select>
+                  </div>
+                  <div className="pp-table-wrap">
+                  <table className="pp-table">
+                    <thead>
+                      <tr>
+                        <th style={{ width: '90px' }}>来源</th>
+                        <th>路径</th>
+                        <th style={{ width: '110px' }}>操作</th>
+                        <th>期望值</th>
+                        <th>说明</th>
+                        <th style={{ width: '70px' }}>操作</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {caseAssertions.map((a, i) => (
+                        <tr key={i}>
+                          <td>
+                            <select className="pp-select pp-input-sm" value={a.source} onChange={(e) => patchAssertion(i, { source: e.target.value })}>
+                              {SOURCES.map((s) => <option key={s} value={s}>{s}</option>)}
+                            </select>
+                          </td>
+                          <td><input className="pp-input pp-input-sm pp-input-mono" style={{ width: '100%' }} value={a.path}
+                            onChange={(e) => patchAssertion(i, { path: e.target.value })} /></td>
+                          <td>
+                            <select className="pp-select pp-input-sm" value={a.op} onChange={(e) => patchAssertion(i, { op: e.target.value })}>
+                              {OPS.map((o) => <option key={o} value={o}>{o}</option>)}
+                            </select>
+                          </td>
+                          <td><input className="pp-input pp-input-sm pp-input-mono" style={{ width: '100%' }} value={a.value}
+                            onChange={(e) => patchAssertion(i, { value: e.target.value })} /></td>
+                          <td><input className="pp-input pp-input-sm" style={{ width: '100%' }} value={a.message}
+                            onChange={(e) => patchAssertion(i, { message: e.target.value })} /></td>
+                          <td><button className="pp-btn pp-btn-sm pp-btn-danger" onClick={() => removeAssertion(i)}>删除</button></td>
+                        </tr>
+                      ))}
+                      {caseAssertions.length === 0 ? <tr><td colSpan={6} className="pp-muted">暂无断言</td></tr> : null}
+                    </tbody>
+                  </table>
+                  </div>
+                  <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
+                    <button className="pp-btn" onClick={addAssertion}>新增断言</button>
+                    <button className="pp-btn pp-btn-primary" onClick={runCase} disabled={running}>运行用例</button>
+                  </div>
+                </div>
+              ) : <div className="pp-empty">左侧选择一个用例</div>}
+            </div>
+            {resultPanel('尚未运行')}
+          </div>
+        ) : (
+          <div className="pp-debug-layout" style={{ marginTop: 'var(--sp-3)' }}>
+            <div className="pp-pane">
+              <div className="pp-card-title">场景</div>
+              <div className="pp-tree">
+                {scenarios.map((s) => (
+                  <div key={s.id} className="pp-tree-row" data-active={s.id === activeScenarioId ? 'true' : 'false'}
+                    onClick={() => { setActiveScenarioId(s.id); setResult(null); setError('') }}>
+                    <span className="pp-ellipsis">{s.name || s.id}</span>
+                    <span className="pp-tree-row-count">{(s.steps || []).length}</span>
+                  </div>
+                ))}
+              </div>
+              {scenarios.length === 0 ? <div className="pp-empty">暂无场景</div> : null}
+            </div>
+            <div className="pp-pane">
+              <div className="pp-card-title">步骤编排</div>
+              {activeScenario ? (
+                <div>
+                  <div className="pp-form-grid" style={{ marginBottom: 'var(--sp-3)' }}>
+                    <label className="pp-form-label">场景名</label>
+                    <input className="pp-input" value={activeScenario.name || ''}
+                      onChange={(e) => patchScenario({ name: e.target.value })} />
+                  </div>
+                  <div className="pp-table-wrap">
+                  <table className="pp-table">
+                    <thead>
+                      <tr>
+                        <th style={{ width: '40px' }}>#</th>
+                        <th>步骤名</th>
+                        <th>接口</th>
+                        <th style={{ width: '140px' }}>操作</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {(activeScenario.steps || []).map((s, i) => (
+                        <tr key={s.id || i}>
+                          <td className="pp-meta">{i + 1}</td>
+                          <td><input className="pp-input pp-input-sm" style={{ width: '100%' }} value={s.name || ''}
+                            onChange={(e) => patchStep(i, { name: e.target.value })} /></td>
+                          <td>
+                            <select className="pp-select pp-input-sm" style={{ width: '100%' }} value={s.endpointId || ''}
+                              onChange={(e) => patchStep(i, { endpointId: e.target.value })}>
+                              <option value="">（未绑定）</option>
+                              {endpoints.map((ep) => <option key={ep.id} value={ep.id}>{ep.method} {ep.url}</option>)}
+                            </select>
+                            {s.endpointId ? (
+                              <span className="pp-method" data-method={(endpoints.find((ep) => ep.id === s.endpointId) || {}).method || 'GET'}>
+                                {(endpoints.find((ep) => ep.id === s.endpointId) || {}).method || 'GET'}
+                              </span>
+                            ) : null}
+                          </td>
+                          <td>
+                            <button className="pp-btn pp-btn-sm" onClick={() => moveStep(i, -1)} title="上移">↑</button>{' '}
+                            <button className="pp-btn pp-btn-sm" onClick={() => moveStep(i, 1)} title="下移">↓</button>{' '}
+                            <button className="pp-btn pp-btn-sm pp-btn-danger" onClick={() => removeStep(i)} title="删除">×</button>
+                          </td>
+                        </tr>
+                      ))}
+                      {(activeScenario.steps || []).length === 0 ? <tr><td colSpan={4} className="pp-muted">暂无步骤</td></tr> : null}
+                    </tbody>
+                  </table>
+                  </div>
+                  <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
+                    <button className="pp-btn" onClick={addStep}>添加步骤</button>
+                    <button className="pp-btn pp-btn-primary" onClick={runScenario} disabled={running}>运行场景</button>
+                  </div>
+                </div>
+              ) : <div className="pp-empty">左侧选择一个场景</div>}
+            </div>
+            {resultPanel('尚未运行')}
+          </div>
+        )}
+      
+      </div>
     </div>
   )
 }

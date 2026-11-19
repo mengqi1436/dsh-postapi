@@ -240,7 +240,7 @@ export function SchemaPage(props) {
 
   return (
     <div className="pp-scope pp-page" data-page="schema" ref={rootRef}>
-      <div className="pp-overview-head" style={{ margin: 'calc(var(--sp-5) * -1) calc(var(--sp-6) * -1) var(--sp-4)' }}>
+      <div className="pp-overview-head">
         <span className="pp-overview-title">数据模型</span>
         <div className="pp-overview-actions">
           <label className="pp-meta">项目</label>
@@ -250,55 +250,58 @@ export function SchemaPage(props) {
           </select>
         </div>
       </div>
-      <p className="pp-muted">
-        {isMock ? '示例数据 — api.storage 不可用，以下为文件内 mock' : '数据来源：api.storage（saveSchema / deleteSchema）'}
-      </p>
-      {error ? <p className="pp-error-text">{error}</p> : null}
-      {notice ? <p className="pp-muted">{notice}</p> : null}
-
-      <div className="pp-debug-layout">
-        <div className="pp-pane">
-          <div className="pp-card-title">模型</div>
-          <div className="pp-tree">
-            {schemas.map((s) => (
-              <div key={s.id} className="pp-tree-row" data-active={s.id === currentId ? 'true' : 'false'} onClick={() => pick(s)}>
-                <span className="pp-ellipsis">{s.name || s.id}</span>
-              </div>
-            ))}
-          </div>
-          {schemas.length === 0 ? <div className="pp-empty">暂无模型</div> : null}
-          <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
-            <button className="pp-btn pp-btn-sm" onClick={blank}>新建模型</button>
-          </div>
-        </div>
-
-        <div className="pp-pane">
-          <div className="pp-card-title">编辑</div>
-          <div className="pp-form-grid" style={{ marginBottom: 'var(--sp-3)' }}>
-            <label className="pp-form-label">名称</label>
-            <input className="pp-input" value={name} onChange={(e) => setName(e.target.value)} />
-            <label className="pp-form-label">说明</label>
-            <input className="pp-input" value={description} onChange={(e) => setDescription(e.target.value)} />
-          </div>
-          <textarea className="pp-json-editor" rows={14} value={text}
-            onChange={(e) => { setText(e.target.value); setCheckResult(null) }} />
-          <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
-            <button className="pp-btn" onClick={validate}>校验</button>
-            <button className="pp-btn" onClick={makeExample}>生成示例</button>
-            <button className="pp-btn pp-btn-primary" onClick={save}>保存</button>
-            <button className="pp-btn pp-btn-danger" onClick={remove}>删除</button>
-          </div>
-          {checkResult ? (
-            <div className={checkResult.ok ? 'pp-note pp-note-ok' : 'pp-note pp-note-bad'} style={{ marginTop: 'var(--sp-3)' }}>
-              {checkResult.ok ? '通过：' : '失败：'}{checkResult.message}
+      <div className="pp-overview-content">
+        <p className="pp-muted">
+          {isMock ? '示例数据 — api.storage 不可用，以下为文件内 mock' : '数据来源：api.storage（saveSchema / deleteSchema）'}
+        </p>
+        {error ? <p className="pp-error-text">{error}</p> : null}
+        {notice ? <p className="pp-muted">{notice}</p> : null}
+  
+        <div className="pp-debug-layout">
+          <div className="pp-pane">
+            <div className="pp-card-title">模型</div>
+            <div className="pp-tree">
+              {schemas.map((s) => (
+                <div key={s.id} className="pp-tree-row" data-active={s.id === currentId ? 'true' : 'false'} onClick={() => pick(s)}>
+                  <span className="pp-ellipsis">{s.name || s.id}</span>
+                </div>
+              ))}
             </div>
-          ) : null}
+            {schemas.length === 0 ? <div className="pp-empty">暂无模型</div> : null}
+            <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
+              <button className="pp-btn pp-btn-sm" onClick={blank}>新建模型</button>
+            </div>
+          </div>
+  
+          <div className="pp-pane">
+            <div className="pp-card-title">编辑</div>
+            <div className="pp-form-grid" style={{ marginBottom: 'var(--sp-3)' }}>
+              <label className="pp-form-label">名称</label>
+              <input className="pp-input" value={name} onChange={(e) => setName(e.target.value)} />
+              <label className="pp-form-label">说明</label>
+              <input className="pp-input" value={description} onChange={(e) => setDescription(e.target.value)} />
+            </div>
+            <textarea className="pp-json-editor" rows={14} value={text}
+              onChange={(e) => { setText(e.target.value); setCheckResult(null) }} />
+            <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
+              <button className="pp-btn" onClick={validate}>校验</button>
+              <button className="pp-btn" onClick={makeExample}>生成示例</button>
+              <button className="pp-btn pp-btn-primary" onClick={save}>保存</button>
+              <button className="pp-btn pp-btn-danger" onClick={remove}>删除</button>
+            </div>
+            {checkResult ? (
+              <div className={checkResult.ok ? 'pp-note pp-note-ok' : 'pp-note pp-note-bad'} style={{ marginTop: 'var(--sp-3)' }}>
+                {checkResult.ok ? '通过：' : '失败：'}{checkResult.message}
+              </div>
+            ) : null}
+          </div>
+  
+          <div className="pp-pane">
+            <div className="pp-card-title">示例数据</div>
+            <pre className="pp-pre pp-pre-scroll">{example || '（点「生成示例」按当前 JSON Schema 生成）'}</pre>
+          </div>
         </div>
-
-        <div className="pp-pane">
-          <div className="pp-card-title">示例数据</div>
-          <pre className="pp-pre pp-pre-scroll">{example || '（点「生成示例」按当前 JSON Schema 生成）'}</pre>
-        </div>
+      
       </div>
     </div>
   )

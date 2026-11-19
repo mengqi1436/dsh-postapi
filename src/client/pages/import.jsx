@@ -244,7 +244,7 @@ export function ImportPage(props) {
 
   return (
     <div className="pp-scope pp-page" data-page="import" ref={rootRef}>
-      <div className="pp-overview-head" style={{ margin: 'calc(var(--sp-5) * -1) calc(var(--sp-6) * -1) var(--sp-4)' }}>
+      <div className="pp-overview-head">
         <span className="pp-overview-title">导入导出与代码生成</span>
         <div className="pp-overview-actions">
           <label className="pp-meta">项目</label>
@@ -253,64 +253,67 @@ export function ImportPage(props) {
           </select>
         </div>
       </div>
-      <div className="pp-toolbar">
-        <span className="pp-meta">
-          {isMock ? '示例数据 — api 桥不可用，操作按钮会提示缺失的方法' : '数据来源：api.import / api.export / api.codegen'}
-        </span>
-      </div>
-      {error ? <p className="pp-error-text">{error}</p> : null}
-      {notice ? <p className="pp-muted">{notice}</p> : null}
-
-      <div className="pp-cols-2">
-        <div className="pp-card pp-card-hover">
-          <div className="pp-card-title">导入</div>
-          <div className="pp-tabs">
-            {IMPORT_KINDS.map((k) => (
-              <button key={k.id} className="pp-tab" data-active={importKind === k.id ? 'true' : 'false'}
-                onClick={() => pickImportKind(k.id)}>{k.label}</button>
-            ))}
+      <div className="pp-overview-content">
+        <div className="pp-toolbar">
+          <span className="pp-meta">
+            {isMock ? '示例数据 — api 桥不可用，操作按钮会提示缺失的方法' : '数据来源：api.import / api.export / api.codegen'}
+          </span>
+        </div>
+        {error ? <p className="pp-error-text">{error}</p> : null}
+        {notice ? <p className="pp-muted">{notice}</p> : null}
+  
+        <div className="pp-cols-2">
+          <div className="pp-card pp-card-hover">
+            <div className="pp-card-title">导入</div>
+            <div className="pp-tabs">
+              {IMPORT_KINDS.map((k) => (
+                <button key={k.id} className="pp-tab" data-active={importKind === k.id ? 'true' : 'false'}
+                  onClick={() => pickImportKind(k.id)}>{k.label}</button>
+              ))}
+            </div>
+            <div className="pp-note" style={{ marginTop: 'var(--sp-2)' }}>{currentImport.hint}</div>
+            <textarea className="pp-textarea" rows={8} value={importText}
+              onChange={(e) => setImportText(e.target.value)} />
+            <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
+              <button className="pp-btn pp-btn-primary" onClick={runImport} disabled={busy}>开始导入</button>
+              <button className="pp-btn" onClick={saveImport} disabled={busy || !bundle}>保存到项目</button>
+              <button className="pp-btn" onClick={() => copy(importOut, '导入结果')}>复制结果</button>
+            </div>
+            {importOut ? <pre className="pp-pre pp-pre-scroll" style={{ marginTop: 'var(--sp-2)' }}>{importOut}</pre> : null}
           </div>
-          <div className="pp-note" style={{ marginTop: 'var(--sp-2)' }}>{currentImport.hint}</div>
-          <textarea className="pp-textarea" rows={8} value={importText}
-            onChange={(e) => setImportText(e.target.value)} />
-          <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
-            <button className="pp-btn pp-btn-primary" onClick={runImport} disabled={busy}>开始导入</button>
-            <button className="pp-btn" onClick={saveImport} disabled={busy || !bundle}>保存到项目</button>
-            <button className="pp-btn" onClick={() => copy(importOut, '导入结果')}>复制结果</button>
+  
+          <div className="pp-card pp-card-hover">
+            <div className="pp-card-title">导出</div>
+            <div className="pp-note">导出读取当前项目对象后交给 api.export，结果可直接复制。</div>
+            <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
+              {EXPORT_KINDS.map((k) => (
+                <button key={k.id} className="pp-btn" onClick={() => runExport(k.id)} disabled={busy}>{k.label}</button>
+              ))}
+              <button className="pp-btn" onClick={() => copy(exportOut, '导出结果')}>复制结果</button>
+            </div>
+            <div className="pp-meta" style={{ marginTop: 'var(--sp-2)' }}>当前导出格式：{exportKind}</div>
+            {exportOut ? <pre className="pp-pre pp-pre-scroll" style={{ marginTop: 'var(--sp-2)' }}>{exportOut}</pre> : null}
           </div>
-          {importOut ? <pre className="pp-pre pp-pre-scroll" style={{ marginTop: 'var(--sp-2)' }}>{importOut}</pre> : null}
         </div>
-
-        <div className="pp-card pp-card-hover">
-          <div className="pp-card-title">导出</div>
-          <div className="pp-note">导出读取当前项目对象后交给 api.export，结果可直接复制。</div>
-          <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
-            {EXPORT_KINDS.map((k) => (
-              <button key={k.id} className="pp-btn" onClick={() => runExport(k.id)} disabled={busy}>{k.label}</button>
-            ))}
-            <button className="pp-btn" onClick={() => copy(exportOut, '导出结果')}>复制结果</button>
+  
+        <div className="pp-card" style={{ marginTop: 'var(--sp-4)' }}>
+          <div className="pp-card-title">代码生成</div>
+          <div className="pp-form-row">
+            <label className="pp-form-label">语言</label>
+            <select className="pp-select" value={lang} onChange={(e) => setLang(e.target.value)}>
+              {LANGS.map((l) => <option key={l.id} value={l.id}>{l.label}</option>)}
+            </select>
+            <button className="pp-btn pp-btn-primary" onClick={runCodegen} disabled={busy}>生成代码</button>
+            <button className="pp-btn" onClick={() => copy(codeOut, '生成代码')}>复制代码</button>
           </div>
-          <div className="pp-meta" style={{ marginTop: 'var(--sp-2)' }}>当前导出格式：{exportKind}</div>
-          {exportOut ? <pre className="pp-pre pp-pre-scroll" style={{ marginTop: 'var(--sp-2)' }}>{exportOut}</pre> : null}
+          <div className="pp-meta" style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-2)' }}>
+            示例接口：
+            <span className="pp-method" data-method={MOCK_ENDPOINT.method}>{MOCK_ENDPOINT.method}</span>
+            <span className="pp-mono">{MOCK_ENDPOINT.url}</span>
+          </div>
+          {codeOut ? <pre className="pp-pre pp-pre-scroll" style={{ marginTop: 'var(--sp-2)' }}>{codeOut}</pre> : null}
         </div>
-      </div>
-
-      <div className="pp-card" style={{ marginTop: 'var(--sp-4)' }}>
-        <div className="pp-card-title">代码生成</div>
-        <div className="pp-form-row">
-          <label className="pp-form-label">语言</label>
-          <select className="pp-select" value={lang} onChange={(e) => setLang(e.target.value)}>
-            {LANGS.map((l) => <option key={l.id} value={l.id}>{l.label}</option>)}
-          </select>
-          <button className="pp-btn pp-btn-primary" onClick={runCodegen} disabled={busy}>生成代码</button>
-          <button className="pp-btn" onClick={() => copy(codeOut, '生成代码')}>复制代码</button>
-        </div>
-        <div className="pp-meta" style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-2)' }}>
-          示例接口：
-          <span className="pp-method" data-method={MOCK_ENDPOINT.method}>{MOCK_ENDPOINT.method}</span>
-          <span className="pp-mono">{MOCK_ENDPOINT.url}</span>
-        </div>
-        {codeOut ? <pre className="pp-pre pp-pre-scroll" style={{ marginTop: 'var(--sp-2)' }}>{codeOut}</pre> : null}
+      
       </div>
     </div>
   )

@@ -158,7 +158,7 @@ export function HistoryPage(props) {
 
   return (
     <div className="pp-scope pp-page" data-page="history" ref={rootRef}>
-      <div className="pp-overview-head" style={{ margin: 'calc(var(--sp-5) * -1) calc(var(--sp-6) * -1) var(--sp-4)' }}>
+      <div className="pp-overview-head">
         <span className="pp-overview-title">请求历史</span>
         <div className="pp-overview-actions">
           <label className="pp-meta">项目</label>
@@ -170,66 +170,69 @@ export function HistoryPage(props) {
           <button className="pp-btn pp-btn-danger" onClick={clear}>{pendingClear ? '确认清空' : '清空历史'}</button>
         </div>
       </div>
-      <div className="pp-toolbar">
-        <span className="pp-meta">
-          {isMock ? '示例数据 — api.storage.getHistory 不可用，以下为文件内 mock' : '数据来源：api.storage（getHistory / clearHistory）'}
-        </span>
-      </div>
-      {error ? <p className="pp-error-text">{error}</p> : null}
-      {notice ? <p className="pp-muted">{notice}</p> : null}
-
-      <div className="pp-card">
-        <div className="pp-table-wrap">
-        <table className="pp-table">
-          <thead>
-            <tr>
-              <th style={{ width: '150px' }}>时间</th>
-              <th style={{ width: '80px' }}>方法</th>
-              <th>URL</th>
-              <th style={{ width: '70px' }}>状态</th>
-              <th style={{ width: '80px' }}>耗时</th>
-              <th style={{ width: '90px' }}>大小</th>
-              <th style={{ width: '130px' }}>操作</th>
-            </tr>
-          </thead>
-          <tbody>
-            {entries.map((e) => (
-              <tr key={e.id} data-active={detailId === e.id ? 'true' : 'false'}>
-                <td className="pp-meta">{fmtDateTime(e.at)}</td>
-                <td><span className="pp-method" data-method={e.method}>{e.method}</span></td>
-                <td className="pp-table-mono pp-ellipsis">{e.url}</td>
-                <td><span className={pillClass(statusTone(e.status))}>{e.status}</span></td>
-                <td className="pp-meta">{e.timeMs} ms</td>
-                <td className="pp-meta">{fmtSize(e.bodySize)}</td>
-                <td>
-                  <button className="pp-btn pp-btn-sm" onClick={() => setDetailId(detailId === e.id ? '' : e.id)}>详情</button>{' '}
-                  <button className="pp-btn pp-btn-sm" onClick={() => replay(e)}>回放</button>
-                </td>
+      <div className="pp-overview-content">
+        <div className="pp-toolbar">
+          <span className="pp-meta">
+            {isMock ? '示例数据 — api.storage.getHistory 不可用，以下为文件内 mock' : '数据来源：api.storage（getHistory / clearHistory）'}
+          </span>
+        </div>
+        {error ? <p className="pp-error-text">{error}</p> : null}
+        {notice ? <p className="pp-muted">{notice}</p> : null}
+  
+        <div className="pp-card">
+          <div className="pp-table-wrap">
+          <table className="pp-table">
+            <thead>
+              <tr>
+                <th style={{ width: '150px' }}>时间</th>
+                <th style={{ width: '80px' }}>方法</th>
+                <th>URL</th>
+                <th style={{ width: '70px' }}>状态</th>
+                <th style={{ width: '80px' }}>耗时</th>
+                <th style={{ width: '90px' }}>大小</th>
+                <th style={{ width: '130px' }}>操作</th>
               </tr>
-            ))}
-            {entries.length === 0 ? (
-              <tr><td colSpan={7} className="pp-muted">暂无历史记录</td></tr>
-            ) : null}
-          </tbody>
-        </table>
-        </div>
-      </div>
-
-      {detail ? (
-        <div className="pp-pane" style={{ marginTop: 'var(--sp-3)' }}>
-          <div className="pp-card-title">详情 · {detail.id}</div>
-          <div className="pp-toolbar-inline">
-            <span className="pp-meta">状态</span>
-            <span className={pillClass(statusTone(detail.status))}>{detail.status}</span>
-            <span className="pp-meta">耗时 {detail.timeMs} ms</span>
-            <span className="pp-meta">大小 {fmtSize(detail.bodySize)}</span>
+            </thead>
+            <tbody>
+              {entries.map((e) => (
+                <tr key={e.id} data-active={detailId === e.id ? 'true' : 'false'}>
+                  <td className="pp-meta">{fmtDateTime(e.at)}</td>
+                  <td><span className="pp-method" data-method={e.method}>{e.method}</span></td>
+                  <td className="pp-table-mono pp-ellipsis">{e.url}</td>
+                  <td><span className={pillClass(statusTone(e.status))}>{e.status}</span></td>
+                  <td className="pp-meta">{e.timeMs} ms</td>
+                  <td className="pp-meta">{fmtSize(e.bodySize)}</td>
+                  <td>
+                    <button className="pp-btn pp-btn-sm" onClick={() => setDetailId(detailId === e.id ? '' : e.id)}>详情</button>{' '}
+                    <button className="pp-btn pp-btn-sm" onClick={() => replay(e)}>回放</button>
+                  </td>
+                </tr>
+              ))}
+              {entries.length === 0 ? (
+                <tr><td colSpan={7} className="pp-muted">暂无历史记录</td></tr>
+              ) : null}
+            </tbody>
+          </table>
           </div>
-          <div className="pp-meta" style={{ marginTop: 'var(--sp-2)' }}>请求</div>
-          <pre className="pp-pre pp-pre-scroll">{JSON.stringify(detail.request || {}, null, 2)}</pre>
-          <div className="pp-meta" style={{ marginTop: 'var(--sp-2)' }}>响应</div>
-          <pre className="pp-pre pp-pre-scroll">{JSON.stringify(detail.response || {}, null, 2)}</pre>
         </div>
-      ) : null}
+  
+        {detail ? (
+          <div className="pp-pane" style={{ marginTop: 'var(--sp-3)' }}>
+            <div className="pp-card-title">详情 · {detail.id}</div>
+            <div className="pp-toolbar-inline">
+              <span className="pp-meta">状态</span>
+              <span className={pillClass(statusTone(detail.status))}>{detail.status}</span>
+              <span className="pp-meta">耗时 {detail.timeMs} ms</span>
+              <span className="pp-meta">大小 {fmtSize(detail.bodySize)}</span>
+            </div>
+            <div className="pp-meta" style={{ marginTop: 'var(--sp-2)' }}>请求</div>
+            <pre className="pp-pre pp-pre-scroll">{JSON.stringify(detail.request || {}, null, 2)}</pre>
+            <div className="pp-meta" style={{ marginTop: 'var(--sp-2)' }}>响应</div>
+            <pre className="pp-pre pp-pre-scroll">{JSON.stringify(detail.response || {}, null, 2)}</pre>
+          </div>
+        ) : null}
+      
+      </div>
     </div>
   )
 }

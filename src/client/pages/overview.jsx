@@ -91,6 +91,8 @@ export function OverviewPage(props) {
   const [newName, setNewName] = useState('')
   const [renameName, setRenameName] = useState(MOCK_PROJECT.name)
   const [pendingDelete, setPendingDelete] = useState('')
+  // 新建/重命名表单折叠态：页头只留一个「新建项目」按钮
+  const [formOpen, setFormOpen] = useState(false)
 
   useEffect(() => applyTheme(rootRef.current), [])
 
@@ -220,102 +222,125 @@ export function OverviewPage(props) {
 
   return (
     <div className="pp-scope pp-page" data-page="overview" ref={rootRef}>
-      <div className="pp-overview-head" style={{ margin: 'calc(var(--sp-5) * -1) calc(var(--sp-6) * -1) var(--sp-4)' }}>
+      {/* 页头只留标题与主动作：Apifox 页头是「标题 + 1~2 个动作」，
+          把新建/重命名的输入框塞进来会让动作区在 528px 宽的主区里换行堆叠。 */}
+      <div className="pp-overview-head">
         <span className="pp-overview-title">项目总览</span>
         <div className="pp-overview-actions">
-          <input className="pp-input" style={{ width: '200px' }} placeholder="项目名"
-            value={newName} onChange={(e) => { setNewName(e.target.value); setNotice('') }} />
-          <button className="pp-btn pp-btn-primary" onClick={createProject}>新建</button>
-          <input className="pp-input" style={{ width: '180px' }} placeholder="重命名"
-            value={renameName} onChange={(e) => { setRenameName(e.target.value); setNotice('') }} />
-          <button className="pp-btn" onClick={renameProject}>重命名</button>
+          <button className="pp-btn pp-btn-primary" onClick={() => setFormOpen((v) => !v)}>
+            {formOpen ? '取消' : '新建项目'}
+          </button>
         </div>
       </div>
-      <p className="pp-muted">
-        {isMock
-          ? '示例数据 — api.storage 未注入或不可用，以下为文件内 mock'
-          : '数据来源：api.storage（listProjects / getProject）'}
-      </p>
-      {error ? <p className="pp-error-text">{error}</p> : null}
-      {notice ? <p className="pp-muted">{notice}</p> : null}
-
-      <div className="pp-stats">
-        <div className="pp-stat">
-          <span className="pp-stat-value">{stats.projectCount}</span>
-          <span className="pp-stat-label">项目数</span>
+      <div className="pp-overview-content">
+        <p className="pp-muted">
+          {isMock
+            ? '示例数据 — api.storage 未注入或不可用，以下为文件内 mock'
+            : '数据来源：api.storage（listProjects / getProject）'}
+        </p>
+        {error ? <p className="pp-error-text">{error}</p> : null}
+        {notice ? <p className="pp-muted">{notice}</p> : null}
+  
+        <div className="pp-stats">
+          <div className="pp-stat">
+            <span className="pp-stat-value">{stats.projectCount}</span>
+            <span className="pp-stat-label">项目数</span>
+          </div>
+          <div className="pp-stat">
+            <span className="pp-stat-value">{stats.endpointCount}</span>
+            <span className="pp-stat-label">接口数</span>
+          </div>
+          <div className="pp-stat">
+            <span className="pp-stat-value">{stats.envCount}</span>
+            <span className="pp-stat-label">环境数</span>
+          </div>
+          <div className="pp-stat">
+            <span className="pp-stat-value">{fmtTime(stats.latestUpdated)}</span>
+            <span className="pp-stat-label">最近更新</span>
+          </div>
         </div>
-        <div className="pp-stat">
-          <span className="pp-stat-value">{stats.endpointCount}</span>
-          <span className="pp-stat-label">接口数</span>
-        </div>
-        <div className="pp-stat">
-          <span className="pp-stat-value">{stats.envCount}</span>
-          <span className="pp-stat-label">环境数</span>
-        </div>
-        <div className="pp-stat">
-          <span className="pp-stat-value">{fmtTime(stats.latestUpdated)}</span>
-          <span className="pp-stat-label">最近更新</span>
-        </div>
-      </div>
-
-      <div className="pp-toolbar-inline" style={{ marginBottom: 'var(--sp-4)' }}>
-        <span className="pp-meta">当前项目</span>
-        <input className="pp-input pp-input-mono" style={{ width: '180px' }} readOnly value={currentId || '-'} />
-      </div>
-
-      <div className="pp-overview-grid">
-        {cards.map((p) => (
-          <div key={p.id} className="pp-card pp-card-hover" data-active={currentId === p.id ? 'true' : 'false'}>
-            <div className="pp-card-title pp-ellipsis">{p.name}</div>
-            <div className="pp-meta">
-              {p.endpointCount === undefined ? '接口数未知' : p.endpointCount + ' 个接口'} · 更新于 {fmtTime(p.updatedAt)}
-            </div>
-            <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
-              <button className="pp-btn" onClick={() => openProject(p.id)}>打开</button>
-              <button className="pp-btn pp-btn-danger" onClick={() => deleteProject(p.id)}>
-                {pendingDelete === p.id ? '确认删除' : '删除'}
-              </button>
+  
+        {/* 项目操作区：新建 / 重命名表单（折叠，避免常驻占位） */}
+        {formOpen ? (
+          <div className="pp-card">
+            <div className="pp-card-title">新建 / 重命名项目</div>
+            <div className="pp-form-grid">
+              <label className="pp-form-label">新建项目</label>
+              <div className="pp-toolbar-inline">
+                <input className="pp-input" placeholder="项目名"
+                  value={newName} onChange={(e) => { setNewName(e.target.value); setNotice('') }} />
+                <button className="pp-btn pp-btn-primary" onClick={createProject}>新建</button>
+              </div>
+              <label className="pp-form-label">重命名当前项目</label>
+              <div className="pp-toolbar-inline">
+                <input className="pp-input" placeholder="新名称"
+                  value={renameName} onChange={(e) => { setRenameName(e.target.value); setNotice('') }} />
+                <button className="pp-btn" onClick={renameProject}>重命名</button>
+              </div>
             </div>
           </div>
-        ))}
-        {cards.length === 0 ? <div className="pp-empty">暂无项目，先在上方新建一个</div> : null}
-      </div>
+        ) : null}
 
-      <div className="pp-card" style={{ marginTop: 'var(--sp-5)' }}>
-        <div className="pp-card-title">最近接口</div>
-        <div className="pp-table-wrap">
-        <table className="pp-table">
-          <thead>
-            <tr>
-              <th style={{ width: '90px' }}>方法</th>
-              <th>名称</th>
-              <th>URL</th>
-              <th style={{ width: '150px' }}>更新时间</th>
-            </tr>
-          </thead>
-          <tbody>
-            {recent.map((e) => (
-              <tr key={e.id} onClick={() => { window.location.hash = '#/doc/' + encodeURIComponent(e.id) }}>
-                <td><span className="pp-method" data-method={e.method}>{e.method}</span></td>
-                <td>{e.name || '-'}</td>
-                <td className="pp-table-mono pp-muted">{e.url || '-'}</td>
-                <td className="pp-muted">{fmtTime(e.updatedAt)}</td>
-              </tr>
-            ))}
-            {recent.length === 0 ? (
-              <tr><td colSpan={4} className="pp-muted">当前项目暂无接口</td></tr>
-            ) : null}
-          </tbody>
-        </table>
+        <div className="pp-toolbar-inline">
+          <span className="pp-meta">当前项目</span>
+          <input className="pp-input pp-input-mono" style={{ width: '180px' }} readOnly value={currentId || '-'} />
         </div>
-      </div>
-
-      <div className="pp-toolbar" style={{ marginTop: 'var(--sp-5)' }}>
-        <span className="pp-card-title" style={{ margin: 0 }}>快捷入口</span>
-        <span className="pp-toolbar-spacer" />
-        {SHORTCUTS.map((s) => (
-          <a key={s.hash} className="pp-btn" href={s.hash}>{s.label}</a>
-        ))}
+  
+        <div className="pp-overview-grid">
+          {cards.map((p) => (
+            <div key={p.id} className="pp-card pp-card-hover" data-active={currentId === p.id ? 'true' : 'false'}>
+              <div className="pp-card-title pp-ellipsis">{p.name}</div>
+              <div className="pp-meta">
+                {p.endpointCount === undefined ? '接口数未知' : p.endpointCount + ' 个接口'} · 更新于 {fmtTime(p.updatedAt)}
+              </div>
+              <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
+                <button className="pp-btn" onClick={() => openProject(p.id)}>打开</button>
+                <button className="pp-btn pp-btn-danger" onClick={() => deleteProject(p.id)}>
+                  {pendingDelete === p.id ? '确认删除' : '删除'}
+                </button>
+              </div>
+            </div>
+          ))}
+          {cards.length === 0 ? <div className="pp-empty">暂无项目，先在上方新建一个</div> : null}
+        </div>
+  
+        <div className="pp-card" style={{ marginTop: 'var(--sp-5)' }}>
+          <div className="pp-card-title">最近接口</div>
+          <div className="pp-table-wrap">
+          <table className="pp-table">
+            <thead>
+              <tr>
+                <th style={{ width: '90px' }}>方法</th>
+                <th>名称</th>
+                <th>URL</th>
+                <th style={{ width: '150px' }}>更新时间</th>
+              </tr>
+            </thead>
+            <tbody>
+              {recent.map((e) => (
+                <tr key={e.id} onClick={() => { window.location.hash = '#/doc/' + encodeURIComponent(e.id) }}>
+                  <td><span className="pp-method" data-method={e.method}>{e.method}</span></td>
+                  <td>{e.name || '-'}</td>
+                  <td className="pp-table-mono pp-muted">{e.url || '-'}</td>
+                  <td className="pp-muted">{fmtTime(e.updatedAt)}</td>
+                </tr>
+              ))}
+              {recent.length === 0 ? (
+                <tr><td colSpan={4} className="pp-muted">当前项目暂无接口</td></tr>
+              ) : null}
+            </tbody>
+          </table>
+          </div>
+        </div>
+  
+        <div className="pp-toolbar" style={{ marginTop: 'var(--sp-5)' }}>
+          <span className="pp-card-title" style={{ margin: 0 }}>快捷入口</span>
+          <span className="pp-toolbar-spacer" />
+          {SHORTCUTS.map((s) => (
+            <a key={s.hash} className="pp-btn" href={s.hash}>{s.label}</a>
+          ))}
+        </div>
+      
       </div>
     </div>
   )

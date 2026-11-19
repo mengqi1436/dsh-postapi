@@ -194,7 +194,7 @@ export function MockPage({ route, api }) {
 
   return (
     <div className="pp-scope pp-page" data-page="mock" ref={rootRef}>
-      <div className="pp-overview-head" style={{ margin: 'calc(var(--sp-5) * -1) calc(var(--sp-6) * -1) var(--sp-4)' }}>
+      <div className="pp-overview-head">
         <span className="pp-overview-title">Mock</span>
         <div className="pp-overview-actions">
           <span className="pp-pill">{service.running ? '运行中' : '已停止'}</span>
@@ -202,100 +202,103 @@ export function MockPage({ route, api }) {
           <button className="pp-btn" onClick={stopService} disabled={busy || !service.running}>停止</button>
         </div>
       </div>
-      <p className="pp-muted">
-        {isMock ? '示例数据 — window.__postapiApi 未注入或读取失败，以下为文件内 mock' : '数据来源：postapi.storage + postapi.mock'}
-      </p>
-      {error ? <p className="pp-muted">{error}</p> : null}
-      {notice ? <p className="pp-muted">{notice}</p> : null}
-
-      <div className="pp-debug-layout">
-        {/* 左：接口列表 */}
-        <nav className="pp-pane" style={{ padding: 'var(--sp-2)' }}>
-          <div className="pp-card-title" style={{ padding: '0 var(--sp-2)' }}>接口</div>
-          {endpoints.length === 0 ? <EmptyState text="暂无接口" /> : null}
-          {endpoints.map((ep) => (
-            <div key={ep.id} className="pp-tree-row" data-active={ep.id === currentId} onClick={() => selectEndpoint(ep)}>
-              <span className="pp-method" data-method={ep.method}>{ep.method}</span>
-              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{ep.name}</span>
+      <div className="pp-overview-content">
+        <p className="pp-muted">
+          {isMock ? '示例数据 — window.__postapiApi 未注入或读取失败，以下为文件内 mock' : '数据来源：postapi.storage + postapi.mock'}
+        </p>
+        {error ? <p className="pp-muted">{error}</p> : null}
+        {notice ? <p className="pp-muted">{notice}</p> : null}
+  
+        <div className="pp-debug-layout">
+          {/* 左：接口列表 */}
+          <nav className="pp-pane" style={{ padding: 'var(--sp-2)' }}>
+            <div className="pp-card-title" style={{ padding: '0 var(--sp-2)' }}>接口</div>
+            {endpoints.length === 0 ? <EmptyState text="暂无接口" /> : null}
+            {endpoints.map((ep) => (
+              <div key={ep.id} className="pp-tree-row" data-active={ep.id === currentId} onClick={() => selectEndpoint(ep)}>
+                <span className="pp-method" data-method={ep.method}>{ep.method}</span>
+                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{ep.name}</span>
+              </div>
+            ))}
+          </nav>
+  
+          {/* 中：规则表 + 延迟 */}
+          <section className="pp-pane">
+            <div className="pp-card-title">{current ? current.name : '未选择接口'}</div>
+            <div className="pp-form-grid" style={{ marginBottom: 'var(--sp-3)' }}>
+              <label className="pp-form-label">启用 Mock</label>
+              <input type="checkbox" checked={mockEnabled} onChange={(e) => setMockEnabled(e.target.checked)} />
+              <label className="pp-form-label">延迟 (ms)</label>
+              <input
+                className="pp-input pp-input-mono"
+                value={String(delayMs)}
+                onChange={(e) => setDelayMs(e.target.value.replace(/[^0-9]/g, ''))}
+              />
             </div>
-          ))}
-        </nav>
-
-        {/* 中：规则表 + 延迟 */}
-        <section className="pp-pane">
-          <div className="pp-card-title">{current ? current.name : '未选择接口'}</div>
-          <div className="pp-form-grid" style={{ marginBottom: 'var(--sp-3)' }}>
-            <label className="pp-form-label">启用 Mock</label>
-            <input type="checkbox" checked={mockEnabled} onChange={(e) => setMockEnabled(e.target.checked)} />
-            <label className="pp-form-label">延迟 (ms)</label>
-            <input
-              className="pp-input pp-input-mono"
-              value={String(delayMs)}
-              onChange={(e) => setDelayMs(e.target.value.replace(/[^0-9]/g, ''))}
-            />
-          </div>
-
-          <div className="pp-card-title" style={{ marginTop: 'var(--sp-3)' }}>字段规则</div>
-          {rules.length === 0 ? <EmptyState text="尚无规则" hint="未命中规则时回落默认响应" /> : null}
-          {rules.length > 0 ? (
-            <div className="pp-table-wrap">
-            <table className="pp-table">
-              <thead>
-                <tr>
-                  <th style={{ width: '56px' }}>启用</th>
-                  <th style={{ width: '180px' }}>字段</th>
-                  <th style={{ width: '110px' }}>规则</th>
-                  <th>值</th>
-                  <th style={{ width: '64px' }}>操作</th>
-                </tr>
-              </thead>
-              <tbody>
-                {rules.map((rule, index) => (
-                  <tr key={index}>
-                    <td><input type="checkbox" checked={rule.enabled !== false} onChange={(e) => patchRule(index, 'enabled', e.target.checked)} /></td>
-                    <td>
-                      <input className="pp-input pp-input-mono" style={{ width: '100%' }} value={rule.field || ''}
-                        placeholder="data.items[0].id" onChange={(e) => patchRule(index, 'field', e.target.value)} />
-                    </td>
-                    <td>
-                      <select className="pp-select" value={rule.rule || 'fixed'} onChange={(e) => patchRule(index, 'rule', e.target.value)}>
-                        {RULES.map((r) => <option key={r} value={r}>{RULE_LABEL[r] || r}</option>)}
-                      </select>
-                    </td>
-                    <td>
-                      <input className="pp-input pp-input-mono" style={{ width: '100%' }} value={rule.value || ''}
-                        onChange={(e) => patchRule(index, 'value', e.target.value)} />
-                    </td>
-                    <td>
-                      <button className="pp-btn" onClick={() => setRules(rules.filter((_, i) => i !== index))}>删除</button>
-                    </td>
+  
+            <div className="pp-card-title" style={{ marginTop: 'var(--sp-3)' }}>字段规则</div>
+            {rules.length === 0 ? <EmptyState text="尚无规则" hint="未命中规则时回落默认响应" /> : null}
+            {rules.length > 0 ? (
+              <div className="pp-table-wrap">
+              <table className="pp-table">
+                <thead>
+                  <tr>
+                    <th style={{ width: '56px' }}>启用</th>
+                    <th style={{ width: '180px' }}>字段</th>
+                    <th style={{ width: '110px' }}>规则</th>
+                    <th>值</th>
+                    <th style={{ width: '64px' }}>操作</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {rules.map((rule, index) => (
+                    <tr key={index}>
+                      <td><input type="checkbox" checked={rule.enabled !== false} onChange={(e) => patchRule(index, 'enabled', e.target.checked)} /></td>
+                      <td>
+                        <input className="pp-input pp-input-mono" style={{ width: '100%' }} value={rule.field || ''}
+                          placeholder="data.items[0].id" onChange={(e) => patchRule(index, 'field', e.target.value)} />
+                      </td>
+                      <td>
+                        <select className="pp-select" value={rule.rule || 'fixed'} onChange={(e) => patchRule(index, 'rule', e.target.value)}>
+                          {RULES.map((r) => <option key={r} value={r}>{RULE_LABEL[r] || r}</option>)}
+                        </select>
+                      </td>
+                      <td>
+                        <input className="pp-input pp-input-mono" style={{ width: '100%' }} value={rule.value || ''}
+                          onChange={(e) => patchRule(index, 'value', e.target.value)} />
+                      </td>
+                      <td>
+                        <button className="pp-btn" onClick={() => setRules(rules.filter((_, i) => i !== index))}>删除</button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              </div>
+            ) : null}
+            <div style={{ display: 'flex', gap: 'var(--sp-2)', marginTop: 'var(--sp-2)' }}>
+              <button className="pp-btn" onClick={() => setRules(rules.concat([blankRule(current && current.id)]))}>+ 添加规则</button>
+              <button className="pp-btn pp-btn-primary" onClick={persist} disabled={busy}>保存配置</button>
             </div>
-          ) : null}
-          <div style={{ display: 'flex', gap: 'var(--sp-2)', marginTop: 'var(--sp-2)' }}>
-            <button className="pp-btn" onClick={() => setRules(rules.concat([blankRule(current && current.id)]))}>+ 添加规则</button>
-            <button className="pp-btn pp-btn-primary" onClick={persist} disabled={busy}>保存配置</button>
-          </div>
-        </section>
-
-        {/* 右：服务启停 + 命中地址 */}
-        <section className="pp-pane">
-          <div className="pp-card-title">本地 Mock 服务</div>
-          <div style={{ display: 'flex', gap: 'var(--sp-2)', alignItems: 'center', flexWrap: 'wrap' }}>
-            <span className="pp-muted">端口 {service.port || port}</span>
-          </div>
-
-          <div className="pp-card-title" style={{ marginTop: 'var(--sp-3)' }}>命中地址</div>
-          {urls.length === 0 ? <EmptyState text="选择接口后显示命中地址" /> : null}
-          {urls.map((u) => <pre key={u} className="pp-pre" style={{ marginBottom: 'var(--sp-1)' }}>{u}</pre>)}
-
-          <p className="pp-muted" style={{ marginTop: 'var(--sp-2)' }}>
-            规则优先级：字段规则 → 默认响应（isDefault）→ 200 {'{}'}
-          </p>
-        </section>
+          </section>
+  
+          {/* 右：服务启停 + 命中地址 */}
+          <section className="pp-pane">
+            <div className="pp-card-title">本地 Mock 服务</div>
+            <div style={{ display: 'flex', gap: 'var(--sp-2)', alignItems: 'center', flexWrap: 'wrap' }}>
+              <span className="pp-muted">端口 {service.port || port}</span>
+            </div>
+  
+            <div className="pp-card-title" style={{ marginTop: 'var(--sp-3)' }}>命中地址</div>
+            {urls.length === 0 ? <EmptyState text="选择接口后显示命中地址" /> : null}
+            {urls.map((u) => <pre key={u} className="pp-pre" style={{ marginBottom: 'var(--sp-1)' }}>{u}</pre>)}
+  
+            <p className="pp-muted" style={{ marginTop: 'var(--sp-2)' }}>
+              规则优先级：字段规则 → 默认响应（isDefault）→ 200 {'{}'}
+            </p>
+          </section>
+        </div>
+      
       </div>
     </div>
   )

@@ -236,7 +236,7 @@ export function EnvPage(props) {
 
   return (
     <div className="pp-scope pp-page" data-page="env" ref={rootRef}>
-      <div className="pp-overview-head" style={{ margin: 'calc(var(--sp-5) * -1) calc(var(--sp-6) * -1) var(--sp-4)' }}>
+      <div className="pp-overview-head">
         <span className="pp-overview-title">环境与变量</span>
         <div className="pp-overview-actions">
           <label className="pp-meta">项目</label>
@@ -246,86 +246,89 @@ export function EnvPage(props) {
           </select>
         </div>
       </div>
-      <div className="pp-toolbar">
-        <span className="pp-meta">
-          {isMock ? '示例数据 — api.storage 不可用，以下为文件内 mock' : '数据来源：api.storage（saveEnvironment / saveGlobals）'}
-        </span>
-      </div>
-      {error ? <p className="pp-error-text">{error}</p> : null}
-      {notice ? <p className="pp-muted">{notice}</p> : null}
-
-      <div className="pp-debug-layout">
-        <div className="pp-pane">
-          <div className="pp-card-title">环境</div>
-          <div className="pp-tree">
-            {envSummary(envs).map((e) => (
-              <div key={e.id} className="pp-tree-row" data-active={draft && draft.id === e.id ? 'true' : 'false'}
-                onClick={() => pickEnv(envs.find((x) => x.id === e.id) || blankEnv())}>
-                <span className="pp-ellipsis">{e.name}{e.isDefault ? ' · 默认' : ''}</span>
-                <span className="pp-tree-row-count">{e.varCount}</span>
-              </div>
-            ))}
-            {envs.length === 0 ? <div className="pp-empty">暂无环境</div> : null}
+      <div className="pp-overview-content">
+        <div className="pp-toolbar">
+          <span className="pp-meta">
+            {isMock ? '示例数据 — api.storage 不可用，以下为文件内 mock' : '数据来源：api.storage（saveEnvironment / saveGlobals）'}
+          </span>
+        </div>
+        {error ? <p className="pp-error-text">{error}</p> : null}
+        {notice ? <p className="pp-muted">{notice}</p> : null}
+  
+        <div className="pp-debug-layout">
+          <div className="pp-pane">
+            <div className="pp-card-title">环境</div>
+            <div className="pp-tree">
+              {envSummary(envs).map((e) => (
+                <div key={e.id} className="pp-tree-row" data-active={draft && draft.id === e.id ? 'true' : 'false'}
+                  onClick={() => pickEnv(envs.find((x) => x.id === e.id) || blankEnv())}>
+                  <span className="pp-ellipsis">{e.name}{e.isDefault ? ' · 默认' : ''}</span>
+                  <span className="pp-tree-row-count">{e.varCount}</span>
+                </div>
+              ))}
+              {envs.length === 0 ? <div className="pp-empty">暂无环境</div> : null}
+            </div>
+            <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
+              <button className="pp-btn pp-btn-sm" onClick={() => pickEnv(blankEnv())}>新建环境</button>
+            </div>
           </div>
-          <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
-            <button className="pp-btn pp-btn-sm" onClick={() => pickEnv(blankEnv())}>新建环境</button>
+  
+          <div className="pp-pane">
+            <div className="pp-card-title">环境变量</div>
+            <div className="pp-form-grid" style={{ marginBottom: 'var(--sp-3)' }}>
+              <label className="pp-form-label">名称</label>
+              <input className="pp-input" value={draft.name || ''}
+                onChange={(e) => patchDraft({ name: e.target.value })} />
+              <label className="pp-form-label">baseUrl</label>
+              <input className="pp-input pp-input-mono" value={draft.baseUrl || ''}
+                onChange={(e) => patchDraft({ baseUrl: e.target.value })} />
+            </div>
+            <div className="pp-form-row">
+              <label className="pp-form-label">设为默认</label>
+              <input type="checkbox" checked={draft.isDefault === true}
+                onChange={(e) => patchDraft({ isDefault: e.target.checked })} />
+            </div>
+            <div className="pp-table-wrap">{varTable(draftVars, setVarAt, removeVar)}</div>
+            <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
+              <button className="pp-btn" onClick={addVar}>新增变量</button>
+              <button className="pp-btn pp-btn-primary" onClick={saveEnv}>保存环境</button>
+              <button className="pp-btn pp-btn-danger" onClick={() => removeEnv(draft.id || '')}>删除环境</button>
+            </div>
+            <div className="pp-note" style={{ marginTop: 'var(--sp-3)' }}>
+              enabled 为 true 的变量才参与 {'{{key}}'} 替换；secret 为 true 时值以密码形式显示。
+            </div>
+          </div>
+  
+          <div className="pp-pane">
+            <div className="pp-card-title">全局变量</div>
+            <div className="pp-table-wrap">{varTable(globals, setGlobalAt, removeGlobal)}</div>
+            <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
+              <button className="pp-btn" onClick={addGlobal}>新增变量</button>
+              <button className="pp-btn pp-btn-primary" onClick={saveGlobals}>保存全局</button>
+            </div>
           </div>
         </div>
-
-        <div className="pp-pane">
-          <div className="pp-card-title">环境变量</div>
-          <div className="pp-form-grid" style={{ marginBottom: 'var(--sp-3)' }}>
-            <label className="pp-form-label">名称</label>
-            <input className="pp-input" value={draft.name || ''}
-              onChange={(e) => patchDraft({ name: e.target.value })} />
-            <label className="pp-form-label">baseUrl</label>
-            <input className="pp-input pp-input-mono" value={draft.baseUrl || ''}
-              onChange={(e) => patchDraft({ baseUrl: e.target.value })} />
-          </div>
-          <div className="pp-form-row">
-            <label className="pp-form-label">设为默认</label>
-            <input type="checkbox" checked={draft.isDefault === true}
-              onChange={(e) => patchDraft({ isDefault: e.target.checked })} />
-          </div>
-          <div className="pp-table-wrap">{varTable(draftVars, setVarAt, removeVar)}</div>
-          <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
-            <button className="pp-btn" onClick={addVar}>新增变量</button>
-            <button className="pp-btn pp-btn-primary" onClick={saveEnv}>保存环境</button>
-            <button className="pp-btn pp-btn-danger" onClick={() => removeEnv(draft.id || '')}>删除环境</button>
-          </div>
-          <div className="pp-note" style={{ marginTop: 'var(--sp-3)' }}>
-            enabled 为 true 的变量才参与 {'{{key}}'} 替换；secret 为 true 时值以密码形式显示。
+  
+        <div className="pp-card" style={{ marginTop: 'var(--sp-5)' }}>
+          <div className="pp-card-title">变量优先级</div>
+          <div className="pp-table-wrap">
+          <table className="pp-table">
+            <thead>
+              <tr><th style={{ width: '110px' }}>优先级</th><th style={{ width: '160px' }}>作用域</th><th>说明</th></tr>
+            </thead>
+            <tbody>
+              {priorityRows().map((r) => (
+                <tr key={r.level}>
+                  <td className="pp-muted">{r.level}</td>
+                  <td>{r.scope}</td>
+                  <td className="pp-muted">{r.note}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
           </div>
         </div>
-
-        <div className="pp-pane">
-          <div className="pp-card-title">全局变量</div>
-          <div className="pp-table-wrap">{varTable(globals, setGlobalAt, removeGlobal)}</div>
-          <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
-            <button className="pp-btn" onClick={addGlobal}>新增变量</button>
-            <button className="pp-btn pp-btn-primary" onClick={saveGlobals}>保存全局</button>
-          </div>
-        </div>
-      </div>
-
-      <div className="pp-card" style={{ marginTop: 'var(--sp-5)' }}>
-        <div className="pp-card-title">变量优先级</div>
-        <div className="pp-table-wrap">
-        <table className="pp-table">
-          <thead>
-            <tr><th style={{ width: '110px' }}>优先级</th><th style={{ width: '160px' }}>作用域</th><th>说明</th></tr>
-          </thead>
-          <tbody>
-            {priorityRows().map((r) => (
-              <tr key={r.level}>
-                <td className="pp-muted">{r.level}</td>
-                <td>{r.scope}</td>
-                <td className="pp-muted">{r.note}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        </div>
+      
       </div>
     </div>
   )
