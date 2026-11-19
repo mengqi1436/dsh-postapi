@@ -2,6 +2,12 @@
 
 本项目版本遵循语义化版本；发布包见 https://www.npmjs.com/package/dsh-postapi 。
 
+## 0.0.2 — OIDC 自动发布
+
+- GitHub Actions 打通：推 tag `v*` 或 master 版本变更时自动发布。
+- 发布认证切换为 npm trusted publishing（OIDC），不再依赖长期 token。
+- 功能与 0.0.1 一致，本版用于验证自动化发布链路。
+
 ## 0.0.1 — 首个 Demo 版本
 
 **定位**：DeepSeek Harness 插件，在官方右侧栏内复刻 Apifox 的接口工作区。数据以 JSON 落盘本地，不依赖云端账号。
