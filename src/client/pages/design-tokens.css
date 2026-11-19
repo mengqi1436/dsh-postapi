@@ -968,6 +968,13 @@
   grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
   gap: var(--sp-2);
 }
+/* 窄容器：4 块各只剩 ~110px，「2026-11-19 09:41」被截成「2026-11-1…」。
+   两列让每块 240px，时间与数字都完整。 */
+@container ppmain (max-width: 640px) {
+  .pp-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
 .pp-stat {
   display: flex;
   flex-direction: column;
@@ -1193,6 +1200,12 @@
 .pp-seq-wrap svg {
   min-width: 100%;
   display: block;
+}
+/* 窄容器：四个泳道挤在 500px 里文字叠成一团，给 svg 一个可读下限，超出由 .pp-seq-wrap 滚动 */
+@container ppmain (max-width: 700px) {
+  .pp-seq-wrap svg {
+    min-width: 620px;
+  }
 }
 .pp-split-hint {
   display: flex;
