@@ -209,7 +209,7 @@ export function HistoryPage(props) {
                 </tr>
               ))}
               {entries.length === 0 ? (
-                <tr><td colSpan={7} className="pp-muted">暂无历史记录</td></tr>
+                <tr><td colSpan={7} className="pp-muted">暂无历史记录，在调试页发送请求后自动记录</td></tr>
               ) : null}
             </tbody>
           </table>

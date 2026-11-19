@@ -215,9 +215,7 @@ export function MockPage({ route, api }) {
           <nav className="pp-panel" aria-label="接口列表">
             <div className="pp-tree">
               <div className="pp-tree-group">接口</div>
-              {endpoints.length === 0 ? (
-                <p className="pp-meta" style={{ margin: 'var(--sp-2) var(--sp-4)' }}>暂无接口</p>
-              ) : null}
+              {endpoints.length === 0 ? <EmptyState text="暂无接口" hint="在总览页新建项目后创建接口" /> : null}
               {endpoints.map((ep) => (
                 <div key={ep.id} className="pp-tree-row" data-active={ep.id === currentId} onClick={() => selectEndpoint(ep)}>
                   <span className="pp-method" data-method={ep.method}>{ep.method}</span>

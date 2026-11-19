@@ -4,6 +4,7 @@
 // 视觉基线：docs/apifox-design-spec.md —— .pp-tree-row / .pp-json-editor / .pp-note-ok / .pp-note-bad
 import React, { useEffect, useRef, useState } from 'react'
 import { applyTheme } from './theme.js'
+import { EmptyState } from './components/EmptyState.jsx'
 
 ;(window.__postapiQueue = window.__postapiQueue || []).push(['schema', SchemaPage]) // 注册表就绪前入队
 
@@ -267,7 +268,7 @@ export function SchemaPage(props) {
                 </div>
               ))}
             </div>
-            {schemas.length === 0 ? <div className="pp-empty">暂无模型</div> : null}
+            {schemas.length === 0 ? <EmptyState text="暂无模型" hint="点下方「新建模型」创建数据模型" /> : null}
             <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
               <button className="pp-btn pp-btn-sm" onClick={blank}>新建模型</button>
             </div>

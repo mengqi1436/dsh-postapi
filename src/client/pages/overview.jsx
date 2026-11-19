@@ -5,6 +5,7 @@
 // 视觉基线：docs/apifox-design-spec.md —— .pp-stats / .pp-overview-grid / .pp-card-hover
 import React, { useEffect, useRef, useState } from 'react'
 import { applyTheme } from './theme.js'
+import { EmptyState } from './components/EmptyState.jsx'
 
 ;(window.__postapiQueue = window.__postapiQueue || []).push(['overview', OverviewPage]) // 注册表就绪前入队
 
@@ -301,7 +302,7 @@ export function OverviewPage(props) {
               </div>
             </div>
           ))}
-          {cards.length === 0 ? <div className="pp-empty">暂无项目，先在上方新建一个</div> : null}
+          {cards.length === 0 ? <EmptyState text="暂无项目" hint="先在上方新建一个项目" /> : null}
         </div>
   
         <div className="pp-card" style={{ marginTop: 'var(--sp-5)' }}>

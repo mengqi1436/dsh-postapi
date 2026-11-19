@@ -6,6 +6,7 @@
 // 视觉基线：docs/apifox-design-spec.md —— .pp-tree-row / .pp-table / .pp-result-row / .pp-pill
 import React, { useEffect, useRef, useState } from 'react'
 import { applyTheme } from './theme.js'
+import { EmptyState } from './components/EmptyState.jsx'
 
 ;(window.__postapiQueue = window.__postapiQueue || []).push(['test', TestPage]) // 注册表就绪前入队
 
@@ -278,7 +279,7 @@ export function TestPage(props) {
             {result.rows.length === 0 ? <div className="pp-result-row pp-meta">无断言结果</div> : null}
           </div>
         </div>
-      ) : <div className="pp-empty">{emptyHint}</div>}
+      ) : <EmptyState text={emptyHint} />}
     </div>
   )
 
@@ -323,7 +324,9 @@ export function TestPage(props) {
                   </div>
                 ))}
               </div>
-              {cases.length === 0 ? <div className="pp-empty">暂无用例</div> : null}
+              {cases.length === 0 ? (
+                <EmptyState text="暂无用例" hint="在调试页保存接口后，点「保存用例与场景」新建" />
+              ) : null}
             </div>
             <div className="pp-pane">
               <div className="pp-card-title">断言</div>
@@ -383,7 +386,7 @@ export function TestPage(props) {
                     <button className="pp-btn pp-btn-primary" onClick={runCase} disabled={running}>运行用例</button>
                   </div>
                 </div>
-              ) : <div className="pp-empty">左侧选择一个用例</div>}
+              ) : <EmptyState text="选择一个用例" hint="选中后可编辑断言并运行" />}
             </div>
             {resultPanel('尚未运行')}
           </div>
@@ -400,7 +403,7 @@ export function TestPage(props) {
                   </div>
                 ))}
               </div>
-              {scenarios.length === 0 ? <div className="pp-empty">暂无场景</div> : null}
+              {scenarios.length === 0 ? <EmptyState text="暂无场景" hint="点「保存用例与场景」新建场景" /> : null}
             </div>
             <div className="pp-pane">
               <div className="pp-card-title">步骤编排</div>
@@ -455,7 +458,7 @@ export function TestPage(props) {
                     <button className="pp-btn pp-btn-primary" onClick={runScenario} disabled={running}>运行场景</button>
                   </div>
                 </div>
-              ) : <div className="pp-empty">左侧选择一个场景</div>}
+              ) : <EmptyState text="选择一个场景" hint="选中后可编排步骤并运行" />}
             </div>
             {resultPanel('尚未运行')}
           </div>
