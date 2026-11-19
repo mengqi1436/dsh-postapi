@@ -7,10 +7,19 @@
  * 既有 9 个方法签名与四条机制（原子写 / 串行队列 / 损坏隔离 / .trash）保持不变。
  */
 import { promises as fs } from 'node:fs'
+import os from 'node:os'
 import path from 'node:path'
 import { randomBytes } from 'node:crypto'
 
-export const DEFAULT_BASE_PATH = 'E:/User/文档/api'
+/**
+ * 默认数据根目录（可移植）：POSTAPI_DATA_DIR 环境变量优先，否则落在用户主目录下的
+ * `.dsh/postapi`。不写死任何盘符——插件要能被任意用户装上就用，宿主侧可再用
+ * config.basePath / config.storage.basePath 覆盖到指定目录。
+ */
+export const DEFAULT_BASE_PATH = (() => {
+  const fromEnv = (process.env.POSTAPI_DATA_DIR || '').trim()
+  return fromEnv !== '' ? fromEnv : path.join(os.homedir(), '.dsh', 'postapi')
+})()
 export const SCHEMA_VERSION = 2
 
 /** 契约 §2.2 settings 默认值。 */

@@ -1,11 +1,40 @@
 {
   "name": "dsh-postapi",
-  "version": "0.1.0",
-  "private": true,
+  "version": "0.0.1",
+  "private": false,
   "type": "module",
-  "description": "PostAPI plugin for DeepSeek Harness",
+  "description": "DSH plugin: Apifox-style API workspace (docs, debug, mock, schema, env, history, tests, import/export, flow, search) inside the official right sidebar",
+  "license": "Apache-2.0",
+  "author": "mengqi1436",
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "dsh-plugin",
+    "apifox",
+    "api-client",
+    "postman",
+    "openapi",
+    "mock-server"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mengqi1436/dsh-postapi.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mengqi1436/dsh-postapi/issues"
+  },
+  "homepage": "https://github.com/mengqi1436/dsh-postapi#readme",
+  "engines": {
+    "node": ">=22",
+    "dsh": ">=0.2.1-rc.2 <0.3.0-0"
+  },
   "scripts": {
-    "build": "node build.mjs"
+    "build": "node build.mjs",
+    "test": "node tests/run.js",
+    "smoke": "node scripts/smoke-host.mjs",
+    "verify": "node build.mjs && node tests/run.js && node scripts/smoke-host.mjs",
+    "prepack": "node build.mjs",
+    "prepublishOnly": "node build.mjs && node tests/run.js"
   },
   "exports": {
     ".": "./index.js",
@@ -22,8 +51,12 @@
     "locale/*.json",
     "docs",
     "icon.svg",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "devDependencies": {
     "esbuild": "0.28.2"
   },

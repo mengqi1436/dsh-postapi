@@ -16,15 +16,20 @@ import * as codegen from './codegen.js'
 import { handlePostapiRequest } from './bridge.js'
 import { appendFileSync } from 'node:fs'
 
-const POSTAPI_BOOT_LOG = 'C:/Users/Sjc/.dsh/postapi-boot.log'
-
 /** cordis 受控 ctx：宿主按此清单注入服务，未声明的属性访问会直接抛错（without inject）。 */
 export const inject = ['webServer', 'connection']
 
+/**
+ * 自诊断日志路径：仅当 POSTAPI_DEBUG_LOG 指定具体文件时才落盘。
+ * 默认不写任何文件——发布版不能往使用者机器上固定路径写日志。
+ */
+const POSTAPI_DEBUG_LOG = (process.env.POSTAPI_DEBUG_LOG || '').trim()
+
 /** 自诊断日志：写失败不得影响插件加载（磁盘只读 / 目录缺失时静默跳过）。 */
 function bootLog(line) {
+  if (POSTAPI_DEBUG_LOG === '') return
   try {
-    appendFileSync(POSTAPI_BOOT_LOG, new Date().toISOString() + ' ' + line + '\n')
+    appendFileSync(POSTAPI_DEBUG_LOG, new Date().toISOString() + ' ' + line + '\n')
   } catch {
     // 诊断日志不是功能路径，写不了就算了
   }

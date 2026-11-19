@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "PostAPI",
-    "description": "DeepSeek Harness 的 PostAPI 插件骨架：以输入框底栏徽章验证挂载链路。",
+    "description": "Apifox 风格的接口工作区：文档、调试、Mock、数据模型、环境变量、历史、测试、导入导出、流程图与全局搜索。",
     "detail": "docs/DETAIL.md"
   }
 }

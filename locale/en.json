@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "PostAPI",
-    "description": "PostAPI plugin skeleton for DeepSeek Harness: minimal composer badge to verify the mount chain.",
+    "description": "Apifox-style API workspace: docs, debug, mock, schemas, environments, history, tests, import/export, flow and global search.",
     "detail": "docs/DETAIL.md"
   }
 }
