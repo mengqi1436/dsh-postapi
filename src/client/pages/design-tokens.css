@@ -179,6 +179,17 @@
 @container ppmain (max-width: 900px) {
   .pp-topbar { padding: 0 var(--sp-5); }
 }
+/* 顶栏产品标识：图标 + 名称（Apifox 左上角是产品名，不是当前页名） */
+.pp-topbar-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--fs-14);
+  font-weight: var(--fw-semibold);
+  color: var(--fg-strong);
+  white-space: nowrap;
+  flex: none;
+}
 .pp-topbar-title {
   font-size: var(--fs-14);
   font-weight: var(--fw-semibold);
@@ -221,15 +232,30 @@
   background: var(--bg-surface);
 }
 
-/* —— 页面骨架 —— */
+/* —— 页面骨架（对齐 Apifox .doc-container + .overview-container）——
+   Apifox 的页面是「页头通栏 + 内容区各自 padding」两段，不是整页统一 padding。
+   整页 padding 会让页头的下边框缩进、还要靠内联负 margin 抵消，10 个页面重复 10 次。
+   这里改成：.pp-page 只负责纵向排布，内边距交给 .pp-overview-head 与 .pp-overview-content。 */
 .pp-page {
-  padding: var(--sp-5) var(--sp-6);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
   min-height: 100%;
+  padding: 0;
 }
 .pp-page-flush {
   padding: 0;
   height: 100%;
   min-height: 0;
+}
+/* 内容区：页头下方的滚动主体，内边距 16px（Apifox .overview-content padding:16px） */
+.pp-overview-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  min-width: 0;
+  min-height: 0;
+  padding: var(--sp-4);
 }
 .pp-page-title {
   font-size: var(--fs-20);
@@ -964,8 +990,9 @@
 .pp-url-row {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: var(--sp-2);
-  height: var(--ctl-h-lg);
+  min-height: var(--ctl-h-lg);
 }
 .pp-url-row .pp-select {
   width: 104px;
@@ -1010,7 +1037,8 @@
 /* 发送按钮组：主按钮吃满剩余宽度，右端 25px 下拉箭头（Apifox .send-btn .ui-btn-group） */
 .pp-send-group {
   display: inline-flex;
-  flex: none;
+  flex: 0 1 auto;
+  min-width: 0;
   gap: 0;
 }
 .pp-send-group .pp-btn:first-child {
@@ -1264,14 +1292,18 @@
   border-bottom: 1px solid var(--border);
 }
 /* 概览页头：标题 18px / 700（Apifox .overview-header__title） */
+/* 页头：Apifox .overview-header-container 原文
+   （border-bottom:1px split; max-width:1512px; padding:16px 20px 16px 14px）。
+   窄容器（侧边栏里只有 455px）时动作区必须换行，否则会把页面顶出 111~693px 横向溢出。 */
 .pp-overview-head {
   display: flex;
   align-items: center;
-  gap: var(--sp-3);
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-3);
+  width: 100%;
   max-width: var(--content-max-w);
-  /* 右内边距用 sp-6 与 .pp-page 的 padding 对齐：页面用负 margin 抵掉外层 padding 时，
-     左右两侧才能严丝合缝地贴到卡片边缘（否则右边缘会差 4px）。 */
-  padding: var(--sp-4) var(--sp-6) var(--sp-4) var(--sp-3);
+  padding: var(--sp-4) var(--sp-5) var(--sp-4) var(--sp-3);
+  background: var(--bg-surface);
   border-bottom: 1px solid var(--border);
 }
 .pp-overview-title {
@@ -1284,21 +1316,34 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+/* 动作区：Apifox .overview-header-actions（inline-flex / 高 32px）。
+   加 flex-wrap 与 min-width:0：动作区里塞 4 个控件时（总览页）在 455px 容器里必然溢出，
+   允许换行是唯一不改语义的解法；子控件用 flex:0 1 auto 允许收缩。 */
 .pp-overview-actions {
   display: inline-flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
+  flex-wrap: wrap;
   gap: var(--sp-2);
-  height: var(--ctl-h);
-  flex: none;
+  min-width: 0;
+  margin-left: auto;
+  min-height: var(--ctl-h);
+}
+.pp-overview-actions > .pp-input,
+.pp-overview-actions > .pp-select {
+  flex: 0 1 auto;
+  min-width: 96px;
 }
 /* 文档页头：与概览同规格 */
 .pp-doc-head {
   display: flex;
   align-items: center;
-  gap: var(--sp-3);
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-3);
+  width: 100%;
   max-width: var(--content-max-w);
-  padding: var(--sp-4) var(--sp-6) var(--sp-4) var(--sp-3);
+  padding: var(--sp-4) var(--sp-5) var(--sp-4) var(--sp-3);
+  background: var(--bg-surface);
   border-bottom: 1px solid var(--border);
 }
 .pp-doc-title {
