@@ -244,7 +244,7 @@ export function FlowPage(props) {
         <div className="pp-card" style={{ marginTop: 'var(--sp-4)' }}>
           <div className="pp-card-title">步骤编排</div>
           <div className="pp-table-wrap">
-          <table className="pp-table">
+          <table className="pp-table pp-table-wide">
             <thead>
               <tr>
                 <th style={{ width: '40px' }}>#</th>

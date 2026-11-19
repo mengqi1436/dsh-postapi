@@ -344,7 +344,7 @@ export function TestPage(props) {
                     </select>
                   </div>
                   <div className="pp-table-wrap">
-                  <table className="pp-table">
+                  <table className="pp-table pp-table-wide">
                     <thead>
                       <tr>
                         <th style={{ width: '90px' }}>来源</th>
@@ -415,7 +415,7 @@ export function TestPage(props) {
                       onChange={(e) => patchScenario({ name: e.target.value })} />
                   </div>
                   <div className="pp-table-wrap">
-                  <table className="pp-table">
+                  <table className="pp-table pp-table-wide">
                     <thead>
                       <tr>
                         <th style={{ width: '40px' }}>#</th>

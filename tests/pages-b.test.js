@@ -780,7 +780,10 @@ t('flow 渲染：时序容器 .pp-seq-wrap + 编排表 .pp-table + 超 9 步拆�
   } })
   const nodes = collectNodes(r.tree)
   if (!nodes.some((n) => String(n.props.className || '') === 'pp-seq-wrap')) throw new Error('缺 .pp-seq-wrap')
-  if (!nodes.some((n) => String(n.props.className || '') === 'pp-table')) throw new Error('编排表未使用 .pp-table')
+  // 编排表挂 .pp-table 与 .pp-table-wide（窄容器里横向滚动），按包含判定
+  if (!nodes.some((n) => String(n.props.className || '').split(/\s+/).includes('pp-table'))) {
+    throw new Error('编排表未使用 .pp-table')
+  }
   if (!nodes.some((n) => String(n.props.className || '').includes('pp-split-hint'))) {
     throw new Error('10 步时未显示 .pp-split-hint 拆分提示')
   }

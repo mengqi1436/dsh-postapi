@@ -435,6 +435,11 @@
 }
 /* 环境页变量表（env.jsx varTable）：五列固定宽度，值列吃剩余宽度。
    不加 fixed 时五列按内容撑开，窄容器里整表 603px 顶破 438px 的容器。 */
+/* 多列编辑表（flow 步骤编排 / test 断言与步骤）：列宽合计 510~640px，
+   窄容器里无宽度列（消息 / 路径）会被压到几像素，表格整体交给 .pp-table-wrap 横向滚动。 */
+.pp-table.pp-table-wide {
+  min-width: 640px;
+}
 .pp-table.pp-table-vars {
   table-layout: fixed;
   /* 固定列 52+52+64=168px，变量名列 30%、值列吃剩余：360px 容器下值列仍有 110px，
