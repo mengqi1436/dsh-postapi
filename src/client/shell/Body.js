@@ -19,19 +19,23 @@ const THEME_KEY = 'postapi.settings.theme'
 const ENV_KEY = 'postapi.settings.env'
 
 /** 12 条路由（顺序 = 契约 §3 页面清单）。 */
+/**
+ * 12 条路由。每条自带 icon：此前侧栏所有条目复用「所属分组」的图标，
+ * 导致文档 / 调试 / Mock 三个图标一模一样、数据模型 / 环境也一样，等于没有图标。
+ */
 export const ROUTES = [
-  { name: 'overview', hash: '#/overview', labelKey: 'nav.overview' },
-  { name: 'doc', hash: '#/doc', labelKey: 'nav.doc' },
-  { name: 'debug', hash: '#/debug', labelKey: 'nav.debug' },
-  { name: 'mock', hash: '#/mock', labelKey: 'nav.mock' },
-  { name: 'schema', hash: '#/schema', labelKey: 'nav.schema' },
-  { name: 'env', hash: '#/env', labelKey: 'nav.env' },
-  { name: 'history', hash: '#/history', labelKey: 'nav.history' },
-  { name: 'test', hash: '#/test', labelKey: 'nav.test' },
-  { name: 'import', hash: '#/import', labelKey: 'nav.import' },
-  { name: 'flow', hash: '#/flow', labelKey: 'nav.flow' },
-  { name: 'search', hash: '#/search', labelKey: 'nav.search' },
-  { name: 'settings', hash: '#/settings', labelKey: 'nav.settings' },
+  { name: 'overview', hash: '#/overview', labelKey: 'nav.overview', icon: 'grid' },
+  { name: 'doc', hash: '#/doc', labelKey: 'nav.doc', icon: 'book' },
+  { name: 'debug', hash: '#/debug', labelKey: 'nav.debug', icon: 'send' },
+  { name: 'mock', hash: '#/mock', labelKey: 'nav.mock', icon: 'cube' },
+  { name: 'schema', hash: '#/schema', labelKey: 'nav.schema', icon: 'db' },
+  { name: 'env', hash: '#/env', labelKey: 'nav.env', icon: 'sliders' },
+  { name: 'history', hash: '#/history', labelKey: 'nav.history', icon: 'clock' },
+  { name: 'test', hash: '#/test', labelKey: 'nav.test', icon: 'check' },
+  { name: 'import', hash: '#/import', labelKey: 'nav.import', icon: 'swap' },
+  { name: 'flow', hash: '#/flow', labelKey: 'nav.flow', icon: 'flow' },
+  { name: 'search', hash: '#/search', labelKey: 'nav.search', icon: 'search' },
+  { name: 'settings', hash: '#/settings', labelKey: 'nav.settings', icon: 'gear' },
 ]
 
 /** 带参数的路由（hash 形态 #/name/:arg）。 */
@@ -65,6 +69,13 @@ const ICON_PATHS = {
   help: ['M12 18h.01', 'M9.1 9a3 3 0 1 1 4.2 2.7c-.8.5-1.3 1.1-1.3 2.3', 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z'],
   plus: ['M12 5v14', 'M5 12h14'],
   close: ['M6 6l12 12', 'M18 6L6 18'],
+  book: ['M4 5.5A2.5 2.5 0 0 1 6.5 3H20v18H6.5A2.5 2.5 0 0 1 4 18.5z', 'M8 3v18'],
+  send: ['M21 3L10 14', 'M21 3l-7 18-4-7-7-4z'],
+  cube: ['M12 3l8 4.5v9L12 21l-8-4.5v-9z', 'M12 12l8-4.5', 'M12 12v9', 'M12 12L4 7.5'],
+  clock: ['M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z', 'M12 7v5l3 2'],
+  swap: ['M4 8h13l-3-3', 'M20 16H7l3 3'],
+  flow: ['M5 6h5', 'M14 6h5', 'M7.5 6v12', 'M16.5 6v12', 'M5 18h5', 'M14 18h5'],
+  search: ['M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14z', 'M20 20l-4.2-4.2'],
 }
 
 /**
@@ -201,22 +212,14 @@ function Placeholder({ route }) {
 }
 
 /**
- * 页头：只放一行页面说明（文案取 aside.page.<route>）。
+ * 页面说明行已删除。
  *
- * 刻意不再重复标题：顶栏已经显示当前页名，页面组件自身也有 .pp-page-title，
- * 三层标题叠在一起是 v1 的视觉噪音来源之一。说明文字缺省时整块不渲染。
+ * 原来顶栏「总览」→ 页签条「总览」→ 说明行「项目总览：项目卡片…」→ 页面内
+ * 「项目总览」四层标题叠在一起，是当前最明显的视觉噪音。Apifox 只有两层：
+ * 页签条（当前打开的工作项）+ 页头标题（18px/700，带动作区）。
+ * 说明文案保留在帮助卡片里（侧栏底部「当前页面」），不再常驻占一行高度。
  */
-function PageHead({ active }) {
-  const desc = zh['aside.page.' + active.name]
-  if (!desc) return null
-  return (
-    <div className="pp-page-head">
-      <div className="pp-page-head-main">
-        <p className="pp-page-desc">{desc}</p>
-      </div>
-    </div>
-  )
-}
+const PAGE_DESC = (name) => zh['aside.page.' + name] || zh['aside.noContext']
 
 /**
  * 页签 body 组件。props 来自 slots runtime：useTabInfo + 注入的 locale t（若有）。
@@ -288,11 +291,17 @@ export function PostApiBody({ useTabInfo }) {
 
   return (
     <div className="pp-scope pp-workbench-v2" data-theme={theme} data-route={route.name}>
+      {/* 顶栏：Apifox 是「产品标识 + 面包屑（分组/当前页）+ 搜索 + 动作」。
+          原来这里还单独显示当前页名，与页签条、页面页头三重重复，已去掉。 */}
       <header className="pp-topbar">
-        <span className="pp-topbar-title">{zh[active.labelKey]}</span>
+        <span className="pp-topbar-brand">
+          <Icon name="layers" size={16} />
+          <span>{zh['type.label']}</span>
+        </span>
         <span className="pp-crumb">
-          <span className="pp-crumb-sep">/</span>
           {zh[activeGroup.labelKey]}
+          <span className="pp-crumb-sep">/</span>
+          {zh[active.labelKey]}
         </span>
         <span className="pp-topbar-spacer" />
         <input
@@ -335,7 +344,7 @@ export function PostApiBody({ useTabInfo }) {
                 <a key={item.name} className="pp-sider-item"
                   href={routeHref(item, route)}
                   data-active={route.name === item.name ? 'true' : 'false'}>
-                  <Icon name={group.icon} size={16} />
+                  <Icon name={item.icon || group.icon} size={16} />
                   <span className="pp-sider-label">{zh[item.labelKey]}</span>
                 </a>
               ))}
@@ -357,7 +366,6 @@ export function PostApiBody({ useTabInfo }) {
               <span className="pp-sider-label">{zh[active.labelKey]}</span>
             </button>
           </div>
-          <PageHead active={active} />
           {helpOpen ? (
             <div className="pp-help-card" role="dialog" aria-label={zh['aside.about']}>
               <div className="pp-help-card-head">
@@ -367,7 +375,7 @@ export function PostApiBody({ useTabInfo }) {
                   <Icon name="close" size={14} />
                 </button>
               </div>
-              <div className="pp-help">{zh['aside.page.' + route.name] || zh['aside.noContext']}</div>
+              <div className="pp-help">{PAGE_DESC(route.name)}</div>
               <div className="pp-help-card-title">{zh['aside.shortcuts']}</div>
               <div className="pp-help-links">
                 {SHORTCUTS.map((item) => (
