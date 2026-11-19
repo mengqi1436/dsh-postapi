@@ -41,6 +41,9 @@ const pagesATests = await optionalPageSuite('src/client/pages/components/__tests
 const apifoxUiTests = await optionalPageSuite('src/client/pages/components/__tests__/apifox-ui.test.js', 'tests')
 const treeTests = await optionalPageSuite('src/client/pages/components/__tests__/tree.test.js', 'tests')
 const headerPresetsTests = await optionalSuite('header-presets.test.js', 'tests')
+const bodyEditorTests = await optionalSuite('body-editor.test.js', 'tests')
+const prepostTests = await optionalSuite('prepost.test.js', 'tests')
+const responsePanelTests = await optionalSuite('response-panel.test.js', 'tests')
 const pagesBTests = await optionalSuite('pages-b.test.js', 'tests')
 const shellFrameTests = await optionalSuite('shell-frame.test.js', 'tests')
 const uiAuditTests = await optionalSuite('ui-audit.test.js', 'tests')
@@ -56,6 +59,9 @@ const suites = [
   ['src/client/pages/components/__tests__/apifox-ui.test.js', apifoxUiTests],
   ['src/client/pages/components/__tests__/tree.test.js', treeTests],
   ['tests/header-presets.test.js', headerPresetsTests],
+  ['tests/body-editor.test.js', bodyEditorTests],
+  ['tests/prepost.test.js', prepostTests],
+  ['tests/response-panel.test.js', responsePanelTests],
   ['tests/pages-b.test.js', pagesBTests],
   ['tests/shell-frame.test.js', shellFrameTests],
   ['tests/ui-audit.test.js', uiAuditTests],

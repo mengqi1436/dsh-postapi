@@ -232,8 +232,11 @@ const pagesATests = [
       const src = read(PAGE_FILES.debug)
       assert(src.includes('request') && src.includes('send'), 'debug.jsx 未接 request.send')
       assert(src.includes('saveEndpoint'), 'debug.jsx 未接 storage.saveEndpoint')
-      assert(src.includes('StatusPill'), 'debug.jsx 未使用 StatusPill')
-      assert(src.includes('resp.tests'), 'debug.jsx 缺断言结果列表')
+      // 状态胶囊与断言结果已随响应面板抽成组件（debug.jsx 只负责传 resp）
+      assert(src.includes('ResponsePanel'), 'debug.jsx 未使用 ResponsePanel')
+      const respSrc = read(join(COMPONENTS_DIR, 'ResponsePanel.jsx'))
+      assert(respSrc.includes('StatusPill'), 'ResponsePanel.jsx 未使用 StatusPill')
+      assert(respSrc.includes('resp.tests'), 'ResponsePanel.jsx 缺断言结果列表')
       // Apifox 调试页是单栏（.apiCase padding:10px）：接口树由左侧全局导航承担，
       // 页面内不再自带树面板，所以断言单栏容器而不是旧的三栏 .pp-debug-layout。
       assert(src.includes('pp-debug-page'), 'debug.jsx 缺单栏容器 .pp-debug-page')

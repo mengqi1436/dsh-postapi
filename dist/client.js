@@ -43,7 +43,7 @@ module.exports = __toCommonJS(index_exports);
 var import_react = require("react");
 
 // src/client/index.js
-var import_react20 = require("react");
+var import_react21 = require("react");
 
 // src/client/shell/definition.js
 var import_react2 = require("react");
@@ -614,23 +614,23 @@ function createStubRequest() {
       for (const { key, value, enabled = true } of headers ?? []) {
         if (enabled && key) h.set(String(key), String(value ?? ""));
       }
-      let bodyText;
+      let bodyText2;
       if (body && body.type !== "none" && method !== "GET" && method !== "HEAD") {
         if (body.type === "json") {
-          bodyText = body.content ?? "";
+          bodyText2 = body.content ?? "";
           if (!h.has("Content-Type")) h.set("Content-Type", "application/json");
         } else if (body.type === "form") {
-          bodyText = body.content ?? "";
+          bodyText2 = body.content ?? "";
           if (!h.has("Content-Type")) h.set("Content-Type", "application/x-www-form-urlencoded");
         } else {
-          bodyText = body.content ?? "";
+          bodyText2 = body.content ?? "";
         }
       }
       if (auth?.type === "bearer" && auth.token) h.set("Authorization", "Bearer " + auth.token);
       if (auth?.type === "basic" && auth.username !== void 0) {
         h.set("Authorization", "Basic " + btoa(auth.username + ":" + (auth.password ?? "")));
       }
-      const res = await fetch(finalUrl.toString(), { method, headers: h, body: bodyText, signal: controller.signal });
+      const res = await fetch(finalUrl.toString(), { method, headers: h, body: bodyText2, signal: controller.signal });
       const text = await res.text();
       return {
         status: res.status,
@@ -1282,7 +1282,7 @@ function ApiTitle({ useTabInfo }) {
 }
 
 // src/client/pages/design-tokens.css
-var design_tokens_default = '/* ============================================================\n   dsh-postapi \u8BBE\u8BA1 token \u2014 Apifox 2.8.55 \u590D\u523B\n   \u4F9D\u636E docs/apifox-design-spec.md\uFF08165 \u4E2A CSS chunk \u7EDF\u8BA1\uFF09\n   \u5C3A\u5BF8\u7EDF\u4E00\u5728 token \u5C42\uFF1A\u63A7\u4EF6 --ctl-h / \u8868\u884C --row-h / \u80F6\u56CA --pill-h\n   \u9875\u9762\u6837\u5F0F\u6240\u6709\u9AD8\u5EA6\u58F0\u660E\u5FC5\u987B\u5F15\u7528\u4E0A\u8FF0 token\uFF08__tests__/heights.test.js \u9759\u6001\u68C0\u67E5\uFF09\n   \u5BC6\u5EA6\u57FA\u8C03\uFF1AApifox \u5DE5\u4F5C\u53F0\u2014\u20141px \u8FB9\u6846\u5206\u533A\u3001\u5361\u7247\u5316\u3001\u6D6E\u5C42\u624D\u6295\u9634\u5F71\n   ============================================================ */\n\n.pp-scope {\n  /* \u2014\u2014 \u5B57\u4F53\uFF08Apifox: -apple-system,"BlinkMacSystemFont","Segoe UI",roboto,...\uFF09\u2014\u2014 */\n  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;\n  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;\n\n  /* \u2014\u2014 \u5B57\u9636\uFF08\u5BF9\u9F50 Apifox \u5B9E\u6D4B\uFF1A12/14/15/16/17/18/20/22\uFF09\u2014\u2014\n     Apifox \u7684 --ui-font-size-* \u539F\u503C\u89C1 docs/apifox-visual-parity-spec.md \xA72\uFF1B\n     13px \u4FDD\u7559\u662F\u56E0\u4E3A\u65E2\u6709\u9875\u9762\u7528\u5B83\u505A\u8F85\u52A9\u6587\u672C\uFF0C\u4E0D\u65B0\u5F15\u5165\u3002 */\n  --fs-12: 12px;\n  --fs-13: 13px;\n  --fs-14: 14px;\n  --fs-15: 15px;\n  --fs-16: 16px;\n  --fs-17: 17px;\n  --fs-18: 18px;\n  --fs-20: 20px;\n  --fs-22: 22px;\n  --fs-24: 24px;\n  --fw-regular: 400;\n  --fw-medium: 500;\n  --fw-semibold: 600;\n\n  /* \u2014\u2014 \u884C\u9AD8\uFF08Apifox \u56FA\u5B9A\u503C\uFF0C\u4E0D\u7528\u500D\u6570\uFF09\u2014\u2014 */\n  /* \u56FE\u8868\u4E13\u7528\u5B57\u9636\uFF1ASVG \u91CC\u7684\u5C0F\u5B57\uFF08\u56FE\u4F8B/\u6807\u8BB0\uFF09\u6BD4\u6B63\u6587\u66F4\u5C0F\uFF0C\u4F46\u4ECD\u8D70 token \u4E0D\u5199\u5B57\u9762\u91CF */\n  --fs-chart: 10px;\n  --lh-18: 18px;\n  --lh-20: 20px;\n  --lh-22: 22px;\n  --lh-24: 24px;\n\n  /* \u2014\u2014 \u5C3A\u5BF8\u7EDF\u4E00 token\uFF08\u5BF9\u9F50 Apifox \u5B9E\u6D4B\uFF0C\u89C1 docs/apifox-visual-parity-spec.md \xA71/\xA72\uFF09\u2014\u2014 */\n  --ctl-h: 32px;         /* Apifox --ui-height-base */\n  --ctl-h-sm: 24px;      /* Apifox --ui-height-sm */\n  --ctl-h-lg: 40px;      /* Apifox --ui-height-lg */\n  --row-h: 32px;         /* Apifox \u8868\u683C/\u5217\u8868\u884C 32px\uFF08\u539F 36px \u504F\u677E\uFF09 */\n  --tree-row-h: 22px;    /* Apifox --ui-tree-title-height: 22px */\n  --pill-h: 22px;\n  --topbar-h: 48px;      /* Apifox --ui-layout-header-height: 48px */\n  --tabbar-h: 44px;      /* Apifox --app-main-tabs-height: 44px */\n  --sider-w: 240px;      /* Apifox .sider-bxNtfB width: 240px */\n  --sider-pad: 20px;     /* Apifox .sider-bxNtfB padding: 20px */\n  --sider-item-h: 32px;  /* Apifox --ui-menu-item-height: 32px */\n  --sider-group-h: 24px; /* Apifox --ui-menu-item-group-height: 24px */\n  --nav-w: 240px;\n  --toc-w: 240px;\n  /* \u5B9E\u4F53\u6811\u9762\u677F\u4E0E Apifox sider \u540C\u5BBD */\n  --panel-w: 240px;\n  --panel-w-max: 320px;\n  --content-max-w: 1512px; /* Apifox .overview-header-container max-width */\n  --page-pad: 10px;        /* Apifox --app-page-layout-size */\n  --layout-pad: 8px;       /* Apifox --app-layout-padding-right/bottom */\n  --hit: 28px;\n  /* \u2014\u2014 \u5F39\u5C42\u83DC\u5355\uFF08\u5BF9\u9F50 Apifox .ui-dropdown-menu / .ui-menu-item \u5B9E\u6D4B\uFF09\u2014\u2014\n     \u9879\u9AD8 32px\u3001\u9762\u677F\u6700\u5C0F\u5BBD 150px\uFF08Apifox .project-module-menu-popup .ui-menu min-width:150px\uFF09\u3001\n     \u9634\u5F71\u53D6 Apifox .keywordSearchPopover .ui-popover-inner \u539F\u6587\u7684\u4E24\u6BB5\u5F0F\u6295\u5F71\u3002 */\n  --menu-w: 200px;\n  --menu-w-sm: 160px;\n  --menu-item-h: 32px;\n  --menu-pad: var(--sp-1);\n  --shadow-menu: 0 8px 8px -4px rgba(16, 24, 40, 0.03), 0 20px 24px -4px rgba(16, 24, 40, 0.08);\n  --z-menu: 40;\n  --z-flyout: 30;\n  --motion-fast: 120ms;\n  --card-pad: 16px;\n  --popover-w: 400px;\n  --empty-w: 360px;\n  --scrollbar: 6px;\n\n  /* \u2014\u2014 \u56FE\u6807\u5C3A\u5BF8 \u2014\u2014 */\n  --icon-sm: 14px;\n  --icon: 16px;\n  --icon-lg: 20px;\n  --icon-xl: 24px;\n\n  /* \u2014\u2014 \u95F4\u8DDD\u523B\u5EA6 4/8/12/16/20/24 \u2014\u2014 */\n  --sp-1: 4px;\n  --sp-2: 8px;\n  --sp-3: 12px;\n  --sp-4: 16px;\n  --sp-5: 20px;\n  --sp-6: 24px;\n\n  /* \u2014\u2014 \u5706\u89D2\uFF1A\u5BF9\u9F50 Apifox --ui-border-radius-sm/base/lg = 6/8/10 \u2014\u2014 */\n  --radius-sm: 6px;\n  --radius-ctl: 6px;\n  --radius-card: 8px;\n  --radius-lg: 10px;\n  --radius-pill: 999px;\n\n  /* \u2014\u2014 light \u76AE\u80A4\uFF08Apifox \u9AD8\u9891\u8272\uFF09\u2014\u2014 */\n  --bg-app: #f9fafb;\n  --bg-surface: #ffffff;\n  --bg-subtle: #f2f4f7;\n  --bg-hover: #f2f4f7;\n  --bg-selected: #f4f1fe;\n  --bg-stripe: #f5f5f5;\n  --fg: #344054;\n  --fg-strong: #101828;\n  --fg-secondary: #667085;\n  --fg-tertiary: #98a2b3;\n  --fg-on-accent: #ffffff;\n  --border: #eaecf0;\n  --border-strong: #d0d5dd;\n  --accent: #9373ee;\n  --accent-hover: #8276c9;\n  --accent-tint: rgba(147, 115, 238, 0.10);\n  --link: #6172f3;\n  --info: #2e90fa;\n  --success: #17b26a;\n  --warning: #f79009;\n  --error: #f04438;\n  --shadow-popover: 0 4px 16px rgba(16, 24, 40, 0.08);\n\n  /* \u2014\u2014 \u65B9\u6CD5\u5FBD\u6807\uFF08\u767D\u5B57\u5F69\u5E95\uFF0Cmono 12px \u7C97\u4F53\uFF09\u2014\u2014 */\n  --method-fs: 12px;\n  --method-get: #17b26a;\n  --method-post: #2e90fa;\n  --method-put: #f79009;\n  --method-delete: #f04438;\n  --method-patch: #ee46bc;\n  --method-other: #06aed4;\n}\n\n.pp-scope[data-theme="dark"] {\n  --bg-app: #101828;\n  --bg-surface: #1d2939;\n  --bg-subtle: #1d2939;\n  --bg-hover: #26334a;\n  --bg-selected: #2b2647;\n  --bg-stripe: #232f42;\n  --fg: #f9fafb;\n  --fg-strong: #ffffff;\n  --fg-secondary: #98a2b3;\n  --fg-tertiary: #667085;\n  --border: #344054;\n  --border-strong: #475467;\n  --accent-tint: rgba(147, 115, 238, 0.18);\n  --shadow-popover: 0 4px 16px rgba(0, 0, 0, 0.4);\n}\n\n/* \u2014\u2014 \u57FA\u7840 \u2014\u2014 */\n.pp-scope,\n.pp-scope * {\n  box-sizing: border-box;\n}\n.pp-scope {\n  font-family: var(--font-sans);\n  font-size: var(--fs-14);\n  line-height: var(--lh-22);\n  color: var(--fg);\n  background: var(--bg-app);\n}\n.pp-scope ::-webkit-scrollbar {\n  width: var(--scrollbar);\n  /* \u6EDA\u52A8\u6761\u9AD8\u5EA6\u4E0E\u5BBD\u5EA6\u540C\u6E90\uFF1A\u7528 calc \u5305\u4E00\u5C42\uFF0C\u9AD8\u5EA6\u7EAA\u5F8B\u68C0\u67E5\u53EA\u63A5\u53D7 token \u8868\u8FBE\u5F0F */\n  height: calc(var(--scrollbar) * 1);\n}\n.pp-scope ::-webkit-scrollbar-thumb {\n  background: var(--border-strong);\n  border-radius: var(--radius-pill);\n}\n\n/* \u2014\u2014 \u5DE5\u4F5C\u53F0\u9AA8\u67B6\uFF1A\u9876\u680F + \u4E09\u6BB5\u5F0F \u2014\u2014 */\n.pp-workbench {\n  display: grid;\n  grid-template-rows: var(--topbar-h) minmax(0, 1fr);\n  height: 100%;\n  min-height: 0;\n}\n/* \u9876\u680F\uFF1AApifox --ui-layout-header-height: 48px / --ui-layout-header-padding: 0 50px\u3002\n   50px \u5DE6\u53F3\u5185\u8FB9\u8DDD\u5728\u7A84\u5BB9\u5668\u91CC\u4F1A\u628A\u4E2D\u95F4\u641C\u7D22\u6846\u538B\u6CA1\uFF0C\u6545\u7528\u5BB9\u5668\u67E5\u8BE2\u964D\u5230 0 20px\u3002 */\n.pp-topbar {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  height: var(--topbar-h);\n  padding: 0 50px;\n  background: var(--bg-surface);\n  border-bottom: 1px solid var(--border);\n}\n@container ppmain (max-width: 900px) {\n  .pp-topbar { padding: 0 var(--sp-5); }\n}\n/* \u9876\u680F\u4EA7\u54C1\u6807\u8BC6\uFF1A\u56FE\u6807 + \u540D\u79F0\uFF08Apifox \u5DE6\u4E0A\u89D2\u662F\u4EA7\u54C1\u540D\uFF0C\u4E0D\u662F\u5F53\u524D\u9875\u540D\uFF09 */\n.pp-topbar-brand {\n  display: inline-flex;\n  align-items: center;\n  gap: var(--sp-2);\n  font-size: var(--fs-14);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-strong);\n  white-space: nowrap;\n  flex: none;\n}\n.pp-topbar-title {\n  font-size: var(--fs-14);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-strong);\n  white-space: nowrap;\n}\n.pp-topbar-spacer {\n  flex: 1;\n}\n.pp-topbar-search {\n  width: var(--nav-w);\n  flex: none;\n}\n.pp-body-3col {\n  display: grid;\n  grid-template-columns: var(--nav-w) minmax(0, 1fr) var(--toc-w);\n  min-height: 0;\n}\n.pp-body-2col {\n  display: grid;\n  grid-template-columns: var(--nav-w) minmax(0, 1fr);\n  min-height: 0;\n}\n.pp-col {\n  min-width: 0;\n  min-height: 0;\n  overflow: auto;\n  background: var(--bg-surface);\n}\n.pp-col-left {\n  border-right: 1px solid var(--border);\n}\n.pp-col-right {\n  border-left: 1px solid var(--border);\n}\n.pp-main {\n  min-width: 0;\n  min-height: 0;\n  overflow: auto;\n  background: var(--bg-surface);\n}\n\n/* \u2014\u2014 \u9875\u9762\u9AA8\u67B6\uFF08\u5BF9\u9F50 Apifox .doc-container + .overview-container\uFF09\u2014\u2014\n   Apifox \u7684\u9875\u9762\u662F\u300C\u9875\u5934\u901A\u680F + \u5185\u5BB9\u533A\u5404\u81EA padding\u300D\u4E24\u6BB5\uFF0C\u4E0D\u662F\u6574\u9875\u7EDF\u4E00 padding\u3002\n   \u6574\u9875 padding \u4F1A\u8BA9\u9875\u5934\u7684\u4E0B\u8FB9\u6846\u7F29\u8FDB\u3001\u8FD8\u8981\u9760\u5185\u8054\u8D1F margin \u62B5\u6D88\uFF0C10 \u4E2A\u9875\u9762\u91CD\u590D 10 \u6B21\u3002\n   \u8FD9\u91CC\u6539\u6210\uFF1A.pp-page \u53EA\u8D1F\u8D23\u7EB5\u5411\u6392\u5E03\uFF0C\u5185\u8FB9\u8DDD\u4EA4\u7ED9 .pp-overview-head \u4E0E .pp-overview-content\u3002 */\n.pp-page {\n  display: flex;\n  flex-direction: column;\n  min-width: 0;\n  min-height: 100%;\n  padding: 0;\n}\n.pp-page-flush {\n  padding: 0;\n  height: 100%;\n  min-height: 0;\n}\n/* \u5185\u5BB9\u533A\uFF1A\u9875\u5934\u4E0B\u65B9\u7684\u6EDA\u52A8\u4E3B\u4F53\uFF0C\u5185\u8FB9\u8DDD 16px\uFF08Apifox .overview-content padding:16px\uFF09 */\n.pp-overview-content {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-4);\n  min-width: 0;\n  min-height: 0;\n  padding: var(--sp-4);\n}\n.pp-page-title {\n  font-size: var(--fs-20);\n  line-height: var(--lh-24);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-strong);\n  margin: 0 0 var(--sp-3) 0;\n}\n.pp-muted {\n  color: var(--fg-secondary);\n}\n.pp-faint {\n  color: var(--fg-tertiary);\n}\n\n/* \u2014\u2014 \u5361\u7247\uFF1A1px \u8FB9\u6846\u30018px \u5706\u89D2\u300116px \u5185\u8FB9\u8DDD\u3001\u65E0\u9634\u5F71 \u2014\u2014 */\n.pp-card {\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  padding: var(--card-pad);\n}\n.pp-card-title {\n  font-size: var(--fs-14);\n  line-height: var(--lh-22);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-strong);\n  margin: 0 0 var(--sp-2) 0;\n}\n.pp-card-hover:hover {\n  border-color: var(--accent);\n  box-shadow: var(--shadow-popover);\n}\n\n/* \u2014\u2014 \u63A7\u4EF6\uFF1A\u9AD8\u5EA6\u4E00\u5F8B var(--ctl-h) \u2014\u2014 */\n.pp-btn {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  gap: var(--sp-1);\n  height: var(--ctl-h);\n  padding: 0 var(--sp-4);\n  font-family: var(--font-sans);\n  font-size: var(--fs-14);\n  line-height: var(--lh-22);\n  color: var(--fg);\n  background: var(--bg-surface);\n  border: 1px solid var(--border-strong);\n  border-radius: var(--radius-ctl);\n  cursor: pointer;\n  white-space: nowrap;\n}\n.pp-btn:hover {\n  border-color: var(--accent);\n  color: var(--accent);\n}\n.pp-btn:disabled {\n  color: var(--fg-tertiary);\n  border-color: var(--border);\n  cursor: not-allowed;\n}\n.pp-btn-primary {\n  color: var(--fg-on-accent);\n  background: var(--accent);\n  border-color: var(--accent);\n}\n.pp-btn-primary:hover {\n  color: var(--fg-on-accent);\n  background: var(--accent-hover);\n  border-color: var(--accent-hover);\n}\n.pp-btn-primary:disabled {\n  color: var(--fg-on-accent);\n  background: var(--border-strong);\n  border-color: var(--border-strong);\n}\n.pp-btn-sm {\n  height: var(--ctl-h-sm);\n  padding: 0 var(--sp-2);\n  font-size: var(--fs-12);\n}\n.pp-btn-ghost {\n  border-color: transparent;\n  background: transparent;\n}\n.pp-btn-ghost:hover {\n  background: var(--bg-hover);\n  border-color: transparent;\n  color: var(--fg);\n}\n.pp-btn-danger:hover {\n  border-color: var(--error);\n  color: var(--error);\n}\n\n.pp-input,\n.pp-select {\n  height: var(--ctl-h);\n  padding: 0 var(--sp-3);\n  font-family: var(--font-sans);\n  font-size: var(--fs-14);\n  line-height: var(--lh-22);\n  color: var(--fg);\n  background: var(--bg-surface);\n  border: 1px solid var(--border-strong);\n  border-radius: var(--radius-ctl);\n  min-width: 0;\n}\n.pp-input::placeholder {\n  color: var(--fg-tertiary);\n}\n.pp-input:focus,\n.pp-select:focus,\n.pp-btn:focus-visible {\n  outline: none;\n  border-color: var(--accent);\n  box-shadow: 0 0 0 2px var(--accent-tint);\n}\n.pp-input-mono {\n  font-family: var(--font-mono);\n  font-size: var(--fs-13);\n}\n.pp-input-sm {\n  height: var(--ctl-h-sm);\n  font-size: var(--fs-12);\n  padding: 0 var(--sp-2);\n}\n\n/* \u2014\u2014 \u8868\u683C\uFF1A\u884C\u9AD8\u4E00\u5F8B var(--row-h) \u2014\u2014 */\n.pp-table {\n  width: 100%;\n  border-collapse: collapse;\n  font-size: var(--fs-14);\n}\n/* \u53C2\u6570\u8868\uFF08ParamTable\uFF09\u4E13\u5C5E\uFF1A\u5217\u5BBD\u5199\u6B7B\u5728 COLUMN_META\uFF0Cfixed \u5E03\u5C40\u4E0B\u7A84\u5BB9\u5668\u7531 .pp-table-wrap\n   \u6574\u4F53\u6A2A\u5411\u6EDA\u52A8\uFF0C\u800C\u4E0D\u662F\u5404\u5217\u6309\u5185\u5BB9\u4E92\u76F8\u6324\u538B\u584C\u9677\u6210 num\u2026/P\u2026\u3002\n   \u7528\u5C5E\u6027\u9009\u62E9\u5668\u800C\u4E0D\u662F\u65B0\u7C7B\u540D\uFF1A.pp-table \u662F\u5176\u5B83 9 \u4E2A\u9875\u9762\u7684\u5171\u7528\u7C7B\uFF0C\u4E0D\u80FD\u5728\u6B64\u6539\u5168\u5C40\u5E03\u5C40\u3002\n   \u6700\u5C0F\u5BBD\u5EA6\u7531\u7EC4\u4EF6\u6309\u5217\u5BBD\u5408\u8BA1\u5185\u8054\u7ED9\u51FA\uFF08\u9ED8\u8BA4\u516D\u5217 + \u64CD\u4F5C\u5217 = 806px\uFF09\uFF0C\u6B64\u5904\u4E0D\u91CD\u590D\u58F0\u660E\u3002 */\n/* \u7C7B\u540D\u522B\u540D\uFF1AParamTable \u540C\u65F6\u6302 .pp-table-params\uFF0C\u4FBF\u4E8E\u6309\u7C7B\u5B9A\u4F4D\uFF08\u5C5E\u6027\u9009\u62E9\u5668\u4FDD\u7559\u517C\u5BB9\uFF09 */\n.pp-table.pp-table-params,\n.pp-table[data-param-table] {\n  table-layout: fixed;\n}\n/* fixed \u5E03\u5C40\u4E0B\u5217\u5BBD\u5DF2\u5B9A\uFF0C\u957F\u6587\u672C\u5FC5\u987B\u88C1\u5728\u81EA\u5DF1\u7684\u683C\u5B50\u91CC\uFF08\u4E0D\u80FD\u9760 max-width:0 \u90A3\u5957\uFF0C\n   \u5B83\u4F1A\u628A\u6574\u4E2A\u8868\u683C\u538B\u584C\uFF09\uFF1B\u88C1\u5207\u53EA\u4F5C\u7528\u4E8E\u53C2\u6570\u8868\uFF0C\u5176\u5B83 .pp-table \u4FDD\u6301\u539F\u884C\u4E3A\u3002 */\n.pp-table[data-param-table] td {\n  overflow: hidden;\n}\n.pp-table th {\n  height: var(--row-h);\n  padding: 0 var(--sp-2);\n  text-align: left;\n  font-weight: var(--fw-medium);\n  font-size: var(--fs-13);\n  color: var(--fg-secondary);\n  background: var(--bg-subtle);\n  border-bottom: 1px solid var(--border);\n  white-space: nowrap;\n}\n.pp-table td {\n  height: var(--row-h);\n  padding: 0 var(--sp-2);\n  border-bottom: 1px solid var(--border);\n  /* Apifox \u8868\u683C\u4E0D\u6298\u884C\uFF1A\u7A84\u5BB9\u5668\u91CC\u9760 .pp-table-wrap \u6A2A\u5411\u6EDA\u52A8\uFF0C\u4E2D\u6587\u9010\u5B57\u65AD\u884C\u4F1A\u628A\u300C\u67E5\u8BE2\u300D\u7AD6\u6392\u3002\n     \u6B64\u5904\u4E0D\u5F97\u518D\u5199 max-width:0 + ellipsis\u2014\u2014\u90A3\u7EC4\u662F\u7A84\u5BB9\u5668\u5217\u584C\u9677\u7684\u5143\u51F6\u3002 */\n  white-space: nowrap;\n}\n/* \u73AF\u5883\u9875\u53D8\u91CF\u8868\uFF08env.jsx varTable\uFF09\uFF1A\u4E94\u5217\u56FA\u5B9A\u5BBD\u5EA6\uFF0C\u503C\u5217\u5403\u5269\u4F59\u5BBD\u5EA6\u3002\n   \u4E0D\u52A0 fixed \u65F6\u4E94\u5217\u6309\u5185\u5BB9\u6491\u5F00\uFF0C\u7A84\u5BB9\u5668\u91CC\u6574\u8868 603px \u9876\u7834 438px \u7684\u5BB9\u5668\u3002 */\n/* \u591A\u5217\u7F16\u8F91\u8868\uFF08flow \u6B65\u9AA4\u7F16\u6392 / test \u65AD\u8A00\u4E0E\u6B65\u9AA4\uFF09\uFF1A\u5217\u5BBD\u5408\u8BA1 510~640px\uFF0C\n   \u7A84\u5BB9\u5668\u91CC\u65E0\u5BBD\u5EA6\u5217\uFF08\u6D88\u606F / \u8DEF\u5F84\uFF09\u4F1A\u88AB\u538B\u5230\u51E0\u50CF\u7D20\uFF0C\u8868\u683C\u6574\u4F53\u4EA4\u7ED9 .pp-table-wrap \u6A2A\u5411\u6EDA\u52A8\u3002 */\n.pp-table.pp-table-wide {\n  min-width: 640px;\n}\n.pp-table.pp-table-vars {\n  table-layout: fixed;\n  /* \u56FA\u5B9A\u5217 52+52+64=168px\uFF0C\u53D8\u91CF\u540D\u5217 30%\u3001\u503C\u5217\u5403\u5269\u4F59\uFF1A360px \u5BB9\u5668\u4E0B\u503C\u5217\u4ECD\u6709 110px\uFF0C\n     \u518D\u7A84\u5C31\u6A2A\u5411\u6EDA\u52A8\u3002\u4E0D\u8BBE 480\u2014\u2014510px \u4E3B\u533A\u91CC\u4F1A\u88AB\u5207\u6389\u300C\u64CD\u4F5C\u300D\u5217\u3002 */\n  min-width: 360px;\n}\n.pp-table.pp-table-vars th:nth-child(1) { width: 30%; }\n.pp-table.pp-table-vars th:nth-child(2) { width: auto; }\n.pp-table.pp-table-vars th:nth-child(3),\n.pp-table.pp-table-vars th:nth-child(4) { width: 52px; }\n.pp-table.pp-table-vars th:nth-child(5) { width: 64px; }\n.pp-table.pp-table-vars td { overflow: hidden; }\n/* \u53F3\u7F16\u8F91\u533A\u53D8\u91CF\u8868\uFF1A\u4E94\u5217\u5728 480px \u4EE5\u4E0A\u90FD\u80FD\u5168\u663E\u793A\uFF0C\u4E0D\u9700\u8981\u6A2A\u5411\u6EDA\u52A8\u3002\n   \u53D8\u91CF\u540D 32% / \u503C\u5217\u5403\u5269\u4F59 / \u542F\u7528\xB7\u5BC6\u94A5\u5404 44px\uFF08\u53EA\u653E\u590D\u9009\u6846\uFF09/ \u64CD\u4F5C 48px\uFF08\u53EA\u653E\u56FE\u6807\u6309\u94AE\uFF09\u3002 */\n.pp-env-main .pp-table.pp-table-vars {\n  min-width: 0;\n  width: 100%;\n}\n.pp-env-main .pp-table.pp-table-vars th:nth-child(1) { width: 32%; }\n.pp-env-main .pp-table.pp-table-vars th:nth-child(3),\n.pp-env-main .pp-table.pp-table-vars th:nth-child(4) { width: 44px; }\n.pp-env-main .pp-table.pp-table-vars th:nth-child(5) { width: 48px; }\n.pp-env-main .pp-table.pp-table-vars td:nth-child(3),\n.pp-env-main .pp-table.pp-table-vars td:nth-child(4),\n.pp-env-main .pp-table.pp-table-vars td:nth-child(5) {\n  text-align: center;\n}\n.pp-env-main .pp-table.pp-table-vars input[type="checkbox"] {\n  margin: 0;\n}\n.pp-table tbody tr:hover {\n  background: var(--bg-hover);\n}\n.pp-table tbody tr[data-active="true"] {\n  background: var(--bg-selected);\n}\n.pp-table-mono {\n  font-family: var(--font-mono);\n  font-size: var(--fs-13);\n}\n/* \u5355\u5143\u683C\u5185\u7F16\u8F91\uFF1A\u65E0\u8FB9\u6846\u8F93\u5165\uFF0C\u805A\u7126\u624D\u663E\u8FB9\u6846\uFF08Apifox \u8868\u683C\u5185\u7F16\u8F91\u89C2\u611F\uFF09 */\n.pp-cell-input {\n  width: 100%;\n  min-width: 0;\n  color: var(--fg);\n  background: transparent;\n  border: 1px solid transparent;\n  border-radius: var(--radius-sm);\n}\n.pp-cell-input:hover {\n  border-color: var(--border);\n}\n.pp-cell-input:focus {\n  outline: none;\n  background: var(--bg-surface);\n  border-color: var(--accent);\n  box-shadow: 0 0 0 2px var(--accent-tint);\n}\n/* \u8868\u5C3E\u300C+ \u6DFB\u52A0\u53C2\u6570\u300D\uFF1A\u5360\u6EE1\u6574\u884C\uFF0C\u5DE6\u5BF9\u9F50 */\n.pp-table-add {\n  width: 100%;\n  justify-content: flex-start;\n  color: var(--accent);\n}\n\n/* \u2014\u2014 \u80F6\u56CA / \u65B9\u6CD5\u5FBD\u6807\uFF1A\u9AD8\u5EA6\u4E00\u5F8B var(--pill-h) \u2014\u2014 */\n.pp-pill {\n  display: inline-flex;\n  align-items: center;\n  height: var(--pill-h);\n  padding: 0 var(--sp-2);\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-secondary);\n  border: 1px solid var(--border-strong);\n  border-radius: var(--radius-pill);\n  white-space: nowrap;\n}\n.pp-pill-ok {\n  color: var(--success);\n  border-color: var(--success);\n}\n.pp-pill-warn {\n  color: var(--warning);\n  border-color: var(--warning);\n}\n.pp-pill-bad {\n  color: var(--error);\n  border-color: var(--error);\n}\n.pp-pill-accent {\n  color: var(--accent);\n  border-color: var(--accent);\n}\n.pp-method {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  height: var(--pill-h);\n  min-width: 44px;\n  padding: 0 var(--sp-2);\n  font-family: var(--font-mono);\n  font-size: var(--method-fs);\n  font-weight: var(--fw-semibold);\n  line-height: var(--lh-18);\n  letter-spacing: 0.02em;\n  text-transform: uppercase;\n  color: var(--fg-on-accent);\n  background: var(--fg-tertiary);\n  border: none;\n  border-radius: var(--radius-sm);\n}\n.pp-method[data-method="GET"] { background: var(--method-get); }\n.pp-method[data-method="POST"] { background: var(--method-post); }\n.pp-method[data-method="PUT"] { background: var(--method-put); }\n.pp-method[data-method="DELETE"] { background: var(--method-delete); }\n.pp-method[data-method="PATCH"] { background: var(--method-patch); }\n.pp-method[data-method="HEAD"],\n.pp-method[data-method="OPTIONS"],\n.pp-method[data-method="TRACE"] { background: var(--method-other); }\n\n/* \u2014\u2014 \u9875\u7B7E\u6761 + \u9875\u7B7E \u2014\u2014 */\n.pp-tabs {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-1);\n  /* \u7A84\u5BB9\u5668\u91CC\u9875\u7B7E\uFF08\u5982 import \u7684\u300COpenAPI / Swagger\u300D\uFF09\u4E00\u884C\u653E\u4E0D\u4E0B\uFF1A\n     \u5141\u8BB8\u6362\u884C\u5E76\u628A\u9AD8\u5EA6\u4EA4\u7ED9\u5185\u5BB9\uFF0C\u5426\u5219\u6807\u7B7E\u6587\u5B57\u4F1A\u88AB\u538B\u6210\u4E24\u884C\u3001\u9875\u7B7E\u6761\u9876\u7834\u5361\u7247\u3002 */\n  flex-wrap: wrap;\n  min-height: var(--ctl-h-lg);\n  padding: 0 var(--sp-3);\n  background: var(--bg-surface);\n  border-bottom: 1px solid var(--border);\n}\n.pp-tab {\n  display: inline-flex;\n  align-items: center;\n  height: var(--ctl-h);\n  padding: 0 var(--sp-3);\n  /* \u9875\u7B7E\u6587\u5B57\u4E0D\u6298\u884C\uFF1A\u6298\u884C\u4F1A\u628A\u300C\u67E5\u8BE2\u300D\u7AD6\u6392\u6210\u4E24\u884C */\n  white-space: nowrap;\n  font-family: var(--font-sans);\n  font-size: var(--fs-14);\n  color: var(--fg-secondary);\n  background: transparent;\n  border: none;\n  border-bottom: 2px solid transparent;\n  cursor: pointer;\n}\n.pp-tab:hover {\n  color: var(--fg);\n}\n.pp-tab[data-active="true"] {\n  color: var(--accent);\n  font-weight: var(--fw-medium);\n  border-bottom-color: var(--accent);\n}\n\n/* \u2014\u2014 \u5206\u6BB5\u63A7\u4EF6 \u2014\u2014 */\n.pp-seg {\n  display: inline-flex;\n  border: 1px solid var(--border-strong);\n  border-radius: var(--radius-ctl);\n  overflow: hidden;\n}\n.pp-seg > button {\n  height: var(--ctl-h-sm);\n  padding: 0 var(--sp-3);\n  font-family: var(--font-sans);\n  font-size: var(--fs-13);\n  color: var(--fg-secondary);\n  background: var(--bg-surface);\n  border: none;\n  border-right: 1px solid var(--border);\n  cursor: pointer;\n}\n.pp-seg > button:last-child {\n  border-right: none;\n}\n.pp-seg > button[data-active="true"] {\n  color: var(--accent);\n  background: var(--accent-tint);\n  font-weight: var(--fw-medium);\n}\n\n/* \u2014\u2014 \u5DE6\u6811\uFF08\u5BF9\u9F50 Apifox .tree-bK2pJT / .treeList-ISn2t4 \u5B9E\u6D4B\uFF09\u2014\u2014\n   \u884C\u9AD8 22px\u3001\u5B57\u53F7 12px\u3001\u6587\u5B57\u8272\u53D6 --fg-secondary\u3001\u5DE6\u53F3\u5916\u8FB9\u8DDD 16px\uFF1B\n   hover \u53EA\u628A\u6587\u5B57\u8272\u63D0\u5230 --fg\uFF0C\u4E0D\u6362\u5E95\u2014\u2014\u8FD9\u662F Apifox \u6811\u6700\u5BB9\u6613\u88AB\u8BA4\u9519\u7684\u7279\u5F81\u3002 */\n.pp-tree {\n  padding: var(--sp-1) 0;\n}\n.pp-tree-row {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-1);\n  height: var(--tree-row-h);\n  margin: 0 var(--sp-4);\n  padding: 0 var(--sp-1);\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-secondary);\n  /* \u5DE6\u6811\u6761\u76EE\u5728\u9AA8\u67B6\u91CC\u662F <a>\uFF1A\u5FC5\u987B\u663E\u5F0F\u53BB\u6389\u94FE\u63A5\u4E0B\u5212\u7EBF\u4E0E\u7EE7\u627F\u8272\uFF0C\u5426\u5219\u6574\u5217\u90FD\u662F\u5E26\u4E0B\u5212\u7EBF\u7684\u94FE\u63A5 */\n  text-decoration: none;\n  border-radius: var(--radius-ctl);\n  cursor: pointer;\n  white-space: nowrap;\n  overflow: hidden;\n}\n.pp-tree-row:hover {\n  color: var(--fg);\n}\n.pp-tree-row[data-active="true"] {\n  color: var(--fg);\n  background: var(--bg-hover);\n  font-weight: var(--fw-medium);\n}\n/* \u5C55\u5F00\u7BAD\u5934\uFF1A\u5BBD 12px\uFF0C\u5DE6 12px \u53F3 4px\uFF08Apifox .tree-bK2pJT .ui-tree-switcher \u539F\u6587\uFF1A\n   width:12px; margin-left:12px; margin-right:4px\uFF09 */\n.pp-tree-switcher {\n  flex: none;\n  width: var(--sp-3);\n  margin-left: var(--sp-3);\n  margin-right: var(--sp-1);\n  text-align: center;\n  color: var(--fg-tertiary);\n}\n.pp-tree-icon {\n  flex: none;\n  width: var(--icon);\n  height: var(--icon);\n  color: var(--fg-tertiary);\n}\n.pp-tree-row-count {\n  margin-left: auto;\n  font-size: var(--fs-12);\n  color: var(--fg-tertiary);\n}\n.pp-tree-group {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-1);\n  height: var(--tree-row-h);\n  margin: 0 var(--sp-4);\n  padding: 0 var(--sp-1);\n  font-size: var(--fs-12);\n  font-weight: var(--fw-medium);\n  color: var(--fg-tertiary);\n  text-transform: none;\n}\n\n/* \u2014\u2014 \u53F3 TOC \u2014\u2014 */\n.pp-toc {\n  padding: var(--sp-3);\n}\n.pp-toc-item {\n  display: block;\n  height: var(--ctl-h-sm);\n  line-height: var(--ctl-h-sm);\n  padding: 0 var(--sp-2);\n  font-size: var(--fs-13);\n  color: var(--fg-secondary);\n  text-decoration: none;\n  border-left: 2px solid transparent;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.pp-toc-item:hover {\n  color: var(--fg);\n}\n.pp-toc-item[data-active="true"] {\n  color: var(--accent);\n  border-left-color: var(--accent);\n}\n\n/* \u2014\u2014 \u6587\u6863\u6B63\u6587\u5206\u533A \u2014\u2014 */\n.pp-doc-section {\n  padding-top: var(--sp-4);\n  margin-top: var(--sp-4);\n  border-top: 1px solid var(--border);\n}\n.pp-doc-section:first-child {\n  padding-top: 0;\n  margin-top: 0;\n  border-top: none;\n}\n.pp-doc-h1 {\n  font-size: var(--fs-20);\n  line-height: var(--lh-24);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-strong);\n  margin: 0 0 var(--sp-2) 0;\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n}\n.pp-doc-h2 {\n  font-size: var(--fs-16);\n  line-height: var(--lh-24);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-strong);\n  margin: 0 0 var(--sp-2) 0;\n}\n.pp-doc-h3 {\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-secondary);\n  margin: 0 0 var(--sp-1) 0;\n}\n\n/* \u2014\u2014 \u5DE5\u5177\u6761 \u2014\u2014 */\n.pp-toolbar {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  flex-wrap: wrap;\n  margin-bottom: var(--sp-3);\n}\n.pp-toolbar-inline {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  flex-wrap: wrap;\n}\n.pp-toolbar-spacer {\n  flex: 1;\n}\n\n/* \u2014\u2014 \u53CC\u680F / \u5B57\u6BB5\u884C \u2014\u2014 */\n.pp-cols-2 {\n  display: grid;\n  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);\n  gap: var(--sp-4);\n  align-items: start;\n}\n/* \u7A84\u5BB9\u5668\uFF1A\u4FA7\u8FB9\u680F\u4E3B\u533A\u5B9E\u6D4B 455~840px\uFF0C\u4E24\u5217\u5404\u53EA\u5269 230~420px\uFF0C\n   import \u7684 textarea \u4E0E settings \u7684\u4EE3\u7406\u8F93\u5165\u6846\u4F1A\u88AB\u622A\u65AD\u3002\n   900px = \u4E24\u5217\u5404 440px \u4EE5\u4E0A\u624D\u591F\u653E\u8FD9\u4E24\u7C7B\u63A7\u4EF6\uFF0C\u4F4E\u4E8E\u6B64\u6539\u4E0A\u4E0B\u5806\u53E0\u3002 */\n@container ppmain (max-width: 900px) {\n  .pp-cols-2 {\n    grid-template-columns: minmax(0, 1fr);\n  }\n}\n.pp-field {\n  display: grid;\n  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.6fr) auto auto;\n  gap: var(--sp-2);\n  align-items: center;\n  min-height: var(--ctl-h);\n}\n.pp-field-head {\n  font-size: var(--fs-12);\n  color: var(--fg-tertiary);\n  border-bottom: 1px solid var(--border);\n}\n.pp-form-row {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-3);\n  min-height: var(--ctl-h);\n  margin-bottom: var(--sp-3);\n}\n.pp-form-label {\n  width: 104px;\n  flex: none;\n  font-size: var(--fs-14);\n  color: var(--fg-secondary);\n}\n\n/* \u2014\u2014 \u4EE3\u7801 / \u9884\u89C8\u5757 \u2014\u2014 */\n.pp-pre {\n  margin: 0;\n  padding: var(--sp-3);\n  font-family: var(--font-mono);\n  font-size: var(--fs-13);\n  line-height: var(--lh-20);\n  color: var(--fg);\n  background: var(--bg-subtle);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-ctl);\n  overflow: auto;\n}\n.pp-pre-scroll {\n  max-height: calc(var(--row-h) * 12);\n}\n.pp-json-editor {\n  width: 100%;\n  min-height: calc(var(--row-h) * 6);\n  padding: var(--sp-3);\n  font-family: var(--font-mono);\n  font-size: var(--fs-13);\n  line-height: var(--lh-20);\n  color: var(--fg);\n  background: var(--bg-surface);\n  border: 1px solid var(--border-strong);\n  border-radius: var(--radius-ctl);\n  resize: vertical;\n}\n.pp-json-editor:focus {\n  outline: none;\n  border-color: var(--accent);\n  box-shadow: 0 0 0 2px var(--accent-tint);\n}\n.pp-textarea {\n  width: 100%;\n  min-height: calc(var(--row-h) * 6);\n  padding: var(--sp-3);\n  font-family: var(--font-mono);\n  font-size: var(--fs-13);\n  line-height: var(--lh-20);\n  color: var(--fg);\n  background: var(--bg-surface);\n  border: 1px solid var(--border-strong);\n  border-radius: var(--radius-ctl);\n  resize: vertical;\n}\n.pp-textarea:focus {\n  outline: none;\n  border-color: var(--accent);\n  box-shadow: 0 0 0 2px var(--accent-tint);\n}\n\n/* \u2014\u2014 \u63D0\u793A\u6761 \u2014\u2014 */\n.pp-note {\n  display: flex;\n  align-items: flex-start;\n  gap: var(--sp-2);\n  padding: var(--sp-2) var(--sp-3);\n  font-size: var(--fs-13);\n  line-height: var(--lh-20);\n  color: var(--fg);\n  background: var(--bg-subtle);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-ctl);\n}\n.pp-note-bad {\n  color: var(--error);\n  border-color: var(--error);\n  background: var(--bg-surface);\n}\n.pp-note-warn {\n  color: var(--warning);\n  border-color: var(--warning);\n  background: var(--bg-surface);\n}\n.pp-note-ok {\n  color: var(--success);\n  border-color: var(--success);\n  background: var(--bg-surface);\n}\n.pp-error-text {\n  color: var(--error);\n  font-size: var(--fs-13);\n  line-height: var(--lh-20);\n  margin: var(--sp-1) 0;\n}\n\n/* \u2014\u2014 \u5217\u8868 / \u7ED3\u679C\u884C \u2014\u2014 */\n.pp-list {\n  display: flex;\n  flex-direction: column;\n  gap: 1px;\n}\n.pp-list-row {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  min-height: var(--row-h);\n  padding: 0 var(--sp-2);\n  font-size: var(--fs-14);\n  color: var(--fg);\n  text-decoration: none;\n  border-radius: var(--radius-ctl);\n  cursor: pointer;\n}\n.pp-list-row:hover {\n  background: var(--bg-hover);\n}\n.pp-list-row[data-active="true"] {\n  background: var(--bg-selected);\n  color: var(--accent);\n}\n.pp-result-row {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  min-height: var(--ctl-h);\n  padding: 0 var(--sp-2);\n  font-size: var(--fs-13);\n  border-bottom: 1px solid var(--border);\n}\n\n/* \u2014\u2014 \u72B6\u6001\u8272\u6587\u672C \u2014\u2014 */\n.pp-ok { color: var(--success); }\n.pp-warn { color: var(--warning); }\n.pp-bad { color: var(--error); }\n.pp-accent { color: var(--accent); }\n\n/* \u2014\u2014 \u5143\u4FE1\u606F / \u7701\u7565 \u2014\u2014 */\n.pp-meta {\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-tertiary);\n}\n.pp-mono {\n  font-family: var(--font-mono);\n  font-size: var(--fs-13);\n}\n.pp-ellipsis {\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  min-width: 0;\n}\n.pp-scroll {\n  overflow: auto;\n  min-height: calc(var(--row-h) * 0);\n}\n/* \u8868\u683C\u5BB9\u5668\uFF1A\u7A84\u680F\u91CC\u6A2A\u5411\u6EDA\u52A8\uFF0C\u4FDD\u6301\u5217\u5BBD\u53EF\u8BFB\u3002\n   \u4E0D\u8981\u518D\u5199 .pp-table-wrap .pp-table{min-width:100%}\uFF1A\u8868\u683C\u6700\u5C0F\u5BBD\u5EA6\u7531 ParamTable\n   \u6309\u5217\u5BBD\u5408\u8BA1\u5185\u8054\u7ED9\u51FA\uFF0C\u8FD9\u6761\u9009\u62E9\u5668\u4F1A\u628A\u5B83\u8986\u76D6\u6210 100%\uFF0C\u5217\u5C31\u53C8\u80FD\u88AB\u538B\u584C\u3002 */\n.pp-table-wrap {\n  overflow-x: auto;\n  overflow-y: hidden;\n  /* flex/grid \u5B50\u9879\u9ED8\u8BA4 min-width:auto\uFF0C\u4F1A\u88AB\u8868\u683C\u5185\u8054 min-width \u9876\u5F00\u5BB9\u5668\uFF0C\n     \u5728 .pp-pane / .pp-debug-tabbody \u91CC\u8868\u73B0\u4E3A\u6574\u9875\u6A2A\u5411\u6EA2\u51FA\u3002\u8FD9\u91CC\u663E\u5F0F\u538B\u5230 0\u3002 */\n  min-width: 0;\n  max-width: 100%;\n}\n.pp-aside-sticky {\n  position: sticky;\n  top: var(--sp-4);\n}\n.pp-md-list {\n  margin: 0 0 var(--sp-2) 0;\n  padding-left: var(--sp-5);\n}\n\n/* \u2014\u2014 \u7EDF\u8BA1\u5757 \u2014\u2014 */\n.pp-stats {\n  display: grid;\n  /* \u4FA7\u8FB9\u680F\u53EF\u7528\u5BBD\u7EA6 500px\uFF1A96px \u8D77\u8DF3\u53EF\u7A33\u5B9A\u6392 4 \u5217\uFF08Apifox \u7EDF\u8BA1\u6761\u662F\u4E00\u884C\u56DB\u5757\uFF09 */\n  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));\n  gap: var(--sp-2);\n}\n/* \u7A84\u5BB9\u5668\uFF1A4 \u5757\u5404\u53EA\u5269 ~110px\uFF0C\u300C2026-11-19 09:41\u300D\u88AB\u622A\u6210\u300C2026-11-1\u2026\u300D\u3002\n   \u4E24\u5217\u8BA9\u6BCF\u5757 240px\uFF0C\u65F6\u95F4\u4E0E\u6570\u5B57\u90FD\u5B8C\u6574\u3002 */\n@container ppmain (max-width: 640px) {\n  .pp-stats {\n    grid-template-columns: repeat(2, minmax(0, 1fr));\n  }\n}\n.pp-stat {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-1);\n  padding: var(--sp-2) var(--sp-3);\n  min-width: 0;\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n}\n.pp-stat-value {\n  /* \u7EDF\u8BA1\u6570\u5B57\u5728\u7A84\u680F\u91CC\u4E0D\u80FD\u7528 24px\uFF08\u4F1A\u6362\u884C\u628A\u56DB\u5757\u6491\u6210\u4E24\u884C\uFF09\uFF0C18px \u4E0E Apifox \u9762\u677F\u5185\u6570\u503C\u540C\u6863 */\n  font-size: var(--fs-16);\n  line-height: var(--lh-24);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-strong);\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.pp-stat-label {\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-secondary);\n}\n\n/* \u2014\u2014 \u603B\u89C8\uFF1A\u9879\u76EE\u5361\u7247\u7F51\u683C \u2014\u2014 */\n.pp-overview-grid {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));\n  gap: var(--sp-4);\n}\n\n/* \u2014\u2014 \u8C03\u8BD5\uFF1A\u6574\u9875 padding 10px\uFF08Apifox .apiCase padding:10px\uFF09\u2014\u2014 */\n/* \u8C03\u8BD5\u9875\uFF1AApifox .apiCase \u539F\u6587\uFF08width/height 100%\u3001padding 10px\u3001overflow auto\uFF09\u3002\n   \u5355\u680F\u7ED3\u6784\u2014\u2014\u63A5\u53E3\u6811\u7531\u5DE6\u4FA7\u5168\u5C40\u5BFC\u822A\u627F\u62C5\uFF0C\u9875\u9762\u5185\u4E0D\u518D\u81EA\u5E26\u3002 */\n.pp-debug-page {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-3);\n  padding: var(--page-pad);\n  padding-right: calc(var(--page-pad) - var(--sp-1) + var(--layout-pad));\n  min-height: 0;\n}\n/* \u5143\u4FE1\u606F\u884C\uFF1A\u73AF\u5883\u9009\u62E9 + \u5B9E\u9645\u5730\u5740 + \u53D8\u91CF + \u5386\u53F2\u5165\u53E3\uFF0C\u538B\u6210\u4E00\u884C */\n/* \u901A\u7528\u4E24\u680F\uFF08\u5DE6\u5217\u8868 + \u53F3\u8BE6\u60C5\uFF09\uFF1Aenv / schema / test / mock \u56DB\u9875\u5171\u7528\u3002\n   debug \u9875\u4E0D\u7528\u5B83\u2014\u2014\u8C03\u8BD5\u53F0\u662F Apifox \u5355\u680F\u7ED3\u6784\u3002 */\n.pp-debug-layout {\n  display: grid;\n  grid-template-columns: clamp(var(--panel-w), 32%, var(--panel-w-max)) minmax(0, 1fr);\n  gap: var(--sp-3);\n  align-items: start;\n}\n@container ppmain (max-width: 980px) {\n  .pp-debug-layout {\n    grid-template-columns: minmax(0, 1fr);\n  }\n}\n/* \u5168\u5C40\u641C\u7D22\u9875\uFF1A\u4E00\u6761\u641C\u7D22\u6761 + \u5206\u7EC4\u7ED3\u679C\u3002\n   \u539F\u6765\u300C\u641C\u7D22\u300D\u6309\u94AE\u5728\u9875\u5934\u3001\u8F93\u5165\u6846\u5728\u4E0B\u65B9\u7684\u5361\u7247\u91CC\uFF0C\u4E00\u6B21\u641C\u7D22\u8981\u8DE8\u4E24\u4E2A\u533A\u57DF\uFF1B\n   \u4E09\u7EC4\u7ED3\u679C\u53C8\u90FD\u585E\u8FDB\u4E00\u5F20\u5361\u7247\uFF0C\u7A7A\u7EC4\u4E5F\u5360\u4F4D\uFF0CURL \u88AB margin-left:auto \u7529\u5230\u8FDC\u7AEF\u3002 */\n.pp-search-bar {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  flex-wrap: wrap;\n  padding: var(--sp-3);\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n}\n.pp-search-project {\n  flex: none;\n  width: 120px;\n}\n.pp-search-input {\n  flex: 1;\n  min-width: 160px;\n}\n.pp-search-btn {\n  flex: none;\n  min-width: 72px;\n}\n.pp-search-source {\n  margin: var(--sp-2) 0 var(--sp-3);\n}\n.pp-search-hint {\n  display: flex;\n  min-height: calc(var(--row-h) * 6);\n}\n.pp-search-results {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-3);\n}\n.pp-search-group {\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  overflow: hidden;\n}\n/* \u5206\u7EC4\u5934\uFF1A\u53EF\u6298\u53E0\uFF0C\u6574\u884C\u53EF\u70B9 */\n.pp-search-group-head {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  width: 100%;\n  height: var(--ctl-h);\n  padding: 0 var(--sp-3);\n  font-family: var(--font-sans);\n  font-size: var(--fs-13);\n  color: var(--fg-secondary);\n  text-align: left;\n  background: var(--bg-subtle);\n  border: none;\n  border-bottom: 1px solid var(--border);\n  cursor: pointer;\n}\n.pp-search-group-head:hover {\n  color: var(--fg);\n}\n.pp-search-caret {\n  flex: none;\n  width: 12px;\n  font-size: var(--fs-12);\n  color: var(--fg-tertiary);\n}\n.pp-search-group-label {\n  font-weight: var(--fw-medium);\n  color: var(--fg-strong);\n}\n.pp-search-count {\n  flex: none;\n  min-width: 18px;\n  padding: 0 var(--sp-1);\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-tertiary);\n  text-align: center;\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-pill);\n}\n.pp-search-list {\n  padding: var(--sp-1) var(--sp-2) var(--sp-2);\n}\n.pp-search-row {\n  gap: var(--sp-2);\n}\n/* \u975E\u63A5\u53E3\u6761\u76EE\uFF08\u6A21\u578B / \u76EE\u5F55\uFF09\u7528\u4E00\u4E2A\u5C0F\u5706\u70B9\u5360\u4F4D\uFF0C\u4FDD\u6301\u4E09\u884C\u7F29\u8FDB\u5BF9\u9F50 */\n/* \u975E\u63A5\u53E3\u6761\u76EE\uFF08\u6A21\u578B / \u76EE\u5F55\uFF09\uFF1A\u7528\u4E00\u4E2A\u4E0E method \u5FBD\u6807\u540C\u5BBD\u7684\u5C0F\u5706\u70B9\u5360\u4F4D\uFF0C\n   \u4FDD\u8BC1\u4E09\u7EC4\u7684\u540D\u79F0\u5217\u5DE6\u8FB9\u7F18\u5BF9\u9F50\u3002method \u5FBD\u6807 min-width 44px\u3002 */\n.pp-search-dot {\n  flex: none;\n  width: 6px;\n  height: 6px;\n  margin: 0 19px;\n  background: var(--fg-tertiary);\n  border-radius: var(--radius-pill);\n}\n.pp-search-name {\n  flex: 0 1 auto;\n  font-size: var(--fs-13);\n}\n.pp-search-sub {\n  /* \u9760\u53F3\u4F46\u4E0D\u5403\u6EE1\uFF1A\u540D\u79F0\u4E0E URL \u4E4B\u95F4\u7559 16px \u8D77\uFF0C\u957F\u540D\u79F0\u65F6 URL \u8BA9\u4F4D */\n  flex: 0 1 auto;\n  margin-left: var(--sp-4);\n  text-align: right;\n}\n/* \u9875\u5934\u7EDF\u8BA1\uFF1A\u4E0D\u53C2\u4E0E\u6536\u7F29\uFF0C\u7A84\u680F\u91CC\u4E5F\u5B8C\u6574\u663E\u793A */\n.pp-search-summary {\n  flex: none;\n  white-space: nowrap;\n}\n.pp-search-mark {\n  padding: 0 1px;\n  color: var(--fg-strong);\n  font-weight: var(--fw-semibold);\n  background: var(--accent-tint);\n  border-radius: 2px;\n}\n/* \u5BFC\u5165\u5BFC\u51FA\u9875\uFF08Apifox\u300C\u5BFC\u5165\u5BFC\u51FA\u6570\u636E\u300D\u540C\u6784\uFF09\uFF1A\u9875\u7B7E\u5206\u533A + \u5DE6\u683C\u5F0F\u5217\u8868 + \u53F3\u5185\u5BB9\u3002\n   \u539F\u6765\u300C\u5BFC\u5165 / \u5BFC\u51FA\u300D\u4E24\u5217\u5E76\u6392\uFF0C\u5404\u53EA\u5269 240px\uFF1Atextarea \u4E0E\u6309\u94AE\u7EC4\u90FD\u6362\u884C\uFF0C\n   \u4EE3\u7801\u751F\u6210\u518D\u5355\u72EC\u5360\u4E00\u6574\u5F20\u5361\uFF0C\u4E09\u5757\u9AD8\u5EA6\u53C2\u5DEE\u3002 */\n.pp-io-layout {\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  overflow: hidden;\n}\n.pp-io-layout > .pp-tabs {\n  border-bottom: 1px solid var(--border);\n}\n.pp-io-body {\n  display: grid;\n  grid-template-columns: 168px minmax(0, 1fr);\n  min-height: 0;\n}\n@container ppmain (max-width: 720px) {\n  .pp-io-body {\n    grid-template-columns: minmax(0, 1fr);\n  }\n  /* \u5806\u53E0\u540E\u683C\u5F0F\u5217\u8868\u6539\u6210\u6A2A\u5411\u53EF\u6EDA\u7684\u4E00\u884C */\n  .pp-io-layout .pp-io-side {\n    flex-direction: row;\n    flex-wrap: nowrap;\n    overflow-x: auto;\n    border-right: none;\n    border-bottom: 1px solid var(--border);\n    padding: var(--sp-2);\n  }\n  .pp-io-layout .pp-io-side-title {\n    display: none;\n  }\n  .pp-io-layout .pp-io-item {\n    flex: none;\n    white-space: nowrap;\n  }\n  /* \u5806\u53E0\u540E\u4E3B\u533A\u72EC\u5360\u6574\u5BBD\uFF0C\u4F46 grid \u5B50\u9879\u9ED8\u8BA4 min-width:auto \u4F1A\u88AB\u5185\u5BB9\u9876\u5F00\uFF0C\n     \u8868\u73B0\u4E3A\u300C\u6E05\u7A7A\u300D\u6309\u94AE\u88AB\u5207\u6389\u4E00\u534A\u3002\u8FD9\u91CC\u663E\u5F0F\u538B\u5230 0\u3002 */\n  .pp-io-layout .pp-io-main {\n    min-width: 0;\n    padding: var(--sp-3);\n    padding-right: calc(var(--sp-3) + var(--sp-1));\n  }\n}\n.pp-io-side {\n  display: flex;\n  flex-direction: column;\n  gap: 1px;\n  padding: var(--sp-2);\n  border-right: 1px solid var(--border);\n  background: var(--bg-app);\n}\n.pp-io-side-title {\n  padding: var(--sp-1) var(--sp-2) var(--sp-2);\n  font-size: var(--fs-12);\n  color: var(--fg-tertiary);\n}\n.pp-io-item {\n  display: flex;\n  align-items: center;\n  height: var(--ctl-h);\n  padding: 0 var(--sp-2);\n  font-family: var(--font-sans);\n  font-size: var(--fs-13);\n  color: var(--fg-secondary);\n  text-align: left;\n  background: transparent;\n  border: none;\n  border-radius: var(--radius-ctl);\n  cursor: pointer;\n}\n.pp-io-item:hover {\n  color: var(--fg);\n  background: var(--bg-hover);\n}\n.pp-io-item[data-active="true"] {\n  color: var(--accent);\n  background: var(--accent-tint);\n  font-weight: var(--fw-medium);\n}\n.pp-io-main {\n  min-width: 0;\n  /* \u53F3\u4FA7\u6BD4\u5DE6\u4FA7\u591A\u7559 4px\uFF1A\u5361\u7247\u53F3\u8FB9\u6846 + \u6EDA\u52A8\u6761\u5728\u7A84\u680F\u91CC\u4F1A\u8D34\u4F4F textarea/\u6309\u94AE */\n  padding: var(--sp-4) var(--sp-4) var(--sp-4) var(--sp-4);\n  padding-right: calc(var(--sp-4) + var(--sp-1));\n}\n.pp-io-head {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  flex-wrap: wrap;\n  margin-bottom: var(--sp-2);\n}\n.pp-io-title {\n  font-size: var(--fs-14);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-strong);\n}\n/* head \u662F flex + flex-wrap\uFF1A\u5B50\u9879\u9ED8\u8BA4\u53EF\u6536\u7F29\uFF0C\u7A84\u680F\u91CC\u300C\u6E05\u7A7A\u300D\u4F1A\u88AB\u538B\u5230 42px \u628A\u5B57\u88C1\u6389\u3002\n   \u6807\u9898\u5141\u8BB8\u7701\u7565\uFF0C\u6309\u94AE\u4E00\u5F8B\u4E0D\u6536\u7F29\u3002 */\n.pp-io-head > .pp-io-title {\n  min-width: 0;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.pp-io-head > .pp-btn {\n  flex: none;\n  /* \u4E24\u5B57\u6309\u94AE\uFF08\u6E05\u7A7A\uFF09\u5728 42px \u65F6\u8D34\u8FB9\uFF0C\u7ED9\u4E00\u70B9\u4F59\u91CF */\n  min-width: 56px;\n}\n.pp-io-head > .pp-btn:last-child {\n  margin-left: auto;\n}\n.pp-io-input {\n  margin-top: var(--sp-2);\n}\n.pp-io-stats {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  flex-wrap: wrap;\n  margin-top: var(--sp-2);\n}\n.pp-io-pre {\n  margin-top: var(--sp-3);\n}\n.pp-io-sample {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  margin-top: var(--sp-2);\n  min-width: 0;\n}\n/* \u73AF\u5883\u9875\uFF08Apifox\u300C\u73AF\u5883\u7BA1\u7406\u300D\u540C\u6784\uFF09\uFF1A\u5DE6\u73AF\u5883\u5217\u8868 + \u53F3\u7F16\u8F91\u533A\u3002\n   \u5DE6\u5217\u5BBD\u4E0E\u6587\u6863\u9875\u76EE\u5F55\u6811\u5171\u7528 --panel-w\uFF0C\u53F3\u533A\u9876\u4E0A\u662F\u9875\u7B7E\uFF08\u73AF\u5883\u53D8\u91CF / \u5168\u5C40\u53D8\u91CF / \u4F18\u5148\u7EA7\uFF09\u3002\n   \u539F\u6765\u7684\u4E00\u884C\u4E09\u5361\u5728 500px \u4E3B\u533A\u91CC\u6BCF\u5361\u53EA\u5269 250px\uFF0C\u53D8\u91CF\u8868\u8981\u6A2A\u5411\u6EDA\u52A8\u3001\n   \u4F18\u5148\u7EA7\u5361\u8BF4\u660E\u9010\u5B57\u6298\u884C\uFF0C\u64CD\u4F5C\u8DEF\u5F84\u4E5F\u4E0D\u5BF9\u2014\u2014\u5207\u6362\u73AF\u5883\u5728\u5DE6\u3001\u7F16\u8F91\u5728\u53F3\u624D\u5BF9\u5F97\u4E0A Apifox\u3002 */\n.pp-env-layout {\n  display: grid;\n  grid-template-columns: var(--panel-w) minmax(0, 1fr);\n  gap: var(--sp-4);\n  align-items: start;\n}\n@container ppmain (max-width: 820px) {\n  .pp-env-layout {\n    grid-template-columns: minmax(0, 1fr);\n    gap: var(--sp-3);\n  }\n  /* \u5806\u53E0\u540E\u5DE6\u5217\u8868\u72EC\u5360\u4E00\u884C\uFF1A\u73AF\u5883\u6761\u76EE\u6539\u6210\u6A2A\u5411\u53EF\u6EDA\u7684\u80F6\u56CA\uFF0C\u4E0D\u518D\u5360\u6389\u6574\u5C4F\u9AD8\u5EA6\u3002\n     .pp-panel \u81EA\u5E26 width:var(--panel-w) \u4E0E overflow:auto\uFF0C\u8FD9\u91CC\u5FC5\u987B\u4E00\u8D77\u8986\u76D6\uFF0C\n     \u5426\u5219\u5DE6\u5217\u4ECD\u662F 240px \u5B9A\u5BBD\u3001\u53F3\u4FA7\u7559\u4E00\u5927\u7247\u7A7A\u767D\u3002 */\n  .pp-env-layout .pp-env-side {\n    width: auto;\n    padding: 0;\n    overflow: visible;\n  }\n  .pp-env-layout .pp-env-tree,\n  .pp-env-layout .pp-tree {\n    display: flex;\n    flex-wrap: nowrap;\n    gap: var(--sp-2);\n    overflow-x: auto;\n    padding: var(--sp-1) var(--sp-3);\n  }\n  .pp-env-layout .pp-tree-row {\n    flex: none;\n    max-width: 200px;\n    margin: 0;\n    padding: 0 var(--sp-3);\n    height: var(--ctl-h);\n    border: 1px solid var(--border);\n    border-radius: var(--radius-pill);\n  }\n  .pp-env-layout .pp-tree-row[data-active="true"] {\n    border-color: var(--accent);\n  }\n}\n.pp-env-side {\n  display: flex;\n  flex-direction: column;\n  min-width: 0;\n  padding: var(--sp-2) 0;\n}\n.pp-env-side-head {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  padding: 0 var(--sp-4) var(--sp-2);\n  border-bottom: 1px solid var(--border);\n  margin-bottom: var(--sp-1);\n}\n.pp-env-side-head .pp-card-title {\n  margin: 0;\n  font-size: var(--fs-13);\n}\n.pp-env-side-head > .pp-btn:last-child {\n  margin-left: auto;\n}\n.pp-btn-accent {\n  color: var(--accent);\n}\n.pp-env-main {\n  min-width: 0;\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  overflow: hidden;\n}\n.pp-env-main > .pp-tabs {\n  border-bottom: 1px solid var(--border);\n}\n.pp-env-pane {\n  padding: var(--sp-4);\n}\n.pp-env-fields {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));\n  gap: var(--sp-3);\n  margin-bottom: var(--sp-4);\n}\n.pp-env-pane > .pp-card-title {\n  margin: 0 0 var(--sp-2) 0;\n}\n/* \u53D8\u91CF\u8868\u7A7A\u884C\uFF1A\u5DE6\u5BF9\u9F50\u4E00\u884C\u63D0\u793A\uFF0C\u4E0D\u8981\u5360\u6EE1\u884C\u9AD8\u7684\u5C45\u4E2D\u7559\u767D */\n.pp-env-vars-empty {\n  height: auto;\n  padding: var(--sp-2) var(--sp-1);\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-tertiary);\n  white-space: normal;\n}\n.pp-env-field {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-1);\n  margin-bottom: var(--sp-3);\n}\n.pp-env-field .pp-form-label {\n  width: auto;\n}\n.pp-env-field-row {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n}\n.pp-env-field-row .pp-input {\n  flex: 1;\n  min-width: 0;\n}\n.pp-env-check {\n  display: inline-flex;\n  align-items: center;\n  gap: var(--sp-1);\n  flex: none;\n  font-size: var(--fs-12);\n  color: var(--fg-secondary);\n  white-space: nowrap;\n}\n/* \u53D8\u91CF\u4F18\u5148\u7EA7\uFF1A\u7EB5\u5411\u56DB\u7EA7\uFF0C\u6BCF\u7EA7\u4E00\u884C\u300C\u5E8F\u53F7 + \u4F5C\u7528\u57DF\u300D\uFF0C\u8BF4\u660E\u7F29\u8FDB\u5728\u4E0B\u4E00\u884C\u3002\n   199px \u7684\u5361\u91CC\u300C1\uFF08\u6700\u9AD8\uFF09\u300D\u8FD9\u79CD\u957F\u5FBD\u6807\u4F1A\u628A\u4F5C\u7528\u57DF\u6324\u6210\u9010\u5B57\u6362\u884C\uFF0C\u6539\u6210\u5706\u5F62\u5E8F\u53F7\u3002 */\n.pp-priority-list {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-1);\n}\n.pp-priority-item {\n  display: grid;\n  grid-template-columns: 20px minmax(0, 1fr);\n  gap: var(--sp-2);\n  padding: var(--sp-2) 0;\n  border-bottom: 1px solid var(--border);\n}\n.pp-priority-item:last-child {\n  border-bottom: none;\n}\n.pp-priority-level {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  width: 20px;\n  height: 20px;\n  font-size: var(--fs-12);\n  line-height: 1;\n  font-weight: var(--fw-semibold);\n  color: var(--fg-secondary);\n  background: var(--bg-subtle);\n  border-radius: var(--radius-pill);\n}\n.pp-priority-item:first-child .pp-priority-level {\n  color: var(--fg-on-accent);\n  background: var(--accent);\n}\n.pp-priority-body {\n  display: flex;\n  flex-direction: column;\n  gap: 2px;\n  min-width: 0;\n}\n.pp-priority-scope {\n  font-size: var(--fs-13);\n  line-height: var(--lh-18);\n  font-weight: var(--fw-medium);\n  color: var(--fg-strong);\n}\n.pp-priority-note {\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-secondary);\n}\n/* Mock \u9875\uFF1A\u5DE6\u63A5\u53E3\u5217\u8868\uFF08240px\uFF0C\u4E0E\u6587\u6863\u9875\u76EE\u5F55\u6811\u540C\u5BBD\uFF09+ \u53F3\u914D\u7F6E\u7EB5\u5411\u4E24\u5361\u3002\n   \u4E4B\u524D\u662F\u4E24\u5217\u7F51\u683C\u585E\u4E09\u4E2A\u5B50\u9879\uFF0C\u7B2C\u4E09\u5757\u88AB\u6324\u5230\u7B2C\u4E8C\u884C\u5DE6\u4FA7\u3001\u4E0E\u53F3\u4FA7\u5F62\u6210\u9AD8\u5EA6\u5DEE\u3002 */\n.pp-mock-layout {\n  display: grid;\n  grid-template-columns: var(--panel-w) minmax(0, 1fr);\n  gap: var(--sp-4);\n  align-items: start;\n}\n.pp-mock-side {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-4);\n  min-width: 0;\n}\n@container ppmain (max-width: 900px) {\n  .pp-mock-layout {\n    grid-template-columns: minmax(0, 1fr);\n  }\n  .pp-mock-layout .pp-panel {\n    width: auto;\n    max-height: calc(var(--tree-row-h) * 10);\n  }\n}\n.pp-debug-meta {\n  display: flex;\n  align-items: center;\n  flex-wrap: wrap;\n  gap: var(--sp-2);\n  margin-top: var(--sp-2);\n  font-size: var(--fs-12);\n}\n.pp-debug-meta .pp-select {\n  flex: none;\n  width: auto;\n  min-width: 96px;\n}\n.pp-debug-meta .pp-mono {\n  flex: 1;\n  min-width: 0;\n}\n/* \u9875\u7B7E\u4F53\uFF1A\u4E0E\u9875\u7B7E\u6761\u4E4B\u95F4\u7559 8px\uFF0C\u5185\u5BB9\u533A\u81EA\u5DF1\u6EDA\u52A8 */\n.pp-debug-tabbody {\n  margin-top: var(--sp-2);\n  min-width: 0;\n}\n/* \u2014\u2014 \u8C03\u8BD5\uFF1A\u5BBD\u5BB9\u5668\u4E09\u680F / \u7A84\u5BB9\u5668\u5355\u5217 \u2014\u2014 */\n/* \u4E09\u680F\uFF08\u6811 / \u8BF7\u6C42\u7F16\u8F91 / \u54CD\u5E94\uFF09\u5728 400~700px \u7684\u4E3B\u533A\u91CC\u6BCF\u680F\u53EA\u5269 100 \u591A\u50CF\u7D20\uFF0C\n   \u53C2\u6570\u8868\u88AB\u6324\u6210\u4E00\u6761\uFF0C\u8FD9\u624D\u662F\u300C\u5E03\u5C40\u9519\u4E71\u300D\u7684\u6839\u56E0\u3002\u7A84\u5BB9\u5668\u4E0B\u6539\u4E3A\u5355\u5217\u7EB5\u5411\u5806\u53E0\u3002\n   \u9996\u5217\u4E0E\u6587\u6863\u9875\u5171\u7528 --panel-w\uFF0C\u4E24\u9875\u7684\u63A5\u53E3\u6811\u5BBD\u5EA6\u4FDD\u6301\u4E00\u81F4\u3002 */\n\n.pp-pane {\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  padding: var(--card-pad);\n  min-width: 0;\n}\n/* \u2014\u2014 \u8C03\u8BD5\u53F0 URL \u884C\uFF08\u5BF9\u9F50 Apifox .apiCase .main-input-bar\uFF09\u2014\u2014\n   \u6574\u884C\u9AD8 40px\uFF1Bmethod \u5DE6\u5185\u8FB9\u8DDD 12px \u53F3 8px\uFF1BbaseUrl / path \u662F\u4E24\u4E2A\u80F6\u56CA\n   \uFF08\u5706\u89D2 6px\u3001margin 5px\u3001\u5185\u8FB9\u8DDD 0 10px\u3001\u884C\u9AD8 28px\uFF09\uFF1B\u53D1\u9001\u6309\u94AE\u7EC4 \u4E3B + 25px \u4E0B\u62C9\u3002 */\n.pp-url-row {\n  display: flex;\n  align-items: center;\n  flex-wrap: wrap;\n  gap: var(--sp-2);\n  min-height: var(--ctl-h-lg);\n}\n.pp-url-row .pp-select {\n  width: 104px;\n  flex: none;\n  padding-left: var(--sp-3);\n}\n.pp-url-row .pp-input {\n  flex: 1;\n  height: var(--ctl-h-sm);\n}\n/* \u7A84\u5BB9\u5668\uFF1AURL \u884C\u6324\u5728\u4E00\u884C\u65F6\u8DEF\u5F84\u8F93\u5165\u6846\u53EA\u5269\u51E0\u5341\u50CF\u7D20\uFF08"\u672A\u914D\u7F6E baseUrl" \u80F6\u56CA\u672C\u8EAB\u5C31\u8981 90px\uFF09\u3002\n   \u8BA9\u8DEF\u5F84\u8F93\u5165\u6846\u72EC\u5360\u7B2C\u4E8C\u884C\uFF0C\u5BBD\u5EA6\u62C9\u6EE1\uFF0C\u53D1\u9001\u7EC4\u4ECD\u7559\u5728\u7B2C\u4E00\u884C\u672B\u5C3E\u3002 */\n@container ppmain (max-width: 640px) {\n  .pp-url-row .pp-input {\n    order: 9;\n    flex-basis: 100%;\n  }\n  .pp-url-row .pp-url-pill {\n    max-width: 32%;\n  }\n}\n.pp-url-method {\n  flex: none;\n  padding: 0 var(--sp-2) 0 var(--sp-3);\n  font-size: var(--fs-14);\n  font-weight: var(--fw-medium);\n  color: var(--fg-strong);\n  line-height: var(--ctl-h-lg);\n}\n/* baseUrl / path \u80F6\u56CA\uFF1AApifox \u628A\u4E24\u8005\u62C6\u6210\u72EC\u7ACB\u7684\u5706\u89D2\u5757\uFF0C\u89C6\u89C9\u4E0A\u533A\u5206\u300C\u73AF\u5883\u57DF\u300D\u4E0E\u300C\u8DEF\u5F84\u300D */\n.pp-url-pill {\n  display: inline-flex;\n  align-items: center;\n  flex: none;\n  max-width: 40%;\n  height: var(--ctl-h-sm);\n  margin: 0 var(--sp-1);\n  padding: 0 var(--sp-2);\n  font-family: var(--font-mono);\n  font-size: var(--fs-12);\n  line-height: var(--ctl-h-sm);\n  color: var(--fg-secondary);\n  background: var(--bg-subtle);\n  border-radius: var(--radius-ctl);\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.pp-url-pill-grow {\n  flex: 1;\n  max-width: none;\n}\n/* \u53D1\u9001\u6309\u94AE\u7EC4\uFF1A\u4E3B\u6309\u94AE\u5403\u6EE1\u5269\u4F59\u5BBD\u5EA6\uFF0C\u53F3\u7AEF 25px \u4E0B\u62C9\u7BAD\u5934\uFF08Apifox .send-btn .ui-btn-group\uFF09 */\n.pp-send-group {\n  display: inline-flex;\n  flex: 0 1 auto;\n  min-width: 0;\n  gap: 0;\n}\n/* Apifox .action-send \u5BBD 95px\uFF1A\u4E3B\u6309\u94AE\u5403\u6EE1\u3001\u53F3\u7AEF 25px \u4E0B\u62C9\u4F4D */\n.pp-url-row .pp-send-group {\n  flex: none;\n  width: 95px;\n}\n.pp-send-group .pp-btn:first-child {\n  border-top-right-radius: 0;\n  border-bottom-right-radius: 0;\n}\n.pp-send-group .pp-btn:last-child {\n  width: calc(var(--hit) - 3px);\n  padding: 0;\n  border-top-left-radius: 0;\n  border-bottom-left-radius: 0;\n}\n/* \u5206\u7EC4\u6807\u9898\uFF1A\u5DE6\u8FB9 3px \u4E3B\u8272\u7AD6\u7EBF + \u5DE6\u5185\u8FB9\u8DDD 10px + 16px \u5B57\n   \uFF08Apifox .apiDebug .group-title \u539F\u6587\uFF1Aborder-left:3px; margin-left:2px; padding-left:10px; font-size:16px\uFF09 */\n.pp-group-title {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  margin: var(--sp-2) 0 var(--sp-1) var(--sp-1);\n  /* 10px \u4E0D\u5728 4/8/12 \u523B\u5EA6\u4E0A\uFF0C\u4F46\u8FD9\u662F Apifox \u539F\u6587\u503C\uFF0C\u5199 calc \u4FDD\u6301\u53EF\u8FFD\u6EAF */\n  padding-left: calc(var(--sp-2) + var(--sp-1) / 2);\n  font-size: var(--fs-16);\n  line-height: var(--lh-24);\n  font-weight: var(--fw-medium);\n  color: var(--fg-strong);\n  border-left: 3px solid var(--accent);\n}\n\n/* \u2014\u2014 \u6D41\u7A0B\u56FE\u5BB9\u5668 \u2014\u2014 */\n/* \u6D41\u7A0B\u56FE\u9875\uFF08Apifox \u6D4B\u8BD5\u573A\u666F\u540C\u6784\uFF09\uFF1A\u5DE6\u6B65\u9AA4\u5217\u8868 + \u53F3\u753B\u5E03 + \u4E0B\u65B9\u5C5E\u6027\u9762\u677F\u3002\n   \u753B\u5E03\u5E38\u9A7B\uFF0C\u6539\u4EFB\u4E00\u6B65\u5373\u65F6\u91CD\u7ED8\uFF1B\u4E0D\u518D\u7528\u300C\u6574\u5BBD\u753B\u5E03 + \u6574\u5BBD\u8868\u683C\u300D\u4E0A\u4E0B\u5806\u53E0\u2014\u2014\n   \u8868\u683C\u5728 500px \u4E3B\u533A\u91CC\u8981\u6A2A\u5411\u6EDA 640px\uFF0C\u6539\u4E00\u6B65\u5F97\u6765\u56DE\u6EDA\u4E24\u6B21\u3002 */\n.pp-flow-layout {\n  display: grid;\n  grid-template-columns: var(--panel-w) minmax(0, 1fr);\n  gap: var(--sp-4);\n  align-items: start;\n}\n@container ppmain (max-width: 820px) {\n  .pp-flow-layout {\n    grid-template-columns: minmax(0, 1fr);\n    gap: var(--sp-3);\n  }\n  /* \u5806\u53E0\u540E\u6B65\u9AA4\u5217\u8868\u9AD8\u5EA6\u538B\u5230 8 \u884C\uFF0C\u907F\u514D\u628A\u753B\u5E03\u6324\u5230\u9996\u5C4F\u4E4B\u5916 */\n  .pp-flow-layout .pp-flow-steps {\n    max-height: calc(var(--row-h) * 8);\n  }\n  .pp-flow-layout .pp-flow-side {\n    width: auto;\n    overflow: visible;\n  }\n}\n.pp-flow-side {\n  display: flex;\n  flex-direction: column;\n  min-width: 0;\n  padding: var(--sp-2) 0;\n}\n.pp-flow-side-head {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  padding: 0 var(--sp-4) var(--sp-2);\n  border-bottom: 1px solid var(--border);\n  margin-bottom: var(--sp-1);\n}\n.pp-flow-side-head .pp-card-title {\n  margin: 0;\n  font-size: var(--fs-13);\n}\n.pp-flow-side-head > .pp-btn:last-child {\n  margin-left: auto;\n}\n.pp-flow-steps {\n  display: flex;\n  flex-direction: column;\n  gap: 1px;\n  max-height: calc(var(--row-h) * 16);\n  overflow: auto;\n}\n.pp-flow-step {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  padding: var(--sp-1) var(--sp-3);\n  margin: 0 var(--sp-2);\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-secondary);\n  border-radius: var(--radius-ctl);\n  cursor: pointer;\n}\n.pp-flow-step:hover {\n  color: var(--fg);\n}\n.pp-flow-step[data-active="true"] {\n  color: var(--fg);\n  background: var(--bg-hover);\n  font-weight: var(--fw-medium);\n}\n.pp-flow-step-no {\n  flex: none;\n  width: 18px;\n  font-family: var(--font-mono);\n  font-size: var(--fs-12);\n  color: var(--fg-tertiary);\n  text-align: right;\n}\n.pp-flow-step[data-active="true"] .pp-flow-step-no {\n  color: var(--accent);\n}\n.pp-flow-step-body {\n  display: flex;\n  flex-direction: column;\n  min-width: 0;\n  flex: 1;\n}\n.pp-flow-step-name {\n  color: inherit;\n}\n.pp-flow-step-msg {\n  font-family: var(--font-mono);\n  font-size: var(--fs-12);\n  color: var(--fg-tertiary);\n}\n.pp-flow-step-act {\n  flex: none;\n  font-size: var(--fs-12);\n  color: var(--fg-tertiary);\n}\n.pp-flow-main {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-4);\n  min-width: 0;\n}\n.pp-flow-canvas {\n  min-width: 0;\n  overflow-x: auto;\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  padding: var(--sp-4);\n}\n.pp-flow-canvas svg {\n  min-width: 100%;\n  display: block;\n}\n@container ppmain (max-width: 700px) {\n  .pp-flow-canvas svg {\n    min-width: 620px;\n  }\n}\n.pp-flow-props {\n  padding: var(--sp-4);\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n}\n.pp-flow-prop-grid {\n  display: grid;\n  grid-template-columns: 72px minmax(0, 1fr);\n  gap: var(--sp-2) var(--sp-3);\n  align-items: center;\n}\n.pp-flow-prop-grid .pp-form-label {\n  width: auto;\n  font-size: var(--fs-13);\n}\n.pp-flow-prop-row {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  min-width: 0;\n}\n.pp-flow-prop-row .pp-input {\n  flex: 1;\n  min-width: 0;\n}\n.pp-flow-name {\n  width: 180px;\n}\n.pp-flow-source {\n  margin-bottom: var(--sp-2);\n}\n.pp-seq-wrap {\n  overflow-x: auto;\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  background: var(--bg-surface);\n  padding: var(--sp-4);\n}\n.pp-seq-wrap svg {\n  min-width: 100%;\n  display: block;\n}\n/* \u7A84\u5BB9\u5668\uFF1A\u56DB\u4E2A\u6CF3\u9053\u6324\u5728 500px \u91CC\u6587\u5B57\u53E0\u6210\u4E00\u56E2\uFF0C\u7ED9 svg \u4E00\u4E2A\u53EF\u8BFB\u4E0B\u9650\uFF0C\u8D85\u51FA\u7531 .pp-seq-wrap \u6EDA\u52A8 */\n@container ppmain (max-width: 700px) {\n  .pp-seq-wrap svg {\n    min-width: 620px;\n  }\n}\n.pp-split-hint {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  padding: var(--sp-2) var(--sp-3);\n  font-size: var(--fs-13);\n  line-height: var(--lh-20);\n  color: var(--warning);\n  border: 1px solid var(--warning);\n  border-radius: var(--radius-ctl);\n  background: var(--bg-surface);\n}\n\n/* \u2014\u2014 \u7A7A\u6001 \u2014\u2014 */\n/* \u7A7A\u6001\uFF1A\u7D27\u51D1\u5C45\u4E2D\u5361\u3002\u6536\u7A84\u5230 --empty-w\uFF08360px\uFF09\u2014\u2014\u4E4B\u524D\u94FA\u6EE1 460px \u5BBD\u53EA\u653E\u4E00\u884C\u5B57\uFF0C\n   \u89C6\u89C9\u4E0A\u50CF\u4E00\u5757\u6CA1\u505A\u5B8C\u7684\u5360\u4F4D\u3002\u56FE\u6807\u7528\u4E09\u7EA7\u8272\uFF0C\u4E3B\u6587\u6848\u7528\u4E8C\u7EA7\u8272\uFF0C\u5C42\u7EA7\u9760\u989C\u8272\u4E0E\u5B57\u53F7\u533A\u5206\u3002 */\n.pp-empty {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  gap: var(--sp-2);\n  width: 100%;\n  max-width: var(--empty-w);\n  /* margin:auto \u5728 flex \u5BB9\u5668\uFF08.pp-page \u662F flex column\uFF09\u91CC\u540C\u65F6\u6C34\u5E73\u4E0E\u5782\u76F4\u5C45\u4E2D\uFF1B\n     \u4E4B\u524D\u5199\u6B7B var(--sp-6) auto \u53EA\u6C34\u5E73\u5C45\u4E2D\uFF0C\u7A7A\u6001\u4F1A\u8D34\u5728\u9876\u90E8\uFF0C\u4E0B\u65B9\u7559\u4E00\u5927\u7247\u7A7A\u767D\u3002 */\n  margin: auto;\n  padding: var(--sp-6) var(--sp-4);\n  text-align: center;\n  font-size: var(--fs-14);\n  line-height: var(--lh-20);\n  color: var(--fg-tertiary);\n  border: 1px dashed var(--border-strong);\n  border-radius: var(--radius-card);\n  background: var(--bg-surface);\n}\n.pp-empty-icon {\n  color: var(--fg-tertiary);\n}\n.pp-empty-text {\n  color: var(--fg-secondary);\n  font-weight: var(--fw-medium);\n}\n.pp-empty-action {\n  margin-top: var(--sp-1);\n}\n/* \u9762\u677F\u5185\u7684\u7A7A\u6001\uFF08\u5DE6\u6811\uFF09\uFF1A\u4E0D\u8981\u865A\u7EBF\u6846\u4E0E\u56FE\u6807\uFF0C\u53EA\u7559\u4E00\u884C\u8BF4\u660E */\n.pp-panel .pp-empty {\n  max-width: none;\n  margin: var(--sp-3) 0;\n  padding: var(--sp-3) var(--sp-2);\n  border: none;\n  background: transparent;\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n}\n.pp-panel .pp-empty-icon,\n.pp-panel .pp-empty-action {\n  display: none;\n}\n\n\n/* ============================================================\n/* ============================================================\n   \u5DE5\u4F5C\u53F0\u9AA8\u67B6 v3\uFF1A\u9876\u680F 48px + \u5DE6\u4FA7 240px \u6587\u5B57\u5BFC\u822A + 44px \u9875\u7B7E\u6761\n   \u6570\u503C\u5168\u90E8\u5BF9\u9F50 Apifox 2.8.55 \u5B9E\u6D4B\uFF08docs/apifox-visual-parity-spec.md\uFF09\uFF1A\n     \u9876\u680F --ui-layout-header-height: 48px\uFF0C\u5185\u8FB9\u8DDD 0 50px\n     \u5DE6\u4FA7 .sider-bxNtfB: width 240px / padding 20px / \u83DC\u5355\u9879\u9AD8 32px / \u5206\u7EC4\u9AD8 24px\n     \u9875\u7B7E\u6761 --app-main-tabs-height: 44px\n   \u539F 64px \u56FE\u6807\u8F68 + \u6D6E\u5C42\u4E8C\u7EA7\u83DC\u5355\u5DF2\u5E9F\u5F03\uFF1A\u56FE\u6807\u4E0B\u7684\u5C0F\u5B57\u4ECD\u4E0D\u8DB3\u4EE5\u8BA9\u4EBA\u4E00\u773C\u8BA4\u51FA\u529F\u80FD\uFF0C\n   \u4E14\u4E8C\u7EA7\u85CF\u5728\u6D6E\u5C42\u91CC\u591A\u4E00\u6B21\u70B9\u51FB\uFF1BApifox \u7528 240px \u5E38\u9A7B\u6587\u5B57\u83DC\u5355\uFF0C\u8FD9\u91CC\u7167\u505A\u3002\n   ============================================================ */\n\n/* \u2014\u2014 \u5DE5\u4F5C\u53F0\uFF1A\u9876\u680F + sider/\u4E3B\u533A \u4E24\u884C\u4E24\u5217 \u2014\u2014 */\n.pp-workbench-v2 {\n  display: grid;\n  grid-template-rows: var(--topbar-h) minmax(0, 1fr);\n  height: 100%;\n  min-height: 0;\n}\n.pp-shell {\n  display: grid;\n  grid-template-columns: var(--sider-w) minmax(0, 1fr);\n  min-height: 0;\n  position: relative;\n}\n\n/* \u2014\u2014 \u5DE6\u4FA7\u5BFC\u822A\uFF08Apifox .sider-bxNtfB \u540C\u89C4\u683C\uFF09\u2014\u2014 */\n.pp-sider {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-1);\n  padding: var(--sider-pad);\n  background: var(--bg-surface);\n  border-right: 1px solid var(--border);\n  min-height: 0;\n  overflow: auto;\n}\n/* \u5206\u7EC4\u6807\u9898\uFF1A12px / \u4E09\u7EA7\u8272 / \u9AD8 24px\uFF0C\u7EC4\u95F4\u4E0A\u95F4\u8DDD 12px\uFF08Apifox menu-item-group\uFF09 */\n.pp-sider-group {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  height: var(--sider-group-h);\n  margin-top: var(--sp-3);\n  padding: 0 var(--sp-2);\n  font-size: var(--fs-12);\n  font-weight: var(--fw-medium);\n  color: var(--fg-tertiary);\n  white-space: nowrap;\n}\n.pp-sider-group:first-child {\n  margin-top: 0;\n}\n/* \u83DC\u5355\u9879\uFF1A\u9AD8 32px\u3001\u5706\u89D2 6px\u300114px \u5B57\uFF0C\u5DE6\u5185\u8FB9\u8DDD 8px\uFF08Apifox menu-item\uFF09 */\n.pp-sider-item {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  height: var(--sider-item-h);\n  padding: 0 var(--sp-2);\n  font-size: var(--fs-14);\n  line-height: var(--lh-20);\n  color: var(--fg-secondary);\n  text-decoration: none;\n  border-radius: var(--radius-ctl);\n  cursor: pointer;\n  white-space: nowrap;\n  overflow: hidden;\n}\n.pp-sider-item:hover {\n  color: var(--fg);\n  background: var(--bg-hover);\n}\n.pp-sider-item:focus-visible {\n  outline: 2px solid var(--accent);\n  outline-offset: -2px;\n}\n/* \u9009\u4E2D\uFF1A\u4E3B\u8272\u6587\u5B57 + \u6DE1\u4E3B\u8272\u5E95\uFF08Apifox \u83DC\u5355\u9009\u4E2D\u6001\uFF09 */\n.pp-sider-item[data-active="true"] {\n  color: var(--accent);\n  background: var(--accent-tint);\n  font-weight: var(--fw-medium);\n}\n.pp-sider-icon {\n  flex: none;\n  width: var(--icon);\n  height: var(--icon);\n  color: inherit;\n}\n.pp-sider-label {\n  min-width: 0;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.pp-sider-spacer {\n  flex: 1;\n}\n\n/* \u2014\u2014 \u5F39\u5C42\u83DC\u5355\uFF08\u4E09\u7EA7\uFF0C\u5BF9\u9F50 Apifox .ui-dropdown-menu / .ui-menu-item\uFF09\u2014\u2014\n   \u4E00\u7EA7\u9762\u677F\u6302\u5728\u89E6\u53D1\u6309\u94AE\u4E0B\u65B9\uFF1B\u4E8C\u7EA7\u3001\u4E09\u7EA7\u5411\u53F3/\u5DE6\u6D6E\u51FA\u5E76\u5782\u76F4\u5BF9\u9F50\u5230\u89E6\u53D1\u9879\u3002\n   Apifox \u539F\u6587\uFF1A\u9879\u9AD8 32px\u3001\u5185\u8FB9\u8DDD 0 8px\u3001\u5B50\u83DC\u5355\u7BAD\u5934\u5BBD 10px \u9760\u53F3 16px\u3001\n   \u5206\u7EC4\u6807\u9898 12px/500 \u5185\u8FB9\u8DDD 0 16px\u3001\u9762\u677F\u5706\u89D2 8px + \u4E24\u6BB5\u5F0F\u6295\u5F71\u3002 */\n.pp-menu-anchor {\n  position: relative;\n  display: inline-flex;\n  flex: none;\n}\n/* \u9762\u677F\u5185\u7684\u9879\u951A\u70B9\u5FC5\u987B\u6491\u6EE1\u5BBD\u5EA6\uFF0C\u5426\u5219\u5B50\u9762\u677F\u7684 right:100% \u4F1A\u8D34\u5230\u6587\u5B57\u800C\u4E0D\u662F\u9762\u677F\u8FB9\u7F18 */\n.pp-menu .pp-menu-anchor {\n  display: block;\n  width: 100%;\n}\n.pp-menu {\n  /* \u7528 fixed \u800C\u4E0D\u662F absolute\uFF1A\u5BBF\u4E3B\u4FA7\u8FB9\u680F\u9762\u677F\u662F 720px \u4E14\u5E26 overflow:hidden/clip\uFF0C\n     \u4E09\u7EA7\u7EA7\u8054\uFF08200\xD73\uFF09\u4ECE\u6309\u94AE\u5F80\u5DE6\u5C55\u5F00\u4F1A\u8D8A\u51FA\u5BB9\u5668\u5DE6\u8FB9\u754C\u88AB\u88C1\u6389\u3002\n     fixed \u4E0D\u53D7\u7956\u5148 overflow \u88C1\u526A\uFF0C\u5750\u6807\u7531 JS \u7528 getBoundingClientRect \u7ED9\u51FA\u3002 */\n  position: fixed;\n  z-index: var(--z-menu);\n  min-width: var(--menu-w);\n  padding: var(--menu-pad);\n  overflow: visible;\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  box-shadow: var(--shadow-menu);\n}\n/* \u5185\u5C42\u6EDA\u52A8\u5BB9\u5668\uFF1A\u53EA\u6709\u5B83\u9650\u9AD8\u5E76\u6EDA\u52A8\uFF0C\u4FDD\u8BC1\u7236\u9762\u677F\u4ECD\u53EF overflow: visible */\n.pp-menu-scroll {\n  max-height: calc(var(--menu-item-h) * 12);\n  overflow: auto;\n}\n/* \u4E8C\u7EA7 / \u4E09\u7EA7\u9762\u677F\uFF1A\u76F8\u5BF9\u7236\u9879\u6D6E\u51FA\u3002\u56E0\u4E3A\u89E6\u53D1\u6309\u94AE\u5728\u4E3B\u533A\u53F3\u7F18\uFF0C\n   \u5B50\u9762\u677F\u7EDF\u4E00\u5411\u5DE6\u5F00\uFF08Apifox \u9760\u8FB9\u65F6\u540C\u6837\u7FFB\u8F6C\u65B9\u5411\uFF09\u3002 */\n/* \u5B50\u9762\u677F\u5C42\u7EA7\uFF1A\u9010\u5C42 +1\uFF0C\u907F\u514D\u6D45\u5C42\u76D6\u4F4F\u5DF2\u5C55\u5F00\u7684\u6DF1\u5C42\u5185\u5BB9 */\n.pp-menu[data-depth="2"] { z-index: calc(var(--z-menu) + 1); }\n.pp-menu[data-depth="3"] { z-index: calc(var(--z-menu) + 2); }\n.pp-menu .pp-menu .pp-menu {\n  z-index: calc(var(--z-menu) + 2);\n}\n/* \u5B50\u9762\u677F\u5185\u4E0D\u518D\u9700\u8981\u81EA\u5DF1\u7684\u5185\u5C42\u6EDA\u52A8\u9650\u9AD8 */\n.pp-menu .pp-menu-scroll {\n  max-height: calc(var(--menu-item-h) * 12);\n}\n.pp-menu-item {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  width: 100%;\n  height: var(--menu-item-h);\n  padding: 0 var(--sp-2);\n  font-family: var(--font-sans);\n  font-size: var(--fs-14);\n  line-height: var(--lh-20);\n  color: var(--fg);\n  text-align: left;\n  text-decoration: none;\n  background: transparent;\n  border: none;\n  border-radius: var(--radius-ctl);\n  cursor: pointer;\n  white-space: nowrap;\n  overflow: hidden;\n}\n.pp-menu-item:hover,\n.pp-menu-item[data-open="true"] {\n  background: var(--bg-hover);\n}\n.pp-menu-item:focus-visible {\n  outline: 2px solid var(--accent);\n  outline-offset: -2px;\n}\n.pp-menu-item[data-active="true"] {\n  color: var(--accent);\n  font-weight: var(--fw-medium);\n}\n.pp-menu-item[disabled] {\n  color: var(--fg-tertiary);\n  cursor: not-allowed;\n}\n.pp-menu-label {\n  min-width: 0;\n  flex: 1;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n/* \u5B50\u83DC\u5355\u7BAD\u5934\uFF1A10px \u5BBD\uFF0C\u4E24\u6761 1.5px \u659C\u7EBF\uFF08Apifox .ui-menu-submenu-arrow\uFF09 */\n.pp-menu-arrow {\n  flex: none;\n  width: var(--sp-3);\n  height: var(--icon-sm);\n  color: var(--fg-tertiary);\n  font-size: var(--fs-12);\n  line-height: var(--icon-sm);\n  text-align: center;\n}\n.pp-menu-hint {\n  flex: none;\n  margin-left: auto;\n  font-family: var(--font-mono);\n  font-size: var(--fs-12);\n  color: var(--fg-tertiary);\n}\n.pp-menu-group {\n  height: var(--ctl-h-sm);\n  padding: 0 var(--sp-4);\n  font-size: var(--fs-12);\n  line-height: var(--lh-20);\n  font-weight: var(--fw-medium);\n  color: var(--fg-tertiary);\n  white-space: nowrap;\n}\n.pp-menu-sep {\n  height: 1px;\n  margin: var(--sp-1) calc(var(--sp-2) * -1);\n  background: var(--border);\n}\n\n/* \u2014\u2014 \u9875\u7B7E\u6761\uFF08Apifox .layoutTabBar\uFF0C44px \u5361\u7247\u5F0F\uFF09\u2014\u2014 */\n.pp-tabbar {\n  display: flex;\n  align-items: flex-end;\n  height: var(--tabbar-h);\n  padding: 0 var(--sp-2);\n  background: var(--bg-surface);\n  border-bottom: 1px solid var(--border);\n  overflow-x: auto;\n  overflow-y: hidden;\n  scrollbar-width: none;\n}\n.pp-tabbar::-webkit-scrollbar {\n  height: calc(var(--scrollbar) * 0);\n}\n.pp-tabbar-item {\n  display: inline-flex;\n  align-items: center;\n  gap: var(--sp-1);\n  height: var(--tabbar-h);\n  padding: 0 var(--sp-4);\n  font-size: var(--fs-14);\n  line-height: var(--lh-20);\n  color: var(--fg-secondary);\n  background: transparent;\n  border: none;\n  border-left: 1px solid var(--border);\n  cursor: pointer;\n  white-space: nowrap;\n  flex: none;\n}\n.pp-tabbar-item:first-child {\n  border-left: none;\n}\n.pp-tabbar-item:hover {\n  color: var(--fg);\n}\n/* \u6FC0\u6D3B\uFF1A\u767D\u5E95 + \u5DE6\u53F3 1px \u8FB9\u6846 + \u6DF1\u8272\u6587\u5B57\uFF08Apifox tabs-tab-active\uFF09 */\n.pp-tabbar-item[data-active="true"] {\n  color: var(--fg-strong);\n  background: var(--bg-surface);\n  border-right: 1px solid var(--border);\n  border-top: 1px solid transparent;\n  font-weight: var(--fw-medium);\n}\n.pp-tabbar-close {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  width: var(--icon-sm);\n  height: var(--icon-sm);\n  margin-left: var(--sp-1);\n  color: var(--fg-tertiary);\n  background: transparent;\n  border: none;\n  border-radius: var(--radius-sm);\n  cursor: pointer;\n}\n.pp-tabbar-close:hover {\n  color: var(--fg);\n  background: var(--bg-hover);\n}\n\n/* \u2014\u2014 \u4E3B\u533A\uFF08v2\uFF1A\u5360\u6EE1\u5269\u4F59\u5BBD\u5EA6\uFF09\u2014\u2014 */\n/* \u4E3B\u533A\u662F\u5BB9\u5668\u67E5\u8BE2\u7684\u951A\u70B9\uFF1A\u4FA7\u8FB9\u680F\u91CC\u7684\u5BBD\u5EA6\u53EA\u6709 400~700px\uFF0C\u9875\u9762\u5185\u90E8\u5E03\u5C40\u5FC5\u987B\u6309\n   \u300C\u5BB9\u5668\u5BBD\u5EA6\u300D\u800C\u4E0D\u662F\u300C\u89C6\u53E3\u5BBD\u5EA6\u300D\u81EA\u9002\u5E94\u2014\u2014\u7528 @media \u5224\u65AD\u89C6\u53E3\u6C38\u8FDC\u547D\u4E2D\u4E0D\u4E86\u7A84\u6001\u3002 */\n.pp-main-v2 {\n  min-width: 0;\n  min-height: 0;\n  overflow: auto;\n  background: var(--bg-app);\n  container-type: inline-size;\n  container-name: ppmain;\n  /* \u5E2E\u52A9\u6D6E\u5C42\u7684\u5B9A\u4F4D\u53C2\u7167\uFF08.pp-help-card \u7528 absolute \u8D34\u53F3\u4E0A\u89D2\uFF09 */\n  position: relative;\n}\n\n/* \u2014\u2014 \u9875\u5934 \u2014\u2014 */\n/* \u9875\u5934\uFF1A\u5BF9\u9F50 Apifox .overview-header-container\uFF08\u4E0B\u8FB9\u6846 1px / padding 16px 20px 16px 14px / \u6700\u5927\u5BBD 1512px\uFF09 */\n.pp-page-head {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-3);\n  max-width: var(--content-max-w);\n  padding: var(--sp-4) var(--sp-5) var(--sp-4) var(--sp-3);\n  background: var(--bg-surface);\n  border-bottom: 1px solid var(--border);\n}\n/* \u6982\u89C8\u9875\u5934\uFF1A\u6807\u9898 18px / 700\uFF08Apifox .overview-header__title\uFF09 */\n/* \u9875\u5934\uFF1AApifox .overview-header-container \u539F\u6587\n   \uFF08border-bottom:1px split; max-width:1512px; padding:16px 20px 16px 14px\uFF09\u3002\n   \u7A84\u5BB9\u5668\uFF08\u4FA7\u8FB9\u680F\u91CC\u53EA\u6709 455px\uFF09\u65F6\u52A8\u4F5C\u533A\u5FC5\u987B\u6362\u884C\uFF0C\u5426\u5219\u4F1A\u628A\u9875\u9762\u9876\u51FA 111~693px \u6A2A\u5411\u6EA2\u51FA\u3002 */\n.pp-overview-head {\n  display: flex;\n  align-items: center;\n  flex-wrap: wrap;\n  gap: var(--sp-2) var(--sp-3);\n  width: 100%;\n  max-width: var(--content-max-w);\n  padding: var(--sp-4) var(--sp-5) var(--sp-4) var(--sp-3);\n  background: var(--bg-surface);\n  border-bottom: 1px solid var(--border);\n}\n.pp-overview-title {\n  margin-right: auto;\n  font-size: var(--fs-18);\n  line-height: var(--lh-24);\n  font-weight: 700;\n  color: var(--fg-strong);\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n/* \u52A8\u4F5C\u533A\uFF1AApifox .overview-header-actions\uFF08inline-flex / \u9AD8 32px\uFF09\u3002\n   \u52A0 flex-wrap \u4E0E min-width:0\uFF1A\u52A8\u4F5C\u533A\u91CC\u585E 4 \u4E2A\u63A7\u4EF6\u65F6\uFF08\u603B\u89C8\u9875\uFF09\u5728 455px \u5BB9\u5668\u91CC\u5FC5\u7136\u6EA2\u51FA\uFF0C\n   \u5141\u8BB8\u6362\u884C\u662F\u552F\u4E00\u4E0D\u6539\u8BED\u4E49\u7684\u89E3\u6CD5\uFF1B\u5B50\u63A7\u4EF6\u7528 flex:0 1 auto \u5141\u8BB8\u6536\u7F29\u3002 */\n.pp-overview-actions {\n  display: inline-flex;\n  align-items: center;\n  justify-content: flex-end;\n  flex-wrap: wrap;\n  gap: var(--sp-2);\n  min-width: 0;\n  margin-left: auto;\n  min-height: var(--ctl-h);\n}\n.pp-overview-actions > .pp-input,\n.pp-overview-actions > .pp-select {\n  flex: 0 1 auto;\n  min-width: 96px;\n}\n/* \u6587\u6863\u9875\u5934\uFF1A\u4E0E\u6982\u89C8\u540C\u89C4\u683C */\n.pp-doc-head {\n  display: flex;\n  align-items: center;\n  flex-wrap: wrap;\n  gap: var(--sp-2) var(--sp-3);\n  width: 100%;\n  max-width: var(--content-max-w);\n  padding: var(--sp-4) var(--sp-5) var(--sp-4) var(--sp-3);\n  background: var(--bg-surface);\n  border-bottom: 1px solid var(--border);\n}\n.pp-doc-title {\n  margin-right: auto;\n  font-size: var(--fs-18);\n  line-height: var(--lh-24);\n  font-weight: 700;\n  color: var(--fg-strong);\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n/* \u6A2A\u5411\u8868\u5355\u6805\u683C\uFF1AApifox .gridForm.ui-form-horizontal\uFF08fit-content(360px) 1fr / gap 16px\uFF09 */\n.pp-form-grid {\n  display: grid;\n  grid-template-columns: fit-content(360px) minmax(0, 1fr);\n  gap: var(--sp-4);\n  align-items: center;\n}\n.pp-page-head-main {\n  min-width: 0;\n  flex: 1;\n}\n.pp-page-head .pp-page-title {\n  margin: 0 0 var(--sp-1) 0;\n}\n.pp-page-desc {\n  font-size: var(--fs-13);\n  line-height: var(--lh-20);\n  color: var(--fg-secondary);\n  margin: 0;\n}\n.pp-page-actions {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  flex: none;\n}\n\n/* \u2014\u2014 \u9762\u677F\u5316\u5B9E\u4F53\u6811\uFF08\u66FF\u4EE3\u901A\u680F .pp-col-left\uFF09\u2014\u2014 */\n.pp-panel {\n  width: var(--panel-w);\n  flex: none;\n  min-height: 0;\n  overflow: auto;\n  padding: var(--sp-2);\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n}\n.pp-split {\n  display: grid;\n  /* \u9762\u677F\u5BBD\u5EA6\u968F\u5BB9\u5668\u81EA\u9002\u5E94\uFF1A\u4E0B\u9650 --panel-w\u3001\u4E0A\u9650 --panel-w-max\u3001\u4E2D\u95F4\u53D6 32%\uFF0C\n     \u5BBD\u7A97\u53E3\u91CC\u76EE\u5F55\u6811\u81EA\u52A8\u53D8\u5BBD\uFF0C\u957F\u63A5\u53E3\u540D\u4E0D\u518D\u88AB\u7701\u7565\u53F7\u622A\u65AD\u3002 */\n  grid-template-columns: clamp(var(--panel-w), 32%, var(--panel-w-max)) minmax(0, 1fr);\n  gap: var(--sp-4);\n  align-items: start;\n  padding: var(--sp-4) var(--sp-5);\n  min-height: 0;\n}\n/* \u5E76\u6392\u65F6\u9762\u677F\u5BBD\u5EA6\u7531 grid \u8F68\u9053\u51B3\u5B9A\uFF0C\u81EA\u8EAB\u4E0D\u518D\u5B9A\u5BBD\uFF08\u5426\u5219\u6BD4\u8F68\u9053\u7A84\u4F1A\u7559\u767D\uFF09 */\n.pp-split > .pp-panel {\n  width: auto;\n}\n/* \u7A84\u5BB9\u5668\uFF1A\u76EE\u5F55\u6811\u4E0E\u6B63\u6587\u5E76\u6392\u4F1A\u628A\u6B63\u6587\u538B\u5230 200px \u7EA7\uFF0C\u6539\u4E3A\u4E0A\u4E0B\u5806\u53E0\u3002\n   \u9608\u503C 800px = \u9762\u677F 280 + \u95F4\u8DDD 16 + \u6B63\u6587\u7EA6 500\uFF086 \u5217\u53C2\u6570\u8868\u5728\u6B64\u5BBD\u5EA6\u4E0B\u624D\u4E0D\u81F3\u4E8E\u53EA\u5269\u8868\u5934\uFF09\u3002 */\n@container ppmain (max-width: 800px) {\n  .pp-split {\n    grid-template-columns: minmax(0, 1fr);\n  }\n  .pp-split .pp-panel {\n    width: auto;\n    /* \u5806\u53E0\u65F6\u76EE\u5F55\u6811\u5360\u6EE1\u6574\u5BBD\uFF1B\u9AD8\u5EA6\u7ED9\u5230 14 \u884C\uFF08\u7EA6 500px\uFF09\u2014\u2014\u5217\u8868\u533A\u592A\u77EE\u65F6\u7FFB\u76EE\u5F55\u5F88\u8D39\u52B2 */\n    max-height: calc(var(--row-h) * 14);\n  }\n}\n/* \u6587\u6863\u9875\u4E3B\u5217\uFF1A\u951A\u70B9\u6761 sticky \u5728\u9876\u90E8\uFF0C\u6B63\u6587\u5728\u4E0B\u65B9\u72EC\u7ACB\u6EDA\u52A8 */\n.pp-doc-main {\n  min-width: 0;\n  min-height: 0;\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  overflow: auto;\n}\n/* \u7A7A\u6001\u65F6\u4E3B\u5217\u72EC\u5360\u4E00\u884C\uFF08\u65E0\u5DE6\u6811\uFF09\uFF0C\u9700\u8981\u81EA\u5DF1\u6491\u6EE1\u9AD8\u5EA6\u5E76\u7559\u51FA\u4E0A\u8FB9\u8DDD */\n.pp-page-flush > .pp-doc-main {\n  display: flex;\n  flex-direction: column;\n  height: 100%;\n  margin: var(--sp-4) var(--sp-5);\n}\n.pp-doc-main .pp-page {\n  padding: var(--sp-5);\n}\n/* \u951A\u70B9\u6761\u5438\u9876\u65F6\u7ED9\u8DF3\u8F6C\u76EE\u6807\u7559\u51FA\u9AD8\u5EA6\uFF0C\u907F\u514D\u6807\u9898\u88AB\u6761\u6321\u4F4F */\n.pp-doc-main [id^="sec-"] {\n  scroll-margin-top: calc(var(--ctl-h-lg) + var(--sp-3));\n}\n.pp-split-wide {\n  grid-template-columns: var(--panel-w) minmax(0, 1.4fr) minmax(0, 1fr);\n}\n\n/* \u2014\u2014 \u9876\u680F v2\uFF1A\u9762\u5305\u5C51 + \u56FE\u6807\u52A8\u4F5C \u2014\u2014 */\n.pp-crumb {\n  display: inline-flex;\n  align-items: center;\n  gap: var(--sp-1);\n  font-size: var(--fs-12);\n  color: var(--fg-tertiary);\n  white-space: nowrap;\n}\n.pp-crumb-sep {\n  color: var(--border-strong);\n}\n.pp-icon-btn {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  width: var(--hit);\n  height: var(--hit);\n  padding: 0;\n  color: var(--fg-secondary);\n  background: transparent;\n  border: 1px solid transparent;\n  border-radius: var(--radius-ctl);\n  cursor: pointer;\n}\n.pp-icon-btn:hover {\n  color: var(--fg);\n  background: var(--bg-hover);\n}\n.pp-icon-btn:focus-visible {\n  outline: 2px solid var(--accent);\n  outline-offset: -2px;\n}\n.pp-icon-btn[data-active="true"] {\n  color: var(--accent);\n  border-color: var(--accent);\n}\n.pp-help {\n  padding: var(--sp-2);\n  font-size: var(--fs-13);\n  line-height: var(--lh-20);\n  color: var(--fg-secondary);\n}\n/* \u5E2E\u52A9\u5361\u7247\uFF1A\u539F\u6D6E\u5C42\u6539\u6210\u4E3B\u533A\u9876\u90E8\u5185\u5D4C\u5361\uFF08\u4E0D\u518D\u906E\u6321\u5185\u5BB9\uFF09 */\n/* \u5E2E\u52A9\u5361\u7247\uFF1A\u6D6E\u5728\u4E3B\u533A\u53F3\u4E0A\u89D2\uFF0C\u4E0D\u5360\u6587\u6863\u6D41\u3002\n   \u4E4B\u524D\u662F\u6587\u6863\u6D41\u5185\u5D4C\u5361\uFF0C\u63D2\u5728\u9875\u7B7E\u6761\u4E0E\u9875\u5934\u4E4B\u95F4\u4F1A\u628A\u9875\u9762\u6807\u9898\u5F80\u4E0B\u63A8\u4E00\u683C\uFF0C\n   \u89C6\u89C9\u4E0A\u50CF\u591A\u4E86\u4E00\u4E2A\u9875\u7B7E\u3002\u6D6E\u5C42\u5B9A\u4F4D\u540E\u4E0E\u9875\u9762\u5185\u5BB9\u4E92\u4E0D\u5F71\u54CD\u3002 */\n.pp-help-card {\n  position: absolute;\n  top: calc(var(--tabbar-h) + var(--sp-2));\n  right: var(--sp-4);\n  z-index: var(--z-menu);\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-1);\n  width: var(--popover-w);\n  max-width: calc(100% - var(--sp-6));\n  padding: var(--sp-3);\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  box-shadow: var(--shadow-menu);\n}\n.pp-help-card-head {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: var(--sp-2);\n}\n.pp-help-card-title {\n  font-size: var(--fs-12);\n  font-weight: var(--fw-medium);\n  color: var(--fg-tertiary);\n}\n\n\n\n/* \u2014\u2014 \u9875\u5185\u951A\u70B9\u6761\uFF08\u539F\u53F3\u680F\u300C\u672C\u9875\u76EE\u5F55\u300D\u7684\u66FF\u4EE3\uFF09\uFF1A\u4E3B\u533A\u9876\u90E8 sticky \u6A2A\u5411 chips \u2014\u2014\n   \u7A84\u5BB9\u5668\u91CC\u53F3\u4FA7\u5E38\u9A7B TOC \u4F1A\u5403\u6389 240px\uFF0C\u628A\u4E3B\u533A\u6324\u5230\u4E0D\u53EF\u8BFB\uFF1B\u6539\u6210\u6A2A\u5411\u6761\u540E\n   \u53EA\u5360\u4E00\u884C\u7EB5\u5411\u9AD8\u5EA6\uFF0C\u4E3B\u533A\u5BBD\u5EA6\u4E0D\u53D7\u5F71\u54CD\uFF0C\u6EDA\u52A8\u65F6\u4ECD\u80FD\u8DF3\u8F6C\u3002 */\n.pp-anchor-bar {\n  position: sticky;\n  top: 0;\n  z-index: 2;\n  display: flex;\n  align-items: center;\n  gap: var(--sp-1);\n  height: var(--ctl-h-lg);\n  padding: 0 var(--sp-4);\n  overflow-x: auto;\n  background: var(--bg-surface);\n  border-bottom: 1px solid var(--border);\n  scrollbar-width: none;\n}\n.pp-anchor-bar::-webkit-scrollbar {\n  height: calc(var(--scrollbar) * 0);\n}\n.pp-anchor-chip {\n  display: inline-flex;\n  align-items: center;\n  flex: none;\n  height: var(--ctl-h-sm);\n  padding: 0 var(--sp-2);\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-secondary);\n  text-decoration: none;\n  border: 1px solid transparent;\n  border-radius: var(--radius-pill);\n  cursor: pointer;\n  white-space: nowrap;\n}\n.pp-anchor-chip:hover {\n  color: var(--fg);\n  background: var(--bg-hover);\n}\n.pp-anchor-chip[data-active="true"] {\n  color: var(--accent);\n  background: var(--accent-tint);\n  border-color: var(--accent);\n}\n\n/* \u2014\u2014 \u5206\u7EC4\u6807\u9898\u884C\uFF1A\u6807\u9898\u9760\u5DE6\u3001\u52A8\u4F5C\u9760\u53F3 \u2014\u2014 */\n/* \u8C03\u8BD5\u53F0\u53C2\u6570\u533A\uFF08\u5982 Headers \u7EC4\uFF09\u7528\u5B83\u5728\u5206\u7EC4\u6807\u9898\u53F3\u4FA7\u6302\u300C\u5E38\u7528\u8BF7\u6C42\u5934\u300D\u6309\u94AE\uFF1B\n   .pp-group-title \u81EA\u5E26 3px \u4E3B\u8272\u7AD6\u7EBF\uFF0C\u8FD9\u91CC\u53EA\u8D1F\u8D23\u884C\u5185\u5DE6\u53F3\u5206\u680F\u3002 */\n.pp-group-head {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: var(--sp-2);\n  min-width: 0;\n}\n.pp-group-head > .pp-group-title {\n  min-width: 0;\n  margin-right: auto;\n}\n\n/* \u2014\u2014 \u884C\u5185\u6587\u5B57\u6309\u94AE\uFF1A\u65E0\u8FB9\u6846\u3001\u4E3B\u8272\u6587\u5B57\uFF0Chover \u53EA\u6362\u4E3B\u8272\u60AC\u505C\u8272 \u2014\u2014 */\n/* \u8868\u683C\u4E0E\u5206\u7EC4\u6807\u9898\u91CC\u7684\u8F7B\u91CF\u52A8\u4F5C\uFF08\u300C\u5E38\u7528\u8BF7\u6C42\u5934\u300D\u300C\u6E05\u7A7A\u300D\u7B49\uFF09\uFF0C\n   \u9AD8\u5EA6\u8D70 --ctl-h-sm \u4E0E .pp-btn-sm \u5BF9\u9F50\uFF0C\u907F\u514D\u4E0E\u8868\u683C\u884C\u9AD8\u6253\u67B6\u3002 */\n.pp-btn-link {\n  display: inline-flex;\n  align-items: center;\n  flex: none;\n  height: var(--ctl-h-sm);\n  padding: 0 var(--sp-1);\n  font-family: var(--font-sans);\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--accent);\n  background: transparent;\n  border: 1px solid transparent;\n  border-radius: var(--radius-sm);\n  cursor: pointer;\n  white-space: nowrap;\n}\n.pp-btn-link:hover {\n  color: var(--accent-hover);\n}\n.pp-btn-link:disabled {\n  color: var(--fg-tertiary);\n  cursor: not-allowed;\n}\n\n';
+var design_tokens_default = '/* ============================================================\n   dsh-postapi \u8BBE\u8BA1 token \u2014 Apifox 2.8.55 \u590D\u523B\n   \u4F9D\u636E docs/apifox-design-spec.md\uFF08165 \u4E2A CSS chunk \u7EDF\u8BA1\uFF09\n   \u5C3A\u5BF8\u7EDF\u4E00\u5728 token \u5C42\uFF1A\u63A7\u4EF6 --ctl-h / \u8868\u884C --row-h / \u80F6\u56CA --pill-h\n   \u9875\u9762\u6837\u5F0F\u6240\u6709\u9AD8\u5EA6\u58F0\u660E\u5FC5\u987B\u5F15\u7528\u4E0A\u8FF0 token\uFF08__tests__/heights.test.js \u9759\u6001\u68C0\u67E5\uFF09\n   \u5BC6\u5EA6\u57FA\u8C03\uFF1AApifox \u5DE5\u4F5C\u53F0\u2014\u20141px \u8FB9\u6846\u5206\u533A\u3001\u5361\u7247\u5316\u3001\u6D6E\u5C42\u624D\u6295\u9634\u5F71\n   ============================================================ */\n\n.pp-scope {\n  /* \u2014\u2014 \u5B57\u4F53\uFF08Apifox: -apple-system,"BlinkMacSystemFont","Segoe UI",roboto,...\uFF09\u2014\u2014 */\n  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;\n  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;\n\n  /* \u2014\u2014 \u5B57\u9636\uFF08\u5BF9\u9F50 Apifox \u5B9E\u6D4B\uFF1A12/14/15/16/17/18/20/22\uFF09\u2014\u2014\n     Apifox \u7684 --ui-font-size-* \u539F\u503C\u89C1 docs/apifox-visual-parity-spec.md \xA72\uFF1B\n     13px \u4FDD\u7559\u662F\u56E0\u4E3A\u65E2\u6709\u9875\u9762\u7528\u5B83\u505A\u8F85\u52A9\u6587\u672C\uFF0C\u4E0D\u65B0\u5F15\u5165\u3002 */\n  --fs-12: 12px;\n  --fs-13: 13px;\n  --fs-14: 14px;\n  --fs-15: 15px;\n  --fs-16: 16px;\n  --fs-17: 17px;\n  --fs-18: 18px;\n  --fs-20: 20px;\n  --fs-22: 22px;\n  --fs-24: 24px;\n  --fw-regular: 400;\n  --fw-medium: 500;\n  --fw-semibold: 600;\n\n  /* \u2014\u2014 \u884C\u9AD8\uFF08Apifox \u56FA\u5B9A\u503C\uFF0C\u4E0D\u7528\u500D\u6570\uFF09\u2014\u2014 */\n  /* \u56FE\u8868\u4E13\u7528\u5B57\u9636\uFF1ASVG \u91CC\u7684\u5C0F\u5B57\uFF08\u56FE\u4F8B/\u6807\u8BB0\uFF09\u6BD4\u6B63\u6587\u66F4\u5C0F\uFF0C\u4F46\u4ECD\u8D70 token \u4E0D\u5199\u5B57\u9762\u91CF */\n  --fs-chart: 10px;\n  --lh-18: 18px;\n  --lh-20: 20px;\n  --lh-22: 22px;\n  --lh-24: 24px;\n\n  /* \u2014\u2014 \u5C3A\u5BF8\u7EDF\u4E00 token\uFF08\u5BF9\u9F50 Apifox \u5B9E\u6D4B\uFF0C\u89C1 docs/apifox-visual-parity-spec.md \xA71/\xA72\uFF09\u2014\u2014 */\n  --ctl-h: 32px;         /* Apifox --ui-height-base */\n  --ctl-h-sm: 24px;      /* Apifox --ui-height-sm */\n  --ctl-h-lg: 40px;      /* Apifox --ui-height-lg */\n  --row-h: 32px;         /* Apifox \u8868\u683C/\u5217\u8868\u884C 32px\uFF08\u539F 36px \u504F\u677E\uFF09 */\n  --tree-row-h: 22px;    /* Apifox --ui-tree-title-height: 22px */\n  --pill-h: 22px;\n  --topbar-h: 48px;      /* Apifox --ui-layout-header-height: 48px */\n  --tabbar-h: 44px;      /* Apifox --app-main-tabs-height: 44px */\n  --sider-w: 240px;      /* Apifox .sider-bxNtfB width: 240px */\n  --sider-pad: 20px;     /* Apifox .sider-bxNtfB padding: 20px */\n  --sider-item-h: 32px;  /* Apifox --ui-menu-item-height: 32px */\n  --sider-group-h: 24px; /* Apifox --ui-menu-item-group-height: 24px */\n  --nav-w: 240px;\n  --toc-w: 240px;\n  /* \u5B9E\u4F53\u6811\u9762\u677F\u4E0E Apifox sider \u540C\u5BBD */\n  --panel-w: 240px;\n  --panel-w-max: 320px;\n  --content-max-w: 1512px; /* Apifox .overview-header-container max-width */\n  --page-pad: 10px;        /* Apifox --app-page-layout-size */\n  --layout-pad: 8px;       /* Apifox --app-layout-padding-right/bottom */\n  --hit: 28px;\n  /* \u2014\u2014 \u5F39\u5C42\u83DC\u5355\uFF08\u5BF9\u9F50 Apifox .ui-dropdown-menu / .ui-menu-item \u5B9E\u6D4B\uFF09\u2014\u2014\n     \u9879\u9AD8 32px\u3001\u9762\u677F\u6700\u5C0F\u5BBD 150px\uFF08Apifox .project-module-menu-popup .ui-menu min-width:150px\uFF09\u3001\n     \u9634\u5F71\u53D6 Apifox .keywordSearchPopover .ui-popover-inner \u539F\u6587\u7684\u4E24\u6BB5\u5F0F\u6295\u5F71\u3002 */\n  --menu-w: 200px;\n  --menu-w-sm: 160px;\n  --menu-item-h: 32px;\n  --menu-pad: var(--sp-1);\n  --shadow-menu: 0 8px 8px -4px rgba(16, 24, 40, 0.03), 0 20px 24px -4px rgba(16, 24, 40, 0.08);\n  --z-menu: 40;\n  --z-flyout: 30;\n  --motion-fast: 120ms;\n  --card-pad: 16px;\n  --popover-w: 400px;\n  --empty-w: 360px;\n  --scrollbar: 6px;\n\n  /* \u2014\u2014 \u56FE\u6807\u5C3A\u5BF8 \u2014\u2014 */\n  --icon-sm: 14px;\n  --icon: 16px;\n  --icon-lg: 20px;\n  --icon-xl: 24px;\n\n  /* \u2014\u2014 \u95F4\u8DDD\u523B\u5EA6 4/8/12/16/20/24 \u2014\u2014 */\n  --sp-1: 4px;\n  --sp-2: 8px;\n  --sp-3: 12px;\n  --sp-4: 16px;\n  --sp-5: 20px;\n  --sp-6: 24px;\n\n  /* \u2014\u2014 \u5706\u89D2\uFF1A\u5BF9\u9F50 Apifox --ui-border-radius-sm/base/lg = 6/8/10 \u2014\u2014 */\n  --radius-sm: 6px;\n  --radius-ctl: 6px;\n  --radius-card: 8px;\n  --radius-lg: 10px;\n  --radius-pill: 999px;\n\n  /* \u2014\u2014 light \u76AE\u80A4\uFF08Apifox \u9AD8\u9891\u8272\uFF09\u2014\u2014 */\n  --bg-app: #f9fafb;\n  --bg-surface: #ffffff;\n  --bg-subtle: #f2f4f7;\n  --bg-hover: #f2f4f7;\n  --bg-selected: #f4f1fe;\n  --bg-stripe: #f5f5f5;\n  --fg: #344054;\n  --fg-strong: #101828;\n  --fg-secondary: #667085;\n  --fg-tertiary: #98a2b3;\n  --fg-on-accent: #ffffff;\n  --border: #eaecf0;\n  --border-strong: #d0d5dd;\n  --accent: #9373ee;\n  --accent-hover: #8276c9;\n  --accent-tint: rgba(147, 115, 238, 0.10);\n  --link: #6172f3;\n  --info: #2e90fa;\n  --success: #17b26a;\n  --warning: #f79009;\n  --error: #f04438;\n  --shadow-popover: 0 4px 16px rgba(16, 24, 40, 0.08);\n\n  /* \u2014\u2014 \u65B9\u6CD5\u5FBD\u6807\uFF08\u767D\u5B57\u5F69\u5E95\uFF0Cmono 12px \u7C97\u4F53\uFF09\u2014\u2014 */\n  --method-fs: 12px;\n  --method-get: #17b26a;\n  --method-post: #2e90fa;\n  --method-put: #f79009;\n  --method-delete: #f04438;\n  --method-patch: #ee46bc;\n  --method-other: #06aed4;\n}\n\n.pp-scope[data-theme="dark"] {\n  --bg-app: #101828;\n  --bg-surface: #1d2939;\n  --bg-subtle: #1d2939;\n  --bg-hover: #26334a;\n  --bg-selected: #2b2647;\n  --bg-stripe: #232f42;\n  --fg: #f9fafb;\n  --fg-strong: #ffffff;\n  --fg-secondary: #98a2b3;\n  --fg-tertiary: #667085;\n  --border: #344054;\n  --border-strong: #475467;\n  --accent-tint: rgba(147, 115, 238, 0.18);\n  --shadow-popover: 0 4px 16px rgba(0, 0, 0, 0.4);\n}\n\n/* \u2014\u2014 \u57FA\u7840 \u2014\u2014 */\n.pp-scope,\n.pp-scope * {\n  box-sizing: border-box;\n}\n.pp-scope {\n  font-family: var(--font-sans);\n  font-size: var(--fs-14);\n  line-height: var(--lh-22);\n  color: var(--fg);\n  background: var(--bg-app);\n}\n.pp-scope ::-webkit-scrollbar {\n  width: var(--scrollbar);\n  /* \u6EDA\u52A8\u6761\u9AD8\u5EA6\u4E0E\u5BBD\u5EA6\u540C\u6E90\uFF1A\u7528 calc \u5305\u4E00\u5C42\uFF0C\u9AD8\u5EA6\u7EAA\u5F8B\u68C0\u67E5\u53EA\u63A5\u53D7 token \u8868\u8FBE\u5F0F */\n  height: calc(var(--scrollbar) * 1);\n}\n.pp-scope ::-webkit-scrollbar-thumb {\n  background: var(--border-strong);\n  border-radius: var(--radius-pill);\n}\n\n/* \u2014\u2014 \u5DE5\u4F5C\u53F0\u9AA8\u67B6\uFF1A\u9876\u680F + \u4E09\u6BB5\u5F0F \u2014\u2014 */\n.pp-workbench {\n  display: grid;\n  grid-template-rows: var(--topbar-h) minmax(0, 1fr);\n  height: 100%;\n  min-height: 0;\n}\n/* \u9876\u680F\uFF1AApifox --ui-layout-header-height: 48px / --ui-layout-header-padding: 0 50px\u3002\n   50px \u5DE6\u53F3\u5185\u8FB9\u8DDD\u5728\u7A84\u5BB9\u5668\u91CC\u4F1A\u628A\u4E2D\u95F4\u641C\u7D22\u6846\u538B\u6CA1\uFF0C\u6545\u7528\u5BB9\u5668\u67E5\u8BE2\u964D\u5230 0 20px\u3002 */\n.pp-topbar {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  height: var(--topbar-h);\n  padding: 0 50px;\n  background: var(--bg-surface);\n  border-bottom: 1px solid var(--border);\n}\n@container ppmain (max-width: 900px) {\n  .pp-topbar { padding: 0 var(--sp-5); }\n}\n/* \u9876\u680F\u4EA7\u54C1\u6807\u8BC6\uFF1A\u56FE\u6807 + \u540D\u79F0\uFF08Apifox \u5DE6\u4E0A\u89D2\u662F\u4EA7\u54C1\u540D\uFF0C\u4E0D\u662F\u5F53\u524D\u9875\u540D\uFF09 */\n.pp-topbar-brand {\n  display: inline-flex;\n  align-items: center;\n  gap: var(--sp-2);\n  font-size: var(--fs-14);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-strong);\n  white-space: nowrap;\n  flex: none;\n}\n.pp-topbar-title {\n  font-size: var(--fs-14);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-strong);\n  white-space: nowrap;\n}\n.pp-topbar-spacer {\n  flex: 1;\n}\n.pp-topbar-search {\n  width: var(--nav-w);\n  flex: none;\n}\n.pp-body-3col {\n  display: grid;\n  grid-template-columns: var(--nav-w) minmax(0, 1fr) var(--toc-w);\n  min-height: 0;\n}\n.pp-body-2col {\n  display: grid;\n  grid-template-columns: var(--nav-w) minmax(0, 1fr);\n  min-height: 0;\n}\n.pp-col {\n  min-width: 0;\n  min-height: 0;\n  overflow: auto;\n  background: var(--bg-surface);\n}\n.pp-col-left {\n  border-right: 1px solid var(--border);\n}\n.pp-col-right {\n  border-left: 1px solid var(--border);\n}\n.pp-main {\n  min-width: 0;\n  min-height: 0;\n  overflow: auto;\n  background: var(--bg-surface);\n}\n\n/* \u2014\u2014 \u9875\u9762\u9AA8\u67B6\uFF08\u5BF9\u9F50 Apifox .doc-container + .overview-container\uFF09\u2014\u2014\n   Apifox \u7684\u9875\u9762\u662F\u300C\u9875\u5934\u901A\u680F + \u5185\u5BB9\u533A\u5404\u81EA padding\u300D\u4E24\u6BB5\uFF0C\u4E0D\u662F\u6574\u9875\u7EDF\u4E00 padding\u3002\n   \u6574\u9875 padding \u4F1A\u8BA9\u9875\u5934\u7684\u4E0B\u8FB9\u6846\u7F29\u8FDB\u3001\u8FD8\u8981\u9760\u5185\u8054\u8D1F margin \u62B5\u6D88\uFF0C10 \u4E2A\u9875\u9762\u91CD\u590D 10 \u6B21\u3002\n   \u8FD9\u91CC\u6539\u6210\uFF1A.pp-page \u53EA\u8D1F\u8D23\u7EB5\u5411\u6392\u5E03\uFF0C\u5185\u8FB9\u8DDD\u4EA4\u7ED9 .pp-overview-head \u4E0E .pp-overview-content\u3002 */\n.pp-page {\n  display: flex;\n  flex-direction: column;\n  min-width: 0;\n  min-height: 100%;\n  padding: 0;\n}\n.pp-page-flush {\n  padding: 0;\n  height: 100%;\n  min-height: 0;\n}\n/* \u5185\u5BB9\u533A\uFF1A\u9875\u5934\u4E0B\u65B9\u7684\u6EDA\u52A8\u4E3B\u4F53\uFF0C\u5185\u8FB9\u8DDD 16px\uFF08Apifox .overview-content padding:16px\uFF09 */\n.pp-overview-content {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-4);\n  min-width: 0;\n  min-height: 0;\n  padding: var(--sp-4);\n}\n.pp-page-title {\n  font-size: var(--fs-20);\n  line-height: var(--lh-24);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-strong);\n  margin: 0 0 var(--sp-3) 0;\n}\n.pp-muted {\n  color: var(--fg-secondary);\n}\n.pp-faint {\n  color: var(--fg-tertiary);\n}\n\n/* \u2014\u2014 \u5361\u7247\uFF1A1px \u8FB9\u6846\u30018px \u5706\u89D2\u300116px \u5185\u8FB9\u8DDD\u3001\u65E0\u9634\u5F71 \u2014\u2014 */\n.pp-card {\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  padding: var(--card-pad);\n}\n.pp-card-title {\n  font-size: var(--fs-14);\n  line-height: var(--lh-22);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-strong);\n  margin: 0 0 var(--sp-2) 0;\n}\n.pp-card-hover:hover {\n  border-color: var(--accent);\n  box-shadow: var(--shadow-popover);\n}\n\n/* \u2014\u2014 \u63A7\u4EF6\uFF1A\u9AD8\u5EA6\u4E00\u5F8B var(--ctl-h) \u2014\u2014 */\n.pp-btn {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  gap: var(--sp-1);\n  height: var(--ctl-h);\n  padding: 0 var(--sp-4);\n  font-family: var(--font-sans);\n  font-size: var(--fs-14);\n  line-height: var(--lh-22);\n  color: var(--fg);\n  background: var(--bg-surface);\n  border: 1px solid var(--border-strong);\n  border-radius: var(--radius-ctl);\n  cursor: pointer;\n  white-space: nowrap;\n}\n.pp-btn:hover {\n  border-color: var(--accent);\n  color: var(--accent);\n}\n.pp-btn:disabled {\n  color: var(--fg-tertiary);\n  border-color: var(--border);\n  cursor: not-allowed;\n}\n.pp-btn-primary {\n  color: var(--fg-on-accent);\n  background: var(--accent);\n  border-color: var(--accent);\n}\n.pp-btn-primary:hover {\n  color: var(--fg-on-accent);\n  background: var(--accent-hover);\n  border-color: var(--accent-hover);\n}\n.pp-btn-primary:disabled {\n  color: var(--fg-on-accent);\n  background: var(--border-strong);\n  border-color: var(--border-strong);\n}\n.pp-btn-sm {\n  height: var(--ctl-h-sm);\n  padding: 0 var(--sp-2);\n  font-size: var(--fs-12);\n}\n.pp-btn-ghost {\n  border-color: transparent;\n  background: transparent;\n}\n.pp-btn-ghost:hover {\n  background: var(--bg-hover);\n  border-color: transparent;\n  color: var(--fg);\n}\n.pp-btn-danger:hover {\n  border-color: var(--error);\n  color: var(--error);\n}\n\n.pp-input,\n.pp-select {\n  height: var(--ctl-h);\n  padding: 0 var(--sp-3);\n  font-family: var(--font-sans);\n  font-size: var(--fs-14);\n  line-height: var(--lh-22);\n  color: var(--fg);\n  background: var(--bg-surface);\n  border: 1px solid var(--border-strong);\n  border-radius: var(--radius-ctl);\n  min-width: 0;\n}\n.pp-input::placeholder {\n  color: var(--fg-tertiary);\n}\n.pp-input:focus,\n.pp-select:focus,\n.pp-btn:focus-visible {\n  outline: none;\n  border-color: var(--accent);\n  box-shadow: 0 0 0 2px var(--accent-tint);\n}\n.pp-input-mono {\n  font-family: var(--font-mono);\n  font-size: var(--fs-13);\n}\n.pp-input-sm {\n  height: var(--ctl-h-sm);\n  font-size: var(--fs-12);\n  padding: 0 var(--sp-2);\n}\n\n/* \u2014\u2014 \u8868\u683C\uFF1A\u884C\u9AD8\u4E00\u5F8B var(--row-h) \u2014\u2014 */\n.pp-table {\n  width: 100%;\n  border-collapse: collapse;\n  font-size: var(--fs-14);\n}\n/* \u53C2\u6570\u8868\uFF08ParamTable\uFF09\u4E13\u5C5E\uFF1A\u5217\u5BBD\u5199\u6B7B\u5728 COLUMN_META\uFF0Cfixed \u5E03\u5C40\u4E0B\u7A84\u5BB9\u5668\u7531 .pp-table-wrap\n   \u6574\u4F53\u6A2A\u5411\u6EDA\u52A8\uFF0C\u800C\u4E0D\u662F\u5404\u5217\u6309\u5185\u5BB9\u4E92\u76F8\u6324\u538B\u584C\u9677\u6210 num\u2026/P\u2026\u3002\n   \u7528\u5C5E\u6027\u9009\u62E9\u5668\u800C\u4E0D\u662F\u65B0\u7C7B\u540D\uFF1A.pp-table \u662F\u5176\u5B83 9 \u4E2A\u9875\u9762\u7684\u5171\u7528\u7C7B\uFF0C\u4E0D\u80FD\u5728\u6B64\u6539\u5168\u5C40\u5E03\u5C40\u3002\n   \u6700\u5C0F\u5BBD\u5EA6\u7531\u7EC4\u4EF6\u6309\u5217\u5BBD\u5408\u8BA1\u5185\u8054\u7ED9\u51FA\uFF08\u9ED8\u8BA4\u516D\u5217 + \u64CD\u4F5C\u5217 = 806px\uFF09\uFF0C\u6B64\u5904\u4E0D\u91CD\u590D\u58F0\u660E\u3002 */\n/* \u7C7B\u540D\u522B\u540D\uFF1AParamTable \u540C\u65F6\u6302 .pp-table-params\uFF0C\u4FBF\u4E8E\u6309\u7C7B\u5B9A\u4F4D\uFF08\u5C5E\u6027\u9009\u62E9\u5668\u4FDD\u7559\u517C\u5BB9\uFF09 */\n.pp-table.pp-table-params,\n.pp-table[data-param-table] {\n  table-layout: fixed;\n}\n/* fixed \u5E03\u5C40\u4E0B\u5217\u5BBD\u5DF2\u5B9A\uFF0C\u957F\u6587\u672C\u5FC5\u987B\u88C1\u5728\u81EA\u5DF1\u7684\u683C\u5B50\u91CC\uFF08\u4E0D\u80FD\u9760 max-width:0 \u90A3\u5957\uFF0C\n   \u5B83\u4F1A\u628A\u6574\u4E2A\u8868\u683C\u538B\u584C\uFF09\uFF1B\u88C1\u5207\u53EA\u4F5C\u7528\u4E8E\u53C2\u6570\u8868\uFF0C\u5176\u5B83 .pp-table \u4FDD\u6301\u539F\u884C\u4E3A\u3002 */\n.pp-table[data-param-table] td {\n  overflow: hidden;\n}\n.pp-table th {\n  height: var(--row-h);\n  padding: 0 var(--sp-2);\n  text-align: left;\n  font-weight: var(--fw-medium);\n  font-size: var(--fs-13);\n  color: var(--fg-secondary);\n  background: var(--bg-subtle);\n  border-bottom: 1px solid var(--border);\n  white-space: nowrap;\n}\n.pp-table td {\n  height: var(--row-h);\n  padding: 0 var(--sp-2);\n  border-bottom: 1px solid var(--border);\n  /* Apifox \u8868\u683C\u4E0D\u6298\u884C\uFF1A\u7A84\u5BB9\u5668\u91CC\u9760 .pp-table-wrap \u6A2A\u5411\u6EDA\u52A8\uFF0C\u4E2D\u6587\u9010\u5B57\u65AD\u884C\u4F1A\u628A\u300C\u67E5\u8BE2\u300D\u7AD6\u6392\u3002\n     \u6B64\u5904\u4E0D\u5F97\u518D\u5199 max-width:0 + ellipsis\u2014\u2014\u90A3\u7EC4\u662F\u7A84\u5BB9\u5668\u5217\u584C\u9677\u7684\u5143\u51F6\u3002 */\n  white-space: nowrap;\n}\n/* \u73AF\u5883\u9875\u53D8\u91CF\u8868\uFF08env.jsx varTable\uFF09\uFF1A\u4E94\u5217\u56FA\u5B9A\u5BBD\u5EA6\uFF0C\u503C\u5217\u5403\u5269\u4F59\u5BBD\u5EA6\u3002\n   \u4E0D\u52A0 fixed \u65F6\u4E94\u5217\u6309\u5185\u5BB9\u6491\u5F00\uFF0C\u7A84\u5BB9\u5668\u91CC\u6574\u8868 603px \u9876\u7834 438px \u7684\u5BB9\u5668\u3002 */\n/* \u591A\u5217\u7F16\u8F91\u8868\uFF08flow \u6B65\u9AA4\u7F16\u6392 / test \u65AD\u8A00\u4E0E\u6B65\u9AA4\uFF09\uFF1A\u5217\u5BBD\u5408\u8BA1 510~640px\uFF0C\n   \u7A84\u5BB9\u5668\u91CC\u65E0\u5BBD\u5EA6\u5217\uFF08\u6D88\u606F / \u8DEF\u5F84\uFF09\u4F1A\u88AB\u538B\u5230\u51E0\u50CF\u7D20\uFF0C\u8868\u683C\u6574\u4F53\u4EA4\u7ED9 .pp-table-wrap \u6A2A\u5411\u6EDA\u52A8\u3002 */\n.pp-table.pp-table-wide {\n  min-width: 640px;\n}\n.pp-table.pp-table-vars {\n  table-layout: fixed;\n  /* \u56FA\u5B9A\u5217 52+52+64=168px\uFF0C\u53D8\u91CF\u540D\u5217 30%\u3001\u503C\u5217\u5403\u5269\u4F59\uFF1A360px \u5BB9\u5668\u4E0B\u503C\u5217\u4ECD\u6709 110px\uFF0C\n     \u518D\u7A84\u5C31\u6A2A\u5411\u6EDA\u52A8\u3002\u4E0D\u8BBE 480\u2014\u2014510px \u4E3B\u533A\u91CC\u4F1A\u88AB\u5207\u6389\u300C\u64CD\u4F5C\u300D\u5217\u3002 */\n  min-width: 360px;\n}\n.pp-table.pp-table-vars th:nth-child(1) { width: 30%; }\n.pp-table.pp-table-vars th:nth-child(2) { width: auto; }\n.pp-table.pp-table-vars th:nth-child(3),\n.pp-table.pp-table-vars th:nth-child(4) { width: 52px; }\n.pp-table.pp-table-vars th:nth-child(5) { width: 64px; }\n.pp-table.pp-table-vars td { overflow: hidden; }\n/* \u53F3\u7F16\u8F91\u533A\u53D8\u91CF\u8868\uFF1A\u4E94\u5217\u5728 480px \u4EE5\u4E0A\u90FD\u80FD\u5168\u663E\u793A\uFF0C\u4E0D\u9700\u8981\u6A2A\u5411\u6EDA\u52A8\u3002\n   \u53D8\u91CF\u540D 32% / \u503C\u5217\u5403\u5269\u4F59 / \u542F\u7528\xB7\u5BC6\u94A5\u5404 44px\uFF08\u53EA\u653E\u590D\u9009\u6846\uFF09/ \u64CD\u4F5C 48px\uFF08\u53EA\u653E\u56FE\u6807\u6309\u94AE\uFF09\u3002 */\n.pp-env-main .pp-table.pp-table-vars {\n  min-width: 0;\n  width: 100%;\n}\n.pp-env-main .pp-table.pp-table-vars th:nth-child(1) { width: 32%; }\n.pp-env-main .pp-table.pp-table-vars th:nth-child(3),\n.pp-env-main .pp-table.pp-table-vars th:nth-child(4) { width: 44px; }\n.pp-env-main .pp-table.pp-table-vars th:nth-child(5) { width: 48px; }\n.pp-env-main .pp-table.pp-table-vars td:nth-child(3),\n.pp-env-main .pp-table.pp-table-vars td:nth-child(4),\n.pp-env-main .pp-table.pp-table-vars td:nth-child(5) {\n  text-align: center;\n}\n.pp-env-main .pp-table.pp-table-vars input[type="checkbox"] {\n  margin: 0;\n}\n.pp-table tbody tr:hover {\n  background: var(--bg-hover);\n}\n.pp-table tbody tr[data-active="true"] {\n  background: var(--bg-selected);\n}\n.pp-table-mono {\n  font-family: var(--font-mono);\n  font-size: var(--fs-13);\n}\n/* \u5355\u5143\u683C\u5185\u7F16\u8F91\uFF1A\u65E0\u8FB9\u6846\u8F93\u5165\uFF0C\u805A\u7126\u624D\u663E\u8FB9\u6846\uFF08Apifox \u8868\u683C\u5185\u7F16\u8F91\u89C2\u611F\uFF09 */\n.pp-cell-input {\n  width: 100%;\n  min-width: 0;\n  color: var(--fg);\n  background: transparent;\n  border: 1px solid transparent;\n  border-radius: var(--radius-sm);\n}\n.pp-cell-input:hover {\n  border-color: var(--border);\n}\n.pp-cell-input:focus {\n  outline: none;\n  background: var(--bg-surface);\n  border-color: var(--accent);\n  box-shadow: 0 0 0 2px var(--accent-tint);\n}\n/* \u8868\u5C3E\u300C+ \u6DFB\u52A0\u53C2\u6570\u300D\uFF1A\u5360\u6EE1\u6574\u884C\uFF0C\u5DE6\u5BF9\u9F50 */\n.pp-table-add {\n  width: 100%;\n  justify-content: flex-start;\n  color: var(--accent);\n}\n\n/* \u2014\u2014 \u80F6\u56CA / \u65B9\u6CD5\u5FBD\u6807\uFF1A\u9AD8\u5EA6\u4E00\u5F8B var(--pill-h) \u2014\u2014 */\n.pp-pill {\n  display: inline-flex;\n  align-items: center;\n  height: var(--pill-h);\n  padding: 0 var(--sp-2);\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-secondary);\n  border: 1px solid var(--border-strong);\n  border-radius: var(--radius-pill);\n  white-space: nowrap;\n}\n.pp-pill-ok {\n  color: var(--success);\n  border-color: var(--success);\n}\n.pp-pill-warn {\n  color: var(--warning);\n  border-color: var(--warning);\n}\n.pp-pill-bad {\n  color: var(--error);\n  border-color: var(--error);\n}\n.pp-pill-accent {\n  color: var(--accent);\n  border-color: var(--accent);\n}\n.pp-method {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  height: var(--pill-h);\n  min-width: 44px;\n  padding: 0 var(--sp-2);\n  font-family: var(--font-mono);\n  font-size: var(--method-fs);\n  font-weight: var(--fw-semibold);\n  line-height: var(--lh-18);\n  letter-spacing: 0.02em;\n  text-transform: uppercase;\n  color: var(--fg-on-accent);\n  background: var(--fg-tertiary);\n  border: none;\n  border-radius: var(--radius-sm);\n}\n.pp-method[data-method="GET"] { background: var(--method-get); }\n.pp-method[data-method="POST"] { background: var(--method-post); }\n.pp-method[data-method="PUT"] { background: var(--method-put); }\n.pp-method[data-method="DELETE"] { background: var(--method-delete); }\n.pp-method[data-method="PATCH"] { background: var(--method-patch); }\n.pp-method[data-method="HEAD"],\n.pp-method[data-method="OPTIONS"],\n.pp-method[data-method="TRACE"] { background: var(--method-other); }\n\n/* \u2014\u2014 \u9875\u7B7E\u6761 + \u9875\u7B7E \u2014\u2014 */\n.pp-tabs {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-1);\n  /* \u7A84\u5BB9\u5668\u91CC\u9875\u7B7E\uFF08\u5982 import \u7684\u300COpenAPI / Swagger\u300D\uFF09\u4E00\u884C\u653E\u4E0D\u4E0B\uFF1A\n     \u5141\u8BB8\u6362\u884C\u5E76\u628A\u9AD8\u5EA6\u4EA4\u7ED9\u5185\u5BB9\uFF0C\u5426\u5219\u6807\u7B7E\u6587\u5B57\u4F1A\u88AB\u538B\u6210\u4E24\u884C\u3001\u9875\u7B7E\u6761\u9876\u7834\u5361\u7247\u3002 */\n  flex-wrap: wrap;\n  min-height: var(--ctl-h-lg);\n  padding: 0 var(--sp-3);\n  background: var(--bg-surface);\n  border-bottom: 1px solid var(--border);\n}\n.pp-tab {\n  display: inline-flex;\n  align-items: center;\n  height: var(--ctl-h);\n  padding: 0 var(--sp-3);\n  /* \u9875\u7B7E\u6587\u5B57\u4E0D\u6298\u884C\uFF1A\u6298\u884C\u4F1A\u628A\u300C\u67E5\u8BE2\u300D\u7AD6\u6392\u6210\u4E24\u884C */\n  white-space: nowrap;\n  font-family: var(--font-sans);\n  font-size: var(--fs-14);\n  color: var(--fg-secondary);\n  background: transparent;\n  border: none;\n  border-bottom: 2px solid transparent;\n  cursor: pointer;\n}\n.pp-tab:hover {\n  color: var(--fg);\n}\n.pp-tab[data-active="true"] {\n  color: var(--accent);\n  font-weight: var(--fw-medium);\n  border-bottom-color: var(--accent);\n}\n\n/* \u2014\u2014 \u5206\u6BB5\u63A7\u4EF6 \u2014\u2014 */\n.pp-seg {\n  display: inline-flex;\n  border: 1px solid var(--border-strong);\n  border-radius: var(--radius-ctl);\n  overflow: hidden;\n}\n.pp-seg > button {\n  height: var(--ctl-h-sm);\n  padding: 0 var(--sp-3);\n  font-family: var(--font-sans);\n  font-size: var(--fs-13);\n  color: var(--fg-secondary);\n  background: var(--bg-surface);\n  border: none;\n  border-right: 1px solid var(--border);\n  cursor: pointer;\n}\n.pp-seg > button:last-child {\n  border-right: none;\n}\n.pp-seg > button[data-active="true"] {\n  color: var(--accent);\n  background: var(--accent-tint);\n  font-weight: var(--fw-medium);\n}\n\n/* \u2014\u2014 \u5DE6\u6811\uFF08\u5BF9\u9F50 Apifox .tree-bK2pJT / .treeList-ISn2t4 \u5B9E\u6D4B\uFF09\u2014\u2014\n   \u884C\u9AD8 22px\u3001\u5B57\u53F7 12px\u3001\u6587\u5B57\u8272\u53D6 --fg-secondary\u3001\u5DE6\u53F3\u5916\u8FB9\u8DDD 16px\uFF1B\n   hover \u53EA\u628A\u6587\u5B57\u8272\u63D0\u5230 --fg\uFF0C\u4E0D\u6362\u5E95\u2014\u2014\u8FD9\u662F Apifox \u6811\u6700\u5BB9\u6613\u88AB\u8BA4\u9519\u7684\u7279\u5F81\u3002 */\n.pp-tree {\n  padding: var(--sp-1) 0;\n}\n.pp-tree-row {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-1);\n  height: var(--tree-row-h);\n  margin: 0 var(--sp-4);\n  padding: 0 var(--sp-1);\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-secondary);\n  /* \u5DE6\u6811\u6761\u76EE\u5728\u9AA8\u67B6\u91CC\u662F <a>\uFF1A\u5FC5\u987B\u663E\u5F0F\u53BB\u6389\u94FE\u63A5\u4E0B\u5212\u7EBF\u4E0E\u7EE7\u627F\u8272\uFF0C\u5426\u5219\u6574\u5217\u90FD\u662F\u5E26\u4E0B\u5212\u7EBF\u7684\u94FE\u63A5 */\n  text-decoration: none;\n  border-radius: var(--radius-ctl);\n  cursor: pointer;\n  white-space: nowrap;\n  overflow: hidden;\n}\n.pp-tree-row:hover {\n  color: var(--fg);\n}\n.pp-tree-row[data-active="true"] {\n  color: var(--fg);\n  background: var(--bg-hover);\n  font-weight: var(--fw-medium);\n}\n/* \u5C55\u5F00\u7BAD\u5934\uFF1A\u5BBD 12px\uFF0C\u5DE6 12px \u53F3 4px\uFF08Apifox .tree-bK2pJT .ui-tree-switcher \u539F\u6587\uFF1A\n   width:12px; margin-left:12px; margin-right:4px\uFF09 */\n.pp-tree-switcher {\n  flex: none;\n  width: var(--sp-3);\n  margin-left: var(--sp-3);\n  margin-right: var(--sp-1);\n  text-align: center;\n  color: var(--fg-tertiary);\n}\n.pp-tree-icon {\n  flex: none;\n  width: var(--icon);\n  height: var(--icon);\n  color: var(--fg-tertiary);\n}\n.pp-tree-row-count {\n  margin-left: auto;\n  font-size: var(--fs-12);\n  color: var(--fg-tertiary);\n}\n.pp-tree-group {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-1);\n  height: var(--tree-row-h);\n  margin: 0 var(--sp-4);\n  padding: 0 var(--sp-1);\n  font-size: var(--fs-12);\n  font-weight: var(--fw-medium);\n  color: var(--fg-tertiary);\n  text-transform: none;\n}\n\n/* \u2014\u2014 \u53F3 TOC \u2014\u2014 */\n.pp-toc {\n  padding: var(--sp-3);\n}\n.pp-toc-item {\n  display: block;\n  height: var(--ctl-h-sm);\n  line-height: var(--ctl-h-sm);\n  padding: 0 var(--sp-2);\n  font-size: var(--fs-13);\n  color: var(--fg-secondary);\n  text-decoration: none;\n  border-left: 2px solid transparent;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.pp-toc-item:hover {\n  color: var(--fg);\n}\n.pp-toc-item[data-active="true"] {\n  color: var(--accent);\n  border-left-color: var(--accent);\n}\n\n/* \u2014\u2014 \u6587\u6863\u6B63\u6587\u5206\u533A \u2014\u2014 */\n.pp-doc-section {\n  padding-top: var(--sp-4);\n  margin-top: var(--sp-4);\n  border-top: 1px solid var(--border);\n}\n.pp-doc-section:first-child {\n  padding-top: 0;\n  margin-top: 0;\n  border-top: none;\n}\n.pp-doc-h1 {\n  font-size: var(--fs-20);\n  line-height: var(--lh-24);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-strong);\n  margin: 0 0 var(--sp-2) 0;\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n}\n.pp-doc-h2 {\n  font-size: var(--fs-16);\n  line-height: var(--lh-24);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-strong);\n  margin: 0 0 var(--sp-2) 0;\n}\n.pp-doc-h3 {\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-secondary);\n  margin: 0 0 var(--sp-1) 0;\n}\n\n/* \u2014\u2014 \u5DE5\u5177\u6761 \u2014\u2014 */\n.pp-toolbar {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  flex-wrap: wrap;\n  margin-bottom: var(--sp-3);\n}\n.pp-toolbar-inline {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  flex-wrap: wrap;\n}\n.pp-toolbar-spacer {\n  flex: 1;\n}\n\n/* \u2014\u2014 \u53CC\u680F / \u5B57\u6BB5\u884C \u2014\u2014 */\n.pp-cols-2 {\n  display: grid;\n  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);\n  gap: var(--sp-4);\n  align-items: start;\n}\n/* \u7A84\u5BB9\u5668\uFF1A\u4FA7\u8FB9\u680F\u4E3B\u533A\u5B9E\u6D4B 455~840px\uFF0C\u4E24\u5217\u5404\u53EA\u5269 230~420px\uFF0C\n   import \u7684 textarea \u4E0E settings \u7684\u4EE3\u7406\u8F93\u5165\u6846\u4F1A\u88AB\u622A\u65AD\u3002\n   900px = \u4E24\u5217\u5404 440px \u4EE5\u4E0A\u624D\u591F\u653E\u8FD9\u4E24\u7C7B\u63A7\u4EF6\uFF0C\u4F4E\u4E8E\u6B64\u6539\u4E0A\u4E0B\u5806\u53E0\u3002 */\n@container ppmain (max-width: 900px) {\n  .pp-cols-2 {\n    grid-template-columns: minmax(0, 1fr);\n  }\n}\n.pp-field {\n  display: grid;\n  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.6fr) auto auto;\n  gap: var(--sp-2);\n  align-items: center;\n  min-height: var(--ctl-h);\n}\n.pp-field-head {\n  font-size: var(--fs-12);\n  color: var(--fg-tertiary);\n  border-bottom: 1px solid var(--border);\n}\n.pp-form-row {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-3);\n  min-height: var(--ctl-h);\n  margin-bottom: var(--sp-3);\n}\n.pp-form-label {\n  width: 104px;\n  flex: none;\n  font-size: var(--fs-14);\n  color: var(--fg-secondary);\n}\n\n/* \u2014\u2014 \u4EE3\u7801 / \u9884\u89C8\u5757 \u2014\u2014 */\n.pp-pre {\n  margin: 0;\n  padding: var(--sp-3);\n  font-family: var(--font-mono);\n  font-size: var(--fs-13);\n  line-height: var(--lh-20);\n  color: var(--fg);\n  background: var(--bg-subtle);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-ctl);\n  overflow: auto;\n}\n.pp-pre-scroll {\n  max-height: calc(var(--row-h) * 12);\n}\n.pp-json-editor {\n  width: 100%;\n  min-height: calc(var(--row-h) * 6);\n  padding: var(--sp-3);\n  font-family: var(--font-mono);\n  font-size: var(--fs-13);\n  line-height: var(--lh-20);\n  color: var(--fg);\n  background: var(--bg-surface);\n  border: 1px solid var(--border-strong);\n  border-radius: var(--radius-ctl);\n  resize: vertical;\n}\n.pp-json-editor:focus {\n  outline: none;\n  border-color: var(--accent);\n  box-shadow: 0 0 0 2px var(--accent-tint);\n}\n.pp-textarea {\n  width: 100%;\n  min-height: calc(var(--row-h) * 6);\n  padding: var(--sp-3);\n  font-family: var(--font-mono);\n  font-size: var(--fs-13);\n  line-height: var(--lh-20);\n  color: var(--fg);\n  background: var(--bg-surface);\n  border: 1px solid var(--border-strong);\n  border-radius: var(--radius-ctl);\n  resize: vertical;\n}\n.pp-textarea:focus {\n  outline: none;\n  border-color: var(--accent);\n  box-shadow: 0 0 0 2px var(--accent-tint);\n}\n\n/* \u2014\u2014 \u63D0\u793A\u6761 \u2014\u2014 */\n.pp-note {\n  display: flex;\n  align-items: flex-start;\n  gap: var(--sp-2);\n  padding: var(--sp-2) var(--sp-3);\n  font-size: var(--fs-13);\n  line-height: var(--lh-20);\n  color: var(--fg);\n  background: var(--bg-subtle);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-ctl);\n}\n.pp-note-bad {\n  color: var(--error);\n  border-color: var(--error);\n  background: var(--bg-surface);\n}\n.pp-note-warn {\n  color: var(--warning);\n  border-color: var(--warning);\n  background: var(--bg-surface);\n}\n.pp-note-ok {\n  color: var(--success);\n  border-color: var(--success);\n  background: var(--bg-surface);\n}\n.pp-error-text {\n  color: var(--error);\n  font-size: var(--fs-13);\n  line-height: var(--lh-20);\n  margin: var(--sp-1) 0;\n}\n\n/* \u2014\u2014 \u5217\u8868 / \u7ED3\u679C\u884C \u2014\u2014 */\n.pp-list {\n  display: flex;\n  flex-direction: column;\n  gap: 1px;\n}\n.pp-list-row {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  min-height: var(--row-h);\n  padding: 0 var(--sp-2);\n  font-size: var(--fs-14);\n  color: var(--fg);\n  text-decoration: none;\n  border-radius: var(--radius-ctl);\n  cursor: pointer;\n}\n.pp-list-row:hover {\n  background: var(--bg-hover);\n}\n.pp-list-row[data-active="true"] {\n  background: var(--bg-selected);\n  color: var(--accent);\n}\n.pp-result-row {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  min-height: var(--ctl-h);\n  padding: 0 var(--sp-2);\n  font-size: var(--fs-13);\n  border-bottom: 1px solid var(--border);\n}\n\n/* \u2014\u2014 \u72B6\u6001\u8272\u6587\u672C \u2014\u2014 */\n.pp-ok { color: var(--success); }\n.pp-warn { color: var(--warning); }\n.pp-bad { color: var(--error); }\n.pp-accent { color: var(--accent); }\n\n/* \u2014\u2014 \u5143\u4FE1\u606F / \u7701\u7565 \u2014\u2014 */\n.pp-meta {\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-tertiary);\n}\n.pp-mono {\n  font-family: var(--font-mono);\n  font-size: var(--fs-13);\n}\n.pp-ellipsis {\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  min-width: 0;\n}\n.pp-scroll {\n  overflow: auto;\n  min-height: calc(var(--row-h) * 0);\n}\n/* \u8868\u683C\u5BB9\u5668\uFF1A\u7A84\u680F\u91CC\u6A2A\u5411\u6EDA\u52A8\uFF0C\u4FDD\u6301\u5217\u5BBD\u53EF\u8BFB\u3002\n   \u4E0D\u8981\u518D\u5199 .pp-table-wrap .pp-table{min-width:100%}\uFF1A\u8868\u683C\u6700\u5C0F\u5BBD\u5EA6\u7531 ParamTable\n   \u6309\u5217\u5BBD\u5408\u8BA1\u5185\u8054\u7ED9\u51FA\uFF0C\u8FD9\u6761\u9009\u62E9\u5668\u4F1A\u628A\u5B83\u8986\u76D6\u6210 100%\uFF0C\u5217\u5C31\u53C8\u80FD\u88AB\u538B\u584C\u3002 */\n.pp-table-wrap {\n  overflow-x: auto;\n  overflow-y: hidden;\n  /* flex/grid \u5B50\u9879\u9ED8\u8BA4 min-width:auto\uFF0C\u4F1A\u88AB\u8868\u683C\u5185\u8054 min-width \u9876\u5F00\u5BB9\u5668\uFF0C\n     \u5728 .pp-pane / .pp-debug-tabbody \u91CC\u8868\u73B0\u4E3A\u6574\u9875\u6A2A\u5411\u6EA2\u51FA\u3002\u8FD9\u91CC\u663E\u5F0F\u538B\u5230 0\u3002 */\n  min-width: 0;\n  max-width: 100%;\n}\n.pp-aside-sticky {\n  position: sticky;\n  top: var(--sp-4);\n}\n.pp-md-list {\n  margin: 0 0 var(--sp-2) 0;\n  padding-left: var(--sp-5);\n}\n\n/* \u2014\u2014 \u7EDF\u8BA1\u5757 \u2014\u2014 */\n.pp-stats {\n  display: grid;\n  /* \u4FA7\u8FB9\u680F\u53EF\u7528\u5BBD\u7EA6 500px\uFF1A96px \u8D77\u8DF3\u53EF\u7A33\u5B9A\u6392 4 \u5217\uFF08Apifox \u7EDF\u8BA1\u6761\u662F\u4E00\u884C\u56DB\u5757\uFF09 */\n  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));\n  gap: var(--sp-2);\n}\n/* \u7A84\u5BB9\u5668\uFF1A4 \u5757\u5404\u53EA\u5269 ~110px\uFF0C\u300C2026-11-19 09:41\u300D\u88AB\u622A\u6210\u300C2026-11-1\u2026\u300D\u3002\n   \u4E24\u5217\u8BA9\u6BCF\u5757 240px\uFF0C\u65F6\u95F4\u4E0E\u6570\u5B57\u90FD\u5B8C\u6574\u3002 */\n@container ppmain (max-width: 640px) {\n  .pp-stats {\n    grid-template-columns: repeat(2, minmax(0, 1fr));\n  }\n}\n.pp-stat {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-1);\n  padding: var(--sp-2) var(--sp-3);\n  min-width: 0;\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n}\n.pp-stat-value {\n  /* \u7EDF\u8BA1\u6570\u5B57\u5728\u7A84\u680F\u91CC\u4E0D\u80FD\u7528 24px\uFF08\u4F1A\u6362\u884C\u628A\u56DB\u5757\u6491\u6210\u4E24\u884C\uFF09\uFF0C18px \u4E0E Apifox \u9762\u677F\u5185\u6570\u503C\u540C\u6863 */\n  font-size: var(--fs-16);\n  line-height: var(--lh-24);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-strong);\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.pp-stat-label {\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-secondary);\n}\n\n/* \u2014\u2014 \u603B\u89C8\uFF1A\u9879\u76EE\u5361\u7247\u7F51\u683C \u2014\u2014 */\n.pp-overview-grid {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));\n  gap: var(--sp-4);\n}\n\n/* \u2014\u2014 \u8C03\u8BD5\uFF1A\u6574\u9875 padding 10px\uFF08Apifox .apiCase padding:10px\uFF09\u2014\u2014 */\n/* \u8C03\u8BD5\u9875\uFF1AApifox .apiCase \u539F\u6587\uFF08width/height 100%\u3001padding 10px\u3001overflow auto\uFF09\u3002\n   \u5355\u680F\u7ED3\u6784\u2014\u2014\u63A5\u53E3\u6811\u7531\u5DE6\u4FA7\u5168\u5C40\u5BFC\u822A\u627F\u62C5\uFF0C\u9875\u9762\u5185\u4E0D\u518D\u81EA\u5E26\u3002 */\n.pp-debug-page {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-3);\n  padding: var(--page-pad);\n  padding-right: calc(var(--page-pad) - var(--sp-1) + var(--layout-pad));\n  min-height: 0;\n}\n/* \u5143\u4FE1\u606F\u884C\uFF1A\u73AF\u5883\u9009\u62E9 + \u5B9E\u9645\u5730\u5740 + \u53D8\u91CF + \u5386\u53F2\u5165\u53E3\uFF0C\u538B\u6210\u4E00\u884C */\n/* \u901A\u7528\u4E24\u680F\uFF08\u5DE6\u5217\u8868 + \u53F3\u8BE6\u60C5\uFF09\uFF1Aenv / schema / test / mock \u56DB\u9875\u5171\u7528\u3002\n   debug \u9875\u4E0D\u7528\u5B83\u2014\u2014\u8C03\u8BD5\u53F0\u662F Apifox \u5355\u680F\u7ED3\u6784\u3002 */\n.pp-debug-layout {\n  display: grid;\n  grid-template-columns: clamp(var(--panel-w), 32%, var(--panel-w-max)) minmax(0, 1fr);\n  gap: var(--sp-3);\n  align-items: start;\n}\n@container ppmain (max-width: 980px) {\n  .pp-debug-layout {\n    grid-template-columns: minmax(0, 1fr);\n  }\n}\n/* \u5168\u5C40\u641C\u7D22\u9875\uFF1A\u4E00\u6761\u641C\u7D22\u6761 + \u5206\u7EC4\u7ED3\u679C\u3002\n   \u539F\u6765\u300C\u641C\u7D22\u300D\u6309\u94AE\u5728\u9875\u5934\u3001\u8F93\u5165\u6846\u5728\u4E0B\u65B9\u7684\u5361\u7247\u91CC\uFF0C\u4E00\u6B21\u641C\u7D22\u8981\u8DE8\u4E24\u4E2A\u533A\u57DF\uFF1B\n   \u4E09\u7EC4\u7ED3\u679C\u53C8\u90FD\u585E\u8FDB\u4E00\u5F20\u5361\u7247\uFF0C\u7A7A\u7EC4\u4E5F\u5360\u4F4D\uFF0CURL \u88AB margin-left:auto \u7529\u5230\u8FDC\u7AEF\u3002 */\n.pp-search-bar {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  flex-wrap: wrap;\n  padding: var(--sp-3);\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n}\n.pp-search-project {\n  flex: none;\n  width: 120px;\n}\n.pp-search-input {\n  flex: 1;\n  min-width: 160px;\n}\n.pp-search-btn {\n  flex: none;\n  min-width: 72px;\n}\n.pp-search-source {\n  margin: var(--sp-2) 0 var(--sp-3);\n}\n.pp-search-hint {\n  display: flex;\n  min-height: calc(var(--row-h) * 6);\n}\n.pp-search-results {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-3);\n}\n.pp-search-group {\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  overflow: hidden;\n}\n/* \u5206\u7EC4\u5934\uFF1A\u53EF\u6298\u53E0\uFF0C\u6574\u884C\u53EF\u70B9 */\n.pp-search-group-head {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  width: 100%;\n  height: var(--ctl-h);\n  padding: 0 var(--sp-3);\n  font-family: var(--font-sans);\n  font-size: var(--fs-13);\n  color: var(--fg-secondary);\n  text-align: left;\n  background: var(--bg-subtle);\n  border: none;\n  border-bottom: 1px solid var(--border);\n  cursor: pointer;\n}\n.pp-search-group-head:hover {\n  color: var(--fg);\n}\n.pp-search-caret {\n  flex: none;\n  width: 12px;\n  font-size: var(--fs-12);\n  color: var(--fg-tertiary);\n}\n.pp-search-group-label {\n  font-weight: var(--fw-medium);\n  color: var(--fg-strong);\n}\n.pp-search-count {\n  flex: none;\n  min-width: 18px;\n  padding: 0 var(--sp-1);\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-tertiary);\n  text-align: center;\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-pill);\n}\n.pp-search-list {\n  padding: var(--sp-1) var(--sp-2) var(--sp-2);\n}\n.pp-search-row {\n  gap: var(--sp-2);\n}\n/* \u975E\u63A5\u53E3\u6761\u76EE\uFF08\u6A21\u578B / \u76EE\u5F55\uFF09\u7528\u4E00\u4E2A\u5C0F\u5706\u70B9\u5360\u4F4D\uFF0C\u4FDD\u6301\u4E09\u884C\u7F29\u8FDB\u5BF9\u9F50 */\n/* \u975E\u63A5\u53E3\u6761\u76EE\uFF08\u6A21\u578B / \u76EE\u5F55\uFF09\uFF1A\u7528\u4E00\u4E2A\u4E0E method \u5FBD\u6807\u540C\u5BBD\u7684\u5C0F\u5706\u70B9\u5360\u4F4D\uFF0C\n   \u4FDD\u8BC1\u4E09\u7EC4\u7684\u540D\u79F0\u5217\u5DE6\u8FB9\u7F18\u5BF9\u9F50\u3002method \u5FBD\u6807 min-width 44px\u3002 */\n.pp-search-dot {\n  flex: none;\n  width: 6px;\n  height: 6px;\n  margin: 0 19px;\n  background: var(--fg-tertiary);\n  border-radius: var(--radius-pill);\n}\n.pp-search-name {\n  flex: 0 1 auto;\n  font-size: var(--fs-13);\n}\n.pp-search-sub {\n  /* \u9760\u53F3\u4F46\u4E0D\u5403\u6EE1\uFF1A\u540D\u79F0\u4E0E URL \u4E4B\u95F4\u7559 16px \u8D77\uFF0C\u957F\u540D\u79F0\u65F6 URL \u8BA9\u4F4D */\n  flex: 0 1 auto;\n  margin-left: var(--sp-4);\n  text-align: right;\n}\n/* \u9875\u5934\u7EDF\u8BA1\uFF1A\u4E0D\u53C2\u4E0E\u6536\u7F29\uFF0C\u7A84\u680F\u91CC\u4E5F\u5B8C\u6574\u663E\u793A */\n.pp-search-summary {\n  flex: none;\n  white-space: nowrap;\n}\n.pp-search-mark {\n  padding: 0 1px;\n  color: var(--fg-strong);\n  font-weight: var(--fw-semibold);\n  background: var(--accent-tint);\n  border-radius: 2px;\n}\n/* \u5BFC\u5165\u5BFC\u51FA\u9875\uFF08Apifox\u300C\u5BFC\u5165\u5BFC\u51FA\u6570\u636E\u300D\u540C\u6784\uFF09\uFF1A\u9875\u7B7E\u5206\u533A + \u5DE6\u683C\u5F0F\u5217\u8868 + \u53F3\u5185\u5BB9\u3002\n   \u539F\u6765\u300C\u5BFC\u5165 / \u5BFC\u51FA\u300D\u4E24\u5217\u5E76\u6392\uFF0C\u5404\u53EA\u5269 240px\uFF1Atextarea \u4E0E\u6309\u94AE\u7EC4\u90FD\u6362\u884C\uFF0C\n   \u4EE3\u7801\u751F\u6210\u518D\u5355\u72EC\u5360\u4E00\u6574\u5F20\u5361\uFF0C\u4E09\u5757\u9AD8\u5EA6\u53C2\u5DEE\u3002 */\n.pp-io-layout {\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  overflow: hidden;\n}\n.pp-io-layout > .pp-tabs {\n  border-bottom: 1px solid var(--border);\n}\n.pp-io-body {\n  display: grid;\n  grid-template-columns: 168px minmax(0, 1fr);\n  min-height: 0;\n}\n@container ppmain (max-width: 720px) {\n  .pp-io-body {\n    grid-template-columns: minmax(0, 1fr);\n  }\n  /* \u5806\u53E0\u540E\u683C\u5F0F\u5217\u8868\u6539\u6210\u6A2A\u5411\u53EF\u6EDA\u7684\u4E00\u884C */\n  .pp-io-layout .pp-io-side {\n    flex-direction: row;\n    flex-wrap: nowrap;\n    overflow-x: auto;\n    border-right: none;\n    border-bottom: 1px solid var(--border);\n    padding: var(--sp-2);\n  }\n  .pp-io-layout .pp-io-side-title {\n    display: none;\n  }\n  .pp-io-layout .pp-io-item {\n    flex: none;\n    white-space: nowrap;\n  }\n  /* \u5806\u53E0\u540E\u4E3B\u533A\u72EC\u5360\u6574\u5BBD\uFF0C\u4F46 grid \u5B50\u9879\u9ED8\u8BA4 min-width:auto \u4F1A\u88AB\u5185\u5BB9\u9876\u5F00\uFF0C\n     \u8868\u73B0\u4E3A\u300C\u6E05\u7A7A\u300D\u6309\u94AE\u88AB\u5207\u6389\u4E00\u534A\u3002\u8FD9\u91CC\u663E\u5F0F\u538B\u5230 0\u3002 */\n  .pp-io-layout .pp-io-main {\n    min-width: 0;\n    padding: var(--sp-3);\n    padding-right: calc(var(--sp-3) + var(--sp-1));\n  }\n}\n.pp-io-side {\n  display: flex;\n  flex-direction: column;\n  gap: 1px;\n  padding: var(--sp-2);\n  border-right: 1px solid var(--border);\n  background: var(--bg-app);\n}\n.pp-io-side-title {\n  padding: var(--sp-1) var(--sp-2) var(--sp-2);\n  font-size: var(--fs-12);\n  color: var(--fg-tertiary);\n}\n.pp-io-item {\n  display: flex;\n  align-items: center;\n  height: var(--ctl-h);\n  padding: 0 var(--sp-2);\n  font-family: var(--font-sans);\n  font-size: var(--fs-13);\n  color: var(--fg-secondary);\n  text-align: left;\n  background: transparent;\n  border: none;\n  border-radius: var(--radius-ctl);\n  cursor: pointer;\n}\n.pp-io-item:hover {\n  color: var(--fg);\n  background: var(--bg-hover);\n}\n.pp-io-item[data-active="true"] {\n  color: var(--accent);\n  background: var(--accent-tint);\n  font-weight: var(--fw-medium);\n}\n.pp-io-main {\n  min-width: 0;\n  /* \u53F3\u4FA7\u6BD4\u5DE6\u4FA7\u591A\u7559 4px\uFF1A\u5361\u7247\u53F3\u8FB9\u6846 + \u6EDA\u52A8\u6761\u5728\u7A84\u680F\u91CC\u4F1A\u8D34\u4F4F textarea/\u6309\u94AE */\n  padding: var(--sp-4) var(--sp-4) var(--sp-4) var(--sp-4);\n  padding-right: calc(var(--sp-4) + var(--sp-1));\n}\n.pp-io-head {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  flex-wrap: wrap;\n  margin-bottom: var(--sp-2);\n}\n.pp-io-title {\n  font-size: var(--fs-14);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-strong);\n}\n/* head \u662F flex + flex-wrap\uFF1A\u5B50\u9879\u9ED8\u8BA4\u53EF\u6536\u7F29\uFF0C\u7A84\u680F\u91CC\u300C\u6E05\u7A7A\u300D\u4F1A\u88AB\u538B\u5230 42px \u628A\u5B57\u88C1\u6389\u3002\n   \u6807\u9898\u5141\u8BB8\u7701\u7565\uFF0C\u6309\u94AE\u4E00\u5F8B\u4E0D\u6536\u7F29\u3002 */\n.pp-io-head > .pp-io-title {\n  min-width: 0;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.pp-io-head > .pp-btn {\n  flex: none;\n  /* \u4E24\u5B57\u6309\u94AE\uFF08\u6E05\u7A7A\uFF09\u5728 42px \u65F6\u8D34\u8FB9\uFF0C\u7ED9\u4E00\u70B9\u4F59\u91CF */\n  min-width: 56px;\n}\n.pp-io-head > .pp-btn:last-child {\n  margin-left: auto;\n}\n.pp-io-input {\n  margin-top: var(--sp-2);\n}\n.pp-io-stats {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  flex-wrap: wrap;\n  margin-top: var(--sp-2);\n}\n.pp-io-pre {\n  margin-top: var(--sp-3);\n}\n.pp-io-sample {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  margin-top: var(--sp-2);\n  min-width: 0;\n}\n/* \u73AF\u5883\u9875\uFF08Apifox\u300C\u73AF\u5883\u7BA1\u7406\u300D\u540C\u6784\uFF09\uFF1A\u5DE6\u73AF\u5883\u5217\u8868 + \u53F3\u7F16\u8F91\u533A\u3002\n   \u5DE6\u5217\u5BBD\u4E0E\u6587\u6863\u9875\u76EE\u5F55\u6811\u5171\u7528 --panel-w\uFF0C\u53F3\u533A\u9876\u4E0A\u662F\u9875\u7B7E\uFF08\u73AF\u5883\u53D8\u91CF / \u5168\u5C40\u53D8\u91CF / \u4F18\u5148\u7EA7\uFF09\u3002\n   \u539F\u6765\u7684\u4E00\u884C\u4E09\u5361\u5728 500px \u4E3B\u533A\u91CC\u6BCF\u5361\u53EA\u5269 250px\uFF0C\u53D8\u91CF\u8868\u8981\u6A2A\u5411\u6EDA\u52A8\u3001\n   \u4F18\u5148\u7EA7\u5361\u8BF4\u660E\u9010\u5B57\u6298\u884C\uFF0C\u64CD\u4F5C\u8DEF\u5F84\u4E5F\u4E0D\u5BF9\u2014\u2014\u5207\u6362\u73AF\u5883\u5728\u5DE6\u3001\u7F16\u8F91\u5728\u53F3\u624D\u5BF9\u5F97\u4E0A Apifox\u3002 */\n.pp-env-layout {\n  display: grid;\n  grid-template-columns: var(--panel-w) minmax(0, 1fr);\n  gap: var(--sp-4);\n  align-items: start;\n}\n@container ppmain (max-width: 820px) {\n  .pp-env-layout {\n    grid-template-columns: minmax(0, 1fr);\n    gap: var(--sp-3);\n  }\n  /* \u5806\u53E0\u540E\u5DE6\u5217\u8868\u72EC\u5360\u4E00\u884C\uFF1A\u73AF\u5883\u6761\u76EE\u6539\u6210\u6A2A\u5411\u53EF\u6EDA\u7684\u80F6\u56CA\uFF0C\u4E0D\u518D\u5360\u6389\u6574\u5C4F\u9AD8\u5EA6\u3002\n     .pp-panel \u81EA\u5E26 width:var(--panel-w) \u4E0E overflow:auto\uFF0C\u8FD9\u91CC\u5FC5\u987B\u4E00\u8D77\u8986\u76D6\uFF0C\n     \u5426\u5219\u5DE6\u5217\u4ECD\u662F 240px \u5B9A\u5BBD\u3001\u53F3\u4FA7\u7559\u4E00\u5927\u7247\u7A7A\u767D\u3002 */\n  .pp-env-layout .pp-env-side {\n    width: auto;\n    padding: 0;\n    overflow: visible;\n  }\n  .pp-env-layout .pp-env-tree,\n  .pp-env-layout .pp-tree {\n    display: flex;\n    flex-wrap: nowrap;\n    gap: var(--sp-2);\n    overflow-x: auto;\n    padding: var(--sp-1) var(--sp-3);\n  }\n  .pp-env-layout .pp-tree-row {\n    flex: none;\n    max-width: 200px;\n    margin: 0;\n    padding: 0 var(--sp-3);\n    height: var(--ctl-h);\n    border: 1px solid var(--border);\n    border-radius: var(--radius-pill);\n  }\n  .pp-env-layout .pp-tree-row[data-active="true"] {\n    border-color: var(--accent);\n  }\n}\n.pp-env-side {\n  display: flex;\n  flex-direction: column;\n  min-width: 0;\n  padding: var(--sp-2) 0;\n}\n.pp-env-side-head {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  padding: 0 var(--sp-4) var(--sp-2);\n  border-bottom: 1px solid var(--border);\n  margin-bottom: var(--sp-1);\n}\n.pp-env-side-head .pp-card-title {\n  margin: 0;\n  font-size: var(--fs-13);\n}\n.pp-env-side-head > .pp-btn:last-child {\n  margin-left: auto;\n}\n.pp-btn-accent {\n  color: var(--accent);\n}\n.pp-env-main {\n  min-width: 0;\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  overflow: hidden;\n}\n.pp-env-main > .pp-tabs {\n  border-bottom: 1px solid var(--border);\n}\n.pp-env-pane {\n  padding: var(--sp-4);\n}\n.pp-env-fields {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));\n  gap: var(--sp-3);\n  margin-bottom: var(--sp-4);\n}\n.pp-env-pane > .pp-card-title {\n  margin: 0 0 var(--sp-2) 0;\n}\n/* \u53D8\u91CF\u8868\u7A7A\u884C\uFF1A\u5DE6\u5BF9\u9F50\u4E00\u884C\u63D0\u793A\uFF0C\u4E0D\u8981\u5360\u6EE1\u884C\u9AD8\u7684\u5C45\u4E2D\u7559\u767D */\n.pp-env-vars-empty {\n  height: auto;\n  padding: var(--sp-2) var(--sp-1);\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-tertiary);\n  white-space: normal;\n}\n.pp-env-field {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-1);\n  margin-bottom: var(--sp-3);\n}\n.pp-env-field .pp-form-label {\n  width: auto;\n}\n.pp-env-field-row {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n}\n.pp-env-field-row .pp-input {\n  flex: 1;\n  min-width: 0;\n}\n.pp-env-check {\n  display: inline-flex;\n  align-items: center;\n  gap: var(--sp-1);\n  flex: none;\n  font-size: var(--fs-12);\n  color: var(--fg-secondary);\n  white-space: nowrap;\n}\n/* \u53D8\u91CF\u4F18\u5148\u7EA7\uFF1A\u7EB5\u5411\u56DB\u7EA7\uFF0C\u6BCF\u7EA7\u4E00\u884C\u300C\u5E8F\u53F7 + \u4F5C\u7528\u57DF\u300D\uFF0C\u8BF4\u660E\u7F29\u8FDB\u5728\u4E0B\u4E00\u884C\u3002\n   199px \u7684\u5361\u91CC\u300C1\uFF08\u6700\u9AD8\uFF09\u300D\u8FD9\u79CD\u957F\u5FBD\u6807\u4F1A\u628A\u4F5C\u7528\u57DF\u6324\u6210\u9010\u5B57\u6362\u884C\uFF0C\u6539\u6210\u5706\u5F62\u5E8F\u53F7\u3002 */\n.pp-priority-list {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-1);\n}\n.pp-priority-item {\n  display: grid;\n  grid-template-columns: 20px minmax(0, 1fr);\n  gap: var(--sp-2);\n  padding: var(--sp-2) 0;\n  border-bottom: 1px solid var(--border);\n}\n.pp-priority-item:last-child {\n  border-bottom: none;\n}\n.pp-priority-level {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  width: 20px;\n  height: 20px;\n  font-size: var(--fs-12);\n  line-height: 1;\n  font-weight: var(--fw-semibold);\n  color: var(--fg-secondary);\n  background: var(--bg-subtle);\n  border-radius: var(--radius-pill);\n}\n.pp-priority-item:first-child .pp-priority-level {\n  color: var(--fg-on-accent);\n  background: var(--accent);\n}\n.pp-priority-body {\n  display: flex;\n  flex-direction: column;\n  gap: 2px;\n  min-width: 0;\n}\n.pp-priority-scope {\n  font-size: var(--fs-13);\n  line-height: var(--lh-18);\n  font-weight: var(--fw-medium);\n  color: var(--fg-strong);\n}\n.pp-priority-note {\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-secondary);\n}\n/* Mock \u9875\uFF1A\u5DE6\u63A5\u53E3\u5217\u8868\uFF08240px\uFF0C\u4E0E\u6587\u6863\u9875\u76EE\u5F55\u6811\u540C\u5BBD\uFF09+ \u53F3\u914D\u7F6E\u7EB5\u5411\u4E24\u5361\u3002\n   \u4E4B\u524D\u662F\u4E24\u5217\u7F51\u683C\u585E\u4E09\u4E2A\u5B50\u9879\uFF0C\u7B2C\u4E09\u5757\u88AB\u6324\u5230\u7B2C\u4E8C\u884C\u5DE6\u4FA7\u3001\u4E0E\u53F3\u4FA7\u5F62\u6210\u9AD8\u5EA6\u5DEE\u3002 */\n.pp-mock-layout {\n  display: grid;\n  grid-template-columns: var(--panel-w) minmax(0, 1fr);\n  gap: var(--sp-4);\n  align-items: start;\n}\n.pp-mock-side {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-4);\n  min-width: 0;\n}\n@container ppmain (max-width: 900px) {\n  .pp-mock-layout {\n    grid-template-columns: minmax(0, 1fr);\n  }\n  .pp-mock-layout .pp-panel {\n    width: auto;\n    max-height: calc(var(--tree-row-h) * 10);\n  }\n}\n.pp-debug-meta {\n  display: flex;\n  align-items: center;\n  flex-wrap: wrap;\n  gap: var(--sp-2);\n  margin-top: var(--sp-2);\n  font-size: var(--fs-12);\n}\n.pp-debug-meta .pp-select {\n  flex: none;\n  width: auto;\n  min-width: 96px;\n}\n.pp-debug-meta .pp-mono {\n  flex: 1;\n  min-width: 0;\n}\n/* \u9875\u7B7E\u4F53\uFF1A\u4E0E\u9875\u7B7E\u6761\u4E4B\u95F4\u7559 8px\uFF0C\u5185\u5BB9\u533A\u81EA\u5DF1\u6EDA\u52A8 */\n.pp-debug-tabbody {\n  margin-top: var(--sp-2);\n  min-width: 0;\n}\n/* \u2014\u2014 \u8C03\u8BD5\uFF1A\u5BBD\u5BB9\u5668\u4E09\u680F / \u7A84\u5BB9\u5668\u5355\u5217 \u2014\u2014 */\n/* \u4E09\u680F\uFF08\u6811 / \u8BF7\u6C42\u7F16\u8F91 / \u54CD\u5E94\uFF09\u5728 400~700px \u7684\u4E3B\u533A\u91CC\u6BCF\u680F\u53EA\u5269 100 \u591A\u50CF\u7D20\uFF0C\n   \u53C2\u6570\u8868\u88AB\u6324\u6210\u4E00\u6761\uFF0C\u8FD9\u624D\u662F\u300C\u5E03\u5C40\u9519\u4E71\u300D\u7684\u6839\u56E0\u3002\u7A84\u5BB9\u5668\u4E0B\u6539\u4E3A\u5355\u5217\u7EB5\u5411\u5806\u53E0\u3002\n   \u9996\u5217\u4E0E\u6587\u6863\u9875\u5171\u7528 --panel-w\uFF0C\u4E24\u9875\u7684\u63A5\u53E3\u6811\u5BBD\u5EA6\u4FDD\u6301\u4E00\u81F4\u3002 */\n\n.pp-pane {\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  padding: var(--card-pad);\n  min-width: 0;\n}\n/* \u2014\u2014 \u8C03\u8BD5\u53F0 URL \u884C\uFF08\u5BF9\u9F50 Apifox .apiCase .main-input-bar\uFF09\u2014\u2014\n   \u6574\u884C\u9AD8 40px\uFF1Bmethod \u5DE6\u5185\u8FB9\u8DDD 12px \u53F3 8px\uFF1BbaseUrl / path \u662F\u4E24\u4E2A\u80F6\u56CA\n   \uFF08\u5706\u89D2 6px\u3001margin 5px\u3001\u5185\u8FB9\u8DDD 0 10px\u3001\u884C\u9AD8 28px\uFF09\uFF1B\u53D1\u9001\u6309\u94AE\u7EC4 \u4E3B + 25px \u4E0B\u62C9\u3002 */\n.pp-url-row {\n  display: flex;\n  align-items: center;\n  flex-wrap: wrap;\n  gap: var(--sp-2);\n  min-height: var(--ctl-h-lg);\n}\n.pp-url-row .pp-select {\n  width: 104px;\n  flex: none;\n  padding-left: var(--sp-3);\n}\n.pp-url-row .pp-input {\n  flex: 1;\n  height: var(--ctl-h-sm);\n}\n/* \u7A84\u5BB9\u5668\uFF1AURL \u884C\u6324\u5728\u4E00\u884C\u65F6\u8DEF\u5F84\u8F93\u5165\u6846\u53EA\u5269\u51E0\u5341\u50CF\u7D20\uFF08"\u672A\u914D\u7F6E baseUrl" \u80F6\u56CA\u672C\u8EAB\u5C31\u8981 90px\uFF09\u3002\n   \u8BA9\u8DEF\u5F84\u8F93\u5165\u6846\u72EC\u5360\u7B2C\u4E8C\u884C\uFF0C\u5BBD\u5EA6\u62C9\u6EE1\uFF0C\u53D1\u9001\u7EC4\u4ECD\u7559\u5728\u7B2C\u4E00\u884C\u672B\u5C3E\u3002 */\n@container ppmain (max-width: 640px) {\n  .pp-url-row .pp-input {\n    order: 9;\n    flex-basis: 100%;\n  }\n  .pp-url-row .pp-url-pill {\n    max-width: 32%;\n  }\n}\n.pp-url-method {\n  flex: none;\n  padding: 0 var(--sp-2) 0 var(--sp-3);\n  font-size: var(--fs-14);\n  font-weight: var(--fw-medium);\n  color: var(--fg-strong);\n  line-height: var(--ctl-h-lg);\n}\n/* baseUrl / path \u80F6\u56CA\uFF1AApifox \u628A\u4E24\u8005\u62C6\u6210\u72EC\u7ACB\u7684\u5706\u89D2\u5757\uFF0C\u89C6\u89C9\u4E0A\u533A\u5206\u300C\u73AF\u5883\u57DF\u300D\u4E0E\u300C\u8DEF\u5F84\u300D */\n.pp-url-pill {\n  display: inline-flex;\n  align-items: center;\n  flex: none;\n  max-width: 40%;\n  height: var(--ctl-h-sm);\n  margin: 0 var(--sp-1);\n  padding: 0 var(--sp-2);\n  font-family: var(--font-mono);\n  font-size: var(--fs-12);\n  line-height: var(--ctl-h-sm);\n  color: var(--fg-secondary);\n  background: var(--bg-subtle);\n  border-radius: var(--radius-ctl);\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.pp-url-pill-grow {\n  flex: 1;\n  max-width: none;\n}\n/* \u53D1\u9001\u6309\u94AE\u7EC4\uFF1A\u4E3B\u6309\u94AE\u5403\u6EE1\u5269\u4F59\u5BBD\u5EA6\uFF0C\u53F3\u7AEF 25px \u4E0B\u62C9\u7BAD\u5934\uFF08Apifox .send-btn .ui-btn-group\uFF09 */\n.pp-send-group {\n  display: inline-flex;\n  flex: 0 1 auto;\n  min-width: 0;\n  gap: 0;\n}\n/* Apifox .action-send \u5BBD 95px\uFF1A\u4E3B\u6309\u94AE\u5403\u6EE1\u3001\u53F3\u7AEF 25px \u4E0B\u62C9\u4F4D */\n.pp-url-row .pp-send-group {\n  flex: none;\n  width: 95px;\n}\n.pp-send-group .pp-btn:first-child {\n  border-top-right-radius: 0;\n  border-bottom-right-radius: 0;\n}\n.pp-send-group .pp-btn:last-child {\n  width: calc(var(--hit) - 3px);\n  padding: 0;\n  border-top-left-radius: 0;\n  border-bottom-left-radius: 0;\n}\n/* \u5206\u7EC4\u6807\u9898\uFF1A\u5DE6\u8FB9 3px \u4E3B\u8272\u7AD6\u7EBF + \u5DE6\u5185\u8FB9\u8DDD 10px + 16px \u5B57\n   \uFF08Apifox .apiDebug .group-title \u539F\u6587\uFF1Aborder-left:3px; margin-left:2px; padding-left:10px; font-size:16px\uFF09 */\n.pp-group-title {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  margin: var(--sp-2) 0 var(--sp-1) var(--sp-1);\n  /* 10px \u4E0D\u5728 4/8/12 \u523B\u5EA6\u4E0A\uFF0C\u4F46\u8FD9\u662F Apifox \u539F\u6587\u503C\uFF0C\u5199 calc \u4FDD\u6301\u53EF\u8FFD\u6EAF */\n  padding-left: calc(var(--sp-2) + var(--sp-1) / 2);\n  font-size: var(--fs-16);\n  line-height: var(--lh-24);\n  font-weight: var(--fw-medium);\n  color: var(--fg-strong);\n  border-left: 3px solid var(--accent);\n}\n\n/* \u2014\u2014 \u6D41\u7A0B\u56FE\u5BB9\u5668 \u2014\u2014 */\n/* \u6D41\u7A0B\u56FE\u9875\uFF08Apifox \u6D4B\u8BD5\u573A\u666F\u540C\u6784\uFF09\uFF1A\u5DE6\u6B65\u9AA4\u5217\u8868 + \u53F3\u753B\u5E03 + \u4E0B\u65B9\u5C5E\u6027\u9762\u677F\u3002\n   \u753B\u5E03\u5E38\u9A7B\uFF0C\u6539\u4EFB\u4E00\u6B65\u5373\u65F6\u91CD\u7ED8\uFF1B\u4E0D\u518D\u7528\u300C\u6574\u5BBD\u753B\u5E03 + \u6574\u5BBD\u8868\u683C\u300D\u4E0A\u4E0B\u5806\u53E0\u2014\u2014\n   \u8868\u683C\u5728 500px \u4E3B\u533A\u91CC\u8981\u6A2A\u5411\u6EDA 640px\uFF0C\u6539\u4E00\u6B65\u5F97\u6765\u56DE\u6EDA\u4E24\u6B21\u3002 */\n.pp-flow-layout {\n  display: grid;\n  grid-template-columns: var(--panel-w) minmax(0, 1fr);\n  gap: var(--sp-4);\n  align-items: start;\n}\n@container ppmain (max-width: 820px) {\n  .pp-flow-layout {\n    grid-template-columns: minmax(0, 1fr);\n    gap: var(--sp-3);\n  }\n  /* \u5806\u53E0\u540E\u6B65\u9AA4\u5217\u8868\u9AD8\u5EA6\u538B\u5230 8 \u884C\uFF0C\u907F\u514D\u628A\u753B\u5E03\u6324\u5230\u9996\u5C4F\u4E4B\u5916 */\n  .pp-flow-layout .pp-flow-steps {\n    max-height: calc(var(--row-h) * 8);\n  }\n  .pp-flow-layout .pp-flow-side {\n    width: auto;\n    overflow: visible;\n  }\n}\n.pp-flow-side {\n  display: flex;\n  flex-direction: column;\n  min-width: 0;\n  padding: var(--sp-2) 0;\n}\n.pp-flow-side-head {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  padding: 0 var(--sp-4) var(--sp-2);\n  border-bottom: 1px solid var(--border);\n  margin-bottom: var(--sp-1);\n}\n.pp-flow-side-head .pp-card-title {\n  margin: 0;\n  font-size: var(--fs-13);\n}\n.pp-flow-side-head > .pp-btn:last-child {\n  margin-left: auto;\n}\n.pp-flow-steps {\n  display: flex;\n  flex-direction: column;\n  gap: 1px;\n  max-height: calc(var(--row-h) * 16);\n  overflow: auto;\n}\n.pp-flow-step {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  padding: var(--sp-1) var(--sp-3);\n  margin: 0 var(--sp-2);\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-secondary);\n  border-radius: var(--radius-ctl);\n  cursor: pointer;\n}\n.pp-flow-step:hover {\n  color: var(--fg);\n}\n.pp-flow-step[data-active="true"] {\n  color: var(--fg);\n  background: var(--bg-hover);\n  font-weight: var(--fw-medium);\n}\n.pp-flow-step-no {\n  flex: none;\n  width: 18px;\n  font-family: var(--font-mono);\n  font-size: var(--fs-12);\n  color: var(--fg-tertiary);\n  text-align: right;\n}\n.pp-flow-step[data-active="true"] .pp-flow-step-no {\n  color: var(--accent);\n}\n.pp-flow-step-body {\n  display: flex;\n  flex-direction: column;\n  min-width: 0;\n  flex: 1;\n}\n.pp-flow-step-name {\n  color: inherit;\n}\n.pp-flow-step-msg {\n  font-family: var(--font-mono);\n  font-size: var(--fs-12);\n  color: var(--fg-tertiary);\n}\n.pp-flow-step-act {\n  flex: none;\n  font-size: var(--fs-12);\n  color: var(--fg-tertiary);\n}\n.pp-flow-main {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-4);\n  min-width: 0;\n}\n.pp-flow-canvas {\n  min-width: 0;\n  overflow-x: auto;\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  padding: var(--sp-4);\n}\n.pp-flow-canvas svg {\n  min-width: 100%;\n  display: block;\n}\n@container ppmain (max-width: 700px) {\n  .pp-flow-canvas svg {\n    min-width: 620px;\n  }\n}\n.pp-flow-props {\n  padding: var(--sp-4);\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n}\n.pp-flow-prop-grid {\n  display: grid;\n  grid-template-columns: 72px minmax(0, 1fr);\n  gap: var(--sp-2) var(--sp-3);\n  align-items: center;\n}\n.pp-flow-prop-grid .pp-form-label {\n  width: auto;\n  font-size: var(--fs-13);\n}\n.pp-flow-prop-row {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  min-width: 0;\n}\n.pp-flow-prop-row .pp-input {\n  flex: 1;\n  min-width: 0;\n}\n.pp-flow-name {\n  width: 180px;\n}\n.pp-flow-source {\n  margin-bottom: var(--sp-2);\n}\n.pp-seq-wrap {\n  overflow-x: auto;\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  background: var(--bg-surface);\n  padding: var(--sp-4);\n}\n.pp-seq-wrap svg {\n  min-width: 100%;\n  display: block;\n}\n/* \u7A84\u5BB9\u5668\uFF1A\u56DB\u4E2A\u6CF3\u9053\u6324\u5728 500px \u91CC\u6587\u5B57\u53E0\u6210\u4E00\u56E2\uFF0C\u7ED9 svg \u4E00\u4E2A\u53EF\u8BFB\u4E0B\u9650\uFF0C\u8D85\u51FA\u7531 .pp-seq-wrap \u6EDA\u52A8 */\n@container ppmain (max-width: 700px) {\n  .pp-seq-wrap svg {\n    min-width: 620px;\n  }\n}\n.pp-split-hint {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  padding: var(--sp-2) var(--sp-3);\n  font-size: var(--fs-13);\n  line-height: var(--lh-20);\n  color: var(--warning);\n  border: 1px solid var(--warning);\n  border-radius: var(--radius-ctl);\n  background: var(--bg-surface);\n}\n\n/* \u2014\u2014 \u7A7A\u6001 \u2014\u2014 */\n/* \u7A7A\u6001\uFF1A\u7D27\u51D1\u5C45\u4E2D\u5361\u3002\u6536\u7A84\u5230 --empty-w\uFF08360px\uFF09\u2014\u2014\u4E4B\u524D\u94FA\u6EE1 460px \u5BBD\u53EA\u653E\u4E00\u884C\u5B57\uFF0C\n   \u89C6\u89C9\u4E0A\u50CF\u4E00\u5757\u6CA1\u505A\u5B8C\u7684\u5360\u4F4D\u3002\u56FE\u6807\u7528\u4E09\u7EA7\u8272\uFF0C\u4E3B\u6587\u6848\u7528\u4E8C\u7EA7\u8272\uFF0C\u5C42\u7EA7\u9760\u989C\u8272\u4E0E\u5B57\u53F7\u533A\u5206\u3002 */\n.pp-empty {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  gap: var(--sp-2);\n  width: 100%;\n  max-width: var(--empty-w);\n  /* margin:auto \u5728 flex \u5BB9\u5668\uFF08.pp-page \u662F flex column\uFF09\u91CC\u540C\u65F6\u6C34\u5E73\u4E0E\u5782\u76F4\u5C45\u4E2D\uFF1B\n     \u4E4B\u524D\u5199\u6B7B var(--sp-6) auto \u53EA\u6C34\u5E73\u5C45\u4E2D\uFF0C\u7A7A\u6001\u4F1A\u8D34\u5728\u9876\u90E8\uFF0C\u4E0B\u65B9\u7559\u4E00\u5927\u7247\u7A7A\u767D\u3002 */\n  margin: auto;\n  padding: var(--sp-6) var(--sp-4);\n  text-align: center;\n  font-size: var(--fs-14);\n  line-height: var(--lh-20);\n  color: var(--fg-tertiary);\n  border: 1px dashed var(--border-strong);\n  border-radius: var(--radius-card);\n  background: var(--bg-surface);\n}\n.pp-empty-icon {\n  color: var(--fg-tertiary);\n}\n.pp-empty-text {\n  color: var(--fg-secondary);\n  font-weight: var(--fw-medium);\n}\n.pp-empty-action {\n  margin-top: var(--sp-1);\n}\n/* \u9762\u677F\u5185\u7684\u7A7A\u6001\uFF08\u5DE6\u6811\uFF09\uFF1A\u4E0D\u8981\u865A\u7EBF\u6846\u4E0E\u56FE\u6807\uFF0C\u53EA\u7559\u4E00\u884C\u8BF4\u660E */\n.pp-panel .pp-empty {\n  max-width: none;\n  margin: var(--sp-3) 0;\n  padding: var(--sp-3) var(--sp-2);\n  border: none;\n  background: transparent;\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n}\n.pp-panel .pp-empty-icon,\n.pp-panel .pp-empty-action {\n  display: none;\n}\n\n\n/* ============================================================\n/* ============================================================\n   \u5DE5\u4F5C\u53F0\u9AA8\u67B6 v3\uFF1A\u9876\u680F 48px + \u5DE6\u4FA7 240px \u6587\u5B57\u5BFC\u822A + 44px \u9875\u7B7E\u6761\n   \u6570\u503C\u5168\u90E8\u5BF9\u9F50 Apifox 2.8.55 \u5B9E\u6D4B\uFF08docs/apifox-visual-parity-spec.md\uFF09\uFF1A\n     \u9876\u680F --ui-layout-header-height: 48px\uFF0C\u5185\u8FB9\u8DDD 0 50px\n     \u5DE6\u4FA7 .sider-bxNtfB: width 240px / padding 20px / \u83DC\u5355\u9879\u9AD8 32px / \u5206\u7EC4\u9AD8 24px\n     \u9875\u7B7E\u6761 --app-main-tabs-height: 44px\n   \u539F 64px \u56FE\u6807\u8F68 + \u6D6E\u5C42\u4E8C\u7EA7\u83DC\u5355\u5DF2\u5E9F\u5F03\uFF1A\u56FE\u6807\u4E0B\u7684\u5C0F\u5B57\u4ECD\u4E0D\u8DB3\u4EE5\u8BA9\u4EBA\u4E00\u773C\u8BA4\u51FA\u529F\u80FD\uFF0C\n   \u4E14\u4E8C\u7EA7\u85CF\u5728\u6D6E\u5C42\u91CC\u591A\u4E00\u6B21\u70B9\u51FB\uFF1BApifox \u7528 240px \u5E38\u9A7B\u6587\u5B57\u83DC\u5355\uFF0C\u8FD9\u91CC\u7167\u505A\u3002\n   ============================================================ */\n\n/* \u2014\u2014 \u5DE5\u4F5C\u53F0\uFF1A\u9876\u680F + sider/\u4E3B\u533A \u4E24\u884C\u4E24\u5217 \u2014\u2014 */\n.pp-workbench-v2 {\n  display: grid;\n  grid-template-rows: var(--topbar-h) minmax(0, 1fr);\n  height: 100%;\n  min-height: 0;\n}\n.pp-shell {\n  display: grid;\n  grid-template-columns: var(--sider-w) minmax(0, 1fr);\n  min-height: 0;\n  position: relative;\n}\n\n/* \u2014\u2014 \u5DE6\u4FA7\u5BFC\u822A\uFF08Apifox .sider-bxNtfB \u540C\u89C4\u683C\uFF09\u2014\u2014 */\n.pp-sider {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-1);\n  padding: var(--sider-pad);\n  background: var(--bg-surface);\n  border-right: 1px solid var(--border);\n  min-height: 0;\n  overflow: auto;\n}\n/* \u5206\u7EC4\u6807\u9898\uFF1A12px / \u4E09\u7EA7\u8272 / \u9AD8 24px\uFF0C\u7EC4\u95F4\u4E0A\u95F4\u8DDD 12px\uFF08Apifox menu-item-group\uFF09 */\n.pp-sider-group {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  height: var(--sider-group-h);\n  margin-top: var(--sp-3);\n  padding: 0 var(--sp-2);\n  font-size: var(--fs-12);\n  font-weight: var(--fw-medium);\n  color: var(--fg-tertiary);\n  white-space: nowrap;\n}\n.pp-sider-group:first-child {\n  margin-top: 0;\n}\n/* \u83DC\u5355\u9879\uFF1A\u9AD8 32px\u3001\u5706\u89D2 6px\u300114px \u5B57\uFF0C\u5DE6\u5185\u8FB9\u8DDD 8px\uFF08Apifox menu-item\uFF09 */\n.pp-sider-item {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  height: var(--sider-item-h);\n  padding: 0 var(--sp-2);\n  font-size: var(--fs-14);\n  line-height: var(--lh-20);\n  color: var(--fg-secondary);\n  text-decoration: none;\n  border-radius: var(--radius-ctl);\n  cursor: pointer;\n  white-space: nowrap;\n  overflow: hidden;\n}\n.pp-sider-item:hover {\n  color: var(--fg);\n  background: var(--bg-hover);\n}\n.pp-sider-item:focus-visible {\n  outline: 2px solid var(--accent);\n  outline-offset: -2px;\n}\n/* \u9009\u4E2D\uFF1A\u4E3B\u8272\u6587\u5B57 + \u6DE1\u4E3B\u8272\u5E95\uFF08Apifox \u83DC\u5355\u9009\u4E2D\u6001\uFF09 */\n.pp-sider-item[data-active="true"] {\n  color: var(--accent);\n  background: var(--accent-tint);\n  font-weight: var(--fw-medium);\n}\n.pp-sider-icon {\n  flex: none;\n  width: var(--icon);\n  height: var(--icon);\n  color: inherit;\n}\n.pp-sider-label {\n  min-width: 0;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.pp-sider-spacer {\n  flex: 1;\n}\n\n/* \u2014\u2014 \u5F39\u5C42\u83DC\u5355\uFF08\u4E09\u7EA7\uFF0C\u5BF9\u9F50 Apifox .ui-dropdown-menu / .ui-menu-item\uFF09\u2014\u2014\n   \u4E00\u7EA7\u9762\u677F\u6302\u5728\u89E6\u53D1\u6309\u94AE\u4E0B\u65B9\uFF1B\u4E8C\u7EA7\u3001\u4E09\u7EA7\u5411\u53F3/\u5DE6\u6D6E\u51FA\u5E76\u5782\u76F4\u5BF9\u9F50\u5230\u89E6\u53D1\u9879\u3002\n   Apifox \u539F\u6587\uFF1A\u9879\u9AD8 32px\u3001\u5185\u8FB9\u8DDD 0 8px\u3001\u5B50\u83DC\u5355\u7BAD\u5934\u5BBD 10px \u9760\u53F3 16px\u3001\n   \u5206\u7EC4\u6807\u9898 12px/500 \u5185\u8FB9\u8DDD 0 16px\u3001\u9762\u677F\u5706\u89D2 8px + \u4E24\u6BB5\u5F0F\u6295\u5F71\u3002 */\n.pp-menu-anchor {\n  position: relative;\n  display: inline-flex;\n  flex: none;\n}\n/* \u9762\u677F\u5185\u7684\u9879\u951A\u70B9\u5FC5\u987B\u6491\u6EE1\u5BBD\u5EA6\uFF0C\u5426\u5219\u5B50\u9762\u677F\u7684 right:100% \u4F1A\u8D34\u5230\u6587\u5B57\u800C\u4E0D\u662F\u9762\u677F\u8FB9\u7F18 */\n.pp-menu .pp-menu-anchor {\n  display: block;\n  width: 100%;\n}\n.pp-menu {\n  /* \u7528 fixed \u800C\u4E0D\u662F absolute\uFF1A\u5BBF\u4E3B\u4FA7\u8FB9\u680F\u9762\u677F\u662F 720px \u4E14\u5E26 overflow:hidden/clip\uFF0C\n     \u4E09\u7EA7\u7EA7\u8054\uFF08200\xD73\uFF09\u4ECE\u6309\u94AE\u5F80\u5DE6\u5C55\u5F00\u4F1A\u8D8A\u51FA\u5BB9\u5668\u5DE6\u8FB9\u754C\u88AB\u88C1\u6389\u3002\n     fixed \u4E0D\u53D7\u7956\u5148 overflow \u88C1\u526A\uFF0C\u5750\u6807\u7531 JS \u7528 getBoundingClientRect \u7ED9\u51FA\u3002 */\n  position: fixed;\n  z-index: var(--z-menu);\n  min-width: var(--menu-w);\n  padding: var(--menu-pad);\n  overflow: visible;\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  box-shadow: var(--shadow-menu);\n}\n/* \u5185\u5C42\u6EDA\u52A8\u5BB9\u5668\uFF1A\u53EA\u6709\u5B83\u9650\u9AD8\u5E76\u6EDA\u52A8\uFF0C\u4FDD\u8BC1\u7236\u9762\u677F\u4ECD\u53EF overflow: visible */\n.pp-menu-scroll {\n  max-height: calc(var(--menu-item-h) * 12);\n  overflow: auto;\n}\n/* \u4E8C\u7EA7 / \u4E09\u7EA7\u9762\u677F\uFF1A\u76F8\u5BF9\u7236\u9879\u6D6E\u51FA\u3002\u56E0\u4E3A\u89E6\u53D1\u6309\u94AE\u5728\u4E3B\u533A\u53F3\u7F18\uFF0C\n   \u5B50\u9762\u677F\u7EDF\u4E00\u5411\u5DE6\u5F00\uFF08Apifox \u9760\u8FB9\u65F6\u540C\u6837\u7FFB\u8F6C\u65B9\u5411\uFF09\u3002 */\n/* \u5B50\u9762\u677F\u5C42\u7EA7\uFF1A\u9010\u5C42 +1\uFF0C\u907F\u514D\u6D45\u5C42\u76D6\u4F4F\u5DF2\u5C55\u5F00\u7684\u6DF1\u5C42\u5185\u5BB9 */\n.pp-menu[data-depth="2"] { z-index: calc(var(--z-menu) + 1); }\n.pp-menu[data-depth="3"] { z-index: calc(var(--z-menu) + 2); }\n.pp-menu .pp-menu .pp-menu {\n  z-index: calc(var(--z-menu) + 2);\n}\n/* \u5B50\u9762\u677F\u5185\u4E0D\u518D\u9700\u8981\u81EA\u5DF1\u7684\u5185\u5C42\u6EDA\u52A8\u9650\u9AD8 */\n.pp-menu .pp-menu-scroll {\n  max-height: calc(var(--menu-item-h) * 12);\n}\n.pp-menu-item {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  width: 100%;\n  height: var(--menu-item-h);\n  padding: 0 var(--sp-2);\n  font-family: var(--font-sans);\n  font-size: var(--fs-14);\n  line-height: var(--lh-20);\n  color: var(--fg);\n  text-align: left;\n  text-decoration: none;\n  background: transparent;\n  border: none;\n  border-radius: var(--radius-ctl);\n  cursor: pointer;\n  white-space: nowrap;\n  overflow: hidden;\n}\n.pp-menu-item:hover,\n.pp-menu-item[data-open="true"] {\n  background: var(--bg-hover);\n}\n.pp-menu-item:focus-visible {\n  outline: 2px solid var(--accent);\n  outline-offset: -2px;\n}\n.pp-menu-item[data-active="true"] {\n  color: var(--accent);\n  font-weight: var(--fw-medium);\n}\n.pp-menu-item[disabled] {\n  color: var(--fg-tertiary);\n  cursor: not-allowed;\n}\n.pp-menu-label {\n  min-width: 0;\n  flex: 1;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n/* \u5B50\u83DC\u5355\u7BAD\u5934\uFF1A10px \u5BBD\uFF0C\u4E24\u6761 1.5px \u659C\u7EBF\uFF08Apifox .ui-menu-submenu-arrow\uFF09 */\n.pp-menu-arrow {\n  flex: none;\n  width: var(--sp-3);\n  height: var(--icon-sm);\n  color: var(--fg-tertiary);\n  font-size: var(--fs-12);\n  line-height: var(--icon-sm);\n  text-align: center;\n}\n.pp-menu-hint {\n  flex: none;\n  margin-left: auto;\n  font-family: var(--font-mono);\n  font-size: var(--fs-12);\n  color: var(--fg-tertiary);\n}\n.pp-menu-group {\n  height: var(--ctl-h-sm);\n  padding: 0 var(--sp-4);\n  font-size: var(--fs-12);\n  line-height: var(--lh-20);\n  font-weight: var(--fw-medium);\n  color: var(--fg-tertiary);\n  white-space: nowrap;\n}\n.pp-menu-sep {\n  height: 1px;\n  margin: var(--sp-1) calc(var(--sp-2) * -1);\n  background: var(--border);\n}\n\n/* \u2014\u2014 \u9875\u7B7E\u6761\uFF08Apifox .layoutTabBar\uFF0C44px \u5361\u7247\u5F0F\uFF09\u2014\u2014 */\n.pp-tabbar {\n  display: flex;\n  align-items: flex-end;\n  height: var(--tabbar-h);\n  padding: 0 var(--sp-2);\n  background: var(--bg-surface);\n  border-bottom: 1px solid var(--border);\n  overflow-x: auto;\n  overflow-y: hidden;\n  scrollbar-width: none;\n}\n.pp-tabbar::-webkit-scrollbar {\n  height: calc(var(--scrollbar) * 0);\n}\n.pp-tabbar-item {\n  display: inline-flex;\n  align-items: center;\n  gap: var(--sp-1);\n  height: var(--tabbar-h);\n  padding: 0 var(--sp-4);\n  font-size: var(--fs-14);\n  line-height: var(--lh-20);\n  color: var(--fg-secondary);\n  background: transparent;\n  border: none;\n  border-left: 1px solid var(--border);\n  cursor: pointer;\n  white-space: nowrap;\n  flex: none;\n}\n.pp-tabbar-item:first-child {\n  border-left: none;\n}\n.pp-tabbar-item:hover {\n  color: var(--fg);\n}\n/* \u6FC0\u6D3B\uFF1A\u767D\u5E95 + \u5DE6\u53F3 1px \u8FB9\u6846 + \u6DF1\u8272\u6587\u5B57\uFF08Apifox tabs-tab-active\uFF09 */\n.pp-tabbar-item[data-active="true"] {\n  color: var(--fg-strong);\n  background: var(--bg-surface);\n  border-right: 1px solid var(--border);\n  border-top: 1px solid transparent;\n  font-weight: var(--fw-medium);\n}\n.pp-tabbar-close {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  width: var(--icon-sm);\n  height: var(--icon-sm);\n  margin-left: var(--sp-1);\n  color: var(--fg-tertiary);\n  background: transparent;\n  border: none;\n  border-radius: var(--radius-sm);\n  cursor: pointer;\n}\n.pp-tabbar-close:hover {\n  color: var(--fg);\n  background: var(--bg-hover);\n}\n\n/* \u2014\u2014 \u4E3B\u533A\uFF08v2\uFF1A\u5360\u6EE1\u5269\u4F59\u5BBD\u5EA6\uFF09\u2014\u2014 */\n/* \u4E3B\u533A\u662F\u5BB9\u5668\u67E5\u8BE2\u7684\u951A\u70B9\uFF1A\u4FA7\u8FB9\u680F\u91CC\u7684\u5BBD\u5EA6\u53EA\u6709 400~700px\uFF0C\u9875\u9762\u5185\u90E8\u5E03\u5C40\u5FC5\u987B\u6309\n   \u300C\u5BB9\u5668\u5BBD\u5EA6\u300D\u800C\u4E0D\u662F\u300C\u89C6\u53E3\u5BBD\u5EA6\u300D\u81EA\u9002\u5E94\u2014\u2014\u7528 @media \u5224\u65AD\u89C6\u53E3\u6C38\u8FDC\u547D\u4E2D\u4E0D\u4E86\u7A84\u6001\u3002 */\n.pp-main-v2 {\n  min-width: 0;\n  min-height: 0;\n  overflow: auto;\n  background: var(--bg-app);\n  container-type: inline-size;\n  container-name: ppmain;\n  /* \u5E2E\u52A9\u6D6E\u5C42\u7684\u5B9A\u4F4D\u53C2\u7167\uFF08.pp-help-card \u7528 absolute \u8D34\u53F3\u4E0A\u89D2\uFF09 */\n  position: relative;\n}\n\n/* \u2014\u2014 \u9875\u5934 \u2014\u2014 */\n/* \u9875\u5934\uFF1A\u5BF9\u9F50 Apifox .overview-header-container\uFF08\u4E0B\u8FB9\u6846 1px / padding 16px 20px 16px 14px / \u6700\u5927\u5BBD 1512px\uFF09 */\n.pp-page-head {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-3);\n  max-width: var(--content-max-w);\n  padding: var(--sp-4) var(--sp-5) var(--sp-4) var(--sp-3);\n  background: var(--bg-surface);\n  border-bottom: 1px solid var(--border);\n}\n/* \u6982\u89C8\u9875\u5934\uFF1A\u6807\u9898 18px / 700\uFF08Apifox .overview-header__title\uFF09 */\n/* \u9875\u5934\uFF1AApifox .overview-header-container \u539F\u6587\n   \uFF08border-bottom:1px split; max-width:1512px; padding:16px 20px 16px 14px\uFF09\u3002\n   \u7A84\u5BB9\u5668\uFF08\u4FA7\u8FB9\u680F\u91CC\u53EA\u6709 455px\uFF09\u65F6\u52A8\u4F5C\u533A\u5FC5\u987B\u6362\u884C\uFF0C\u5426\u5219\u4F1A\u628A\u9875\u9762\u9876\u51FA 111~693px \u6A2A\u5411\u6EA2\u51FA\u3002 */\n.pp-overview-head {\n  display: flex;\n  align-items: center;\n  flex-wrap: wrap;\n  gap: var(--sp-2) var(--sp-3);\n  width: 100%;\n  max-width: var(--content-max-w);\n  padding: var(--sp-4) var(--sp-5) var(--sp-4) var(--sp-3);\n  background: var(--bg-surface);\n  border-bottom: 1px solid var(--border);\n}\n.pp-overview-title {\n  margin-right: auto;\n  font-size: var(--fs-18);\n  line-height: var(--lh-24);\n  font-weight: 700;\n  color: var(--fg-strong);\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n/* \u52A8\u4F5C\u533A\uFF1AApifox .overview-header-actions\uFF08inline-flex / \u9AD8 32px\uFF09\u3002\n   \u52A0 flex-wrap \u4E0E min-width:0\uFF1A\u52A8\u4F5C\u533A\u91CC\u585E 4 \u4E2A\u63A7\u4EF6\u65F6\uFF08\u603B\u89C8\u9875\uFF09\u5728 455px \u5BB9\u5668\u91CC\u5FC5\u7136\u6EA2\u51FA\uFF0C\n   \u5141\u8BB8\u6362\u884C\u662F\u552F\u4E00\u4E0D\u6539\u8BED\u4E49\u7684\u89E3\u6CD5\uFF1B\u5B50\u63A7\u4EF6\u7528 flex:0 1 auto \u5141\u8BB8\u6536\u7F29\u3002 */\n.pp-overview-actions {\n  display: inline-flex;\n  align-items: center;\n  justify-content: flex-end;\n  flex-wrap: wrap;\n  gap: var(--sp-2);\n  min-width: 0;\n  margin-left: auto;\n  min-height: var(--ctl-h);\n}\n.pp-overview-actions > .pp-input,\n.pp-overview-actions > .pp-select {\n  flex: 0 1 auto;\n  min-width: 96px;\n}\n/* \u6587\u6863\u9875\u5934\uFF1A\u4E0E\u6982\u89C8\u540C\u89C4\u683C */\n.pp-doc-head {\n  display: flex;\n  align-items: center;\n  flex-wrap: wrap;\n  gap: var(--sp-2) var(--sp-3);\n  width: 100%;\n  max-width: var(--content-max-w);\n  padding: var(--sp-4) var(--sp-5) var(--sp-4) var(--sp-3);\n  background: var(--bg-surface);\n  border-bottom: 1px solid var(--border);\n}\n.pp-doc-title {\n  margin-right: auto;\n  font-size: var(--fs-18);\n  line-height: var(--lh-24);\n  font-weight: 700;\n  color: var(--fg-strong);\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n/* \u6A2A\u5411\u8868\u5355\u6805\u683C\uFF1AApifox .gridForm.ui-form-horizontal\uFF08fit-content(360px) 1fr / gap 16px\uFF09 */\n.pp-form-grid {\n  display: grid;\n  grid-template-columns: fit-content(360px) minmax(0, 1fr);\n  gap: var(--sp-4);\n  align-items: center;\n}\n.pp-page-head-main {\n  min-width: 0;\n  flex: 1;\n}\n.pp-page-head .pp-page-title {\n  margin: 0 0 var(--sp-1) 0;\n}\n.pp-page-desc {\n  font-size: var(--fs-13);\n  line-height: var(--lh-20);\n  color: var(--fg-secondary);\n  margin: 0;\n}\n.pp-page-actions {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  flex: none;\n}\n\n/* \u2014\u2014 \u9762\u677F\u5316\u5B9E\u4F53\u6811\uFF08\u66FF\u4EE3\u901A\u680F .pp-col-left\uFF09\u2014\u2014 */\n.pp-panel {\n  width: var(--panel-w);\n  flex: none;\n  min-height: 0;\n  overflow: auto;\n  padding: var(--sp-2);\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n}\n.pp-split {\n  display: grid;\n  /* \u9762\u677F\u5BBD\u5EA6\u968F\u5BB9\u5668\u81EA\u9002\u5E94\uFF1A\u4E0B\u9650 --panel-w\u3001\u4E0A\u9650 --panel-w-max\u3001\u4E2D\u95F4\u53D6 32%\uFF0C\n     \u5BBD\u7A97\u53E3\u91CC\u76EE\u5F55\u6811\u81EA\u52A8\u53D8\u5BBD\uFF0C\u957F\u63A5\u53E3\u540D\u4E0D\u518D\u88AB\u7701\u7565\u53F7\u622A\u65AD\u3002 */\n  grid-template-columns: clamp(var(--panel-w), 32%, var(--panel-w-max)) minmax(0, 1fr);\n  gap: var(--sp-4);\n  align-items: start;\n  padding: var(--sp-4) var(--sp-5);\n  min-height: 0;\n}\n/* \u5E76\u6392\u65F6\u9762\u677F\u5BBD\u5EA6\u7531 grid \u8F68\u9053\u51B3\u5B9A\uFF0C\u81EA\u8EAB\u4E0D\u518D\u5B9A\u5BBD\uFF08\u5426\u5219\u6BD4\u8F68\u9053\u7A84\u4F1A\u7559\u767D\uFF09 */\n.pp-split > .pp-panel {\n  width: auto;\n}\n/* \u7A84\u5BB9\u5668\uFF1A\u76EE\u5F55\u6811\u4E0E\u6B63\u6587\u5E76\u6392\u4F1A\u628A\u6B63\u6587\u538B\u5230 200px \u7EA7\uFF0C\u6539\u4E3A\u4E0A\u4E0B\u5806\u53E0\u3002\n   \u9608\u503C 800px = \u9762\u677F 280 + \u95F4\u8DDD 16 + \u6B63\u6587\u7EA6 500\uFF086 \u5217\u53C2\u6570\u8868\u5728\u6B64\u5BBD\u5EA6\u4E0B\u624D\u4E0D\u81F3\u4E8E\u53EA\u5269\u8868\u5934\uFF09\u3002 */\n@container ppmain (max-width: 800px) {\n  .pp-split {\n    grid-template-columns: minmax(0, 1fr);\n  }\n  .pp-split .pp-panel {\n    width: auto;\n    /* \u5806\u53E0\u65F6\u76EE\u5F55\u6811\u5360\u6EE1\u6574\u5BBD\uFF1B\u9AD8\u5EA6\u7ED9\u5230 14 \u884C\uFF08\u7EA6 500px\uFF09\u2014\u2014\u5217\u8868\u533A\u592A\u77EE\u65F6\u7FFB\u76EE\u5F55\u5F88\u8D39\u52B2 */\n    max-height: calc(var(--row-h) * 14);\n  }\n}\n/* \u6587\u6863\u9875\u4E3B\u5217\uFF1A\u951A\u70B9\u6761 sticky \u5728\u9876\u90E8\uFF0C\u6B63\u6587\u5728\u4E0B\u65B9\u72EC\u7ACB\u6EDA\u52A8 */\n.pp-doc-main {\n  min-width: 0;\n  min-height: 0;\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  overflow: auto;\n}\n/* \u7A7A\u6001\u65F6\u4E3B\u5217\u72EC\u5360\u4E00\u884C\uFF08\u65E0\u5DE6\u6811\uFF09\uFF0C\u9700\u8981\u81EA\u5DF1\u6491\u6EE1\u9AD8\u5EA6\u5E76\u7559\u51FA\u4E0A\u8FB9\u8DDD */\n.pp-page-flush > .pp-doc-main {\n  display: flex;\n  flex-direction: column;\n  height: 100%;\n  margin: var(--sp-4) var(--sp-5);\n}\n.pp-doc-main .pp-page {\n  padding: var(--sp-5);\n}\n/* \u951A\u70B9\u6761\u5438\u9876\u65F6\u7ED9\u8DF3\u8F6C\u76EE\u6807\u7559\u51FA\u9AD8\u5EA6\uFF0C\u907F\u514D\u6807\u9898\u88AB\u6761\u6321\u4F4F */\n.pp-doc-main [id^="sec-"] {\n  scroll-margin-top: calc(var(--ctl-h-lg) + var(--sp-3));\n}\n.pp-split-wide {\n  grid-template-columns: var(--panel-w) minmax(0, 1.4fr) minmax(0, 1fr);\n}\n\n/* \u2014\u2014 \u9876\u680F v2\uFF1A\u9762\u5305\u5C51 + \u56FE\u6807\u52A8\u4F5C \u2014\u2014 */\n.pp-crumb {\n  display: inline-flex;\n  align-items: center;\n  gap: var(--sp-1);\n  font-size: var(--fs-12);\n  color: var(--fg-tertiary);\n  white-space: nowrap;\n}\n.pp-crumb-sep {\n  color: var(--border-strong);\n}\n.pp-icon-btn {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  width: var(--hit);\n  height: var(--hit);\n  padding: 0;\n  color: var(--fg-secondary);\n  background: transparent;\n  border: 1px solid transparent;\n  border-radius: var(--radius-ctl);\n  cursor: pointer;\n}\n.pp-icon-btn:hover {\n  color: var(--fg);\n  background: var(--bg-hover);\n}\n.pp-icon-btn:focus-visible {\n  outline: 2px solid var(--accent);\n  outline-offset: -2px;\n}\n.pp-icon-btn[data-active="true"] {\n  color: var(--accent);\n  border-color: var(--accent);\n}\n.pp-help {\n  padding: var(--sp-2);\n  font-size: var(--fs-13);\n  line-height: var(--lh-20);\n  color: var(--fg-secondary);\n}\n/* \u5E2E\u52A9\u5361\u7247\uFF1A\u539F\u6D6E\u5C42\u6539\u6210\u4E3B\u533A\u9876\u90E8\u5185\u5D4C\u5361\uFF08\u4E0D\u518D\u906E\u6321\u5185\u5BB9\uFF09 */\n/* \u5E2E\u52A9\u5361\u7247\uFF1A\u6D6E\u5728\u4E3B\u533A\u53F3\u4E0A\u89D2\uFF0C\u4E0D\u5360\u6587\u6863\u6D41\u3002\n   \u4E4B\u524D\u662F\u6587\u6863\u6D41\u5185\u5D4C\u5361\uFF0C\u63D2\u5728\u9875\u7B7E\u6761\u4E0E\u9875\u5934\u4E4B\u95F4\u4F1A\u628A\u9875\u9762\u6807\u9898\u5F80\u4E0B\u63A8\u4E00\u683C\uFF0C\n   \u89C6\u89C9\u4E0A\u50CF\u591A\u4E86\u4E00\u4E2A\u9875\u7B7E\u3002\u6D6E\u5C42\u5B9A\u4F4D\u540E\u4E0E\u9875\u9762\u5185\u5BB9\u4E92\u4E0D\u5F71\u54CD\u3002 */\n.pp-help-card {\n  position: absolute;\n  top: calc(var(--tabbar-h) + var(--sp-2));\n  right: var(--sp-4);\n  z-index: var(--z-menu);\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-1);\n  width: var(--popover-w);\n  max-width: calc(100% - var(--sp-6));\n  padding: var(--sp-3);\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  box-shadow: var(--shadow-menu);\n}\n.pp-help-card-head {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: var(--sp-2);\n}\n.pp-help-card-title {\n  font-size: var(--fs-12);\n  font-weight: var(--fw-medium);\n  color: var(--fg-tertiary);\n}\n\n\n\n/* \u2014\u2014 \u9875\u5185\u951A\u70B9\u6761\uFF08\u539F\u53F3\u680F\u300C\u672C\u9875\u76EE\u5F55\u300D\u7684\u66FF\u4EE3\uFF09\uFF1A\u4E3B\u533A\u9876\u90E8 sticky \u6A2A\u5411 chips \u2014\u2014\n   \u7A84\u5BB9\u5668\u91CC\u53F3\u4FA7\u5E38\u9A7B TOC \u4F1A\u5403\u6389 240px\uFF0C\u628A\u4E3B\u533A\u6324\u5230\u4E0D\u53EF\u8BFB\uFF1B\u6539\u6210\u6A2A\u5411\u6761\u540E\n   \u53EA\u5360\u4E00\u884C\u7EB5\u5411\u9AD8\u5EA6\uFF0C\u4E3B\u533A\u5BBD\u5EA6\u4E0D\u53D7\u5F71\u54CD\uFF0C\u6EDA\u52A8\u65F6\u4ECD\u80FD\u8DF3\u8F6C\u3002 */\n.pp-anchor-bar {\n  position: sticky;\n  top: 0;\n  z-index: 2;\n  display: flex;\n  align-items: center;\n  gap: var(--sp-1);\n  height: var(--ctl-h-lg);\n  padding: 0 var(--sp-4);\n  overflow-x: auto;\n  background: var(--bg-surface);\n  border-bottom: 1px solid var(--border);\n  scrollbar-width: none;\n}\n.pp-anchor-bar::-webkit-scrollbar {\n  height: calc(var(--scrollbar) * 0);\n}\n.pp-anchor-chip {\n  display: inline-flex;\n  align-items: center;\n  flex: none;\n  height: var(--ctl-h-sm);\n  padding: 0 var(--sp-2);\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-secondary);\n  text-decoration: none;\n  border: 1px solid transparent;\n  border-radius: var(--radius-pill);\n  cursor: pointer;\n  white-space: nowrap;\n}\n.pp-anchor-chip:hover {\n  color: var(--fg);\n  background: var(--bg-hover);\n}\n.pp-anchor-chip[data-active="true"] {\n  color: var(--accent);\n  background: var(--accent-tint);\n  border-color: var(--accent);\n}\n\n/* \u2014\u2014 \u5206\u7EC4\u6807\u9898\u884C\uFF1A\u6807\u9898\u9760\u5DE6\u3001\u52A8\u4F5C\u9760\u53F3 \u2014\u2014 */\n/* \u8C03\u8BD5\u53F0\u53C2\u6570\u533A\uFF08\u5982 Headers \u7EC4\uFF09\u7528\u5B83\u5728\u5206\u7EC4\u6807\u9898\u53F3\u4FA7\u6302\u300C\u5E38\u7528\u8BF7\u6C42\u5934\u300D\u6309\u94AE\uFF1B\n   .pp-group-title \u81EA\u5E26 3px \u4E3B\u8272\u7AD6\u7EBF\uFF0C\u8FD9\u91CC\u53EA\u8D1F\u8D23\u884C\u5185\u5DE6\u53F3\u5206\u680F\u3002 */\n.pp-group-head {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: var(--sp-2);\n  min-width: 0;\n}\n.pp-group-head > .pp-group-title {\n  min-width: 0;\n  margin-right: auto;\n}\n\n/* \u2014\u2014 \u884C\u5185\u6587\u5B57\u6309\u94AE\uFF1A\u65E0\u8FB9\u6846\u3001\u4E3B\u8272\u6587\u5B57\uFF0Chover \u53EA\u6362\u4E3B\u8272\u60AC\u505C\u8272 \u2014\u2014 */\n/* \u8868\u683C\u4E0E\u5206\u7EC4\u6807\u9898\u91CC\u7684\u8F7B\u91CF\u52A8\u4F5C\uFF08\u300C\u5E38\u7528\u8BF7\u6C42\u5934\u300D\u300C\u6E05\u7A7A\u300D\u7B49\uFF09\uFF0C\n   \u9AD8\u5EA6\u8D70 --ctl-h-sm \u4E0E .pp-btn-sm \u5BF9\u9F50\uFF0C\u907F\u514D\u4E0E\u8868\u683C\u884C\u9AD8\u6253\u67B6\u3002 */\n.pp-btn-link {\n  display: inline-flex;\n  align-items: center;\n  flex: none;\n  height: var(--ctl-h-sm);\n  padding: 0 var(--sp-1);\n  font-family: var(--font-sans);\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--accent);\n  background: transparent;\n  border: 1px solid transparent;\n  border-radius: var(--radius-sm);\n  cursor: pointer;\n  white-space: nowrap;\n}\n.pp-btn-link:hover {\n  color: var(--accent-hover);\n}\n.pp-btn-link:disabled {\n  color: var(--fg-tertiary);\n  cursor: not-allowed;\n}\n\n/* \u2014\u2014 \u8C03\u8BD5\u53F0\u4E0A\u4E0B\u5206\u680F\uFF1A\u8BF7\u6C42\u533A\u5728\u4E0A\u3001\u54CD\u5E94\u533A\u5728\u4E0B \u2014\u2014 */\n/* \u5355\u680F\u7ED3\u6784\uFF08Apifox .apiCase \u6574\u9875\u7EB5\u5411\u6392\u5E03\uFF09\uFF1A\u4E24\u533A\u90FD\u53EF\u6536\u7F29\uFF0C\n   \u6EDA\u52A8\u4EA4\u7ED9\u5404\u81EA\u5185\u90E8\u5BB9\u5668\uFF0C\u5916\u5C42\u4E0D\u518D\u6491\u9AD8\u3002 */\n.pp-debug-split {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-3);\n  min-height: 0;\n}\n/* \u8BF7\u6C42\u533A\uFF1A\u53EA\u8D1F\u8D23\u6536\u7A84\uFF0C\u4E0D\u62A2\u9AD8\u5EA6 */\n.pp-debug-request {\n  min-width: 0;\n  min-height: 0;\n}\n/* \u54CD\u5E94\u533A\uFF1A\u5360\u6EE1\u5269\u4F59\u9AD8\u5EA6\uFF0C\u5185\u5BB9\u8D85\u9AD8\u65F6\u81EA\u5DF1\u6EDA\u52A8 */\n.pp-debug-response {\n  display: flex;\n  flex-direction: column;\n  flex: 1 1 auto;\n  min-width: 0;\n  min-height: 0;\n  overflow: auto;\n}\n\n/* \u2014\u2014 BodyEditor \u9876\u90E8\u7C7B\u578B\u884C\uFF1A\u7C7B\u578B\u9009\u62E9\u5728\u5DE6\u3001\u52A8\u4F5C\u6309\u94AE\u5728\u53F3\uFF0C\u4E0E\u7F16\u8F91\u5668\u7528\u5206\u9694\u7EBF\u9694\u5F00 \u2014\u2014 */\n.pp-body-head {\n  display: flex;\n  align-items: center;\n  flex-wrap: wrap;\n  gap: var(--sp-2);\n  padding-bottom: var(--sp-2);\n  border-bottom: 1px solid var(--border);\n}\n\n/* \u2014\u2014 ScriptPanel \u6BCF\u6BB5\u5BB9\u5668\uFF08\u524D\u7F6E / \u540E\u7F6E\uFF09\uFF1A\u5185\u8FB9\u8DDD + \u6BB5\u95F4\u5E95\u90E8\u95F4\u8DDD \u2014\u2014 */\n.pp-script-block {\n  padding: var(--sp-2) 0;\n  margin-bottom: var(--sp-3);\n  min-width: 0;\n}\n.pp-script-block:last-child {\n  margin-bottom: 0;\n}\n\n/* \u2014\u2014 \u54CD\u5E94\u72B6\u6001\u6761\uFF1A\u72B6\u6001\u80F6\u56CA\u5728\u5DE6\u3001\u8017\u65F6\u4E0E\u5927\u5C0F\u5C45\u4E2D\u3001\u590D\u5236\u6309\u94AE\u9760\u53F3 \u2014\u2014 */\n.pp-resp-bar {\n  display: flex;\n  align-items: center;\n  flex-wrap: wrap;\n  gap: var(--sp-2);\n  min-width: 0;\n}\n.pp-resp-bar > .pp-pill {\n  flex: none;\n}\n/* \u6700\u540E\u4E00\u4E2A\u5B50\u5143\u7D20\uFF08\u590D\u5236\u6309\u94AE\uFF09\u7528\u81EA\u52A8\u5916\u8FB9\u8DDD\u63A8\u5230\u884C\u5C3E\uFF0C\u7A84\u5BB9\u5668\u6362\u884C\u540E\u4ECD\u8D34\u53F3 */\n.pp-resp-bar > :last-child {\n  margin-left: auto;\n}\n\n/* \u2014\u2014 \u54CD\u5E94\u9875\u7B7E\u6761\uFF1A\u89C2\u611F\u540C .pp-tabs\uFF0C\u4F46\u4E0A\u65B9\u6709\u72B6\u6001\u6761\uFF0C\u9700\u8981\u4E00\u6761\u4E0A\u8FB9\u6846\u628A\u4E24\u8005\u5206\u5F00 \u2014\u2014 */\n.pp-resp-tabs {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-1);\n  flex-wrap: wrap;\n  min-height: var(--ctl-h-lg);\n  padding: 0 var(--sp-3);\n  background: var(--bg-surface);\n  border-top: 1px solid var(--border);\n  border-bottom: 1px solid var(--border);\n}\n\n/* \u2014\u2014 \u9875\u7B7E\u8BA1\u6570\uFF1A\u5C0F\u53F7\u3001\u6B21\u8981\u8272\u3001\u4E0D\u6362\u884C \u2014\u2014 */\n.pp-resp-count {\n  flex: none;\n  font-size: var(--fs-12);\n  color: var(--fg-tertiary);\n  white-space: nowrap;\n}\n\n/* \u2014\u2014 \u54CD\u5E94 Body \u7684 JSON \u6811\uFF1A\u7B49\u5BBD\u5B57\u4F53\u3001\u6309\u5C42\u7F29\u8FDB\u3001\u8D85\u9AD8\u81EA\u5DF1\u6EDA\u52A8\uFF0814 \u884C\uFF09\u2014\u2014 */\n.pp-json-tree {\n  margin: 0;\n  padding: var(--sp-2);\n  font-family: var(--font-mono);\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg);\n  background: var(--bg-subtle);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-sm);\n  max-height: calc(var(--row-h) * 14);\n  overflow: auto;\n  white-space: pre;\n  tab-size: 2;\n}\n\n\n';
 
 // src/client/pages/overview.jsx
 var import_react5 = __toESM(require("react"), 1);
@@ -2250,7 +2250,7 @@ function DocPage({ route, api }) {
 }
 
 // src/client/pages/debug.jsx
-var import_react9 = require("react");
+var import_react10 = require("react");
 
 // src/client/pages/components/headerPresets.js
 var COMMON_HEADERS = [
@@ -2291,10 +2291,329 @@ function filterHeaders(query) {
   return prefix.concat(contains).slice(0, SUGGEST_LIMIT).map(copy);
 }
 
+// src/client/pages/components/BodyEditor.jsx
+var BODY_TYPES2 = [
+  { id: "none", label: "none" },
+  { id: "form", label: "form-data" },
+  { id: "urlencoded", label: "x-www-form-urlencoded" },
+  { id: "json", label: "json" },
+  { id: "xml", label: "xml" },
+  { id: "raw", label: "raw" },
+  { id: "graphql", label: "GraphQL" }
+];
+var BODY_FIELD_COLUMNS = ["enabled", "key", "type", "value", "description"];
+var TABLE_TYPES = ["form", "urlencoded"];
+var PLACEHOLDER = {
+  json: '{\n  "key": "value"\n}',
+  xml: "<root>\n  <item>value</item>\n</root>",
+  raw: "\u539F\u59CB\u6587\u672C",
+  graphql: "query {\n  field\n}"
+};
+function normalize(value) {
+  const src = value && typeof value === "object" ? value : {};
+  const type = BODY_TYPES2.some((t) => t.id === src.type) ? src.type : "none";
+  return {
+    type,
+    content: src.content == null ? "" : String(src.content),
+    fields: Array.isArray(src.fields) ? src.fields : []
+  };
+}
+function BodyEditor({ value, onChange }) {
+  const body = normalize(value);
+  const emit = (patch) => {
+    if (typeof onChange === "function") onChange({ ...body, ...patch });
+  };
+  const isTable = TABLE_TYPES.indexOf(body.type) >= 0;
+  return /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-body-head" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u7C7B\u578B"), /* @__PURE__ */ (0, import_react.createElement)(
+    "select",
+    {
+      className: "pp-select pp-input-sm",
+      value: body.type,
+      onChange: (e) => emit({ type: e.target.value })
+    },
+    BODY_TYPES2.map((t) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: t.id, value: t.id }, t.label))
+  )), body.type === "none" ? /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u65E0\u8BF7\u6C42\u4F53", hint: "Body \u7C7B\u578B\u9009 none \u65F6\u4E0D\u53D1\u9001\u8BF7\u6C42\u4F53" }) : isTable ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(
+    ParamTable,
+    {
+      rows: body.fields,
+      columns: BODY_FIELD_COLUMNS,
+      onChange: (rows) => emit({ fields: rows }),
+      emptyText: "\u65E0\u8868\u5355\u5B57\u6BB5",
+      addLabel: "+ \u6DFB\u52A0\u5B57\u6BB5"
+    }
+  )) : /* @__PURE__ */ (0, import_react.createElement)(
+    JsonEditor,
+    {
+      value: body.content,
+      rows: 10,
+      placeholder: PLACEHOLDER[body.type] || "",
+      onChange: (next) => emit({ content: next })
+    }
+  ));
+}
+
+// src/client/pages/components/AssertTable.jsx
+var ASSERT_SOURCES = ["status", "body", "header", "time"];
+var ASSERT_OPS = ["eq", "neq", "gt", "lt", "contains", "notContains", "exists", "notExists", "regex"];
+var ASSERT_COLUMNS = [
+  { field: "source", title: "\u6765\u6E90" },
+  { field: "path", title: "\u8DEF\u5F84", mono: true },
+  { field: "op", title: "\u64CD\u4F5C" },
+  { field: "value", title: "\u671F\u671B\u503C", mono: true },
+  { field: "message", title: "\u8BF4\u660E" }
+];
+function blankAssertRow() {
+  return { source: "status", path: "", op: "eq", value: "", message: "" };
+}
+function cellInputClass(mono) {
+  return "pp-cell-input pp-input-sm" + (mono ? " pp-input-mono" : "");
+}
+function renderCell2(row, column, index, patch) {
+  const value = row ? row[column.field] : void 0;
+  const text = value == null ? "" : String(value);
+  if (column.field === "source") {
+    return /* @__PURE__ */ (0, import_react.createElement)(
+      "select",
+      {
+        className: "pp-cell-input pp-input-sm",
+        value: text || ASSERT_SOURCES[0],
+        onChange: (e) => patch(index, column.field, e.target.value)
+      },
+      ASSERT_SOURCES.map((s) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: s, value: s }, s))
+    );
+  }
+  if (column.field === "op") {
+    return /* @__PURE__ */ (0, import_react.createElement)(
+      "select",
+      {
+        className: "pp-cell-input pp-input-sm",
+        value: text || ASSERT_OPS[0],
+        onChange: (e) => patch(index, column.field, e.target.value)
+      },
+      ASSERT_OPS.map((o) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: o, value: o }, o))
+    );
+  }
+  return /* @__PURE__ */ (0, import_react.createElement)(
+    "input",
+    {
+      className: cellInputClass(column.mono),
+      value: text,
+      onChange: (e) => patch(index, column.field, e.target.value)
+    }
+  );
+}
+function AssertTable({ rows, onChange }) {
+  const list = Array.isArray(rows) ? rows : [];
+  const emit = (next) => {
+    if (typeof onChange === "function") onChange(next);
+  };
+  const patch = (index, field, value) => {
+    const next = list.slice();
+    next[index] = { ...next[index], [field]: value };
+    emit(next);
+  };
+  const remove = (index) => {
+    const next = list.slice();
+    next.splice(index, 1);
+    emit(next);
+  };
+  const add = () => emit(list.concat([blankAssertRow()]));
+  const colSpan = ASSERT_COLUMNS.length + 1;
+  return /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table pp-table-wide" }, /* @__PURE__ */ (0, import_react.createElement)("thead", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, ASSERT_COLUMNS.map((column) => /* @__PURE__ */ (0, import_react.createElement)("th", { key: column.field, "data-col": column.field }, column.title)), /* @__PURE__ */ (0, import_react.createElement)("th", { "data-col": "op-cell" }, "\u64CD\u4F5C"))), /* @__PURE__ */ (0, import_react.createElement)("tbody", null, list.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { colSpan }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-meta" }, "\u6682\u65E0\u65AD\u8A00"))) : list.map((row, index) => /* @__PURE__ */ (0, import_react.createElement)("tr", { key: index }, ASSERT_COLUMNS.map((column) => /* @__PURE__ */ (0, import_react.createElement)("td", { key: column.field, "data-col": column.field }, renderCell2(row, column, index, patch))), /* @__PURE__ */ (0, import_react.createElement)("td", { "data-col": "op-cell" }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm pp-btn-ghost pp-btn-danger", onClick: () => remove(index) }, "\u5220\u9664")))), /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { colSpan }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm pp-btn-ghost pp-table-add", onClick: add }, "+ \u6DFB\u52A0\u65AD\u8A00")))));
+}
+
+// src/client/pages/components/ScriptPanel.jsx
+function normalize2(value) {
+  const v = value || {};
+  return {
+    preScript: v.preScript == null ? "" : String(v.preScript),
+    postScript: v.postScript == null ? "" : String(v.postScript),
+    assertions: Array.isArray(v.assertions) ? v.assertions : [],
+    waitMs: Number.isFinite(v.waitMs) ? v.waitMs : 0
+  };
+}
+function parseWait(text) {
+  const digits = String(text == null ? "" : text).replace(/[^0-9]/g, "");
+  return digits === "" ? 0 : Number(digits);
+}
+function ScriptPanel({ value, onChange }) {
+  const current = normalize2(value);
+  const emit = (next) => {
+    if (typeof onChange === "function") onChange({ ...current, ...next });
+  };
+  return /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-script-block" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-group-title" }, "\u524D\u7F6E\u811A\u672C")), /* @__PURE__ */ (0, import_react.createElement)(
+    "textarea",
+    {
+      className: "pp-textarea pp-input-mono",
+      rows: 6,
+      placeholder: "// \u8BF7\u6C42\u53D1\u9001\u524D\u6267\u884C",
+      value: current.preScript,
+      onChange: (e) => emit({ preScript: e.target.value })
+    }
+  ), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-meta" }, "\u53EF\u7528 pm.request / pm.environment.set / console.log")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-script-block" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-group-title" }, "\u540E\u7F6E\u811A\u672C")), /* @__PURE__ */ (0, import_react.createElement)(
+    "textarea",
+    {
+      className: "pp-textarea pp-input-mono",
+      rows: 6,
+      placeholder: "// \u54CD\u5E94\u8FD4\u56DE\u540E\u6267\u884C",
+      value: current.postScript,
+      onChange: (e) => emit({ postScript: e.target.value })
+    }
+  ), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-meta" }, "\u53EF\u7528 pm.response / pm.test / pm.globals.set")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-script-block" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-group-title" }, "\u65AD\u8A00")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(AssertTable, { rows: current.assertions, onChange: (rows) => emit({ assertions: rows }) }))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-script-block" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-group-title" }, "\u7B49\u5F85\u65F6\u95F4")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label", htmlFor: "pp-wait-ms" }, "\u7B49\u5F85"), /* @__PURE__ */ (0, import_react.createElement)(
+    "input",
+    {
+      id: "pp-wait-ms",
+      className: "pp-input pp-input-sm",
+      type: "number",
+      min: "0",
+      step: "100",
+      value: String(current.waitMs),
+      onChange: (e) => emit({ waitMs: parseWait(e.target.value) })
+    }
+  ), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, "ms \xB7 \u53D1\u9001\u524D\u7B49\u5F85"))));
+}
+
+// src/client/pages/components/ResponsePanel.jsx
+var import_react9 = require("react");
+var RESPONSE_TABS = [
+  { id: "body", label: "Body" },
+  { id: "headers", label: "Headers" },
+  { id: "cookies", label: "Cookies" },
+  { id: "request", label: "\u5B9E\u9645\u8BF7\u6C42" },
+  { id: "tests", label: "\u6D4B\u8BD5\u7ED3\u679C" },
+  { id: "logs", label: "\u63A7\u5236\u53F0" }
+];
+var COUNTED_TABS = ["headers", "tests"];
+function tabTitle(tab, counts) {
+  const n = counts ? counts[tab.id] : void 0;
+  const counted = COUNTED_TABS.indexOf(tab.id) > -1 && typeof n === "number";
+  return counted ? tab.label + " (" + n + ")" : tab.label;
+}
+function textOf(v) {
+  if (v == null) return "";
+  if (Array.isArray(v)) return v.map(textOf).filter((s) => s !== "").join("\n");
+  if (typeof v === "object") {
+    try {
+      return JSON.stringify(v);
+    } catch {
+      return String(v);
+    }
+  }
+  return String(v);
+}
+function bodyText(body) {
+  return body == null ? "" : textOf(body);
+}
+function prettyBody(body) {
+  const text = bodyText(body);
+  if (!text) return "";
+  try {
+    return JSON.stringify(JSON.parse(text), null, 2);
+  } catch {
+    return text;
+  }
+}
+function headersToRows(headers) {
+  if (!headers || typeof headers !== "object") return [];
+  const keys = Array.isArray(headers) ? headers.map((_, i) => String(i)) : Object.keys(headers);
+  return keys.map((key) => ({ key, value: textOf(headers[key]) }));
+}
+function parseSetCookies(headers) {
+  const raw = [];
+  if (headers && typeof headers === "object") {
+    for (const key of Object.keys(headers)) {
+      if (key.toLowerCase() !== "set-cookie") continue;
+      const value = headers[key];
+      if (Array.isArray(value)) raw.push(...value.map(textOf));
+      else if (value != null) raw.push(textOf(value));
+    }
+  }
+  const rows = [];
+  for (const item of raw) {
+    for (const line of String(item).split("\n")) {
+      const seg = line.trim();
+      if (!seg) continue;
+      const pieces = seg.split(";").map((s) => s.trim()).filter((s) => s !== "");
+      const head = pieces.shift() || "";
+      const eq = head.indexOf("=");
+      rows.push({
+        name: eq >= 0 ? head.slice(0, eq).trim() : head,
+        value: eq >= 0 ? head.slice(eq + 1).trim() : "",
+        attrs: pieces.join("; ")
+      });
+    }
+  }
+  return rows;
+}
+function logsText(logs) {
+  if (Array.isArray(logs)) return logs.map(textOf).filter((s) => s !== "").join("\n");
+  return logs == null ? "" : textOf(logs);
+}
+function errText2(err) {
+  if (err == null) return "";
+  if (typeof err === "object" && err.message) return String(err.message);
+  return String(err);
+}
+var COOKIE_COLS = [
+  { title: "\u540D\u79F0", width: "180px" },
+  { title: "\u503C", width: "" },
+  { title: "\u5C5E\u6027", width: "" }
+];
+function ResponsePanel({ resp, sending = false, onCancel }) {
+  const [tab, setTab] = (0, import_react9.useState)("body");
+  const [bodyView, setBodyView] = (0, import_react9.useState)("pretty");
+  const [copyError, setCopyError] = (0, import_react9.useState)("");
+  const copyBody = () => {
+    const clip = typeof navigator === "undefined" || !navigator ? null : navigator.clipboard;
+    if (!clip || typeof clip.writeText !== "function") {
+      setCopyError("\u590D\u5236\u5931\u8D25\uFF1A\u5F53\u524D\u73AF\u5883\u4E0D\u652F\u6301\u526A\u8D34\u677F");
+      return;
+    }
+    try {
+      const result = clip.writeText(bodyText(resp ? resp.body : ""));
+      if (result && typeof result.then === "function") {
+        result.then(() => setCopyError("")).catch((err) => setCopyError("\u590D\u5236\u5931\u8D25\uFF1A" + errText2(err)));
+      } else {
+        setCopyError("");
+      }
+    } catch (err) {
+      setCopyError("\u590D\u5236\u5931\u8D25\uFF1A" + errText2(err));
+    }
+  };
+  const sendingBar = sending ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-resp-bar" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-pill pp-pill-accent" }, "\u53D1\u9001\u4E2D\u2026"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm", onClick: () => {
+    if (typeof onCancel === "function") onCancel();
+  } }, "\u53D6\u6D88")) : null;
+  if (!resp) {
+    return /* @__PURE__ */ (0, import_react.createElement)("div", { "data-response-panel": "" }, sendingBar, sending ? null : /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u5C1A\u672A\u53D1\u9001\u8BF7\u6C42", hint: "\u586B\u5199 URL \u540E\u70B9\u300C\u53D1\u9001\u300D" }));
+  }
+  const headerRows = headersToRows(resp.headers);
+  const cookieRows = parseSetCookies(resp.headers);
+  const testItems = Array.isArray(resp.tests) ? resp.tests : [];
+  const logText = logsText(resp.logs);
+  const req = resp.request && typeof resp.request === "object" ? resp.request : null;
+  const counts = { headers: headerRows.length, tests: testItems.length };
+  const errorMsg = resp.error ? errText2(resp.error) : "";
+  const statusBar = /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-resp-bar" }, /* @__PURE__ */ (0, import_react.createElement)(StatusPill, { status: resp.status, text: resp.statusText || "" }), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, resp.timeMs == null ? "-" : resp.timeMs, " ms"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, resp.bodySize == null ? "-" : resp.bodySize, " B"), resp.truncated ? /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-pill pp-pill-warn" }, "\u5DF2\u622A\u65AD") : null, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm", onClick: copyBody }, "\u590D\u5236"));
+  let tabBody = null;
+  if (tab === "body") {
+    tabBody = /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tabs" }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-tab", "data-active": bodyView === "pretty", onClick: () => setBodyView("pretty") }, "\u7F8E\u5316"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-tab", "data-active": bodyView === "raw", onClick: () => setBodyView("raw") }, "\u539F\u6587")), /* @__PURE__ */ (0, import_react.createElement)("pre", { className: "pp-pre pp-pre-scroll", style: { marginTop: "var(--sp-2)" } }, bodyView === "pretty" ? prettyBody(resp.body) : bodyText(resp.body)));
+  } else if (tab === "headers") {
+    tabBody = /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: headerRows, readOnly: true, columns: ["key", "value"], emptyText: "\u65E0\u54CD\u5E94\u5934" }));
+  } else if (tab === "cookies") {
+    tabBody = cookieRows.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u65E0 Cookies" }) : /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table" }, /* @__PURE__ */ (0, import_react.createElement)("thead", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, COOKIE_COLS.map((col) => /* @__PURE__ */ (0, import_react.createElement)("th", { key: col.title, style: col.width ? { width: col.width } : void 0 }, col.title)))), /* @__PURE__ */ (0, import_react.createElement)("tbody", null, cookieRows.map((row, i) => /* @__PURE__ */ (0, import_react.createElement)("tr", { key: i }, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-table-mono" }, row.name || "-"), /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-table-mono" }, row.value || "-"), /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-muted" }, row.attrs || "-"))))));
+  } else if (tab === "request") {
+    tabBody = req ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": String(req.method || "GET").toUpperCase() }, String(req.method || "GET").toUpperCase()), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-mono pp-ellipsis", title: req.url || "" }, req.url || "-")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap", style: { marginTop: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: headersToRows(req.headers), readOnly: true, columns: ["key", "value"], emptyText: "\u65E0\u8BF7\u6C42\u5934" })), bodyText(req.body) ? /* @__PURE__ */ (0, import_react.createElement)("pre", { className: "pp-pre pp-pre-scroll", style: { marginTop: "var(--sp-2)" } }, bodyText(req.body)) : null) : /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u65E0\u8BF7\u6C42\u5FEB\u7167" });
+  } else if (tab === "tests") {
+    tabBody = testItems.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u65E0\u65AD\u8A00" }) : /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-list" }, testItems.map((item, i) => /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-result-row", key: i }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: item && item.passed ? "pp-pill pp-pill-ok" : "pp-pill pp-pill-bad" }, item && item.passed ? "\u901A\u8FC7" : "\u5931\u8D25"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ellipsis" }, item && item.name ? String(item.name) : "-"), item && item.error ? /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, errText2(item.error)) : null)));
+  } else {
+    tabBody = logText ? /* @__PURE__ */ (0, import_react.createElement)("pre", { className: "pp-pre pp-pre-scroll" }, logText) : /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u65E0\u65E5\u5FD7" });
+  }
+  return /* @__PURE__ */ (0, import_react.createElement)("div", { "data-response-panel": "" }, sendingBar, statusBar, copyError ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-note pp-note-bad" }, copyError) : null, errorMsg ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-note pp-note-bad" }, errorMsg) : /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-resp-tabs" }, RESPONSE_TABS.map((t) => /* @__PURE__ */ (0, import_react.createElement)("button", { key: t.id, className: "pp-tab", "data-active": tab === t.id, onClick: () => setTab(t.id) }, tabTitle(t, counts)))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-debug-tabbody" }, tabBody)));
+}
+
 // src/client/pages/debug.jsx
 (window.__postapiQueue = window.__postapiQueue || []).push(["debug", DebugPage]);
 var METHODS = ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"];
-var BODY_TYPES2 = ["none", "json", "form", "urlencoded", "raw", "xml", "graphql"];
 var AUTH_TYPES = ["none", "bearer", "basic", "apikey"];
 var MOCK_PROJECT3 = {
   id: "proj_demo01",
@@ -2381,8 +2700,11 @@ var TABS = [
   { id: "params", label: "Params" },
   { id: "headers", label: "Headers" },
   { id: "body", label: "Body" },
-  { id: "auth", label: "Auth" }
+  { id: "auth", label: "Auth" },
+  { id: "script", label: "\u811A\u672C" },
+  { id: "settings", label: "\u8BBE\u7F6E" }
 ];
+var REPLAY_KEY = "postapi.debug.replay";
 var AUTH_LABEL2 = { none: "\u65E0\u8BA4\u8BC1", bearer: "Bearer", basic: "Basic", apikey: "API Key" };
 function resolveApi2() {
   return typeof window !== "undefined" ? window.__postapiApi : null;
@@ -2408,8 +2730,23 @@ function emptyDraft(ep) {
       value: ep && ep.auth && ep.auth.value || "",
       addTo: ep && ep.auth && ep.auth.addTo || "header"
     },
-    responses: (ep && Array.isArray(ep.responses) ? ep.responses : []).map((r) => ({ ...r }))
+    responses: (ep && Array.isArray(ep.responses) ? ep.responses : []).map((r) => ({ ...r })),
+    // 前后置脚本 / 断言 / 发送前等待（Apifox 的「前置操作 / 后置操作」与「等待时间」）
+    preScript: ep && ep.preScript || "",
+    postScript: ep && ep.postScript || "",
+    assertions: (ep && Array.isArray(ep.assertions) ? ep.assertions : []).map((a) => ({ ...a })),
+    waitMs: Number.isFinite(ep && ep.waitMs) ? ep.waitMs : 0
   };
+}
+function readReplay() {
+  try {
+    const raw = typeof localStorage !== "undefined" ? localStorage.getItem(REPLAY_KEY) : null;
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === "object" ? parsed : null;
+  } catch {
+    return null;
+  }
 }
 function collectVarRefs(draft) {
   const found = [];
@@ -2471,34 +2808,26 @@ function appendCommonHeaders(rows, limit = 3) {
   }
   return list;
 }
-function prettyJson(text) {
-  if (text == null) return "";
-  try {
-    return JSON.stringify(JSON.parse(text), null, 2);
-  } catch {
-    return text == null ? "" : String(text);
-  }
-}
 function DebugPage({ route, api }) {
-  const rootRef = (0, import_react9.useRef)(null);
-  const abortRef = (0, import_react9.useRef)({ cancelled: false });
-  (0, import_react9.useEffect)(() => applyTheme(rootRef.current), []);
+  const rootRef = (0, import_react10.useRef)(null);
+  const abortRef = (0, import_react10.useRef)({ cancelled: false });
+  (0, import_react10.useEffect)(() => applyTheme(rootRef.current), []);
   const apiRef = resolveApi2() || api;
-  const [project, setProject] = (0, import_react9.useState)(MOCK_PROJECT3);
-  const [isMock, setIsMock] = (0, import_react9.useState)(true);
-  const [error, setError] = (0, import_react9.useState)("");
-  const [envId, setEnvId] = (0, import_react9.useState)(() => {
+  const [project, setProject] = (0, import_react10.useState)(MOCK_PROJECT3);
+  const [isMock, setIsMock] = (0, import_react10.useState)(true);
+  const [error, setError] = (0, import_react10.useState)("");
+  const [envId, setEnvId] = (0, import_react10.useState)(() => {
     const envs2 = MOCK_PROJECT3.environments;
     const def = envs2.find((e) => e.isDefault) || envs2[0];
     return def ? def.id : "";
   });
-  const [draft, setDraft] = (0, import_react9.useState)(() => emptyDraft(MOCK_PROJECT3.endpoints[0]));
-  const [tab, setTab] = (0, import_react9.useState)("params");
-  const [resp, setResp] = (0, import_react9.useState)(null);
-  const [sending, setSending] = (0, import_react9.useState)(false);
-  const [bodyView, setBodyView] = (0, import_react9.useState)("pretty");
-  const [savedHint, setSavedHint] = (0, import_react9.useState)("");
-  (0, import_react9.useEffect)(() => {
+  const [draft, setDraft] = (0, import_react10.useState)(() => emptyDraft(MOCK_PROJECT3.endpoints[0]));
+  const [tab, setTab] = (0, import_react10.useState)("params");
+  const [resp, setResp] = (0, import_react10.useState)(null);
+  const [sending, setSending] = (0, import_react10.useState)(false);
+  const [timeoutMs, setTimeoutMs] = (0, import_react10.useState)(3e4);
+  const [savedHint, setSavedHint] = (0, import_react10.useState)("");
+  (0, import_react10.useEffect)(() => {
     const storage = apiRef && apiRef.storage;
     if (!storage || typeof storage.listProjects !== "function" || typeof storage.getProject !== "function") return void 0;
     let cancelled = false;
@@ -2523,11 +2852,26 @@ function DebugPage({ route, api }) {
       cancelled = true;
     };
   }, [apiRef]);
-  const envs = (0, import_react9.useMemo)(() => Array.isArray(project && project.environments) ? project.environments : [], [project]);
-  const { table, env } = (0, import_react9.useMemo)(() => varTable(project, envId), [project, envId]);
-  const varRefs = (0, import_react9.useMemo)(() => collectVarRefs(draft), [draft]);
-  const missingVars = (0, import_react9.useMemo)(() => varRefs.filter((k) => !(k in table)), [varRefs, table]);
-  const finalUrl = (0, import_react9.useMemo)(() => joinUrl2(env && env.baseUrl, draft.url), [env, draft.url]);
+  (0, import_react10.useEffect)(() => {
+    const snap = readReplay();
+    if (!snap) return;
+    setDraft((prev) => ({
+      ...prev,
+      method: snap.method || prev.method,
+      url: snap.url || prev.url,
+      headers: Array.isArray(snap.headers) && snap.headers.length ? snap.headers.map((h) => ({ enabled: true, type: "string", required: false, description: "", ...h })) : prev.headers,
+      body: typeof snap.body === "string" && snap.body ? { ...prev.body, type: prev.body.type === "none" ? "json" : prev.body.type, content: snap.body } : prev.body
+    }));
+    try {
+      localStorage.removeItem(REPLAY_KEY);
+    } catch {
+    }
+  }, []);
+  const envs = (0, import_react10.useMemo)(() => Array.isArray(project && project.environments) ? project.environments : [], [project]);
+  const { table, env } = (0, import_react10.useMemo)(() => varTable(project, envId), [project, envId]);
+  const varRefs = (0, import_react10.useMemo)(() => collectVarRefs(draft), [draft]);
+  const missingVars = (0, import_react10.useMemo)(() => varRefs.filter((k) => !(k in table)), [varRefs, table]);
+  const finalUrl = (0, import_react10.useMemo)(() => joinUrl2(env && env.baseUrl, draft.url), [env, draft.url]);
   const patch = (field, value) => setDraft((prev) => ({ ...prev, [field]: value }));
   const patchAuth = (field, value) => setDraft((prev) => ({ ...prev, auth: { ...prev.auth, [field]: value } }));
   const addCommonHeaders = () => setDraft((prev) => ({ ...prev, headers: appendCommonHeaders(prev.headers, 3) }));
@@ -2544,7 +2888,11 @@ function DebugPage({ route, api }) {
       headers: draft.headers.filter((h) => h && h.enabled !== false && h.key),
       body: draft.body,
       auth: draft.auth,
-      timeoutMs: 3e4,
+      timeoutMs: timeoutMs > 0 ? timeoutMs : 3e4,
+      // 前后置脚本与断言：host request.send 已支持这三个字段（bridge 直通 request.js）
+      preScript: draft.preScript || void 0,
+      postScript: draft.postScript || void 0,
+      assertions: Array.isArray(draft.assertions) && draft.assertions.length ? draft.assertions : void 0,
       variables: {
         globals: project && project.globals ? project.globals.variables || [] : [],
         environment: env && Array.isArray(env.variables) ? env.variables : [],
@@ -2566,7 +2914,8 @@ function DebugPage({ route, api }) {
       setSending(false);
       return;
     }
-    Promise.resolve().then(() => requestApi.send(payload)).then((result) => {
+    const wait = Number(draft.waitMs) > 0 ? Number(draft.waitMs) : 0;
+    Promise.resolve().then(() => wait > 0 ? new Promise((resolve) => setTimeout(resolve, wait)) : void 0).then(() => requestApi.send(payload)).then((result) => {
       if (cancelled.cancelled) return;
       setResp(result || {});
       setError("");
@@ -2606,14 +2955,8 @@ function DebugPage({ route, api }) {
       setDraft((prev) => ({ ...prev, id: saved && saved.id || prev.id }));
     }).catch((err) => setSavedHint("\u4FDD\u5B58\u5931\u8D25\uFF1A" + (err && err.message ? err.message : String(err))));
   };
-  const respBodyText = resp ? bodyView === "pretty" ? prettyJson(resp.body) : String(resp.body == null ? "" : resp.body) : "";
-  const respHeaders = (0, import_react9.useMemo)(() => {
-    const h = resp && resp.headers;
-    if (!h || typeof h !== "object") return [];
-    return Object.keys(h).map((key) => ({ key, value: h[key] }));
-  }, [resp]);
-  const responsePanel = /* @__PURE__ */ (0, import_react.createElement)("section", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u54CD\u5E94"), !resp ? /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u5C1A\u672A\u53D1\u9001\u8BF7\u6C42", hint: "\u586B\u5199 URL \u540E\u70B9\u300C\u53D1\u9001\u300D" }) : null, resp && resp.error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-note pp-note-bad" }, "\u9519\u8BEF\uFF1A", resp.error.message || String(resp.error)) : null, resp && !resp.error ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline" }, /* @__PURE__ */ (0, import_react.createElement)(StatusPill, { status: resp.status, text: resp.statusText || "" }), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, resp.timeMs == null ? "-" : resp.timeMs, " ms"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, resp.bodySize == null ? "-" : resp.bodySize, " B"), resp.truncated ? /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-pill pp-pill-warn" }, "\u5DF2\u622A\u65AD") : null), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tabs", style: { marginTop: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-tab", "data-active": bodyView === "pretty", onClick: () => setBodyView("pretty") }, "\u7F8E\u5316"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-tab", "data-active": bodyView === "raw", onClick: () => setBodyView("raw") }, "\u539F\u6587")), /* @__PURE__ */ (0, import_react.createElement)("pre", { className: "pp-pre pp-pre-scroll", style: { marginTop: "var(--sp-2)" } }, respBodyText), respHeaders.length > 0 ? /* @__PURE__ */ (0, import_react.createElement)("div", { style: { marginTop: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u54CD\u5E94\u5934"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: respHeaders, readOnly: true, columns: ["key", "value"], emptyText: "\u65E0\u54CD\u5E94\u5934" }))) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { style: { marginTop: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u65AD\u8A00 / \u811A\u672C\u7ED3\u679C"), Array.isArray(resp.tests) && resp.tests.length > 0 ? /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table" }, /* @__PURE__ */ (0, import_react.createElement)("thead", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("th", null, "\u540D\u79F0"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "72px" } }, "\u7ED3\u679C"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "160px" } }, "\u9519\u8BEF"))), /* @__PURE__ */ (0, import_react.createElement)("tbody", null, resp.tests.map((t, i) => /* @__PURE__ */ (0, import_react.createElement)("tr", { key: i }, /* @__PURE__ */ (0, import_react.createElement)("td", null, t.name), /* @__PURE__ */ (0, import_react.createElement)("td", { className: t.passed ? "pp-ok" : "pp-bad" }, t.passed ? "\u901A\u8FC7" : "\u5931\u8D25"), /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-muted" }, t.error || "-"))))) : /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-meta" }, "\u65E0\u65AD\u8A00")), Array.isArray(resp.logs) && resp.logs.length > 0 ? /* @__PURE__ */ (0, import_react.createElement)("div", { style: { marginTop: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u811A\u672C\u65E5\u5FD7"), /* @__PURE__ */ (0, import_react.createElement)("pre", { className: "pp-pre pp-pre-scroll" }, resp.logs.join("\n"))) : null) : null);
-  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page-flush", "data-page": "debug", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-debug-page" }, /* @__PURE__ */ (0, import_react.createElement)("section", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-url-row" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": draft.method }, draft.method), /* @__PURE__ */ (0, import_react.createElement)(
+  const responsePanel = /* @__PURE__ */ (0, import_react.createElement)("section", { className: "pp-pane pp-debug-response" }, /* @__PURE__ */ (0, import_react.createElement)(ResponsePanel, { resp, sending, onCancel: cancel }));
+  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page-flush", "data-page": "debug", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-debug-page pp-debug-split" }, /* @__PURE__ */ (0, import_react.createElement)("section", { className: "pp-pane pp-debug-request" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-url-row" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": draft.method }, draft.method), /* @__PURE__ */ (0, import_react.createElement)(
     "select",
     {
       className: "pp-select pp-url-method",
@@ -2631,7 +2974,16 @@ function DebugPage({ route, api }) {
       onChange: (e) => patch("url", e.target.value),
       "aria-label": "\u8BF7\u6C42\u8DEF\u5F84"
     }
-  ), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-send-group" }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: send, disabled: sending }, sending ? "\u53D1\u9001\u4E2D\u2026" : "\u53D1\u9001"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: cancel, disabled: !sending, title: "\u53D6\u6D88\u672C\u6B21\u53D1\u9001" }, "\u2715"))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-debug-meta" }, /* @__PURE__ */ (0, import_react.createElement)(
+  ), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-send-group" }, /* @__PURE__ */ (0, import_react.createElement)(
+    "button",
+    {
+      className: "pp-btn pp-btn-primary",
+      onClick: send,
+      disabled: sending || !String(draft.url || "").trim(),
+      title: String(draft.url || "").trim() ? "" : "\u5148\u586B\u5199\u8BF7\u6C42\u8DEF\u5F84"
+    },
+    sending ? "\u53D1\u9001\u4E2D\u2026" : "\u53D1\u9001"
+  ), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: cancel, disabled: !sending, title: "\u53D6\u6D88\u672C\u6B21\u53D1\u9001" }, "\u2715"))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-debug-meta" }, /* @__PURE__ */ (0, import_react.createElement)(
     "select",
     {
       className: "pp-select pp-input-sm",
@@ -2641,7 +2993,7 @@ function DebugPage({ route, api }) {
     },
     envs.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("option", { value: "" }, "\uFF08\u65E0\u73AF\u5883\uFF09") : null,
     envs.map((e) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: e.id, value: e.id }, e.name))
-  ), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-mono pp-meta pp-ellipsis", title: finalUrl || "" }, finalUrl || "\uFF08\u672A\u586B\u5199 URL\uFF09"), varRefs.length > 0 ? /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, "\u53D8\u91CF ", varRefs.join("\u3001"), missingVars.length > 0 ? "\uFF08\u672A\u5B9A\u4E49\uFF1A" + missingVars.join("\u3001") + "\uFF09" : "\uFF08\u5747\u5DF2\u5B9A\u4E49\uFF09") : null, /* @__PURE__ */ (0, import_react.createElement)("a", { className: "pp-meta", href: "#/history" }, "\u8BF7\u6C42\u5386\u53F2")), isMock ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-note pp-note-warn" }, "\u793A\u4F8B\u6570\u636E \u2014 window.__postapiApi \u672A\u6CE8\u5165\u6216\u8BFB\u53D6\u5931\u8D25\uFF0C\u53D1\u9001\u5C06\u8FD4\u56DE mock \u54CD\u5E94") : null, error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-note pp-note-bad" }, error) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tabs" }, TABS.map((t) => /* @__PURE__ */ (0, import_react.createElement)("button", { key: t.id, className: "pp-tab", "data-active": tab === t.id, onClick: () => setTab(t.id) }, t.label))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-debug-tabbody" }, tab === "params" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-title" }, "Path \u53C2\u6570"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: draft.pathParams, onChange: (rows) => patch("pathParams", rows), emptyText: "\u65E0 Path \u53C2\u6570" })), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-title" }, "Query \u53C2\u6570"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: draft.params, onChange: (rows) => patch("params", rows), emptyText: "\u65E0 Query \u53C2\u6570" }))) : null, tab === "headers" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-group-title" }, "\u8BF7\u6C42\u5934"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-link", onClick: addCommonHeaders, title: "\u8FFD\u52A0 3 \u6761\u5E38\u7528\u8BF7\u6C42\u5934" }, "+ \u5E38\u7528\u8BF7\u6C42\u5934")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(
+  ), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-mono pp-meta pp-ellipsis", title: finalUrl || "" }, finalUrl || "\uFF08\u672A\u586B\u5199 URL\uFF09"), varRefs.length > 0 ? /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, "\u53D8\u91CF ", varRefs.join("\u3001"), missingVars.length > 0 ? "\uFF08\u672A\u5B9A\u4E49\uFF1A" + missingVars.join("\u3001") + "\uFF09" : "\uFF08\u5747\u5DF2\u5B9A\u4E49\uFF09") : null, /* @__PURE__ */ (0, import_react.createElement)("a", { className: "pp-meta", href: "#/history" }, "\u8BF7\u6C42\u5386\u53F2")), !isMock && !String(draft.url || "").trim() ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-note" }, "\u5F53\u524D\u9879\u76EE\u8FD8\u6CA1\u6709\u63A5\u53E3\uFF0C\u5148\u5230 ", /* @__PURE__ */ (0, import_react.createElement)("a", { href: "#/doc" }, "\u63A5\u53E3\u6587\u6863"), " \u6216 ", /* @__PURE__ */ (0, import_react.createElement)("a", { href: "#/overview" }, "\u603B\u89C8"), " \u65B0\u5EFA\u4E00\u4E2A\uFF0C\u4E5F\u53EF\u4EE5\u76F4\u63A5\u5728\u4E0A\u65B9\u586B\u5199\u5B8C\u6574 URL \u8C03\u8BD5\u3002") : null, isMock ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-note pp-note-warn" }, "\u793A\u4F8B\u6570\u636E \u2014 window.__postapiApi \u672A\u6CE8\u5165\u6216\u8BFB\u53D6\u5931\u8D25\uFF0C\u53D1\u9001\u5C06\u8FD4\u56DE mock \u54CD\u5E94") : null, error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-note pp-note-bad" }, error) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tabs" }, TABS.map((t) => /* @__PURE__ */ (0, import_react.createElement)("button", { key: t.id, className: "pp-tab", "data-active": tab === t.id, onClick: () => setTab(t.id) }, t.label))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-debug-tabbody" }, tab === "params" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-title" }, "Path \u53C2\u6570"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: draft.pathParams, onChange: (rows) => patch("pathParams", rows), emptyText: "\u65E0 Path \u53C2\u6570" })), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-title" }, "Query \u53C2\u6570"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: draft.params, onChange: (rows) => patch("params", rows), emptyText: "\u65E0 Query \u53C2\u6570" }))) : null, tab === "headers" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-group-title" }, "\u8BF7\u6C42\u5934"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-link", onClick: addCommonHeaders, title: "\u8FFD\u52A0 3 \u6761\u5E38\u7528\u8BF7\u6C42\u5934" }, "+ \u5E38\u7528\u8BF7\u6C42\u5934")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(
     ParamTable,
     {
       rows: draft.headers,
@@ -2649,14 +3001,29 @@ function DebugPage({ route, api }) {
       suggest: filterHeaders,
       emptyText: "\u65E0\u8BF7\u6C42\u5934"
     }
-  )), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-title" }, "Cookies"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: draft.cookies, onChange: (rows) => patch("cookies", rows), emptyText: "\u65E0 Cookies" }))) : null, tab === "body" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u7C7B\u578B"), /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: draft.body.type, onChange: (e) => patch("body", { ...draft.body, type: e.target.value }) }, BODY_TYPES2.map((t) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: t, value: t }, t)))), draft.body.type === "none" ? /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u65E0\u8BF7\u6C42\u4F53", hint: "Body \u7C7B\u578B\u9009 none \u65F6\u4E0D\u53D1\u9001\u8BF7\u6C42\u4F53" }) : /* @__PURE__ */ (0, import_react.createElement)(
-    JsonEditor,
+  )), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-title" }, "Cookies"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: draft.cookies, onChange: (rows) => patch("cookies", rows), emptyText: "\u65E0 Cookies" }))) : null, tab === "body" ? /* @__PURE__ */ (0, import_react.createElement)(BodyEditor, { value: draft.body, onChange: (next) => patch("body", next) }) : null, tab === "script" ? /* @__PURE__ */ (0, import_react.createElement)(
+    ScriptPanel,
     {
-      value: draft.body.content,
-      rows: 8,
-      onChange: (next) => patch("body", { ...draft.body, content: next })
+      value: { preScript: draft.preScript, postScript: draft.postScript, assertions: draft.assertions, waitMs: draft.waitMs },
+      onChange: (next) => setDraft((prev) => ({ ...prev, ...next }))
     }
-  )) : null, tab === "auth" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u7C7B\u578B"), /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: draft.auth.type, onChange: (e) => patchAuth("type", e.target.value) }, AUTH_TYPES.map((t) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: t, value: t }, AUTH_LABEL2[t] || t)))), draft.auth.type === "bearer" ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "Token"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { flex: 1 }, value: draft.auth.token, onChange: (e) => patchAuth("token", e.target.value) })) : null, draft.auth.type === "basic" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u7528\u6237\u540D"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { flex: 1 }, value: draft.auth.username, onChange: (e) => patchAuth("username", e.target.value) })), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u5BC6\u7801"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { flex: 1 }, value: draft.auth.password, onChange: (e) => patchAuth("password", e.target.value) }))) : null, draft.auth.type === "apikey" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "Key"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { flex: 1 }, value: draft.auth.key, onChange: (e) => patchAuth("key", e.target.value) })), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "Value"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { flex: 1 }, value: draft.auth.value, onChange: (e) => patchAuth("value", e.target.value) })), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u4F4D\u7F6E"), /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: draft.auth.addTo, onChange: (e) => patchAuth("addTo", e.target.value) }, /* @__PURE__ */ (0, import_react.createElement)("option", { value: "header" }, "header"), /* @__PURE__ */ (0, import_react.createElement)("option", { value: "query" }, "query")))) : null, draft.auth.type === "none" ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-meta" }, "\u65E0\u8BA4\u8BC1") : null) : null), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)(
+  ) : null, tab === "settings" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-title" }, "\u53D1\u9001\u8BBE\u7F6E"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u8D85\u65F6 (ms)"), /* @__PURE__ */ (0, import_react.createElement)(
+    "input",
+    {
+      className: "pp-input pp-input-sm",
+      style: { flex: 1, maxWidth: 160 },
+      value: String(timeoutMs),
+      onChange: (e) => setTimeoutMs(Number(e.target.value.replace(/[^0-9]/g, "")) || 0)
+    }
+  )), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u7B49\u5F85 (ms)"), /* @__PURE__ */ (0, import_react.createElement)(
+    "input",
+    {
+      className: "pp-input pp-input-sm",
+      style: { flex: 1, maxWidth: 160 },
+      value: String(draft.waitMs || 0),
+      onChange: (e) => patch("waitMs", Number(e.target.value.replace(/[^0-9]/g, "")) || 0)
+    }
+  )), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-title" }, "\u8BF7\u6C42\u6982\u89C8"), /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table" }, /* @__PURE__ */ (0, import_react.createElement)("tbody", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, "\u65B9\u6CD5"), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": draft.method }, draft.method))), /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, "\u5B8C\u6574 URL"), /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-mono pp-ellipsis" }, finalUrl || "\uFF08\u672A\u586B\u5199\uFF09")), /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, "\u73AF\u5883"), /* @__PURE__ */ (0, import_react.createElement)("td", null, env ? env.name : "\uFF08\u65E0\u73AF\u5883\uFF09")), /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, "\u53D8\u91CF"), /* @__PURE__ */ (0, import_react.createElement)("td", null, varRefs.length ? varRefs.join("\u3001") + (missingVars.length ? "\uFF08\u672A\u5B9A\u4E49\uFF1A" + missingVars.join("\u3001") + "\uFF09" : "\uFF08\u5747\u5DF2\u5B9A\u4E49\uFF09") : "\u65E0")), /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, "\u5DF2\u542F\u7528\u53C2\u6570"), /* @__PURE__ */ (0, import_react.createElement)("td", null, draft.params.filter((p) => p && p.enabled !== false && p.key).length, " \u4E2A Query / ", draft.pathParams.filter((p) => p && p.enabled !== false && p.key).length, " \u4E2A Path")), /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, "\u5DF2\u542F\u7528\u8BF7\u6C42\u5934"), /* @__PURE__ */ (0, import_react.createElement)("td", null, draft.headers.filter((h) => h && h.enabled !== false && h.key).length, " \u4E2A"))))) : null, tab === "auth" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u7C7B\u578B"), /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: draft.auth.type, onChange: (e) => patchAuth("type", e.target.value) }, AUTH_TYPES.map((t) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: t, value: t }, AUTH_LABEL2[t] || t)))), draft.auth.type === "bearer" ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "Token"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { flex: 1 }, value: draft.auth.token, onChange: (e) => patchAuth("token", e.target.value) })) : null, draft.auth.type === "basic" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u7528\u6237\u540D"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { flex: 1 }, value: draft.auth.username, onChange: (e) => patchAuth("username", e.target.value) })), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u5BC6\u7801"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { flex: 1 }, value: draft.auth.password, onChange: (e) => patchAuth("password", e.target.value) }))) : null, draft.auth.type === "apikey" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "Key"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { flex: 1 }, value: draft.auth.key, onChange: (e) => patchAuth("key", e.target.value) })), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "Value"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { flex: 1 }, value: draft.auth.value, onChange: (e) => patchAuth("value", e.target.value) })), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u4F4D\u7F6E"), /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: draft.auth.addTo, onChange: (e) => patchAuth("addTo", e.target.value) }, /* @__PURE__ */ (0, import_react.createElement)("option", { value: "header" }, "header"), /* @__PURE__ */ (0, import_react.createElement)("option", { value: "query" }, "query")))) : null, draft.auth.type === "none" ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-meta" }, "\u65E0\u8BA4\u8BC1") : null) : null), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)(
     "input",
     {
       className: "pp-input",
@@ -2669,7 +3036,7 @@ function DebugPage({ route, api }) {
 }
 
 // src/client/pages/mock.jsx
-var import_react10 = require("react");
+var import_react11 = require("react");
 (window.__postapiQueue = window.__postapiQueue || []).push(["mock", MockPage]);
 var RULES = ["fixed", "regex", "increment", "random", "template"];
 var RULE_LABEL = { fixed: "\u56FA\u5B9A\u503C", regex: "\u6B63\u5219\u751F\u6210", increment: "\u81EA\u589E", random: "\u968F\u673A", template: "\u6A21\u677F" };
@@ -2719,23 +3086,23 @@ function hitUrls(projectId, endpoint, port) {
   ];
 }
 function MockPage({ route, api }) {
-  const rootRef = (0, import_react10.useRef)(null);
-  (0, import_react10.useEffect)(() => applyTheme(rootRef.current), []);
+  const rootRef = (0, import_react11.useRef)(null);
+  (0, import_react11.useEffect)(() => applyTheme(rootRef.current), []);
   const apiRef = resolveApi3() || api;
-  const [project, setProject] = (0, import_react10.useState)(MOCK_PROJECT4);
-  const [isMock, setIsMock] = (0, import_react10.useState)(true);
-  const [error, setError] = (0, import_react10.useState)("");
-  const [notice, setNotice] = (0, import_react10.useState)("");
-  const [currentId, setCurrentId] = (0, import_react10.useState)(MOCK_PROJECT4.endpoints[0].id);
-  const [delayMs, setDelayMs] = (0, import_react10.useState)(MOCK_PROJECT4.endpoints[0].mock.delayMs);
-  const [rules, setRules] = (0, import_react10.useState)(MOCK_PROJECT4.endpoints[0].mock.rules);
-  const [mockEnabled, setMockEnabled] = (0, import_react10.useState)(MOCK_PROJECT4.endpoints[0].mock.enabled);
-  const [service, setService] = (0, import_react10.useState)({ running: false, port: 4010 });
-  const [busy, setBusy] = (0, import_react10.useState)(false);
-  const endpoints = (0, import_react10.useMemo)(() => Array.isArray(project && project.endpoints) ? project.endpoints : [], [project]);
-  const current = (0, import_react10.useMemo)(() => endpoints.find((e) => e.id === currentId) || endpoints[0] || null, [endpoints, currentId]);
+  const [project, setProject] = (0, import_react11.useState)(MOCK_PROJECT4);
+  const [isMock, setIsMock] = (0, import_react11.useState)(true);
+  const [error, setError] = (0, import_react11.useState)("");
+  const [notice, setNotice] = (0, import_react11.useState)("");
+  const [currentId, setCurrentId] = (0, import_react11.useState)(MOCK_PROJECT4.endpoints[0].id);
+  const [delayMs, setDelayMs] = (0, import_react11.useState)(MOCK_PROJECT4.endpoints[0].mock.delayMs);
+  const [rules, setRules] = (0, import_react11.useState)(MOCK_PROJECT4.endpoints[0].mock.rules);
+  const [mockEnabled, setMockEnabled] = (0, import_react11.useState)(MOCK_PROJECT4.endpoints[0].mock.enabled);
+  const [service, setService] = (0, import_react11.useState)({ running: false, port: 4010 });
+  const [busy, setBusy] = (0, import_react11.useState)(false);
+  const endpoints = (0, import_react11.useMemo)(() => Array.isArray(project && project.endpoints) ? project.endpoints : [], [project]);
+  const current = (0, import_react11.useMemo)(() => endpoints.find((e) => e.id === currentId) || endpoints[0] || null, [endpoints, currentId]);
   const port = project && project.settings && project.settings.mockPort || 4010;
-  (0, import_react10.useEffect)(() => {
+  (0, import_react11.useEffect)(() => {
     const storage = apiRef && apiRef.storage;
     let cancelled = false;
     if (storage && typeof storage.listProjects === "function" && typeof storage.getProject === "function") {
@@ -2825,7 +3192,7 @@ function MockPage({ route, api }) {
     next[index] = { ...next[index], [field]: value };
     setRules(next);
   };
-  const urls = (0, import_react10.useMemo)(() => hitUrls(project && project.id, current, service.port || port), [project, current, service.port, port]);
+  const urls = (0, import_react11.useMemo)(() => hitUrls(project && project.id, current, service.port || port), [project, current, service.port, port]);
   return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page", "data-page": "mock", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-overview-title" }, "Mock"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-actions" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-pill" }, service.running ? "\u8FD0\u884C\u4E2D" : "\u5DF2\u505C\u6B62"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: startService, disabled: busy || service.running }, "\u542F\u52A8"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: stopService, disabled: busy || !service.running }, "\u505C\u6B62"))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-content" }, /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, isMock ? "\u793A\u4F8B\u6570\u636E \u2014 window.__postapiApi \u672A\u6CE8\u5165\u6216\u8BFB\u53D6\u5931\u8D25\uFF0C\u4EE5\u4E0B\u4E3A\u6587\u4EF6\u5185 mock" : "\u6570\u636E\u6765\u6E90\uFF1Apostapi.storage + postapi.mock"), error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, error) : null, notice ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, notice) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-mock-layout" }, /* @__PURE__ */ (0, import_react.createElement)("nav", { className: "pp-panel", "aria-label": "\u63A5\u53E3\u5217\u8868" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tree" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tree-group" }, "\u63A5\u53E3"), endpoints.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u6682\u65E0\u63A5\u53E3", hint: "\u5728\u603B\u89C8\u9875\u65B0\u5EFA\u9879\u76EE\u540E\u521B\u5EFA\u63A5\u53E3" }) : null, endpoints.map((ep) => /* @__PURE__ */ (0, import_react.createElement)("div", { key: ep.id, className: "pp-tree-row", "data-active": ep.id === currentId, onClick: () => selectEndpoint(ep) }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": ep.method }, ep.method), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ellipsis" }, ep.name))))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-mock-side" }, /* @__PURE__ */ (0, import_react.createElement)("section", { className: "pp-card" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, current ? current.name : "\u672A\u9009\u62E9\u63A5\u53E3"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-grid", style: { marginBottom: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u542F\u7528 Mock"), /* @__PURE__ */ (0, import_react.createElement)("input", { type: "checkbox", checked: mockEnabled, onChange: (e) => setMockEnabled(e.target.checked) }), /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u5EF6\u8FDF (ms)"), /* @__PURE__ */ (0, import_react.createElement)(
     "input",
     {
@@ -2854,7 +3221,7 @@ function MockPage({ route, api }) {
 }
 
 // src/client/pages/schema.jsx
-var import_react11 = __toESM(require("react"), 1);
+var import_react12 = __toESM(require("react"), 1);
 (window.__postapiQueue = window.__postapiQueue || []).push(["schema", SchemaPage]);
 var MOCK_SCHEMAS = [
   {
@@ -2912,7 +3279,7 @@ function localExampleFromSchema(schema) {
   if (type === "null") return null;
   return "string";
 }
-function errText2(err) {
+function errText3(err) {
   return err && err.message ? err.message : String(err);
 }
 function toText(value) {
@@ -2923,23 +3290,23 @@ function toText(value) {
   }
 }
 function SchemaPage(props) {
-  const rootRef = (0, import_react11.useRef)(null);
+  const rootRef = (0, import_react12.useRef)(null);
   const api = props && props.api || (typeof window !== "undefined" ? window.__postapiApi : void 0);
   const storage = api && api.storage;
   const route = props && props.route || {};
-  const [projects, setProjects] = (0, import_react11.useState)([{ id: "proj_demo01", name: "\u8BA2\u5355\u4E2D\u5FC3" }]);
-  const [projectId, setProjectId] = (0, import_react11.useState)("proj_demo01");
-  const [schemas, setSchemas] = (0, import_react11.useState)(MOCK_SCHEMAS);
-  const [isMock, setIsMock] = (0, import_react11.useState)(true);
-  const [error, setError] = (0, import_react11.useState)("");
-  const [notice, setNotice] = (0, import_react11.useState)("");
-  const [currentId, setCurrentId] = (0, import_react11.useState)("");
-  const [name, setName] = (0, import_react11.useState)("");
-  const [description, setDescription] = (0, import_react11.useState)("");
-  const [text, setText] = (0, import_react11.useState)(toText(MOCK_SCHEMAS[0].jsonSchema));
-  const [checkResult, setCheckResult] = (0, import_react11.useState)(null);
-  const [example, setExample] = (0, import_react11.useState)("");
-  (0, import_react11.useEffect)(() => applyTheme(rootRef.current), []);
+  const [projects, setProjects] = (0, import_react12.useState)([{ id: "proj_demo01", name: "\u8BA2\u5355\u4E2D\u5FC3" }]);
+  const [projectId, setProjectId] = (0, import_react12.useState)("proj_demo01");
+  const [schemas, setSchemas] = (0, import_react12.useState)(MOCK_SCHEMAS);
+  const [isMock, setIsMock] = (0, import_react12.useState)(true);
+  const [error, setError] = (0, import_react12.useState)("");
+  const [notice, setNotice] = (0, import_react12.useState)("");
+  const [currentId, setCurrentId] = (0, import_react12.useState)("");
+  const [name, setName] = (0, import_react12.useState)("");
+  const [description, setDescription] = (0, import_react12.useState)("");
+  const [text, setText] = (0, import_react12.useState)(toText(MOCK_SCHEMAS[0].jsonSchema));
+  const [checkResult, setCheckResult] = (0, import_react12.useState)(null);
+  const [example, setExample] = (0, import_react12.useState)("");
+  (0, import_react12.useEffect)(() => applyTheme(rootRef.current), []);
   const loadProject = async (id) => {
     if (!storage || typeof storage.getProject !== "function") {
       setIsMock(true);
@@ -2956,10 +3323,10 @@ function SchemaPage(props) {
         if (wanted) pick(wanted);
       }
     } catch (err) {
-      setError("\u52A0\u8F7D\u9879\u76EE\u5931\u8D25\uFF1A" + errText2(err));
+      setError("\u52A0\u8F7D\u9879\u76EE\u5931\u8D25\uFF1A" + errText3(err));
     }
   };
-  (0, import_react11.useEffect)(() => {
+  (0, import_react12.useEffect)(() => {
     const boot = async () => {
       if (storage && typeof storage.listProjects === "function") {
         try {
@@ -2971,7 +3338,7 @@ function SchemaPage(props) {
             return;
           }
         } catch (err) {
-          setError("\u52A0\u8F7D\u9879\u76EE\u5217\u8868\u5931\u8D25\uFF1A" + errText2(err));
+          setError("\u52A0\u8F7D\u9879\u76EE\u5217\u8868\u5931\u8D25\uFF1A" + errText3(err));
         }
       }
       setIsMock(true);
@@ -3005,7 +3372,7 @@ function SchemaPage(props) {
         setCheckResult({ ok: res2 && res2.ok !== false, message: res2 && res2.message || (res2 && res2.ok === false ? "\u6821\u9A8C\u672A\u901A\u8FC7" : "\u6821\u9A8C\u901A\u8FC7") });
         return;
       } catch (err) {
-        setError("api.schema.validate \u8C03\u7528\u5931\u8D25\uFF1A" + errText2(err));
+        setError("api.schema.validate \u8C03\u7528\u5931\u8D25\uFF1A" + errText3(err));
       }
     }
     const res = localValidateSchema(text);
@@ -3024,7 +3391,7 @@ function SchemaPage(props) {
         setExample(toText(res && res.example !== void 0 ? res.example : res));
         return;
       } catch (err) {
-        setError("api.schema.example \u8C03\u7528\u5931\u8D25\uFF1A" + errText2(err));
+        setError("api.schema.example \u8C03\u7528\u5931\u8D25\uFF1A" + errText3(err));
       }
     }
     setExample(toText(localExampleFromSchema(parsed)));
@@ -3048,7 +3415,7 @@ function SchemaPage(props) {
       if (saved && saved.id) setCurrentId(saved.id);
       await loadProject(projectId);
     } catch (err) {
-      setError("\u4FDD\u5B58\u6A21\u578B\u5931\u8D25\uFF1A" + errText2(err));
+      setError("\u4FDD\u5B58\u6A21\u578B\u5931\u8D25\uFF1A" + errText3(err));
     }
   };
   const remove = async () => {
@@ -3067,7 +3434,7 @@ function SchemaPage(props) {
       blank();
       await loadProject(projectId);
     } catch (err) {
-      setError("\u5220\u9664\u6A21\u578B\u5931\u8D25\uFF1A" + errText2(err));
+      setError("\u5220\u9664\u6A21\u578B\u5931\u8D25\uFF1A" + errText3(err));
     }
   };
   return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page", "data-page": "schema", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-overview-title" }, "\u6570\u636E\u6A21\u578B"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-actions" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-meta" }, "\u9879\u76EE"), /* @__PURE__ */ (0, import_react.createElement)(
@@ -3103,7 +3470,7 @@ function safeParse(text) {
 }
 
 // src/client/pages/env.jsx
-var import_react12 = __toESM(require("react"), 1);
+var import_react13 = __toESM(require("react"), 1);
 (window.__postapiQueue = window.__postapiQueue || []).push(["env", EnvPage]);
 var MOCK_PROJECT5 = {
   id: "proj_demo01",
@@ -3155,26 +3522,26 @@ function envSummary(envs) {
     varCount: Array.isArray(e.variables) ? e.variables.length : 0
   }));
 }
-function errText3(err) {
+function errText4(err) {
   return err && err.message ? err.message : String(err);
 }
 function blankEnv() {
   return { name: "\u65B0\u73AF\u5883", baseUrl: "", isDefault: false, variables: [] };
 }
 function EnvPage(props) {
-  const rootRef = (0, import_react12.useRef)(null);
+  const rootRef = (0, import_react13.useRef)(null);
   const api = props && props.api || (typeof window !== "undefined" ? window.__postapiApi : void 0);
   const storage = api && api.storage;
-  const [projects, setProjects] = (0, import_react12.useState)([{ id: MOCK_PROJECT5.id, name: MOCK_PROJECT5.name }]);
-  const [projectId, setProjectId] = (0, import_react12.useState)(MOCK_PROJECT5.id);
-  const [project, setProject] = (0, import_react12.useState)(MOCK_PROJECT5);
-  const [isMock, setIsMock] = (0, import_react12.useState)(true);
-  const [error, setError] = (0, import_react12.useState)("");
-  const [notice, setNotice] = (0, import_react12.useState)("");
-  const [draft, setDraft] = (0, import_react12.useState)(MOCK_PROJECT5.environments[0]);
-  const [globals, setGlobals] = (0, import_react12.useState)(normalizeVars(MOCK_PROJECT5.globals.variables));
-  const [envTab, setEnvTab] = (0, import_react12.useState)("env");
-  (0, import_react12.useEffect)(() => applyTheme(rootRef.current), []);
+  const [projects, setProjects] = (0, import_react13.useState)([{ id: MOCK_PROJECT5.id, name: MOCK_PROJECT5.name }]);
+  const [projectId, setProjectId] = (0, import_react13.useState)(MOCK_PROJECT5.id);
+  const [project, setProject] = (0, import_react13.useState)(MOCK_PROJECT5);
+  const [isMock, setIsMock] = (0, import_react13.useState)(true);
+  const [error, setError] = (0, import_react13.useState)("");
+  const [notice, setNotice] = (0, import_react13.useState)("");
+  const [draft, setDraft] = (0, import_react13.useState)(MOCK_PROJECT5.environments[0]);
+  const [globals, setGlobals] = (0, import_react13.useState)(normalizeVars(MOCK_PROJECT5.globals.variables));
+  const [envTab, setEnvTab] = (0, import_react13.useState)("env");
+  (0, import_react13.useEffect)(() => applyTheme(rootRef.current), []);
   const loadProject = async (id) => {
     if (!storage || typeof storage.getProject !== "function") {
       setIsMock(true);
@@ -3193,10 +3560,10 @@ function EnvPage(props) {
         setIsMock(false);
       }
     } catch (err) {
-      setError("\u52A0\u8F7D\u9879\u76EE\u5931\u8D25\uFF1A" + errText3(err));
+      setError("\u52A0\u8F7D\u9879\u76EE\u5931\u8D25\uFF1A" + errText4(err));
     }
   };
-  (0, import_react12.useEffect)(() => {
+  (0, import_react13.useEffect)(() => {
     const boot = async () => {
       if (storage && typeof storage.listProjects === "function") {
         try {
@@ -3208,7 +3575,7 @@ function EnvPage(props) {
             return;
           }
         } catch (err) {
-          setError("\u52A0\u8F7D\u9879\u76EE\u5217\u8868\u5931\u8D25\uFF1A" + errText3(err));
+          setError("\u52A0\u8F7D\u9879\u76EE\u5217\u8868\u5931\u8D25\uFF1A" + errText4(err));
         }
       }
       setIsMock(true);
@@ -3252,7 +3619,7 @@ function EnvPage(props) {
       setNotice("\u5DF2\u4FDD\u5B58\u73AF\u5883\uFF1A" + (saved && saved.name || payload.name));
       await loadProject(projectId);
     } catch (err) {
-      setError("\u4FDD\u5B58\u73AF\u5883\u5931\u8D25\uFF1A" + errText3(err));
+      setError("\u4FDD\u5B58\u73AF\u5883\u5931\u8D25\uFF1A" + errText4(err));
     }
   };
   const removeEnv = async (envId) => {
@@ -3266,7 +3633,7 @@ function EnvPage(props) {
       setNotice("\u5DF2\u5220\u9664\u73AF\u5883\uFF1A" + envId);
       await loadProject(projectId);
     } catch (err) {
-      setError("\u5220\u9664\u73AF\u5883\u5931\u8D25\uFF1A" + errText3(err));
+      setError("\u5220\u9664\u73AF\u5883\u5931\u8D25\uFF1A" + errText4(err));
     }
   };
   const saveGlobals = async () => {
@@ -3280,7 +3647,7 @@ function EnvPage(props) {
       setNotice("\u5DF2\u4FDD\u5B58\u5168\u5C40\u53D8\u91CF");
       await loadProject(projectId);
     } catch (err) {
-      setError("\u4FDD\u5B58\u5168\u5C40\u53D8\u91CF\u5931\u8D25\uFF1A" + errText3(err));
+      setError("\u4FDD\u5B58\u5168\u5C40\u53D8\u91CF\u5931\u8D25\uFF1A" + errText4(err));
     }
   };
   const draftVars = normalizeVars(draft.variables);
@@ -3366,9 +3733,9 @@ function EnvPage(props) {
 }
 
 // src/client/pages/history.jsx
-var import_react13 = __toESM(require("react"), 1);
+var import_react14 = __toESM(require("react"), 1);
 (window.__postapiQueue = window.__postapiQueue || []).push(["history", HistoryPage]);
-var REPLAY_KEY = "postapi.debug.replay";
+var REPLAY_KEY2 = "postapi.debug.replay";
 var MOCK_ENTRIES = [
   {
     id: "his_1001",
@@ -3424,22 +3791,22 @@ function replayPayload(entry) {
     body: typeof req.body === "string" ? req.body : ""
   };
 }
-function errText4(err) {
+function errText5(err) {
   return err && err.message ? err.message : String(err);
 }
 function HistoryPage(props) {
-  const rootRef = (0, import_react13.useRef)(null);
+  const rootRef = (0, import_react14.useRef)(null);
   const api = props && props.api || (typeof window !== "undefined" ? window.__postapiApi : void 0);
   const storage = api && api.storage;
-  const [projects, setProjects] = (0, import_react13.useState)([{ id: "proj_demo01", name: "\u8BA2\u5355\u4E2D\u5FC3" }]);
-  const [projectId, setProjectId] = (0, import_react13.useState)("proj_demo01");
-  const [entries, setEntries] = (0, import_react13.useState)(MOCK_ENTRIES);
-  const [isMock, setIsMock] = (0, import_react13.useState)(true);
-  const [error, setError] = (0, import_react13.useState)("");
-  const [notice, setNotice] = (0, import_react13.useState)("");
-  const [detailId, setDetailId] = (0, import_react13.useState)("");
-  const [pendingClear, setPendingClear] = (0, import_react13.useState)(false);
-  (0, import_react13.useEffect)(() => applyTheme(rootRef.current), []);
+  const [projects, setProjects] = (0, import_react14.useState)([{ id: "proj_demo01", name: "\u8BA2\u5355\u4E2D\u5FC3" }]);
+  const [projectId, setProjectId] = (0, import_react14.useState)("proj_demo01");
+  const [entries, setEntries] = (0, import_react14.useState)(MOCK_ENTRIES);
+  const [isMock, setIsMock] = (0, import_react14.useState)(true);
+  const [error, setError] = (0, import_react14.useState)("");
+  const [notice, setNotice] = (0, import_react14.useState)("");
+  const [detailId, setDetailId] = (0, import_react14.useState)("");
+  const [pendingClear, setPendingClear] = (0, import_react14.useState)(false);
+  (0, import_react14.useEffect)(() => applyTheme(rootRef.current), []);
   const load = async (id) => {
     if (!storage || typeof storage.getHistory !== "function") {
       setIsMock(true);
@@ -3453,10 +3820,10 @@ function HistoryPage(props) {
       setIsMock(false);
       setError("");
     } catch (err) {
-      setError("\u52A0\u8F7D\u5386\u53F2\u5931\u8D25\uFF1A" + errText4(err));
+      setError("\u52A0\u8F7D\u5386\u53F2\u5931\u8D25\uFF1A" + errText5(err));
     }
   };
-  (0, import_react13.useEffect)(() => {
+  (0, import_react14.useEffect)(() => {
     const boot = async () => {
       if (storage && typeof storage.listProjects === "function") {
         try {
@@ -3468,7 +3835,7 @@ function HistoryPage(props) {
             return;
           }
         } catch (err) {
-          setError("\u52A0\u8F7D\u9879\u76EE\u5217\u8868\u5931\u8D25\uFF1A" + errText4(err));
+          setError("\u52A0\u8F7D\u9879\u76EE\u5217\u8868\u5931\u8D25\uFF1A" + errText5(err));
         }
       }
       setIsMock(true);
@@ -3477,10 +3844,10 @@ function HistoryPage(props) {
   }, []);
   const replay = (entry) => {
     try {
-      localStorage.setItem(REPLAY_KEY, JSON.stringify(replayPayload(entry)));
-      setNotice("\u5DF2\u5199\u5165\u56DE\u653E\u5FEB\u7167\uFF08" + REPLAY_KEY + "\uFF09\uFF0C\u5207\u5230\u8C03\u8BD5\u9875\u540E\u6309\u6B64\u5FEB\u7167\u91CD\u53D1");
+      localStorage.setItem(REPLAY_KEY2, JSON.stringify(replayPayload(entry)));
+      setNotice("\u5DF2\u5199\u5165\u56DE\u653E\u5FEB\u7167\uFF08" + REPLAY_KEY2 + "\uFF09\uFF0C\u5207\u5230\u8C03\u8BD5\u9875\u540E\u6309\u6B64\u5FEB\u7167\u91CD\u53D1");
     } catch (err) {
-      setError("\u5199\u5165\u56DE\u653E\u5FEB\u7167\u5931\u8D25\uFF1A" + errText4(err));
+      setError("\u5199\u5165\u56DE\u653E\u5FEB\u7167\u5931\u8D25\uFF1A" + errText5(err));
       return;
     }
     window.location.hash = "#/debug";
@@ -3502,7 +3869,7 @@ function HistoryPage(props) {
       setNotice("\u5DF2\u6E05\u7A7A\u5386\u53F2\uFF1A" + (res && res.cleared || 0) + " \u6761");
       await load(projectId);
     } catch (err) {
-      setError("\u6E05\u7A7A\u5386\u53F2\u5931\u8D25\uFF1A" + errText4(err));
+      setError("\u6E05\u7A7A\u5386\u53F2\u5931\u8D25\uFF1A" + errText5(err));
     }
   };
   const detail = entries.find((e) => e.id === detailId);
@@ -3521,7 +3888,7 @@ function HistoryPage(props) {
 }
 
 // src/client/pages/test.jsx
-var import_react14 = __toESM(require("react"), 1);
+var import_react15 = __toESM(require("react"), 1);
 (window.__postapiQueue = window.__postapiQueue || []).push(["test", TestPage]);
 var OPS = ["eq", "neq", "gt", "lt", "contains", "notContains", "exists", "notExists", "regex"];
 var SOURCES = ["status", "body", "header", "time"];
@@ -3590,27 +3957,27 @@ function scenariosOf(project) {
   const src = Array.isArray(p.testScenarios) ? p.testScenarios : Array.isArray(settings.testScenarios) ? settings.testScenarios : [];
   return src.filter((s) => s && typeof s === "object");
 }
-function errText5(err) {
+function errText6(err) {
   return err && err.message ? err.message : String(err);
 }
 function TestPage(props) {
-  const rootRef = (0, import_react14.useRef)(null);
+  const rootRef = (0, import_react15.useRef)(null);
   const api = props && props.api || (typeof window !== "undefined" ? window.__postapiApi : void 0);
   const storage = api && api.storage;
-  const [projects, setProjects] = (0, import_react14.useState)([{ id: "proj_demo01", name: "\u8BA2\u5355\u4E2D\u5FC3" }]);
-  const [projectId, setProjectId] = (0, import_react14.useState)("proj_demo01");
-  const [project, setProject] = (0, import_react14.useState)({ endpoints: [] });
-  const [cases, setCases] = (0, import_react14.useState)(MOCK_CASES);
-  const [scenarios, setScenarios] = (0, import_react14.useState)(MOCK_SCENARIOS);
-  const [isMock, setIsMock] = (0, import_react14.useState)(true);
-  const [error, setError] = (0, import_react14.useState)("");
-  const [notice, setNotice] = (0, import_react14.useState)("");
-  const [tab, setTab] = (0, import_react14.useState)("cases");
-  const [activeCaseId, setActiveCaseId] = (0, import_react14.useState)(MOCK_CASES[0].id);
-  const [activeScenarioId, setActiveScenarioId] = (0, import_react14.useState)(MOCK_SCENARIOS[0].id);
-  const [result, setResult] = (0, import_react14.useState)(null);
-  const [running, setRunning] = (0, import_react14.useState)(false);
-  (0, import_react14.useEffect)(() => applyTheme(rootRef.current), []);
+  const [projects, setProjects] = (0, import_react15.useState)([{ id: "proj_demo01", name: "\u8BA2\u5355\u4E2D\u5FC3" }]);
+  const [projectId, setProjectId] = (0, import_react15.useState)("proj_demo01");
+  const [project, setProject] = (0, import_react15.useState)({ endpoints: [] });
+  const [cases, setCases] = (0, import_react15.useState)(MOCK_CASES);
+  const [scenarios, setScenarios] = (0, import_react15.useState)(MOCK_SCENARIOS);
+  const [isMock, setIsMock] = (0, import_react15.useState)(true);
+  const [error, setError] = (0, import_react15.useState)("");
+  const [notice, setNotice] = (0, import_react15.useState)("");
+  const [tab, setTab] = (0, import_react15.useState)("cases");
+  const [activeCaseId, setActiveCaseId] = (0, import_react15.useState)(MOCK_CASES[0].id);
+  const [activeScenarioId, setActiveScenarioId] = (0, import_react15.useState)(MOCK_SCENARIOS[0].id);
+  const [result, setResult] = (0, import_react15.useState)(null);
+  const [running, setRunning] = (0, import_react15.useState)(false);
+  (0, import_react15.useEffect)(() => applyTheme(rootRef.current), []);
   const loadProject = async (id) => {
     if (!storage || typeof storage.getProject !== "function") {
       setIsMock(true);
@@ -3625,10 +3992,10 @@ function TestPage(props) {
         setIsMock(false);
       }
     } catch (err) {
-      setError("\u52A0\u8F7D\u9879\u76EE\u5931\u8D25\uFF1A" + errText5(err));
+      setError("\u52A0\u8F7D\u9879\u76EE\u5931\u8D25\uFF1A" + errText6(err));
     }
   };
-  (0, import_react14.useEffect)(() => {
+  (0, import_react15.useEffect)(() => {
     const boot = async () => {
       if (storage && typeof storage.listProjects === "function") {
         try {
@@ -3640,7 +4007,7 @@ function TestPage(props) {
             return;
           }
         } catch (err) {
-          setError("\u52A0\u8F7D\u9879\u76EE\u5217\u8868\u5931\u8D25\uFF1A" + errText5(err));
+          setError("\u52A0\u8F7D\u9879\u76EE\u5217\u8868\u5931\u8D25\uFF1A" + errText6(err));
         }
       }
       setIsMock(true);
@@ -3708,7 +4075,7 @@ function TestPage(props) {
       setNotice("\u5DF2\u4FDD\u5B58\u7528\u4F8B\u4E0E\u573A\u666F\uFF08\u843D\u5728 project.settings.testCases / testScenarios\uFF09");
       return true;
     } catch (err) {
-      setError("\u4FDD\u5B58\u7528\u4F8B\u4E0E\u573A\u666F\u5931\u8D25\uFF1A" + errText5(err));
+      setError("\u4FDD\u5B58\u7528\u4F8B\u4E0E\u573A\u666F\u5931\u8D25\uFF1A" + errText6(err));
       return false;
     }
   };
@@ -3725,7 +4092,7 @@ function TestPage(props) {
       const res = await api.test.runCase(projectId, activeCase.id);
       setResult({ kind: "case", name: activeCase.name, ...summarizeResult(res) });
     } catch (err) {
-      setError("\u8FD0\u884C\u7528\u4F8B\u5931\u8D25\uFF1A" + errText5(err));
+      setError("\u8FD0\u884C\u7528\u4F8B\u5931\u8D25\uFF1A" + errText6(err));
     } finally {
       setRunning(false);
     }
@@ -3743,7 +4110,7 @@ function TestPage(props) {
       const res = await api.test.runScenario(projectId, activeScenario.id);
       setResult({ kind: "scenario", name: activeScenario.name, ...summarizeResult(res) });
     } catch (err) {
-      setError("\u8FD0\u884C\u573A\u666F\u5931\u8D25\uFF1A" + errText5(err));
+      setError("\u8FD0\u884C\u573A\u666F\u5931\u8D25\uFF1A" + errText6(err));
     } finally {
       setRunning(false);
     }
@@ -3857,7 +4224,7 @@ function TestPage(props) {
 }
 
 // src/client/pages/import.jsx
-var import_react15 = __toESM(require("react"), 1);
+var import_react16 = __toESM(require("react"), 1);
 (window.__postapiQueue = window.__postapiQueue || []).push(["import", ImportPage]);
 var IO_TABS = [
   { id: "import", label: "\u5BFC\u5165" },
@@ -3916,30 +4283,30 @@ function importSummary(res) {
     schemas: count(data.schemas)
   };
 }
-function errText6(err) {
+function errText7(err) {
   return err && err.message ? err.message : String(err);
 }
 function ImportPage(props) {
-  const rootRef = (0, import_react15.useRef)(null);
+  const rootRef = (0, import_react16.useRef)(null);
   const api = props && props.api || (typeof window !== "undefined" ? window.__postapiApi : void 0);
   const storage = api && api.storage;
-  const [projects, setProjects] = (0, import_react15.useState)([{ id: "proj_demo01", name: "\u8BA2\u5355\u4E2D\u5FC3" }]);
-  const [projectId, setProjectId] = (0, import_react15.useState)("proj_demo01");
-  const [isMock, setIsMock] = (0, import_react15.useState)(true);
-  const [error, setError] = (0, import_react15.useState)("");
-  const [notice, setNotice] = (0, import_react15.useState)("");
-  const [ioTab, setIoTab] = (0, import_react15.useState)("import");
-  const [importKind, setImportKind] = (0, import_react15.useState)("openapi");
-  const [importText, setImportText] = (0, import_react15.useState)(MOCK_CURL);
-  const [importOut, setImportOut] = (0, import_react15.useState)("");
-  const [bundle, setBundle] = (0, import_react15.useState)(null);
-  const [exportKind, setExportKind] = (0, import_react15.useState)("openapi");
-  const [exportOut, setExportOut] = (0, import_react15.useState)("");
-  const [lang, setLang] = (0, import_react15.useState)("curl");
-  const [codeOut, setCodeOut] = (0, import_react15.useState)("");
-  const [busy, setBusy] = (0, import_react15.useState)(false);
-  (0, import_react15.useEffect)(() => applyTheme(rootRef.current), []);
-  (0, import_react15.useEffect)(() => {
+  const [projects, setProjects] = (0, import_react16.useState)([{ id: "proj_demo01", name: "\u8BA2\u5355\u4E2D\u5FC3" }]);
+  const [projectId, setProjectId] = (0, import_react16.useState)("proj_demo01");
+  const [isMock, setIsMock] = (0, import_react16.useState)(true);
+  const [error, setError] = (0, import_react16.useState)("");
+  const [notice, setNotice] = (0, import_react16.useState)("");
+  const [ioTab, setIoTab] = (0, import_react16.useState)("import");
+  const [importKind, setImportKind] = (0, import_react16.useState)("openapi");
+  const [importText, setImportText] = (0, import_react16.useState)(MOCK_CURL);
+  const [importOut, setImportOut] = (0, import_react16.useState)("");
+  const [bundle, setBundle] = (0, import_react16.useState)(null);
+  const [exportKind, setExportKind] = (0, import_react16.useState)("openapi");
+  const [exportOut, setExportOut] = (0, import_react16.useState)("");
+  const [lang, setLang] = (0, import_react16.useState)("curl");
+  const [codeOut, setCodeOut] = (0, import_react16.useState)("");
+  const [busy, setBusy] = (0, import_react16.useState)(false);
+  (0, import_react16.useEffect)(() => applyTheme(rootRef.current), []);
+  (0, import_react16.useEffect)(() => {
     const boot = async () => {
       if (!storage || typeof storage.listProjects !== "function") return;
       try {
@@ -3950,7 +4317,7 @@ function ImportPage(props) {
           setIsMock(false);
         }
       } catch (err) {
-        setError("\u52A0\u8F7D\u9879\u76EE\u5217\u8868\u5931\u8D25\uFF1A" + errText6(err));
+        setError("\u52A0\u8F7D\u9879\u76EE\u5217\u8868\u5931\u8D25\uFF1A" + errText7(err));
       }
     };
     boot();
@@ -3977,7 +4344,7 @@ function ImportPage(props) {
       try {
         payload = JSON.parse(raw);
       } catch (err) {
-        setError("\u5BFC\u5165\u5185\u5BB9\u4E0D\u662F\u5408\u6CD5 JSON\uFF1A" + errText6(err));
+        setError("\u5BFC\u5165\u5185\u5BB9\u4E0D\u662F\u5408\u6CD5 JSON\uFF1A" + errText7(err));
         return;
       }
     }
@@ -3992,7 +4359,7 @@ function ImportPage(props) {
       setBundle(res && res.data !== void 0 ? res.data : res);
       setNotice("\u89E3\u6790\u5B8C\u6210\uFF1A\u63A5\u53E3 " + summary.endpoints + " \u6761 / \u76EE\u5F55 " + summary.folders + " \u4E2A / \u6A21\u578B " + summary.schemas + " \u4E2A\uFF0C\u70B9\u300C\u4FDD\u5B58\u5230\u9879\u76EE\u300D\u5199\u5165\u5F53\u524D\u9879\u76EE");
     } catch (err) {
-      setError("\u5BFC\u5165\u5931\u8D25\uFF1A" + errText6(err));
+      setError("\u5BFC\u5165\u5931\u8D25\uFF1A" + errText7(err));
     } finally {
       setBusy(false);
     }
@@ -4014,7 +4381,7 @@ function ImportPage(props) {
       const num = (v) => typeof v === "number" ? v : 0;
       setNotice("\u5DF2\u4FDD\u5B58\u5230\u9879\u76EE\uFF1A\u76EE\u5F55 " + num(written.folders) + " \u4E2A / \u63A5\u53E3 " + num(written.endpoints) + " \u4E2A / \u6A21\u578B " + num(written.schemas) + " \u4E2A");
     } catch (err) {
-      setError("\u4FDD\u5B58\u5931\u8D25\uFF1A" + errText6(err));
+      setError("\u4FDD\u5B58\u5931\u8D25\uFF1A" + errText7(err));
     } finally {
       setBusy(false);
     }
@@ -4040,7 +4407,7 @@ function ImportPage(props) {
       setExportOut(resultText(res));
       setNotice("\u5BFC\u51FA\u5B8C\u6210\uFF1A" + id);
     } catch (err) {
-      setError("\u5BFC\u51FA\u5931\u8D25\uFF1A" + errText6(err));
+      setError("\u5BFC\u51FA\u5931\u8D25\uFF1A" + errText7(err));
     } finally {
       setBusy(false);
     }
@@ -4058,7 +4425,7 @@ function ImportPage(props) {
       setCodeOut(resultText(res));
       setNotice("\u4EE3\u7801\u751F\u6210\u5B8C\u6210\uFF1A" + lang);
     } catch (err) {
-      setError("\u4EE3\u7801\u751F\u6210\u5931\u8D25\uFF1A" + errText6(err));
+      setError("\u4EE3\u7801\u751F\u6210\u5931\u8D25\uFF1A" + errText7(err));
     } finally {
       setBusy(false);
     }
@@ -4076,7 +4443,7 @@ function ImportPage(props) {
         setError("\u5F53\u524D\u73AF\u5883\u65E0\u526A\u8D34\u677F\u6743\u9650\uFF0C\u8BF7\u624B\u52A8\u9009\u4E2D\u4E0B\u65B9\u6587\u672C\u590D\u5236");
       }
     } catch (err) {
-      setError("\u590D\u5236\u5931\u8D25\uFF1A" + errText6(err));
+      setError("\u590D\u5236\u5931\u8D25\uFF1A" + errText7(err));
     }
   };
   const currentImport = IMPORT_KINDS.find((k) => k.id === importKind) || IMPORT_KINDS[0];
@@ -4131,10 +4498,10 @@ function ImportPage(props) {
 }
 
 // src/client/pages/flow.jsx
-var import_react17 = __toESM(require("react"), 1);
+var import_react18 = __toESM(require("react"), 1);
 
 // src/client/pages/sequence.jsx
-var import_react16 = require("react");
+var import_react17 = require("react");
 var ACTOR_GAP = 150;
 var MIN_W = 480;
 var MAX_W = 960;
@@ -4270,7 +4637,7 @@ function maskWidth(text) {
   return Math.max(24, Math.round(text.length * 5 + 10));
 }
 function SequenceDiagram({ steps, idPrefix = "flow-seq", title = "\u65F6\u5E8F\u56FE", desc = "\u63A5\u53E3\u8C03\u7528\u65F6\u5E8F", svgRef: externalSvgRef, activeIndex = -1, onSelectRow }) {
-  const innerRef = (0, import_react16.useRef)(null);
+  const innerRef = (0, import_react17.useRef)(null);
   const svgRef = externalSvgRef || innerRef;
   if (!steps || steps.length === 0) return null;
   const L = layoutSequence(steps);
@@ -4651,27 +5018,27 @@ function saveDraft(steps) {
   } catch {
   }
 }
-function errText7(err) {
+function errText8(err) {
   return err && err.message ? err.message : String(err);
 }
 function FlowPage(props) {
-  const rootRef = (0, import_react17.useRef)(null);
-  const svgRef = (0, import_react17.useRef)(null);
+  const rootRef = (0, import_react18.useRef)(null);
+  const svgRef = (0, import_react18.useRef)(null);
   const api = props && props.api || (typeof window !== "undefined" ? window.__postapiApi : void 0);
   const storage = api && api.storage;
-  const [projects, setProjects] = (0, import_react17.useState)([{ id: "proj_demo01", name: "\u8BA2\u5355\u4E2D\u5FC3" }]);
-  const [projectId, setProjectId] = (0, import_react17.useState)("proj_demo01");
-  const [flowName, setFlowName] = (0, import_react17.useState)("\u63A5\u53E3\u8C03\u8BD5\u65F6\u5E8F");
-  const [steps, setSteps] = (0, import_react17.useState)(() => loadDraft() || DEFAULT_STEPS);
-  const [isMock, setIsMock] = (0, import_react17.useState)(true);
-  const [error, setError] = (0, import_react17.useState)("");
-  const [notice, setNotice] = (0, import_react17.useState)("");
-  const [activeIdx, setActiveIdx] = (0, import_react17.useState)(0);
-  (0, import_react17.useEffect)(() => {
+  const [projects, setProjects] = (0, import_react18.useState)([{ id: "proj_demo01", name: "\u8BA2\u5355\u4E2D\u5FC3" }]);
+  const [projectId, setProjectId] = (0, import_react18.useState)("proj_demo01");
+  const [flowName, setFlowName] = (0, import_react18.useState)("\u63A5\u53E3\u8C03\u8BD5\u65F6\u5E8F");
+  const [steps, setSteps] = (0, import_react18.useState)(() => loadDraft() || DEFAULT_STEPS);
+  const [isMock, setIsMock] = (0, import_react18.useState)(true);
+  const [error, setError] = (0, import_react18.useState)("");
+  const [notice, setNotice] = (0, import_react18.useState)("");
+  const [activeIdx, setActiveIdx] = (0, import_react18.useState)(0);
+  (0, import_react18.useEffect)(() => {
     applyTheme(rootRef.current);
     saveDraft(steps);
   }, [steps]);
-  (0, import_react17.useEffect)(() => {
+  (0, import_react18.useEffect)(() => {
     const boot = async () => {
       if (!storage || typeof storage.listProjects !== "function") return;
       try {
@@ -4690,7 +5057,7 @@ function FlowPage(props) {
           }
         }
       } catch (err) {
-        setError("\u52A0\u8F7D\u9879\u76EE\u5931\u8D25\uFF1A" + errText7(err));
+        setError("\u52A0\u8F7D\u9879\u76EE\u5931\u8D25\uFF1A" + errText8(err));
       }
     };
     boot();
@@ -4735,7 +5102,7 @@ function FlowPage(props) {
         setNotice("\u8BE5\u9879\u76EE\u5C1A\u65E0\u6D41\u7A0B\u56FE\uFF0C\u53EF\u7F16\u8F91\u540E\u4FDD\u5B58");
       }
     } catch (err) {
-      setError("\u8F7D\u5165\u6D41\u7A0B\u56FE\u5931\u8D25\uFF1A" + errText7(err));
+      setError("\u8F7D\u5165\u6D41\u7A0B\u56FE\u5931\u8D25\uFF1A" + errText8(err));
     }
   };
   const persist = async () => {
@@ -4749,7 +5116,7 @@ function FlowPage(props) {
       await storage.saveFlow(projectId, payload);
       setNotice("\u5DF2\u4FDD\u5B58\u6D41\u7A0B\u56FE\uFF1A" + (payload.name || "\u672A\u547D\u540D") + "\uFF08" + payload.steps.length + " \u6B65\uFF09");
     } catch (err) {
-      setError("\u4FDD\u5B58\u6D41\u7A0B\u56FE\u5931\u8D25\uFF1A" + errText7(err));
+      setError("\u4FDD\u5B58\u6D41\u7A0B\u56FE\u5931\u8D25\uFF1A" + errText8(err));
     }
   };
   const copyJson = async () => {
@@ -4760,7 +5127,7 @@ function FlowPage(props) {
         setNotice("flow JSON \u5DF2\u590D\u5236");
         return;
       } catch (err) {
-        setError("\u590D\u5236\u5931\u8D25\uFF1A" + errText7(err));
+        setError("\u590D\u5236\u5931\u8D25\uFF1A" + errText8(err));
         return;
       }
     }
@@ -4890,7 +5257,7 @@ function FlowPage(props) {
 }
 
 // src/client/pages/search.jsx
-var import_react18 = __toESM(require("react"), 1);
+var import_react19 = __toESM(require("react"), 1);
 (window.__postapiQueue = window.__postapiQueue || []).push(["search", SearchPage]);
 var MOCK_RESULT = {
   endpoints: [{ id: "ep_1001", name: "\u67E5\u8BE2\u8BA2\u5355\u5217\u8868", method: "GET", url: "/api/v1/orders" }],
@@ -4920,7 +5287,7 @@ function groupResults(res) {
 function hasKeyword(keyword) {
   return String(keyword || "").trim().length > 0;
 }
-function errText8(err) {
+function errText9(err) {
   return err && err.message ? err.message : String(err);
 }
 function markParts(text, keyword) {
@@ -4952,20 +5319,20 @@ function readQueryKeyword(query) {
   }
 }
 function SearchPage(props) {
-  const rootRef = (0, import_react18.useRef)(null);
+  const rootRef = (0, import_react19.useRef)(null);
   const api = props && props.api || (typeof window !== "undefined" ? window.__postapiApi : void 0);
   const storage = api && api.storage;
   const route = props && props.route || {};
-  const [projects, setProjects] = (0, import_react18.useState)([{ id: "proj_demo01", name: "\u8BA2\u5355\u4E2D\u5FC3" }]);
-  const [projectId, setProjectId] = (0, import_react18.useState)("proj_demo01");
-  const [keyword, setKeyword] = (0, import_react18.useState)(() => readQueryKeyword(route.query));
-  const [groups, setGroups] = (0, import_react18.useState)(groupResults(MOCK_RESULT));
-  const [isMock, setIsMock] = (0, import_react18.useState)(true);
-  const [searched, setSearched] = (0, import_react18.useState)(false);
-  const [collapsed, setCollapsed] = (0, import_react18.useState)({});
-  const [error, setError] = (0, import_react18.useState)("");
-  (0, import_react18.useEffect)(() => applyTheme(rootRef.current), []);
-  (0, import_react18.useEffect)(() => {
+  const [projects, setProjects] = (0, import_react19.useState)([{ id: "proj_demo01", name: "\u8BA2\u5355\u4E2D\u5FC3" }]);
+  const [projectId, setProjectId] = (0, import_react19.useState)("proj_demo01");
+  const [keyword, setKeyword] = (0, import_react19.useState)(() => readQueryKeyword(route.query));
+  const [groups, setGroups] = (0, import_react19.useState)(groupResults(MOCK_RESULT));
+  const [isMock, setIsMock] = (0, import_react19.useState)(true);
+  const [searched, setSearched] = (0, import_react19.useState)(false);
+  const [collapsed, setCollapsed] = (0, import_react19.useState)({});
+  const [error, setError] = (0, import_react19.useState)("");
+  (0, import_react19.useEffect)(() => applyTheme(rootRef.current), []);
+  (0, import_react19.useEffect)(() => {
     const boot = async () => {
       if (!storage || typeof storage.listProjects !== "function") return;
       try {
@@ -4976,7 +5343,7 @@ function SearchPage(props) {
           setIsMock(false);
         }
       } catch (err) {
-        setError("\u52A0\u8F7D\u9879\u76EE\u5217\u8868\u5931\u8D25\uFF1A" + errText8(err));
+        setError("\u52A0\u8F7D\u9879\u76EE\u5217\u8868\u5931\u8D25\uFF1A" + errText9(err));
       }
     };
     boot();
@@ -4996,7 +5363,7 @@ function SearchPage(props) {
       setGroups(groupResults(res));
       setSearched(true);
     } catch (err) {
-      setError("\u641C\u7D22\u5931\u8D25\uFF1A" + errText8(err));
+      setError("\u641C\u7D22\u5931\u8D25\uFF1A" + errText9(err));
     }
   };
   const jump = (hash) => {
@@ -5048,7 +5415,7 @@ function SearchPage(props) {
 }
 
 // src/client/pages/settings.jsx
-var import_react19 = __toESM(require("react"), 1);
+var import_react20 = __toESM(require("react"), 1);
 (window.__postapiQueue = window.__postapiQueue || []).push(["settings", SettingsPage]);
 var DEFAULT_STORE_ROOT = "E:/User/\u6587\u6863/api";
 var DEFAULT_SETTINGS = { mockPort: 4010, proxyUrl: "", requestTimeoutMs: 3e4, historyLimit: 200 };
@@ -5074,26 +5441,26 @@ function storeRootOf(injected) {
     return DEFAULT_STORE_ROOT;
   }
 }
-function errText9(err) {
+function errText10(err) {
   return err && err.message ? err.message : String(err);
 }
 function SettingsPage(props) {
-  const rootRef = (0, import_react19.useRef)(null);
+  const rootRef = (0, import_react20.useRef)(null);
   const api = props && props.api || (typeof window !== "undefined" ? window.__postapiApi : void 0);
   const storage = api && api.storage;
-  const [projects, setProjects] = (0, import_react19.useState)([{ id: "proj_demo01", name: "\u8BA2\u5355\u4E2D\u5FC3" }]);
-  const [projectId, setProjectId] = (0, import_react19.useState)("proj_demo01");
-  const [storeRoot, setStoreRoot] = (0, import_react19.useState)(() => storeRootOf(api && api.storeRoot));
-  const [theme, setTheme] = (0, import_react19.useState)(readTheme);
-  const [locale, setLocale] = (0, import_react19.useState)(readLocale);
-  const [settings, setSettings] = (0, import_react19.useState)(DEFAULT_SETTINGS);
-  const [isMock, setIsMock] = (0, import_react19.useState)(true);
-  const [error, setError] = (0, import_react19.useState)("");
-  const [notice, setNotice] = (0, import_react19.useState)("");
-  (0, import_react19.useEffect)(() => {
+  const [projects, setProjects] = (0, import_react20.useState)([{ id: "proj_demo01", name: "\u8BA2\u5355\u4E2D\u5FC3" }]);
+  const [projectId, setProjectId] = (0, import_react20.useState)("proj_demo01");
+  const [storeRoot, setStoreRoot] = (0, import_react20.useState)(() => storeRootOf(api && api.storeRoot));
+  const [theme, setTheme] = (0, import_react20.useState)(readTheme);
+  const [locale, setLocale] = (0, import_react20.useState)(readLocale);
+  const [settings, setSettings] = (0, import_react20.useState)(DEFAULT_SETTINGS);
+  const [isMock, setIsMock] = (0, import_react20.useState)(true);
+  const [error, setError] = (0, import_react20.useState)("");
+  const [notice, setNotice] = (0, import_react20.useState)("");
+  (0, import_react20.useEffect)(() => {
     applyTheme(rootRef.current);
   }, []);
-  (0, import_react19.useEffect)(() => {
+  (0, import_react20.useEffect)(() => {
     const boot = async () => {
       if (!storage || typeof storage.listProjects !== "function") return;
       try {
@@ -5108,7 +5475,7 @@ function SettingsPage(props) {
           }
         }
       } catch (err) {
-        setError("\u52A0\u8F7D\u8BBE\u7F6E\u5931\u8D25\uFF1A" + errText9(err));
+        setError("\u52A0\u8F7D\u8BBE\u7F6E\u5931\u8D25\uFF1A" + errText10(err));
       }
     };
     boot();
@@ -5140,7 +5507,7 @@ function SettingsPage(props) {
       setSettings(payload);
       setNotice("\u5DF2\u4FDD\u5B58\u9879\u76EE\u8BBE\u7F6E");
     } catch (err) {
-      setError("\u4FDD\u5B58\u8BBE\u7F6E\u5931\u8D25\uFF1A" + errText9(err));
+      setError("\u4FDD\u5B58\u8BBE\u7F6E\u5931\u8D25\uFF1A" + errText10(err));
     }
   };
   const reloadProject = async (id) => {
@@ -5154,7 +5521,7 @@ function SettingsPage(props) {
       if (loaded) setSettings(normalizeSettings(loaded.settings));
       setNotice("\u5DF2\u8F7D\u5165\u9879\u76EE\u8BBE\u7F6E");
     } catch (err) {
-      setError("\u8F7D\u5165\u8BBE\u7F6E\u5931\u8D25\uFF1A" + errText9(err));
+      setError("\u8F7D\u5165\u8BBE\u7F6E\u5931\u8D25\uFF1A" + errText10(err));
     }
   };
   return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page", "data-page": "settings", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-overview-title" }, "\u8BBE\u7F6E"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-actions" }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: persist }, "\u4FDD\u5B58\u9879\u76EE\u8BBE\u7F6E"))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-content" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, isMock ? "\u793A\u4F8B\u6570\u636E \u2014 api.storage \u4E0D\u53EF\u7528\uFF0C\u9879\u76EE\u8BBE\u7F6E\u9879\u4E3A\u6587\u4EF6\u5185\u9ED8\u8BA4\u503C" : "\u6570\u636E\u6765\u6E90\uFF1Aapi.storage\uFF08getProject / saveProjectSettings\uFF09")), error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-error-text" }, error) : null, notice ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-note pp-note-ok" }, notice) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-cols-2" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u5916\u89C2\u4E0E\u5B58\u50A8"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u5B58\u50A8\u8DEF\u5F84"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { flex: 1 }, readOnly: true, value: storeRoot })), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-grid", style: { marginBottom: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u4E3B\u9898"), /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: theme, onChange: (e) => applyThemeChoice(e.target.value) }, /* @__PURE__ */ (0, import_react.createElement)("option", { value: "light" }, "\u6D45\u8272"), /* @__PURE__ */ (0, import_react.createElement)("option", { value: "dark" }, "\u6DF1\u8272")), /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u8BED\u8A00"), /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: locale, onChange: (e) => applyLocaleChoice(e.target.value) }, /* @__PURE__ */ (0, import_react.createElement)("option", { value: "zh-CN" }, "\u7B80\u4F53\u4E2D\u6587"), /* @__PURE__ */ (0, import_react.createElement)("option", { value: "en" }, "English"))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-note" }, "\u5B58\u50A8\u6839\u76EE\u5F55\u7531 host \u6784\u9020\u53C2\u6570\u6CE8\u5165\uFF08createStorageService(basePath)\uFF09\uFF0C\u9875\u9762\u53EA\u8BFB\u5C55\u793A\uFF0C\u4E0D\u53EF\u4FEE\u6539\u3002")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u9879\u76EE\u8BBE\u7F6E"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-grid", style: { marginBottom: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u9879\u76EE"), /* @__PURE__ */ (0, import_react.createElement)(
@@ -5232,13 +5599,13 @@ function safeEffect(ctx, label, body) {
   }, label);
 }
 function ComposerBadge() {
-  return (0, import_react20.createElement)("svg", {
+  return (0, import_react21.createElement)("svg", {
     viewBox: "0 0 64 64",
     width: 16,
     height: 16,
     "aria-hidden": true,
     style: { display: "block", pointerEvents: "none" }
-  }, (0, import_react20.createElement)("path", { d: "M6 50 L54 26 L6 8 L6 24 L36 26 L6 28 Z", fill: "currentColor" }));
+  }, (0, import_react21.createElement)("path", { d: "M6 50 L54 26 L6 8 L6 24 L36 26 L6 28 Z", fill: "currentColor" }));
 }
 function apply(ctx) {
   console.info("[dsh-postapi] client apply \u5DF2\u6267\u884C", { hasTabs: !!ctx.sidebarRightTabs, hasSlots: !!ctx.slots, hasLocale: !!ctx.locale });

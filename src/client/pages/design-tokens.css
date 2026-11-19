@@ -2503,3 +2503,102 @@
   cursor: not-allowed;
 }
 
+/* —— 调试台上下分栏：请求区在上、响应区在下 —— */
+/* 单栏结构（Apifox .apiCase 整页纵向排布）：两区都可收缩，
+   滚动交给各自内部容器，外层不再撑高。 */
+.pp-debug-split {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  min-height: 0;
+}
+/* 请求区：只负责收窄，不抢高度 */
+.pp-debug-request {
+  min-width: 0;
+  min-height: 0;
+}
+/* 响应区：占满剩余高度，内容超高时自己滚动 */
+.pp-debug-response {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+}
+
+/* —— BodyEditor 顶部类型行：类型选择在左、动作按钮在右，与编辑器用分隔线隔开 —— */
+.pp-body-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  padding-bottom: var(--sp-2);
+  border-bottom: 1px solid var(--border);
+}
+
+/* —— ScriptPanel 每段容器（前置 / 后置）：内边距 + 段间底部间距 —— */
+.pp-script-block {
+  padding: var(--sp-2) 0;
+  margin-bottom: var(--sp-3);
+  min-width: 0;
+}
+.pp-script-block:last-child {
+  margin-bottom: 0;
+}
+
+/* —— 响应状态条：状态胶囊在左、耗时与大小居中、复制按钮靠右 —— */
+.pp-resp-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  min-width: 0;
+}
+.pp-resp-bar > .pp-pill {
+  flex: none;
+}
+/* 最后一个子元素（复制按钮）用自动外边距推到行尾，窄容器换行后仍贴右 */
+.pp-resp-bar > :last-child {
+  margin-left: auto;
+}
+
+/* —— 响应页签条：观感同 .pp-tabs，但上方有状态条，需要一条上边框把两者分开 —— */
+.pp-resp-tabs {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-1);
+  flex-wrap: wrap;
+  min-height: var(--ctl-h-lg);
+  padding: 0 var(--sp-3);
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+/* —— 页签计数：小号、次要色、不换行 —— */
+.pp-resp-count {
+  flex: none;
+  font-size: var(--fs-12);
+  color: var(--fg-tertiary);
+  white-space: nowrap;
+}
+
+/* —— 响应 Body 的 JSON 树：等宽字体、按层缩进、超高自己滚动（14 行）—— */
+.pp-json-tree {
+  margin: 0;
+  padding: var(--sp-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-12);
+  line-height: var(--lh-18);
+  color: var(--fg);
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  max-height: calc(var(--row-h) * 14);
+  overflow: auto;
+  white-space: pre;
+  tab-size: 2;
+}
+
+

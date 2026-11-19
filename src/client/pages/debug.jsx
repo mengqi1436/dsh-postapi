@@ -8,6 +8,9 @@ import { JsonEditor } from './components/JsonEditor.jsx'
 import { EmptyState } from './components/EmptyState.jsx'
 import { StatusPill } from './components/StatusPill.jsx'
 import { COMMON_HEADERS, filterHeaders } from './components/headerPresets.js'
+import { BodyEditor } from './components/BodyEditor.jsx'
+import { ScriptPanel } from './components/ScriptPanel.jsx'
+import { ResponsePanel } from './components/ResponsePanel.jsx'
 
 ;(window.__postapiQueue = window.__postapiQueue || []).push(['debug', DebugPage]) // 注册表就绪前入队，ensureGlobals 统一重放（模块求值顺序无关）
 
@@ -63,7 +66,12 @@ const TABS = [
   { id: 'headers', label: 'Headers' },
   { id: 'body', label: 'Body' },
   { id: 'auth', label: 'Auth' },
+  { id: 'script', label: '脚本' },
+  { id: 'settings', label: '设置' },
 ]
+
+/** 回放快照 key：与 history 页写入的 key 一致，切到调试页即按快照重填。 */
+const REPLAY_KEY = 'postapi.debug.replay'
 
 // 参数表列用 ParamTable 的默认列（启用/参数名/类型/必填/示例值/描述 + 操作），
 // 与 doc 页只读表同一套，避免两页列不一致。
@@ -95,6 +103,23 @@ function emptyDraft(ep) {
       addTo: (ep && ep.auth && ep.auth.addTo) || 'header',
     },
     responses: (ep && Array.isArray(ep.responses) ? ep.responses : []).map((r) => ({ ...r })),
+    // 前后置脚本 / 断言 / 发送前等待（Apifox 的「前置操作 / 后置操作」与「等待时间」）
+    preScript: (ep && ep.preScript) || '',
+    postScript: (ep && ep.postScript) || '',
+    assertions: (ep && Array.isArray(ep.assertions) ? ep.assertions : []).map((a) => ({ ...a })),
+    waitMs: Number.isFinite(ep && ep.waitMs) ? ep.waitMs : 0,
+  }
+}
+
+/** 读取 history 页写入的回放快照（无则 null）；结构 { method, url, headers, body }。 */
+export function readReplay() {
+  try {
+    const raw = typeof localStorage !== 'undefined' ? localStorage.getItem(REPLAY_KEY) : null
+    if (!raw) return null
+    const parsed = JSON.parse(raw)
+    return parsed && typeof parsed === 'object' ? parsed : null
+  } catch {
+    return null
   }
 }
 
@@ -195,7 +220,7 @@ export function DebugPage({ route, api }) {
   // 左树折叠态：{ folderId: true } 表示该目录已收起
   const [resp, setResp] = useState(null)
   const [sending, setSending] = useState(false)
-  const [bodyView, setBodyView] = useState('pretty')
+  const [timeoutMs, setTimeoutMs] = useState(30000)
   const [savedHint, setSavedHint] = useState('')
 
   // 载入项目（列表首个）
@@ -227,6 +252,24 @@ export function DebugPage({ route, api }) {
     return () => { cancelled = true }
   }, [apiRef])
 
+  // 历史页「回放」写入的快照：进入本页时读一次，把 method/url/headers/body 填进草稿
+  useEffect(() => {
+    const snap = readReplay()
+    if (!snap) return
+    setDraft((prev) => ({
+      ...prev,
+      method: snap.method || prev.method,
+      url: snap.url || prev.url,
+      headers: Array.isArray(snap.headers) && snap.headers.length
+        ? snap.headers.map((h) => ({ enabled: true, type: 'string', required: false, description: '', ...h }))
+        : prev.headers,
+      body: typeof snap.body === 'string' && snap.body
+        ? { ...prev.body, type: prev.body.type === 'none' ? 'json' : prev.body.type, content: snap.body }
+        : prev.body,
+    }))
+    try { localStorage.removeItem(REPLAY_KEY) } catch { /* 隐私模式忽略 */ }
+  }, [])
+
   const envs = useMemo(() => (Array.isArray(project && project.environments) ? project.environments : []), [project])
   const { table, env } = useMemo(() => varTable(project, envId), [project, envId])
   const varRefs = useMemo(() => collectVarRefs(draft), [draft])
@@ -251,7 +294,11 @@ export function DebugPage({ route, api }) {
       headers: draft.headers.filter((h) => h && h.enabled !== false && h.key),
       body: draft.body,
       auth: draft.auth,
-      timeoutMs: 30000,
+      timeoutMs: timeoutMs > 0 ? timeoutMs : 30000,
+      // 前后置脚本与断言：host request.send 已支持这三个字段（bridge 直通 request.js）
+      preScript: draft.preScript || undefined,
+      postScript: draft.postScript || undefined,
+      assertions: Array.isArray(draft.assertions) && draft.assertions.length ? draft.assertions : undefined,
       variables: {
         globals: project && project.globals ? project.globals.variables || [] : [],
         environment: env && Array.isArray(env.variables) ? env.variables : [],
@@ -274,7 +321,10 @@ export function DebugPage({ route, api }) {
       setSending(false)
       return
     }
+    // 发送前等待（Apifox「等待时间」）：仅在有值时延后，0 不引入额外 tick
+    const wait = Number(draft.waitMs) > 0 ? Number(draft.waitMs) : 0
     Promise.resolve()
+      .then(() => (wait > 0 ? new Promise((resolve) => setTimeout(resolve, wait)) : undefined))
       .then(() => requestApi.send(payload))
       .then((result) => {
         if (cancelled.cancelled) return
@@ -315,79 +365,17 @@ export function DebugPage({ route, api }) {
       .catch((err) => setSavedHint('保存失败：' + (err && err.message ? err.message : String(err))))
   }
 
-  const respBodyText = resp ? (bodyView === 'pretty' ? prettyJson(resp.body) : String(resp.body == null ? '' : resp.body)) : ''
-  const respHeaders = useMemo(() => {
-    const h = resp && resp.headers
-    if (!h || typeof h !== 'object') return []
-    return Object.keys(h).map((key) => ({ key, value: h[key] }))
-  }, [resp])
-
   const responsePanel = (
-    <section className="pp-pane">
-      <div className="pp-card-title">响应</div>
-      {!resp ? <EmptyState text="尚未发送请求" hint="填写 URL 后点「发送」" /> : null}
-      {resp && resp.error ? (
-        <p className="pp-note pp-note-bad">错误：{resp.error.message || String(resp.error)}</p>
-      ) : null}
-      {resp && !resp.error ? (
-        <div>
-          <div className="pp-toolbar-inline">
-            <StatusPill status={resp.status} text={resp.statusText || ''} />
-            <span className="pp-meta">{resp.timeMs == null ? '-' : resp.timeMs} ms</span>
-            <span className="pp-meta">{resp.bodySize == null ? '-' : resp.bodySize} B</span>
-            {resp.truncated ? <span className="pp-pill pp-pill-warn">已截断</span> : null}
-          </div>
-
-          <div className="pp-tabs" style={{ marginTop: 'var(--sp-2)' }}>
-            <button className="pp-tab" data-active={bodyView === 'pretty'} onClick={() => setBodyView('pretty')}>美化</button>
-            <button className="pp-tab" data-active={bodyView === 'raw'} onClick={() => setBodyView('raw')}>原文</button>
-          </div>
-          <pre className="pp-pre pp-pre-scroll" style={{ marginTop: 'var(--sp-2)' }}>{respBodyText}</pre>
-
-          {respHeaders.length > 0 ? (
-            <div style={{ marginTop: 'var(--sp-2)' }}>
-              <div className="pp-card-title">响应头</div>
-              <div className="pp-table-wrap"><ParamTable rows={respHeaders} readOnly columns={['key', 'value']} emptyText="无响应头" /></div>
-            </div>
-          ) : null}
-
-          <div style={{ marginTop: 'var(--sp-2)' }}>
-            <div className="pp-card-title">断言 / 脚本结果</div>
-            {Array.isArray(resp.tests) && resp.tests.length > 0 ? (
-              <table className="pp-table">
-                <thead><tr><th>名称</th><th style={{ width: '72px' }}>结果</th><th style={{ width: '160px' }}>错误</th></tr></thead>
-                <tbody>
-                  {resp.tests.map((t, i) => (
-                    <tr key={i}>
-                      <td>{t.name}</td>
-                      <td className={t.passed ? 'pp-ok' : 'pp-bad'}>{t.passed ? '通过' : '失败'}</td>
-                      <td className="pp-muted">{t.error || '-'}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            ) : (
-              <p className="pp-meta">无断言</p>
-            )}
-          </div>
-
-          {Array.isArray(resp.logs) && resp.logs.length > 0 ? (
-            <div style={{ marginTop: 'var(--sp-2)' }}>
-              <div className="pp-card-title">脚本日志</div>
-              <pre className="pp-pre pp-pre-scroll">{resp.logs.join('\n')}</pre>
-            </div>
-          ) : null}
-        </div>
-      ) : null}
+    <section className="pp-pane pp-debug-response">
+      <ResponsePanel resp={resp} sending={sending} onCancel={cancel} />
     </section>
   )
-
   return (
     <div className="pp-scope pp-page-flush" data-page="debug" ref={rootRef}>
       {/* Apifox 调试页是单栏：接口树就是左侧全局导航，页面内不再自带一份。
           之前自带 .pp-pane 树面板，窄容器下收成单列后变成一张铺满宽度的空白卡。 */}
-      <div className="pp-debug-page">
-        <section className="pp-pane">
+      <div className="pp-debug-page pp-debug-split">
+        <section className="pp-pane pp-debug-request">
           {/* URL 行（Apifox .main-input-bar）：40px 高，方法 + baseUrl 胶囊 + path + 发送按钮组 */}
           <div className="pp-url-row">
             {/* 方法徽标：Apifox .url-col-method 在 URL 行首显示彩色方法块 */}
@@ -411,7 +399,8 @@ export function DebugPage({ route, api }) {
               aria-label="请求路径"
             />
             <span className="pp-send-group">
-              <button className="pp-btn pp-btn-primary" onClick={send} disabled={sending}>
+              <button className="pp-btn pp-btn-primary" onClick={send} disabled={sending || !String(draft.url || '').trim()}
+                title={String(draft.url || '').trim() ? '' : '先填写请求路径'}>
                 {sending ? '发送中…' : '发送'}
               </button>
               <button className="pp-btn" onClick={cancel} disabled={!sending} title="取消本次发送">✕</button>
@@ -436,6 +425,12 @@ export function DebugPage({ route, api }) {
             ) : null}
             <a className="pp-meta" href="#/history">请求历史</a>
           </div>
+          {/* 空项目引导：真实项目还没有接口时，URL 为空、发送无意义，明确指引去哪里建 */}
+          {!isMock && !String(draft.url || '').trim() ? (
+            <p className="pp-note">
+              当前项目还没有接口，先到 <a href="#/doc">接口文档</a> 或 <a href="#/overview">总览</a> 新建一个，也可以直接在上方填写完整 URL 调试。
+            </p>
+          ) : null}
           {isMock ? <p className="pp-note pp-note-warn">示例数据 — window.__postapiApi 未注入或读取失败，发送将返回 mock 响应</p> : null}
           {error ? <p className="pp-note pp-note-bad">{error}</p> : null}
 
@@ -475,22 +470,38 @@ export function DebugPage({ route, api }) {
               </div>
             ) : null}
             {tab === 'body' ? (
+              <BodyEditor value={draft.body} onChange={(next) => patch('body', next)} />
+            ) : null}
+            {tab === 'script' ? (
+              <ScriptPanel
+                value={{ preScript: draft.preScript, postScript: draft.postScript, assertions: draft.assertions, waitMs: draft.waitMs }}
+                onChange={(next) => setDraft((prev) => ({ ...prev, ...next }))}
+              />
+            ) : null}
+            {tab === 'settings' ? (
               <div>
+                <div className="pp-group-title">发送设置</div>
                 <div className="pp-form-row">
-                  <label className="pp-form-label">类型</label>
-                  <select className="pp-select" value={draft.body.type} onChange={(e) => patch('body', { ...draft.body, type: e.target.value })}>
-                    {BODY_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
-                  </select>
+                  <label className="pp-form-label">超时 (ms)</label>
+                  <input className="pp-input pp-input-sm" style={{ flex: 1, maxWidth: 160 }} value={String(timeoutMs)}
+                    onChange={(e) => setTimeoutMs(Number(e.target.value.replace(/[^0-9]/g, '')) || 0)} />
                 </div>
-                {draft.body.type === 'none' ? (
-                  <EmptyState text="无请求体" hint="Body 类型选 none 时不发送请求体" />
-                ) : (
-                  <JsonEditor
-                    value={draft.body.content}
-                    rows={8}
-                    onChange={(next) => patch('body', { ...draft.body, content: next })}
-                  />
-                )}
+                <div className="pp-form-row">
+                  <label className="pp-form-label">等待 (ms)</label>
+                  <input className="pp-input pp-input-sm" style={{ flex: 1, maxWidth: 160 }} value={String(draft.waitMs || 0)}
+                    onChange={(e) => patch('waitMs', Number(e.target.value.replace(/[^0-9]/g, '')) || 0)} />
+                </div>
+                <div className="pp-group-title">请求概览</div>
+                <table className="pp-table">
+                  <tbody>
+                    <tr><td className="pp-meta">方法</td><td><span className="pp-method" data-method={draft.method}>{draft.method}</span></td></tr>
+                    <tr><td className="pp-meta">完整 URL</td><td className="pp-mono pp-ellipsis">{finalUrl || '（未填写）'}</td></tr>
+                    <tr><td className="pp-meta">环境</td><td>{env ? env.name : '（无环境）'}</td></tr>
+                    <tr><td className="pp-meta">变量</td><td>{varRefs.length ? varRefs.join('、') + (missingVars.length ? '（未定义：' + missingVars.join('、') + '）' : '（均已定义）') : '无'}</td></tr>
+                    <tr><td className="pp-meta">已启用参数</td><td>{draft.params.filter((p) => p && p.enabled !== false && p.key).length} 个 Query / {draft.pathParams.filter((p) => p && p.enabled !== false && p.key).length} 个 Path</td></tr>
+                    <tr><td className="pp-meta">已启用请求头</td><td>{draft.headers.filter((h) => h && h.enabled !== false && h.key).length} 个</td></tr>
+                  </tbody>
+                </table>
               </div>
             ) : null}
             {tab === 'auth' ? (

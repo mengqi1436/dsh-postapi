@@ -16,6 +16,9 @@ const FILE = {
   doc: join(PAGES_DIR, 'doc.jsx'),
   tree: join(COMPONENTS_DIR, 'FolderTree.jsx'),
   debug: join(PAGES_DIR, 'debug.jsx'),
+  responsePanel: join(COMPONENTS_DIR, 'ResponsePanel.jsx'),
+  bodyEditor: join(COMPONENTS_DIR, 'BodyEditor.jsx'),
+  scriptPanel: join(COMPONENTS_DIR, 'ScriptPanel.jsx'),
   paramTable: join(COMPONENTS_DIR, 'ParamTable.jsx'),
   jsonEditor: join(COMPONENTS_DIR, 'JsonEditor.jsx'),
   statusPill: join(COMPONENTS_DIR, 'StatusPill.jsx'),
@@ -142,14 +145,28 @@ export const tests = [
     name: 'apifox-ui: debug 页 Apifox 调试台结构（URL 行 / 页签 / 响应面板 / 断言表）',
     fn() {
       const src = read(FILE.debug)
-      for (const cls of ['pp-url-row', 'pp-tabs', 'pp-tab', 'pp-pane', 'pp-pill', 'pp-pre', 'pp-pre-scroll', 'pp-table', 'pp-btn-primary']) {
+      // 页面本体：URL 行 + 请求页签 + 上下分栏 + 发送按钮
+      for (const cls of ['pp-url-row', 'pp-tabs', 'pp-tab', 'pp-pane', 'pp-debug-split', 'pp-debug-request', 'pp-debug-response', 'pp-btn-primary']) {
         assert(src.includes(cls), 'debug.jsx 缺 ' + cls)
       }
       assert(src.includes('data-active={tab === t.id}'), 'debug.jsx 页签缺 data-active 切换')
-      assert(src.includes('data-active={bodyView ==='), 'debug.jsx 响应体美化/原文页签缺 data-active')
       assert(src.includes('pp-meta'), 'debug.jsx 耗时/大小未用 pp-meta')
-      assert(src.includes('断言 / 脚本结果'), 'debug.jsx 缺断言结果区块')
-      assert(src.includes('脚本日志'), 'debug.jsx 缺脚本日志区块')
+      // 响应面板已抽成组件：结构断言落到组件源码，不再要求页面内出现
+      assert(src.includes('ResponsePanel'), 'debug.jsx 未使用 ResponsePanel')
+      assert(src.includes('BodyEditor'), 'debug.jsx 未使用 BodyEditor')
+      assert(src.includes('ScriptPanel'), 'debug.jsx 未使用 ScriptPanel')
+      const respSrc = read(FILE.responsePanel)
+      for (const cls of ['pp-pre', 'pp-pre-scroll', 'pp-table', 'pp-table-wrap', 'pp-pill', 'pp-resp-bar', 'pp-resp-tabs']) {
+        assert(respSrc.includes(cls), 'ResponsePanel.jsx 缺 ' + cls)
+      }
+      assert(respSrc.includes('data-active={bodyView ==='), 'ResponsePanel.jsx 响应体美化/原文页签缺 data-active')
+      assert(respSrc.includes('测试结果'), 'ResponsePanel.jsx 缺「测试结果」页签')
+      assert(respSrc.includes('控制台'), 'ResponsePanel.jsx 缺「控制台」页签')
+      // 断言编辑器在 ScriptPanel 里
+      const scriptSrc = read(FILE.scriptPanel)
+      for (const word of ['前置脚本', '后置脚本', '断言', '等待']) {
+        assert(scriptSrc.includes(word), 'ScriptPanel.jsx 缺「' + word + '」段落')
+      }
     },
   },
   {
