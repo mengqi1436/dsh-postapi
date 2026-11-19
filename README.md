@@ -138,3 +138,4 @@ npm run verify       # 上面三步串跑
 ## 许可
 
 [Apache-2.0](./LICENSE) © 2026 mengqi1436
+<!-- superagent 接入验证 -->
