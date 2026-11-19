@@ -990,16 +990,27 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
-/* Mock 页：左表单 + 右规则表两栏，窄容器收单列 */
+/* Mock 页：左接口列表（240px，与文档页目录树同宽）+ 右配置纵向两卡。
+   之前是两列网格塞三个子项，第三块被挤到第二行左侧、与右侧形成高度差。 */
 .pp-mock-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: var(--panel-w) minmax(0, 1fr);
   gap: var(--sp-4);
   align-items: start;
+}
+.pp-mock-side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  min-width: 0;
 }
 @container ppmain (max-width: 900px) {
   .pp-mock-layout {
     grid-template-columns: minmax(0, 1fr);
+  }
+  .pp-mock-layout .pp-panel {
+    width: auto;
+    max-height: calc(var(--tree-row-h) * 10);
   }
 }
 .pp-debug-meta {

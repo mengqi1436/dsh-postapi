@@ -209,22 +209,28 @@ export function MockPage({ route, api }) {
         {error ? <p className="pp-muted">{error}</p> : null}
         {notice ? <p className="pp-muted">{notice}</p> : null}
   
+        {/* 左：接口列表（与文档页目录树同规格）+ 右：配置纵向两卡。
+            原来是 3 个子项塞进 2 列网格，第三块被挤到第二行左侧，与右侧形成高度差。 */}
         <div className="pp-mock-layout">
-          {/* 左：接口列表 */}
-          <nav className="pp-pane" style={{ padding: 'var(--sp-2)' }}>
-            <div className="pp-card-title" style={{ padding: '0 var(--sp-2)' }}>接口</div>
-            {endpoints.length === 0 ? <EmptyState text="暂无接口" /> : null}
-            {endpoints.map((ep) => (
-              <div key={ep.id} className="pp-tree-row" data-active={ep.id === currentId} onClick={() => selectEndpoint(ep)}>
-                <span className="pp-method" data-method={ep.method}>{ep.method}</span>
-                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{ep.name}</span>
-              </div>
-            ))}
+          <nav className="pp-panel" aria-label="接口列表">
+            <div className="pp-tree">
+              <div className="pp-tree-group">接口</div>
+              {endpoints.length === 0 ? (
+                <p className="pp-meta" style={{ margin: 'var(--sp-2) var(--sp-4)' }}>暂无接口</p>
+              ) : null}
+              {endpoints.map((ep) => (
+                <div key={ep.id} className="pp-tree-row" data-active={ep.id === currentId} onClick={() => selectEndpoint(ep)}>
+                  <span className="pp-method" data-method={ep.method}>{ep.method}</span>
+                  <span className="pp-ellipsis">{ep.name}</span>
+                </div>
+              ))}
+            </div>
           </nav>
+          <div className="pp-mock-side">
   
-          {/* 中：规则表 + 延迟 */}
-          <section className="pp-pane">
-            <div className="pp-card-title">{current ? current.name : '未选择接口'}</div>
+            {/* 上：Mock 配置（启用 / 延迟 / 字段规则） */}
+            <section className="pp-card">
+              <div className="pp-card-title">{current ? current.name : '未选择接口'}</div>
             <div className="pp-form-grid" style={{ marginBottom: 'var(--sp-3)' }}>
               <label className="pp-form-label">启用 Mock</label>
               <input type="checkbox" checked={mockEnabled} onChange={(e) => setMockEnabled(e.target.checked)} />
@@ -237,7 +243,7 @@ export function MockPage({ route, api }) {
             </div>
   
             <div className="pp-card-title" style={{ marginTop: 'var(--sp-3)' }}>字段规则</div>
-            {rules.length === 0 ? <EmptyState text="尚无规则" hint="未命中规则时回落默认响应" /> : null}
+            {rules.length === 0 ? <p className="pp-meta">尚无规则；未命中规则时回落默认响应</p> : null}
             {rules.length > 0 ? (
               <div className="pp-table-wrap">
               <table className="pp-table">
@@ -282,21 +288,28 @@ export function MockPage({ route, api }) {
             </div>
           </section>
   
-          {/* 右：服务启停 + 命中地址 */}
-          <section className="pp-pane">
-            <div className="pp-card-title">本地 Mock 服务</div>
-            <div style={{ display: 'flex', gap: 'var(--sp-2)', alignItems: 'center', flexWrap: 'wrap' }}>
-              <span className="pp-muted">端口 {service.port || port}</span>
-            </div>
+            {/* 下：本地 Mock 服务（端口 / 命中地址 / 规则优先级） */}
+            <section className="pp-card">
+              <div className="pp-card-title">本地 Mock 服务</div>
+              <div className="pp-form-grid">
+                <label className="pp-form-label">端口</label>
+                <span className="pp-mono">{service.port || port}</span>
+                <label className="pp-form-label">状态</label>
+                <span className="pp-meta">{service.running ? '运行中' : '已停止'}</span>
+              </div>
   
             <div className="pp-card-title" style={{ marginTop: 'var(--sp-3)' }}>命中地址</div>
-            {urls.length === 0 ? <EmptyState text="选择接口后显示命中地址" /> : null}
-            {urls.map((u) => <pre key={u} className="pp-pre" style={{ marginBottom: 'var(--sp-1)' }}>{u}</pre>)}
+            {urls.length === 0 ? (
+              <p className="pp-meta">选择接口后显示命中地址</p>
+            ) : (
+              urls.map((u) => <pre key={u} className="pp-pre" style={{ marginBottom: 'var(--sp-1)' }}>{u}</pre>)
+            )}
   
-            <p className="pp-muted" style={{ marginTop: 'var(--sp-2)' }}>
+            <p className="pp-meta" style={{ marginTop: 'var(--sp-2)' }}>
               规则优先级：字段规则 → 默认响应（isDefault）→ 200 {'{}'}
             </p>
-          </section>
+            </section>
+          </div>
         </div>
       
       </div>
