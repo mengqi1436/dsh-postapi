@@ -208,6 +208,8 @@ export async function handlePostapiRequest(req, res, { storage, request, service
         parentId: b.parentId === undefined ? null : b.parentId,
         order: b.order,
       })),
+      // 导入 bundle 原子落盘：body { projectId, bundle: { folders, endpoints, schemas } }
+      'POST /storage/importBundle': (b, s) => store('importBundle', b, s, () => [b.bundle]),
       'POST /storage/saveSchema': (b, s) => store('saveSchema', b, s, (id) => [b.schema]),
       'POST /storage/deleteSchema': (b, s) => store('deleteSchema', b, s, () => [str(b.schemaId)]),
       'POST /storage/saveEnvironment': (b, s) => store('saveEnvironment', b, s, () => [b.environment]),

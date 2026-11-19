@@ -92,6 +92,7 @@ export function createBridgeStorage() {
     deleteFolder: (projectId, folderId) => post('deleteFolder', { projectId, folderId }),
     // 契约 §3 新增
     moveNode: (projectId, node) => post('moveNode', { projectId, ...(node ?? {}) }),
+    importBundle: (projectId, bundle) => post('importBundle', { projectId, bundle }),
     saveSchema: (projectId, schema) => post('saveSchema', { projectId, schema }),
     deleteSchema: (projectId, schemaId) => post('deleteSchema', { projectId, schemaId }),
     saveEnvironment: (projectId, environment) => post('saveEnvironment', { projectId, environment }),
@@ -250,6 +251,15 @@ export function createStubStorage() {
       if (order !== undefined) hit.order = order
       p.updatedAt = nowIso()
       return clone(hit)
+    },
+    /** 桥不可达时的兜底：与 host importBundle 同形返回（计数 + 空映射），数据不落盘。 */
+    importBundle(projectId, bundle) {
+      const p = project(projectId)
+      const b = bundle && typeof bundle === 'object' ? bundle : {}
+      const count = (v) => (Array.isArray(v) ? v.length : 0)
+      const result = { folders: count(b.folders), endpoints: count(b.endpoints), schemas: count(b.schemas), idMap: {} }
+      if (p) p.updatedAt = nowIso()
+      return result
     },
     saveSchema(projectId, schema) {
       const p = project(projectId)
@@ -448,7 +458,7 @@ export function createStubServices() {
 export const STORAGE_METHODS = [
   'listProjects', 'createProject', 'renameProject', 'deleteProject', 'getProject',
   'saveEndpoint', 'deleteEndpoint', 'saveFolder', 'deleteFolder',
-  'moveNode', 'saveSchema', 'deleteSchema', 'saveEnvironment', 'deleteEnvironment',
+  'moveNode', 'importBundle', 'saveSchema', 'deleteSchema', 'saveEnvironment', 'deleteEnvironment',
   'saveGlobals', 'saveProjectSettings', 'saveFlow', 'saveResponse', 'deleteResponse',
   'getHistory', 'appendHistory', 'clearHistory', 'search',
 ]

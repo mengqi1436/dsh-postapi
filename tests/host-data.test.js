@@ -98,6 +98,30 @@ const POSTMAN_SAMPLE = {
   ],
 }
 
+/** 多级嵌套 Postman 样本：验证标准层级（collection → 目录 → 子目录 → 接口）。 */
+const NESTED_SAMPLE = {
+  info: { name: '商城 API', schema: 'https://schema.getpostman.com/json/collection/v2.1.0/collection.json' },
+  item: [
+    {
+      name: '用户',
+      item: [
+        {
+          name: '鉴权',
+          item: [
+            { name: '登录', request: { method: 'POST', url: 'https://api.example.com/login' } },
+            { name: '登出', request: { method: 'POST', url: 'https://api.example.com/logout' } },
+          ],
+        },
+        { name: '资料', request: { method: 'GET', url: 'https://api.example.com/profile' } },
+      ],
+    },
+    {
+      name: '订单',
+      item: [{ name: '列表', request: { method: 'GET', url: 'https://api.example.com/orders' } }],
+    },
+  ],
+}
+
 const HAR_SAMPLE = {
   log: {
     version: '1.2',
@@ -631,15 +655,20 @@ export const tests = [
     name: 'import: Postman v2.1 固定样本 → 目录嵌套/headers 过滤 disabled/auth/响应',
     fn: async () => {
       const out = importPostman(POSTMAN_SAMPLE)
-      assert.equal(out.folders.length, 1)
-      assert.equal(out.folders[0].name, '用户模块')
+      // collection.info.name 作为根目录（parentId null），item 树挂在它下面
+      assert.equal(out.folders.length, 2)
+      assert.equal(out.folders[0].name, 'Postman 示例')
       assert.equal(out.folders[0].parentId, null)
+      assert.equal(out.folders[0].order, 0)
+      assert.equal(out.folders[1].name, '用户模块')
+      assert.equal(out.folders[1].parentId, out.folders[0].id)
+      assert.equal(out.folders[1].order, 0) // 同级内序号，不是全局序号
       assert.equal(out.endpoints.length, 2)
 
       const login = out.endpoints.find((e) => e.name === '登录')
       assert.equal(login.method, 'POST')
       assert.equal(login.url, 'https://api.example.com/login?from=web')
-      assert.equal(login.folderId, out.folders[0].id)
+      assert.equal(login.folderId, out.folders[1].id)
       // disabled header 保留但 enabled=false
       assert.equal(login.headers.length, 2)
       assert.equal(login.headers[1].enabled, false)
@@ -654,8 +683,9 @@ export const tests = [
       assert.equal(login.responses[0].body, '{"token":"tk_2"}')
 
       const health = out.endpoints.find((e) => e.name === '健康检查')
-      assert.equal(health.folderId, null) // 顶层未归类
+      assert.equal(health.folderId, out.folders[0].id) // 直接挂在根目录下
       assert.equal(health.method, 'GET')
+      assert.equal(health.order, 0) // 根目录下第一个接口
 
       // 空集合边界
       assert.deepEqual(importPostman(null), { folders: [], endpoints: [], schemas: [] })
@@ -797,10 +827,15 @@ export const tests = [
 
       const back = importPostman(JSON.parse(JSON.stringify(collection)))
       assert.equal(back.endpoints.length, 1)
-      assert.equal(back.folders.length, 1)
+      // collection.info.name 回导入时成为根目录，原目录降为其子目录
+      assert.equal(back.folders.length, 2)
+      assert.equal(back.folders[0].name, '示例项目')
+      assert.equal(back.folders[0].parentId, null)
+      assert.equal(back.folders[1].name, '用户模块')
+      assert.equal(back.folders[1].parentId, back.folders[0].id)
       assert.equal(back.endpoints[0].name, '查询用户')
       assert.equal(back.endpoints[0].method, 'GET')
-      assert.equal(back.endpoints[0].folderId, back.folders[0].id)
+      assert.equal(back.endpoints[0].folderId, back.folders[1].id)
       assert.equal(back.endpoints[0].auth.type, 'bearer')
       assert.equal(back.endpoints[0].params[0].key, 'verbose')
       // 往返后 url 已补 baseUrl 并带 query（Postman raw 惯例）
@@ -957,5 +992,166 @@ export const tests = [
       assert.equal(joinUrl('', '/x'), '/x')
       assert.equal(joinUrl(null, null), '')
     },
+  },
+
+  /* ── 标准层级：多级目录树 + importBundle 原子落盘 ─────────────────── */
+
+  {
+    name: 'import: Postman 多级嵌套 → 根目录为 collection 名、parentId 链完整、order 同级递增且父在子前',
+    fn: async () => {
+      const out = importPostman(NESTED_SAMPLE)
+      const byName = (n) => out.folders.find((f) => f.name === n)
+      const idx = (id) => out.folders.findIndex((f) => f.id === id)
+      const root = out.folders[0]
+      assert.equal(root.name, '商城 API')
+      assert.equal(root.parentId, null)
+      assert.equal(root.order, 0)
+
+      const user = byName('用户')
+      const auth = byName('鉴权')
+      const order = byName('订单')
+      assert.equal(user.parentId, root.id)
+      assert.equal(order.parentId, root.id)
+      assert.equal(auth.parentId, user.id)
+      // order 是同级内序号，不是全局递增
+      assert.equal(user.order, 0)
+      assert.equal(order.order, 1)
+      assert.equal(auth.order, 0)
+      // 先序：父目录在子目录之前
+      assert.ok(idx(root.id) < idx(user.id), '根目录应在子目录前')
+      assert.ok(idx(user.id) < idx(auth.id), '父目录应在子目录前')
+
+      const login = out.endpoints.find((e) => e.name === '登录')
+      const logout = out.endpoints.find((e) => e.name === '登出')
+      const profile = out.endpoints.find((e) => e.name === '资料')
+      const list = out.endpoints.find((e) => e.name === '列表')
+      assert.equal(login.folderId, auth.id)
+      assert.equal(logout.folderId, auth.id)
+      assert.equal(profile.folderId, user.id)
+      assert.equal(list.folderId, order.id)
+      // endpoint order 同样按同级内序号
+      assert.equal(login.order, 0)
+      assert.equal(logout.order, 1)
+      assert.equal(profile.order, 0)
+      assert.equal(list.order, 0)
+    },
+  },
+  {
+    name: 'importBundle: 单次原子落盘多级目录树，getProject 读回完整层级且只写一次 project.json',
+    fn: () => withTempStorage(async (storage, base) => {
+      const bundle = importPostman(NESTED_SAMPLE)
+      const p = await storage.createProject('导入落盘项目')
+
+      const writes = []
+      const origRename = fs.rename
+      fs.rename = async (from, to) => {
+        writes.push(String(to))
+        return origRename(from, to)
+      }
+      let res
+      try {
+        res = await storage.importBundle(p.id, bundle)
+      } finally {
+        fs.rename = origRename
+      }
+
+      assert.equal(writes.filter((f) => f.endsWith('project.json')).length, 1, 'importBundle 应只落盘一次 project.json')
+      assert.deepEqual(
+        { folders: res.folders, endpoints: res.endpoints, schemas: res.schemas },
+        { folders: bundle.folders.length, endpoints: bundle.endpoints.length, schemas: 0 },
+      )
+      assert.deepEqual(res.idMap, {}, '空项目无 id 冲突时映射应为空')
+
+      const got = await storage.getProject(p.id)
+      assert.equal(got.folders.length, bundle.folders.length)
+      assert.equal(got.endpoints.length, bundle.endpoints.length)
+      // 层级链完整：每个目录的 parentId 要么 null 要么命中已有目录，且父在子前
+      const seen = new Set()
+      for (const f of got.folders) {
+        if (f.parentId !== null) assert.ok(seen.has(f.parentId), '目录 ' + f.name + ' 的父目录应已在前')
+        seen.add(f.id)
+      }
+      const root = got.folders.find((f) => f.name === '商城 API')
+      const user = got.folders.find((f) => f.name === '用户')
+      const auth = got.folders.find((f) => f.name === '鉴权')
+      assert.equal(root.parentId, null)
+      assert.equal(user.parentId, root.id)
+      assert.equal(auth.parentId, user.id)
+      // 接口全部挂在存在的目录上，且补全 v2 默认字段与时间戳
+      for (const ep of got.endpoints) {
+        assert.ok(got.folders.some((f) => f.id === ep.folderId), '接口 ' + ep.name + ' 的 folderId 应命中目录')
+        assert.equal(ep.protocol, 'http')
+        assert.deepEqual(ep.tags, [])
+        assert.ok(!Number.isNaN(Date.parse(ep.createdAt)))
+        assert.ok(!Number.isNaN(Date.parse(ep.updatedAt)))
+      }
+      // 原子写无 .tmp 残留
+      assert.ok(!(await fs.readdir(path.join(base, p.id))).some((n) => n.endsWith('.tmp')))
+    }),
+  },
+  {
+    name: 'importBundle: id 冲突重分配并返回旧→新映射，endpoint.folderId 按映射改写，重复导入不撞 id',
+    fn: () => withTempStorage(async (storage) => {
+      const bundle = importPostman(NESTED_SAMPLE)
+      const p = await storage.createProject('冲突项目')
+      const takenFolderId = bundle.folders[0].id
+      const takenEndpointId = bundle.endpoints[0].id
+      await storage.saveFolder(p.id, { id: takenFolderId, name: '已有目录', parentId: null, order: 0 })
+      await storage.saveEndpoint(p.id, { id: takenEndpointId, name: '已有接口', folderId: takenFolderId })
+
+      const res = await storage.importBundle(p.id, bundle)
+      assert.ok(res.idMap[takenFolderId], '冲突目录 id 应出现在映射中')
+      assert.notEqual(res.idMap[takenFolderId], takenFolderId)
+      assert.ok(res.idMap[takenEndpointId], '冲突接口 id 应出现在映射中')
+      assert.notEqual(res.idMap[takenEndpointId], takenEndpointId)
+
+      const got = await storage.getProject(p.id)
+      // 原占位数据未被覆盖
+      assert.equal(got.folders.find((f) => f.id === takenFolderId).name, '已有目录')
+      assert.equal(got.endpoints.find((e) => e.id === takenEndpointId).name, '已有接口')
+      // 导入的根目录拿到新 id，子目录 parentId 指向新 id
+      const importedRoot = got.folders.find((f) => f.name === '商城 API')
+      assert.equal(importedRoot.id, res.idMap[takenFolderId])
+      assert.equal(got.folders.find((f) => f.name === '用户').parentId, importedRoot.id)
+      // 接口 folderId 已按映射改写，不会挂到旧目录 id 上
+      for (const ep of got.endpoints) {
+        if (ep.id === takenEndpointId) continue
+        assert.notEqual(ep.folderId, takenFolderId)
+        assert.ok(got.folders.some((f) => f.id === ep.folderId))
+      }
+
+      // 重复导入同一 bundle：id 全部重分配，不产生重复 id
+      const res2 = await storage.importBundle(p.id, bundle)
+      assert.equal(Object.keys(res2.idMap).length, bundle.folders.length + bundle.endpoints.length)
+      const got2 = await storage.getProject(p.id)
+      assert.equal(new Set(got2.folders.map((f) => f.id)).size, got2.folders.length, '目录 id 不得重复')
+      assert.equal(new Set(got2.endpoints.map((e) => e.id)).size, got2.endpoints.length, '接口 id 不得重复')
+      assert.equal(got2.folders.filter((f) => f.name === '商城 API').length, 2, '两次导入应各有一棵完整树')
+      // 边界：bundle.folders 非先序（子目录排在父目录前）也能正确挂链
+      const shuffled = {
+        folders: [
+          { id: 'fld_child', name: '子', parentId: 'fld_parent', order: 0 },
+          { id: 'fld_parent', name: '父', parentId: null, order: 0 },
+        ],
+        endpoints: [{ id: 'ep_c', name: '子接口', folderId: 'fld_child' }],
+        schemas: [],
+      }
+      const resShuffled = await storage.importBundle(p.id, shuffled)
+      const gotShuffled = await storage.getProject(p.id)
+      const parent = gotShuffled.folders.find((f) => f.name === '父')
+      const child = gotShuffled.folders.find((f) => f.name === '子')
+      assert.equal(child.parentId, parent.id, '非先序 bundle 的子目录仍应挂到父目录')
+      assert.equal(gotShuffled.endpoints.find((x) => x.name === '子接口').folderId, child.id)
+      assert.deepEqual(resShuffled.idMap, {}, '无 id 冲突时映射应为空')
+      // 落盘顺序父在子前，且不泄漏内部中间字段
+      const shufFolders = gotShuffled.folders.filter((f) => f.name === '父' || f.name === '子')
+      assert.equal(shufFolders[0].name, '父', '落盘顺序应父在子前')
+      assert.ok(!('oldId' in shufFolders[0]), '落盘目录不应带内部中间字段 oldId')
+
+      // 边界：缺 bundle / 项目不存在
+      const blank = await storage.importBundle(p.id, null)
+      assert.deepEqual({ folders: blank.folders, endpoints: blank.endpoints, schemas: blank.schemas }, { folders: 0, endpoints: 0, schemas: 0 })
+      await assert.rejects(() => storage.importBundle('proj_missing', bundle), /project not found/)
+    }),
   },
 ]

@@ -78,6 +78,8 @@ export function ImportPage(props) {
   const [importKind, setImportKind] = useState('openapi')
   const [importText, setImportText] = useState(MOCK_CURL)
   const [importOut, setImportOut] = useState('')
+  // 最近一次导入的 bundle（folders/endpoints/schemas 骨架），供「保存到项目」真正落盘
+  const [bundle, setBundle] = useState(null)
   const [exportKind, setExportKind] = useState('openapi')
   const [exportOut, setExportOut] = useState('')
   const [lang, setLang] = useState('curl')
@@ -106,6 +108,7 @@ export function ImportPage(props) {
   const pickImportKind = (id) => {
     setImportKind(id)
     setImportOut('')
+    setBundle(null)
     setError('')
   }
 
@@ -133,13 +136,40 @@ export function ImportPage(props) {
     setBusy(true)
     setError('')
     setImportOut('')
+    setBundle(null)
     try {
       const res = await fn(payload)
       const summary = importSummary(res)
       setImportOut(resultText(res))
-      setNotice('导入完成：接口 ' + summary.endpoints + ' 条 / 目录 ' + summary.folders + ' 个 / 模型 ' + summary.schemas + ' 个（导入结果需在文档页确认后再保存）')
+      // 解析结果留在页面里；点「保存到项目」才真正写盘（纯本地，不涉及云端）
+      setBundle(res && res.data !== undefined ? res.data : res)
+      setNotice('解析完成：接口 ' + summary.endpoints + ' 条 / 目录 ' + summary.folders + ' 个 / 模型 ' + summary.schemas + ' 个，点「保存到项目」写入当前项目')
     } catch (err) {
       setError('导入失败：' + errText(err))
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  /** 把上一次导入的骨架真正落盘：storage.importBundle 单次原子写入。 */
+  const saveImport = async () => {
+    if (!bundle || typeof bundle !== 'object') {
+      setError('还没有可保存的导入结果，先点「开始导入」')
+      return
+    }
+    if (!storage || typeof storage.importBundle !== 'function') {
+      setError('当前桥未提供 api.storage.importBundle（契约 §5 POST /storage/importBundle）')
+      return
+    }
+    setBusy(true)
+    setError('')
+    try {
+      const res = await storage.importBundle(projectId, bundle)
+      const written = res && typeof res === 'object' ? res : {}
+      const num = (v) => (typeof v === 'number' ? v : 0)
+      setNotice('已保存到项目：目录 ' + num(written.folders) + ' 个 / 接口 ' + num(written.endpoints) + ' 个 / 模型 ' + num(written.schemas) + ' 个')
+    } catch (err) {
+      setError('保存失败：' + errText(err))
     } finally {
       setBusy(false)
     }
@@ -242,6 +272,7 @@ export function ImportPage(props) {
             onChange={(e) => setImportText(e.target.value)} />
           <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
             <button className="pp-btn pp-btn-primary" onClick={runImport} disabled={busy}>开始导入</button>
+            <button className="pp-btn" onClick={saveImport} disabled={busy || !bundle}>保存到项目</button>
             <button className="pp-btn" onClick={() => copy(importOut, '导入结果')}>复制结果</button>
           </div>
           {importOut ? <pre className="pp-pre pp-pre-scroll" style={{ marginTop: 'var(--sp-2)' }}>{importOut}</pre> : null}

@@ -463,6 +463,105 @@ export function createStorageService(basePath = DEFAULT_BASE_PATH) {
       })
     },
 
+    /**
+     * 导入 bundle 原子落盘：{ folders, endpoints, schemas } 一次 enqueue、一次 saveProject。
+     * id 冲突（已有同 id）重分配并在 idMap 记旧→新；folder 的 parentId / endpoint 与 schema 的
+     * folderId 按 idMap 改写，避免挂到旧 id 上。folders 按数组先序写入（父必在子前）。
+     */
+    async importBundle(projectId, bundle) {
+      return enqueue(async () => {
+        const project = await loadProjectForWrite(projectId)
+        const b = bundle && typeof bundle === 'object' ? bundle : {}
+        const ts = nowIso()
+        const idMap = {}
+        const taken = {
+          fld_: new Set(project.folders.map((f) => f.id)),
+          ep_: new Set(project.endpoints.map((e) => e.id)),
+          sch_: new Set(project.schemas.map((s) => s.id)),
+        }
+        /** 取 id：未占用则原样保留，否则分配新 id 并记映射。 */
+        const takeId = (raw, prefix) => {
+          const old = raw && raw.id != null ? String(raw.id) : ''
+          if (old !== '' && !taken[prefix].has(old)) {
+            taken[prefix].add(old)
+            return old
+          }
+          const next = uniqueId(prefix, taken[prefix])
+          taken[prefix].add(next)
+          if (old !== '') idMap[old] = next
+          return next
+        }
+        /** 父引用改写：命中 idMap 用新 id，未在 bundle 内的既有 id 保持原值。 */
+        const remap = (v) => {
+          if (v == null || v === '') return null
+          const key = String(v)
+          return idMap[key] !== undefined ? idMap[key] : key
+        }
+        const rows = (v) => (Array.isArray(v) ? v : [])
+
+        // 两遍处理：先给全部目录分配 id（建全 idMap），再 remap parentId，
+        // 这样即使 bundle.folders 不是先序，子目录也能正确指向父目录的新 id。
+        const folderRows = rows(b.folders).map((raw) => {
+          const f = raw && typeof raw === 'object' ? raw : {}
+          return { ...f, oldId: f.id == null ? '' : String(f.id), id: takeId(f, 'fld_') }
+        })
+        // 落盘顺序按父子深度稳定排序：bundle 乱序时 project.json 里仍是父在子前
+        const byOldId = new Map()
+        for (const f of folderRows) if (f.oldId !== '') byOldId.set(f.oldId, f)
+        const depthOf = (f) => {
+          let d = 0
+          let cur = f
+          const guard = new Set([f.oldId])
+          while (cur && cur.parentId && byOldId.has(cur.parentId) && !guard.has(cur.parentId)) {
+            guard.add(cur.parentId)
+            cur = byOldId.get(cur.parentId)
+            d += 1
+          }
+          return d
+        }
+        const ordered = folderRows
+          .map((f, i) => ({ f, i, d: depthOf(f) }))
+          .sort((x, y) => (x.d - y.d) || (x.i - y.i))
+          .map((x) => x.f)
+        const folders = ordered.map(({ oldId, ...f }) => ({
+          name: '',
+          order: 0,
+          ...f,
+          parentId: remap(f.parentId),
+          createdAt: f.createdAt || ts,
+          updatedAt: ts,
+        }))
+        const endpoints = rows(b.endpoints).map((raw) => {
+          const ep = raw && typeof raw === 'object' ? raw : {}
+          return {
+            ...withEndpointDefaults(ep, null),
+            id: takeId(ep, 'ep_'),
+            folderId: remap(ep.folderId),
+            createdAt: ts,
+            updatedAt: ts,
+          }
+        })
+        const schemas = rows(b.schemas).map((raw) => {
+          const s = raw && typeof raw === 'object' ? raw : {}
+          return {
+            ...SCHEMA_DEFAULTS,
+            ...s,
+            id: takeId(s, 'sch_'),
+            folderId: remap(s.folderId),
+            createdAt: s.createdAt || ts,
+            updatedAt: ts,
+          }
+        })
+
+        project.folders.push(...folders)
+        project.endpoints.push(...endpoints)
+        project.schemas.push(...schemas)
+        project.updatedAt = ts
+        await saveProject(project)
+        return { folders: folders.length, endpoints: endpoints.length, schemas: schemas.length, idMap }
+      })
+    },
+
     async saveSchema(projectId, schema) {
       return enqueue(async () => {
         const project = await loadProjectForWrite(projectId)

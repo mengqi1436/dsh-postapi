@@ -317,7 +317,9 @@ function postmanAuth(auth) {
 
 /**
  * Postman v2.1 → { folders, endpoints, schemas: [] }。
- * item 含 request 的当接口，含 item 的当目录（递归，parentId 指向父目录）。
+ * 标准层级：collection 名 → 根目录（parentId null），item 树递归挂在它下面；
+ * item 含 request 的当接口，含 item 的当目录。order 是同级内序号（不是全局序号），
+ * folders 数组保持先序（父目录必在子目录之前），便于按序落盘。
  */
 export function importPostman(json) {
   const collection = json && typeof json === 'object'
@@ -325,8 +327,19 @@ export function importPostman(json) {
     : {}
   const folders = []
   const endpoints = []
+  // 空集合（无 item 且无 info.name）不造根目录，保持「无内容 → 空结构」的边界语义
+  const rootName = str(collection.info && collection.info.name)
+  if (rootName === '' && asArray(collection.item).length === 0) {
+    return { folders: [], endpoints: [], schemas: [] }
+  }
+  // 根目录：collection.info.name（缺失时给中性名），让导入结果始终有唯一的项目级分组
+  const rootId = seqId('fld_', 0)
+  folders.push({ id: rootId, name: rootName || '导入的 Collection', parentId: null, order: 0 })
 
+  /** 同级序号：按父目录分别计数，子目录与接口各自独立递增。 */
   const walk = (items, parentId) => {
+    let folderOrder = 0
+    let endpointOrder = 0
     for (const raw of asArray(items)) {
       const item = raw && typeof raw === 'object' ? raw : {}
       const name = str(item.name)
@@ -359,7 +372,7 @@ export function importPostman(json) {
           id: seqId('ep_', endpoints.length),
           name: name || ((str(req.method) || 'GET').toUpperCase() + ' ' + parts.raw),
           folderId: parentId,
-          order: endpoints.length,
+          order: endpointOrder++,
           method: (str(req.method) || 'GET').toUpperCase(),
           url: parts.raw,
           params,
@@ -373,13 +386,13 @@ export function importPostman(json) {
       }
       if (Array.isArray(item.item)) {
         const id = seqId('fld_', folders.length)
-        folders.push({ id, name, parentId, order: folders.length })
+        folders.push({ id, name, parentId, order: folderOrder++ })
         walk(item.item, id)
       }
     }
   }
 
-  walk(collection.item, null)
+  walk(collection.item, rootId)
   return { folders, endpoints, schemas: [] }
 }
 
