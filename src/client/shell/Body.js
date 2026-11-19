@@ -10,9 +10,10 @@
  * 路由形态：#/overview、#/doc/:endpointId、#/debug、#/flow、#/settings…（契约 §3）。
  * 颜色 / 字号 / 尺寸一律引用 design-tokens.css 的 var(--*) token，内联 style 只写 layout。
  */
-import { createElement, useEffect, useRef, useState } from 'react'
+import { createElement, useEffect, useMemo, useRef, useState } from 'react'
 import { zh } from './locales.js'
 import { pageRegistry } from './registry.js'
+import { NEW_MENU, actionHash } from './menu.js'
 
 /** 主题与环境的本地设置键（与 pages/theme.js 共用同一套键，切页不丢）。 */
 const THEME_KEY = 'postapi.settings.theme'
@@ -97,6 +98,84 @@ export function Icon({ name, size = 20 }) {
     'aria-hidden': true,
     style: { display: 'block' },
   }, paths.map((d, i) => createElement('path', { key: i, d })))
+}
+
+/**
+ * 三级菜单树（Apifox「+」同构）。
+ *
+ * 结构：一个面板里渲染当前层的全部项；有 children 的项点击后把该层 id 记进
+ * openPath，下一层面板以绝对定位浮出到父项左侧（.pp-menu .pp-menu 的 CSS 规则）。
+ * 层级由 openPath 的长度决定，因此天然支持 1~3 级，不需要为每级写一份 JSX。
+ *
+ * @param items     当前层节点数组（NEW_MENU 的某一段）
+ * @param openPath  从根到当前展开项的 id 数组
+ * @param onOpen    展开某个子层（传入该层 id 数组）
+ * @param onPick    选中叶子（node, hash）
+ * @param depth     当前层深度（1 起），仅用于 aria 与测试断言
+ */
+function MenuTree({ items, openPath, onOpen, onPick, depth = 1, pos }) {
+  // openId 取「本层应展开的项」：openPath 是从根到最深展开项的完整 id 链，
+  // 本层对应第 depth 个元素。子层复用同一份 openPath（不截断），否则子层看不到自己要展开谁。
+  const openId = openPath.length >= depth ? openPath[depth - 1] : null
+  const openNode = openId ? items.find((n) => n && n.id === openId) : null
+  // fixed 定位：坐标由上层算好传进来（顶层贴按钮，子层贴触发项）
+  const style = pos ? { top: pos.top + 'px', left: pos.left + 'px' } : undefined
+  // 触发项元素引用：子面板坐标需要它的 getBoundingClientRect
+  const itemRef = useRef(null)
+  const childPos = useMemo(() => {
+    const el = itemRef.current
+    if (!el || typeof el.getBoundingClientRect !== 'function') return undefined
+    const r = el.getBoundingClientRect()
+    const w = 200 // 与 --menu-w 一致
+    const gap = 4
+    // 默认向左开；左侧放不下就向右翻（Apifox 同样按边界翻转）
+    const left = r.left - w - gap >= gap ? r.left - w - gap : r.right + gap
+    // 垂直对齐到触发项上沿，并夹到视口内（面板高按最多 12 项估）
+    const maxTop = (typeof window !== 'undefined' ? window.innerHeight : 800) - 12 * 32 - 16
+    const top = Math.max(8, Math.min(r.top - 4, maxTop))
+    return { top, left }
+  }, [openId])
+  return (
+    <div className="pp-menu" role="menu" data-depth={depth} style={style}>
+      {items.map((node) => {
+        if (!node || node.separator) return <div key={node && node.id ? node.id : 'sep'} className="pp-menu-sep" role="separator" />
+        const hasKids = Array.isArray(node.children) && node.children.length > 0
+        const isOpen = Boolean(openNode) && openNode.id === node.id
+        if (hasKids) {
+          return (
+            <div key={node.id} className="pp-menu-anchor" data-index={items.indexOf(node)}>
+              <button type="button" className="pp-menu-item" role="menuitem"
+                data-open={isOpen ? 'true' : 'false'}
+                aria-haspopup="menu" aria-expanded={isOpen ? 'true' : 'false'}
+                ref={(el) => { if (el && isOpen) itemRef.current = el }}
+                onClick={(event) => {
+                  event.stopPropagation()
+                  itemRef.current = event.currentTarget
+                  onOpen(openPath.slice(0, depth - 1).concat([node.id]))
+                }}>
+                <span className="pp-menu-label">{zh[node.labelKey]}</span>
+                <span className="pp-menu-arrow" aria-hidden="true">›</span>
+              </button>
+              {isOpen ? (
+                <MenuTree items={node.children}
+                  openPath={openPath}
+                  onOpen={onOpen} onPick={onPick} depth={depth + 1}
+                  pos={childPos} />
+              ) : null}
+            </div>
+          )
+        }
+        const hash = actionHash(node.action)
+        return (
+          <a key={node.id} className="pp-menu-item" role="menuitem"
+            href={hash || '#'}
+            onClick={(event) => { event.preventDefault(); onPick(node, hash) }}>
+            <span className="pp-menu-label">{zh[node.labelKey]}</span>
+          </a>
+        )
+      })}
+    </div>
+  )
 }
 
 /** 帮助浮层里的快捷入口（固定四条，文案复用 nav.* 键）。 */
@@ -232,6 +311,12 @@ export function PostApiBody({ useTabInfo }) {
   const [keyword, setKeyword] = useState('')
   // 帮助卡片（原右上下文栏的内容，收进侧栏底部一项）
   const [helpOpen, setHelpOpen] = useState(false)
+  // 新建三级菜单：menuOpen 控制一级面板，menuPath 是从根到当前展开层的 id 链
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [menuPath, setMenuPath] = useState([])
+  // fixed 定位的顶层面板坐标（贴按钮下方）；子层坐标由 MenuTree 自己算
+  const [menuPos, setMenuPos] = useState(null)
+  const menuBtnRef = useRef(null)
   const shellRef = useRef(null)
   // 页面组件每次渲染查注册表：页面可能在 body 已挂载后才自注册。
   const Page = pageRegistry.get(route.name)
@@ -242,16 +327,23 @@ export function PostApiBody({ useTabInfo }) {
   // Esc 关闭帮助卡片；点卡片外关闭。
   useEffect(() => {
     const onKey = (event) => {
-      if (event && event.key === 'Escape') setHelpOpen(false)
+      if (!event) return
+      if (event.key === 'Escape') {
+        // Esc 逐级收起：先关最深一层，路径空了再关面板
+        setMenuPath((prev) => (prev.length > 0 ? prev.slice(0, -1) : prev))
+        setHelpOpen(false)
+      }
     }
     const onDown = (event) => {
       const target = event && event.target
       if (!target || !shellRef.current) return
       if (typeof shellRef.current.contains === 'function' && shellRef.current.contains(target)) {
-        // 点在侧栏或帮助卡片内部：交给各自的 onClick 处理
-        if (target.closest && (target.closest('.pp-sider') || target.closest('.pp-help-card'))) return
+        // 点在侧栏 / 帮助卡 / 菜单内部：交给各自的 onClick 处理
+        if (target.closest && (target.closest('.pp-sider') || target.closest('.pp-help-card') || target.closest('.pp-menu-anchor'))) return
       }
       setHelpOpen(false)
+      setMenuOpen(false)
+      setMenuPath([])
     }
     if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
       window.addEventListener('keydown', onKey)
@@ -313,8 +405,33 @@ export function PostApiBody({ useTabInfo }) {
           onChange={(event) => setKeyword(event.target.value)}
           onKeyDown={onSearchKey}
         />
-        <button className="pp-btn pp-btn-sm pp-btn-primary" type="button"
-          onClick={() => goto('#/doc')}>{zh['topbar.newEndpoint']}</button>
+        {/* 新建：三级下拉菜单（Apifox 左侧「+」同构） */}
+        <span className="pp-menu-anchor">
+          <button className="pp-btn pp-btn-sm pp-btn-primary" type="button"
+            ref={menuBtnRef}
+            aria-haspopup="menu" aria-expanded={menuOpen ? 'true' : 'false'}
+            onClick={() => {
+              if (!menuOpen && menuBtnRef.current) {
+                const r = menuBtnRef.current.getBoundingClientRect()
+                const w = 200
+                // 顶层面板贴按钮下方，右缘与按钮对齐；左侧放不下就贴视口左边界
+                setMenuPos({ top: Math.round(r.bottom + 4), left: Math.round(Math.max(8, r.right - w)) })
+              }
+              setMenuOpen((v) => !v)
+              setMenuPath([])
+            }}>
+            {zh['topbar.new']}
+          </button>
+          {menuOpen ? (
+            <MenuTree items={NEW_MENU} openPath={menuPath} pos={menuPos}
+              onOpen={(path) => setMenuPath(path)}
+              onPick={(node, hash) => {
+                setMenuOpen(false)
+                setMenuPath([])
+                if (hash) goto(hash)
+              }} />
+          ) : null}
+        </span>
         <select className="pp-select pp-input-sm" value={env} onChange={pickEnv}
           title={zh['topbar.env']} aria-label={zh['topbar.env']}>
           <option value="">{zh['topbar.envDefault']}</option>
