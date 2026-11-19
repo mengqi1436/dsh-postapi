@@ -71,6 +71,7 @@
   --motion-fast: 120ms;
   --card-pad: 16px;
   --popover-w: 400px;
+  --empty-w: 360px;
   --scrollbar: 6px;
 
   /* —— 图标尺寸 —— */
@@ -1102,18 +1103,51 @@
 }
 
 /* —— 空态 —— */
+/* 空态：紧凑居中卡。收窄到 --empty-w（360px）——之前铺满 460px 宽只放一行字，
+   视觉上像一块没做完的占位。图标用三级色，主文案用二级色，层级靠颜色与字号区分。 */
 .pp-empty {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: var(--sp-2);
-  padding: var(--sp-6);
+  width: 100%;
+  max-width: var(--empty-w);
+  /* margin:auto 在 flex 容器（.pp-page 是 flex column）里同时水平与垂直居中；
+     之前写死 var(--sp-6) auto 只水平居中，空态会贴在顶部，下方留一大片空白。 */
+  margin: auto;
+  padding: var(--sp-6) var(--sp-4);
   text-align: center;
   font-size: var(--fs-14);
+  line-height: var(--lh-20);
   color: var(--fg-tertiary);
   border: 1px dashed var(--border-strong);
   border-radius: var(--radius-card);
+  background: var(--bg-surface);
+}
+.pp-empty-icon {
+  color: var(--fg-tertiary);
+}
+.pp-empty-text {
+  color: var(--fg-secondary);
+  font-weight: var(--fw-medium);
+}
+.pp-empty-action {
+  margin-top: var(--sp-1);
+}
+/* 面板内的空态（左树）：不要虚线框与图标，只留一行说明 */
+.pp-panel .pp-empty {
+  max-width: none;
+  margin: var(--sp-3) 0;
+  padding: var(--sp-3) var(--sp-2);
+  border: none;
+  background: transparent;
+  font-size: var(--fs-12);
+  line-height: var(--lh-18);
+}
+.pp-panel .pp-empty-icon,
+.pp-panel .pp-empty-action {
+  display: none;
 }
 
 
@@ -1558,6 +1592,13 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-card);
   overflow: auto;
+}
+/* 空态时主列独占一行（无左树），需要自己撑满高度并留出上边距 */
+.pp-page-flush > .pp-doc-main {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  margin: var(--sp-4) var(--sp-5);
 }
 .pp-doc-main .pp-page {
   padding: var(--sp-5);

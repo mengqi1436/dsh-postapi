@@ -103,7 +103,7 @@ export function FolderTree({ project, activeEndpointId, onPick, onToggle, collap
           {loose.map((ep) => renderEndpoint(ep, 0))}
         </div>
       ) : null}
-      {isEmpty ? <EmptyState text="暂无目录与接口" hint="先在总览页创建项目与接口" /> : null}
+      {isEmpty ? <EmptyState icon={null} text="暂无目录与接口" /> : null}
     </div>
   )
 }

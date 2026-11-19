@@ -386,14 +386,27 @@ export function DocPage({ route, api }) {
     </div>
   )
 
+  // 空态：与正常文档页同骨架（页头 + 目录 + 主区），但空态只在主区出现一次。
+  // 之前左右两栏各渲染一条「暂无接口 / 先在总览页创建项目与接口」，同一句话重复两遍，
+  // 右侧还是个铺满宽度的虚线大框。现在左树只留一行说明，主区给带图标与动作的空态。
+  // 空态：不渲染左树面板。
+  // 没有接口时目录树本身零信息量，占满整宽只放一个空态会留下大片空白（窄容器下尤其明显）。
+  // 主区独占一行，空态居中，并给一个去总览页的出口。
   if (!ep) {
     return (
       <div className="pp-scope pp-page-flush" data-page="doc" ref={rootRef}>
-        <div className="pp-split">
-          <nav className="pp-panel" aria-label="接口目录">{tree}</nav>
-          <div>
-            <h1 className="pp-doc-h1">接口文档</h1>
-            <EmptyState text="暂无接口" hint="先在总览页创建项目与接口" />
+        <div className="pp-doc-main">
+          <div className="pp-doc-head">
+            <span className="pp-doc-title">接口文档</span>
+          </div>
+          <div className="pp-page">
+            {isMock ? <p className="pp-note pp-note-warn">示例数据 — window.__postapiApi 未注入或读取失败，以下为文件内 mock</p> : null}
+            <EmptyState
+              icon="file"
+              text="还没有接口文档"
+              hint="在总览页新建项目后，用顶栏「新建」创建第一个接口"
+              action={{ label: '去总览页', href: '#/overview' }}
+            />
           </div>
         </div>
       </div>
