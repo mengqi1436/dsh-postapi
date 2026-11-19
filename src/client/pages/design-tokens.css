@@ -40,7 +40,9 @@
   --nav-w: 240px;
   --toc-w: 240px;
   /* —— 导航 v2（图标轨 + 浮层二级菜单，见 docs/nav-layout-v2-spec.md）—— */
-  --rail-w: 48px;
+  /* 轨宽 64px：图标 20px + 下方一行 12px 文字，最窄也要容下 3 个中文字 */
+  --rail-w: 64px;
+  --rail-btn-h: 52px;
   --flyout-w: 200px;
   --flyout-w-sm: 176px;
   --panel-w: 200px;
@@ -958,16 +960,28 @@
 }
 .pp-rail-btn {
   display: inline-flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: calc(var(--rail-w) - var(--sp-3));
-  height: calc(var(--rail-w) - var(--sp-3));
+  gap: var(--sp-1);
+  width: calc(var(--rail-w) - var(--sp-2));
+  height: var(--rail-btn-h);
   padding: 0;
   color: var(--fg-secondary);
   background: transparent;
   border: none;
   border-radius: var(--radius-ctl);
   cursor: pointer;
+}
+/* 图标下方的一行文字：不靠 title 提示，直接可见 */
+.pp-rail-label {
+  font-size: var(--fs-12);
+  line-height: var(--lh-18);
+  font-weight: var(--fw-medium);
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .pp-rail-btn:hover {
   color: var(--fg);

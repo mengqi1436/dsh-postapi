@@ -351,6 +351,8 @@ export function PostApiBody({ useTabInfo }) {
               aria-expanded={openGroup === group.id ? 'true' : 'false'}
               onClick={() => toggleGroup(group.id)}>
               <Icon name={group.icon} size={20} />
+              {/* 图标下方常显分组名：只给 title 提示的话，用户看不出这一列是什么功能 */}
+              <span className="pp-rail-label">{zh[group.labelKey]}</span>
             </button>
           ))}
           <span className="pp-rail-spacer" />

@@ -84,7 +84,8 @@ export const SPEC_SIZE_TOKENS = {
   // v2（docs/nav-layout-v2-spec.md）：顶栏压到 44px，把纵向让给内容
   '--topbar-h': '44px',
   // v2 导航 token
-  '--rail-w': '48px',
+  '--rail-w': '64px',
+  '--rail-btn-h': '52px',
   '--flyout-w': '200px',
   '--flyout-w-sm': '176px',
   '--panel-w': '200px',
