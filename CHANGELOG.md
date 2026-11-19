@@ -2,6 +2,12 @@
 
 本项目版本遵循语义化版本；发布包见 https://www.npmjs.com/package/dsh-postapi 。
 
+## 0.0.3 — 纯 OIDC 发布
+
+- 发布步骤不再注入 `NODE_AUTH_TOKEN`，改为完全由 OIDC trusted publisher 授权并生成 provenance。
+- `NPM_TOKEN` 仅保留为手动回退（需仓库变量 `FORCE_TOKEN_PUBLISH=true` 才启用）。
+- workflow 升 `actions/checkout@v5` / `actions/setup-node@v5`，消除 Node 20 弃用告警。
+
 ## 0.0.2 — OIDC 自动发布
 
 - GitHub Actions 打通：推 tag `v*` 或 master 版本变更时自动发布。

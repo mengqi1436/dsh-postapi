@@ -5,7 +5,7 @@ DeepSeek Harness 插件：在官方右侧栏内提供一套 Apifox 风格的接�
 [![npm](https://img.shields.io/npm/v/dsh-postapi.svg)](https://www.npmjs.com/package/dsh-postapi)
 [![license](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](./LICENSE)
 
-当前版本 **0.0.1（Demo）**：功能面已完整可跑，边界见文末「已知边界」。
+当前版本 **0.0.3（Demo）**：功能面已完整可跑，边界见文末「已知边界」。发布由 GitHub Actions 经 npm trusted publishing（OIDC）自动完成。
 
 ![PostAPI 预览](docs/preview.svg)
 
@@ -18,14 +18,14 @@ DSH 桌面端（Electron）管理 profile，插件必须装进 profile 由宿主
 dsh plugin --profile desktop add @deepseek-ai/dsh-client-ui-sidebar-right@0.2.2-rc.3 --registry=https://registry.npmjs.org/
 
 # 2) 本插件
-dsh plugin --profile desktop add dsh-postapi@0.0.1 --registry=https://registry.npmjs.org/
+dsh plugin --profile desktop add dsh-postapi@0.0.3 --registry=https://registry.npmjs.org/
 ```
 
 `dsh` 是桌面端自带的 CLI，Windows 路径：
 
 ```powershell
 & "C:\Users\<你>\AppData\Local\Programs\DeepSeek Harness\resources\runtime\cli\bin\dsh.cmd" `
-  plugin --profile desktop add dsh-postapi@0.0.1 --registry=https://registry.npmjs.org/
+  plugin --profile desktop add dsh-postapi@0.0.3 --registry=https://registry.npmjs.org/
 ```
 
 装完重启桌面端，右侧栏空态会出现「打开 PostAPI」入口。
@@ -110,7 +110,7 @@ npm run verify       # 上面三步串跑
 
 发布前 `prepublishOnly` 会自动跑 `build + test`，构建失败即中止发布。
 
-## 已知边界（0.0.1 Demo）
+## 已知边界（0.0.3 Demo）
 
 - gRPC / Dubbo / Tars：只有协议字段与 UI 提示，未做真实收发。
 - 数据库操作：`/db/query|test|close` 三条路由固定 `501 NOT_IMPLEMENTED`，UI 保留占位。

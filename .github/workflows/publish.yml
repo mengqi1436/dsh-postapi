@@ -101,15 +101,20 @@ jobs:
         if: steps.check.outputs.needed == 'true'
         run: npm pack --dry-run
 
-      - name: 发布到 npm（OIDC 优先，NPM_TOKEN 回退）
+      - name: 发布到 npm（OIDC trusted publishing）
         if: steps.check.outputs.needed == 'true'
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          # 只透传 OIDC 请求用的 id-token，不注入 NPM_TOKEN。
+          # 一旦 NODE_AUTH_TOKEN 存在，npm 会优先走 token 认证而不是 OIDC，
+          # trusted publisher 也就不会被真正使用；NPM_TOKEN 仅作回退保留在仓库 secret 里。
+          NPM_CONFIG_PROVENANCE: 'true'
         run: |
-          if [ -n "$NODE_AUTH_TOKEN" ]; then
-            npm publish --access public --provenance
+          if [ -n "${{ secrets.NPM_TOKEN }}" ] && [ "${{ vars.FORCE_TOKEN_PUBLISH }}" = "true" ]; then
+            echo "::warning::回退模式：使用 NPM_TOKEN 发布（不走 OIDC）"
+            NODE_AUTH_TOKEN="${{ secrets.NPM_TOKEN }}" npm publish --access public
           else
-            npm publish --access public
+            echo "OIDC 模式：由 trusted publisher 授权，npm 自动签发短期凭证"
+            npm publish --access public --provenance
           fi
 
       - name: 写入运行摘要
