@@ -14,6 +14,7 @@ const ROOT = resolve(PAGES_DIR, '..', '..', '..')
 
 const FILE = {
   doc: join(PAGES_DIR, 'doc.jsx'),
+  tree: join(COMPONENTS_DIR, 'FolderTree.jsx'),
   debug: join(PAGES_DIR, 'debug.jsx'),
   paramTable: join(COMPONENTS_DIR, 'ParamTable.jsx'),
   jsonEditor: join(COMPONENTS_DIR, 'JsonEditor.jsx'),
@@ -103,8 +104,12 @@ export const tests = [
       for (const cls of ['pp-col-right', 'pp-body-3col', 'pp-toc']) {
         assert(!src.includes(cls), 'doc.jsx 不应再出现 ' + cls + '（v2 已改锚点条）')
       }
+      // 多级目录树已抽成 FolderTree 组件（递归 parentId），doc.jsx 只负责挂载
+      assert(src.includes('FolderTree'), 'doc.jsx 未挂载 FolderTree 多级目录树')
+      assert(!src.includes('className="pp-tree"'), 'doc.jsx 不应再手写树（已抽 FolderTree）')
+      const treeSrc = read(FILE.tree)
       for (const cls of ['pp-tree', 'pp-tree-group', 'pp-tree-row', 'pp-tree-row-count']) {
-        assert(src.includes(cls), 'doc.jsx 左树缺 ' + cls)
+        assert(treeSrc.includes(cls), 'FolderTree.jsx 缺 ' + cls)
       }
       for (const cls of ['pp-anchor-chip']) {
         assert(src.includes(cls), 'doc.jsx 锚点条缺 ' + cls)

@@ -4,6 +4,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { applyTheme } from './theme.js'
 import { ParamTable } from './components/ParamTable.jsx'
+import { FolderTree } from './components/FolderTree.jsx'
 import { JsonEditor } from './components/JsonEditor.jsx'
 import { EmptyState } from './components/EmptyState.jsx'
 import { StatusPill } from './components/StatusPill.jsx'
@@ -64,7 +65,8 @@ const TABS = [
   { id: 'auth', label: 'Auth' },
 ]
 
-const PARAM_COLUMNS = ['enabled', 'key', 'value', 'description']
+// 参数表列用 ParamTable 的默认列（启用/参数名/类型/必填/示例值/描述 + 操作），
+// 与 doc 页只读表同一套，避免两页列不一致。
 const AUTH_LABEL = { none: '无认证', bearer: 'Bearer', basic: 'Basic', apikey: 'API Key' }
 
 function resolveApi() {
@@ -168,6 +170,8 @@ export function DebugPage({ route, api }) {
   })
   const [draft, setDraft] = useState(() => emptyDraft(MOCK_PROJECT.endpoints[0]))
   const [tab, setTab] = useState('params')
+  // 左树折叠态：{ folderId: true } 表示该目录已收起
+  const [collapsed, setCollapsed] = useState({})
   const [resp, setResp] = useState(null)
   const [sending, setSending] = useState(false)
   const [bodyView, setBodyView] = useState('pretty')
@@ -327,7 +331,7 @@ export function DebugPage({ route, api }) {
           {respHeaders.length > 0 ? (
             <div style={{ marginTop: 'var(--sp-2)' }}>
               <div className="pp-card-title">响应头</div>
-              <ParamTable rows={respHeaders} readOnly columns={['key', 'value']} emptyText="无响应头" />
+              <div className="pp-table-wrap"><ParamTable rows={respHeaders} readOnly columns={['key', 'value']} emptyText="无响应头" /></div>
             </div>
           ) : null}
 
@@ -367,16 +371,16 @@ export function DebugPage({ route, api }) {
       <div className="pp-debug-layout" style={{ margin: 'var(--sp-3)' }}>
         {/* 左：接口树 */}
         <nav className="pp-pane" style={{ padding: 'var(--sp-2)' }}>
-          <div className="pp-tree">
-            <div className="pp-tree-group">接口</div>
-            {endpoints.length === 0 ? <EmptyState text="暂无接口" /> : null}
-            {endpoints.map((ep) => (
-              <div key={ep.id} className="pp-tree-row" data-active={ep.id === draft.id} onClick={() => loadEndpoint(ep)}>
-                <span className="pp-method" data-method={ep.method}>{ep.method}</span>
-                <span className="pp-ellipsis">{ep.name}</span>
-              </div>
-            ))}
-          </div>
+          <FolderTree
+            project={project}
+            activeEndpointId={draft.id}
+            collapsed={collapsed}
+            onPick={(endpointId) => {
+              const target = endpoints.find((e) => e.id === endpointId)
+              if (target) loadEndpoint(target)
+            }}
+            onToggle={(folderId) => setCollapsed((prev) => ({ ...prev, [folderId]: !prev[folderId] }))}
+          />
           <div style={{ marginTop: 'var(--sp-3)' }}>
             <a className="pp-toc-item" href="#/history">请求历史 / 回放</a>
           </div>
@@ -431,17 +435,17 @@ export function DebugPage({ route, api }) {
             {tab === 'params' ? (
               <div>
                 <div className="pp-card-title">Path 参数</div>
-                <ParamTable rows={draft.pathParams} onChange={(rows) => patch('pathParams', rows)} columns={PARAM_COLUMNS} emptyText="无 Path 参数" />
+                <div className="pp-table-wrap"><ParamTable rows={draft.pathParams} onChange={(rows) => patch('pathParams', rows)} emptyText="无 Path 参数" /></div>
                 <div className="pp-card-title" style={{ marginTop: 'var(--sp-3)' }}>Query 参数</div>
-                <ParamTable rows={draft.params} onChange={(rows) => patch('params', rows)} columns={PARAM_COLUMNS} emptyText="无 Query 参数" />
+                <div className="pp-table-wrap"><ParamTable rows={draft.params} onChange={(rows) => patch('params', rows)} emptyText="无 Query 参数" /></div>
               </div>
             ) : null}
             {tab === 'headers' ? (
               <div>
                 <div className="pp-card-title">请求头</div>
-                <ParamTable rows={draft.headers} onChange={(rows) => patch('headers', rows)} columns={PARAM_COLUMNS} emptyText="无请求头" />
+                <div className="pp-table-wrap"><ParamTable rows={draft.headers} onChange={(rows) => patch('headers', rows)} emptyText="无请求头" /></div>
                 <div className="pp-card-title" style={{ marginTop: 'var(--sp-3)' }}>Cookies</div>
-                <ParamTable rows={draft.cookies} onChange={(rows) => patch('cookies', rows)} columns={PARAM_COLUMNS} emptyText="无 Cookies" />
+                <div className="pp-table-wrap"><ParamTable rows={draft.cookies} onChange={(rows) => patch('cookies', rows)} emptyText="无 Cookies" /></div>
               </div>
             ) : null}
             {tab === 'body' ? (

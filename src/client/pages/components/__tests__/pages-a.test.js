@@ -21,7 +21,7 @@ const PAGE_FILES = {
   debug: join(PAGES_DIR, 'debug.jsx'),
   mock: join(PAGES_DIR, 'mock.jsx'),
 }
-const COMPONENT_FILES = ['EmptyState.jsx', 'StatusPill.jsx', 'ParamTable.jsx', 'JsonEditor.jsx']
+const COMPONENT_FILES = ['EmptyState.jsx', 'StatusPill.jsx', 'ParamTable.jsx', 'JsonEditor.jsx', 'FolderTree.jsx']
 
 const read = (file) => (existsSync(file) ? readFileSync(file, 'utf8') : '')
 

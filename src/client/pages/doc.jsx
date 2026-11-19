@@ -10,6 +10,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { applyTheme } from './theme.js'
 import { ParamTable } from './components/ParamTable.jsx'
+import { FolderTree } from './components/FolderTree.jsx'
 import { JsonEditor } from './components/JsonEditor.jsx'
 import { EmptyState } from './components/EmptyState.jsx'
 import { StatusPill } from './components/StatusPill.jsx'
@@ -351,47 +352,15 @@ export function DocPage({ route, api }) {
       .catch((err) => setError('保存响应失败：' + (err && err.message ? err.message : String(err))))
   }
 
+  // 目录树：递归渲染 parentId 多级层级（Apifox 左树观感），折叠态由本页持有
   const tree = (
-    <div className="pp-tree">
-      <div className="pp-tree-group">{project.name || '未命名项目'}</div>
-      {folders.map((folder) => {
-        const inFolder = endpoints.filter((e) => e.folderId === folder.id)
-        const isCollapsed = Boolean(collapsed[folder.id])
-        return (
-          <div key={folder.id}>
-            <div className="pp-tree-row" onClick={() => setCollapsed((prev) => ({ ...prev, [folder.id]: !prev[folder.id] }))}>
-              <span className="pp-faint">{isCollapsed ? '▸' : '▾'}</span>
-              <span className="pp-ellipsis">{folder.name}</span>
-              <span className="pp-tree-row-count">{inFolder.length}</span>
-            </div>
-            {isCollapsed ? null : inFolder.map((e) => (
-              <div
-                key={e.id}
-                className="pp-tree-row"
-                data-active={Boolean(ep) && e.id === ep.id}
-                onClick={() => pick(e.id)}
-                style={{ paddingLeft: 'var(--sp-5)' }}
-              >
-                <span className="pp-method" data-method={e.method}>{e.method}</span>
-                <span className="pp-ellipsis">{e.name}</span>
-              </div>
-            ))}
-          </div>
-        )
-      })}
-      {endpoints.filter((e) => !e.folderId).length > 0 ? (
-        <div>
-          <div className="pp-tree-group">未归类</div>
-          {endpoints.filter((e) => !e.folderId).map((e) => (
-            <div key={e.id} className="pp-tree-row" data-active={Boolean(ep) && e.id === ep.id} onClick={() => pick(e.id)}>
-              <span className="pp-method" data-method={e.method}>{e.method}</span>
-              <span className="pp-ellipsis">{e.name}</span>
-            </div>
-          ))}
-        </div>
-      ) : null}
-      {endpoints.length === 0 ? <EmptyState text="暂无接口" hint="先在总览页创建项目与接口" /> : null}
-    </div>
+    <FolderTree
+      project={project}
+      activeEndpointId={ep ? ep.id : ''}
+      collapsed={collapsed}
+      onPick={pick}
+      onToggle={(folderId) => setCollapsed((prev) => ({ ...prev, [folderId]: !prev[folderId] }))}
+    />
   )
 
   /**
@@ -459,22 +428,22 @@ export function DocPage({ route, api }) {
 
             <section id="sec-path" className="pp-doc-section">
               <h2 className="pp-doc-h2">Path 参数</h2>
-              <ParamTable rows={ep.pathParams} readOnly emptyText="无 Path 参数" emptyHint="路径里没有 {var} 占位符" />
+              <div className="pp-table-wrap"><ParamTable rows={ep.pathParams} readOnly emptyText="无 Path 参数" emptyHint="路径里没有 {var} 占位符" /></div>
             </section>
 
             <section id="sec-params" className="pp-doc-section">
               <h2 className="pp-doc-h2">Query 参数</h2>
-              <ParamTable rows={ep.params} readOnly emptyText="无 Query 参数" />
+              <div className="pp-table-wrap"><ParamTable rows={ep.params} readOnly emptyText="无 Query 参数" /></div>
             </section>
 
             <section id="sec-headers" className="pp-doc-section">
               <h2 className="pp-doc-h2">请求头</h2>
-              <ParamTable rows={ep.headers} readOnly emptyText="无请求头" />
+              <div className="pp-table-wrap"><ParamTable rows={ep.headers} readOnly emptyText="无请求头" /></div>
             </section>
 
             <section id="sec-cookies" className="pp-doc-section">
               <h2 className="pp-doc-h2">Cookies</h2>
-              <ParamTable rows={ep.cookies} readOnly emptyText="无 Cookies" />
+              <div className="pp-table-wrap"><ParamTable rows={ep.cookies} readOnly emptyText="无 Cookies" /></div>
             </section>
 
             <section id="sec-body" className="pp-doc-section">
@@ -536,7 +505,7 @@ export function DocPage({ route, api }) {
                       {Array.isArray(activeResponse.headers) && activeResponse.headers.length > 0 ? (
                         <div style={{ marginTop: 'var(--sp-2)' }}>
                           <h3 className="pp-doc-h2">响应头</h3>
-                          <ParamTable rows={activeResponse.headers} readOnly columns={['key', 'value']} emptyText="无响应头" />
+                          <div className="pp-table-wrap"><ParamTable rows={activeResponse.headers} readOnly columns={['key', 'value']} emptyText="无响应头" /></div>
                         </div>
                       ) : null}
                     </div>
