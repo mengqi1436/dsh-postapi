@@ -58,6 +58,15 @@
   --page-pad: 10px;        /* Apifox --app-page-layout-size */
   --layout-pad: 8px;       /* Apifox --app-layout-padding-right/bottom */
   --hit: 28px;
+  /* —— 弹层菜单（对齐 Apifox .ui-dropdown-menu / .ui-menu-item 实测）——
+     项高 32px、面板最小宽 150px（Apifox .project-module-menu-popup .ui-menu min-width:150px）、
+     阴影取 Apifox .keywordSearchPopover .ui-popover-inner 原文的两段式投影。 */
+  --menu-w: 200px;
+  --menu-w-sm: 160px;
+  --menu-item-h: 32px;
+  --menu-pad: var(--sp-1);
+  --shadow-menu: 0 8px 8px -4px rgba(16, 24, 40, 0.03), 0 20px 24px -4px rgba(16, 24, 40, 0.08);
+  --z-menu: 40;
   --z-flyout: 30;
   --motion-fast: 120ms;
   --card-pad: 16px;
@@ -1203,6 +1212,125 @@
 }
 .pp-sider-spacer {
   flex: 1;
+}
+
+/* —— 弹层菜单（三级，对齐 Apifox .ui-dropdown-menu / .ui-menu-item）——
+   一级面板挂在触发按钮下方；二级、三级向右/左浮出并垂直对齐到触发项。
+   Apifox 原文：项高 32px、内边距 0 8px、子菜单箭头宽 10px 靠右 16px、
+   分组标题 12px/500 内边距 0 16px、面板圆角 8px + 两段式投影。 */
+.pp-menu-anchor {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+}
+/* 面板内的项锚点必须撑满宽度，否则子面板的 right:100% 会贴到文字而不是面板边缘 */
+.pp-menu .pp-menu-anchor {
+  display: block;
+  width: 100%;
+}
+.pp-menu {
+  /* 用 fixed 而不是 absolute：宿主侧边栏面板是 720px 且带 overflow:hidden/clip，
+     三级级联（200×3）从按钮往左展开会越出容器左边界被裁掉。
+     fixed 不受祖先 overflow 裁剪，坐标由 JS 用 getBoundingClientRect 给出。 */
+  position: fixed;
+  z-index: var(--z-menu);
+  min-width: var(--menu-w);
+  padding: var(--menu-pad);
+  overflow: visible;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-menu);
+}
+/* 内层滚动容器：只有它限高并滚动，保证父面板仍可 overflow: visible */
+.pp-menu-scroll {
+  max-height: calc(var(--menu-item-h) * 12);
+  overflow: auto;
+}
+/* 二级 / 三级面板：相对父项浮出。因为触发按钮在主区右缘，
+   子面板统一向左开（Apifox 靠边时同样翻转方向）。 */
+/* 子面板层级：逐层 +1，避免浅层盖住已展开的深层内容 */
+.pp-menu[data-depth="2"] { z-index: calc(var(--z-menu) + 1); }
+.pp-menu[data-depth="3"] { z-index: calc(var(--z-menu) + 2); }
+.pp-menu .pp-menu .pp-menu {
+  z-index: calc(var(--z-menu) + 2);
+}
+/* 子面板内不再需要自己的内层滚动限高 */
+.pp-menu .pp-menu-scroll {
+  max-height: calc(var(--menu-item-h) * 12);
+}
+.pp-menu-item {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  width: 100%;
+  height: var(--menu-item-h);
+  padding: 0 var(--sp-2);
+  font-family: var(--font-sans);
+  font-size: var(--fs-14);
+  line-height: var(--lh-20);
+  color: var(--fg);
+  text-align: left;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-ctl);
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.pp-menu-item:hover,
+.pp-menu-item[data-open="true"] {
+  background: var(--bg-hover);
+}
+.pp-menu-item:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.pp-menu-item[data-active="true"] {
+  color: var(--accent);
+  font-weight: var(--fw-medium);
+}
+.pp-menu-item[disabled] {
+  color: var(--fg-tertiary);
+  cursor: not-allowed;
+}
+.pp-menu-label {
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* 子菜单箭头：10px 宽，两条 1.5px 斜线（Apifox .ui-menu-submenu-arrow） */
+.pp-menu-arrow {
+  flex: none;
+  width: var(--sp-3);
+  height: var(--icon-sm);
+  color: var(--fg-tertiary);
+  font-size: var(--fs-12);
+  line-height: var(--icon-sm);
+  text-align: center;
+}
+.pp-menu-hint {
+  flex: none;
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: var(--fs-12);
+  color: var(--fg-tertiary);
+}
+.pp-menu-group {
+  height: var(--ctl-h-sm);
+  padding: 0 var(--sp-4);
+  font-size: var(--fs-12);
+  line-height: var(--lh-20);
+  font-weight: var(--fw-medium);
+  color: var(--fg-tertiary);
+  white-space: nowrap;
+}
+.pp-menu-sep {
+  height: 1px;
+  margin: var(--sp-1) calc(var(--sp-2) * -1);
+  background: var(--border);
 }
 
 /* —— 页签条（Apifox .layoutTabBar，44px 卡片式）—— */
