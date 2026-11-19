@@ -1,14 +1,11 @@
 /**
- * PostAPI 页签 body（sidebar.right.pane.tab 席位）：导航 v2 工作台骨架。
+ * PostAPI 页签 body（sidebar.right.pane.tab 席位）：Apifox 同构工作台骨架。
  *
- * 规范：docs/nav-layout-v2-spec.md
- *   v1 的问题：12 条路由在左树平铺一遍、又在水平页签条平铺一遍（重复导航），
- *   且右侧栏实际可用宽约 500px，240px 左树 + 主区 + 240px 右栏在窄容器里必然拥挤。
- *   v2 改为「图标轨 48px + 浮层二级菜单」：
- *     - 一级：图标轨 .pp-rail，5 个分组图标，永远可见，只占 48px；
- *     - 二级：浮层 .pp-flyout，点分组后从轨右侧浮出，绝对定位覆盖主区，不挤压主区宽度；
- *     - 三级：分组内路由条目，点即跳转，浮层自动关闭。
- *   主区永远拿到「容器宽 - 48px」，这是本次改造的核心目标。
+ * 规范：docs/apifox-visual-parity-spec.md（全部数值取自 Apifox 2.8.55 的 CSS 原文）
+ *   结构 = 顶栏 48px + 左侧 240px 常驻文字菜单 + 主区（44px 页签条 + 页头 + 页面）。
+ *   历史：v1 是 240px 左树 + 主区 + 240px 右栏三段式，窄容器里必然拥挤；
+ *   v2 换成 64px 图标轨 + 浮层二级菜单，解决了宽度但图标认不出功能、二级要多点一次；
+ *   v3（当前）照 Apifox 用 240px 常驻文字菜单，分组标题 + 路由文字全部直读。
  *
  * 路由形态：#/overview、#/doc/:endpointId、#/debug、#/flow、#/settings…（契约 §3）。
  * 颜色 / 字号 / 尺寸一律引用 design-tokens.css 的 var(--*) token，内联 style 只写 layout。
@@ -230,9 +227,7 @@ export function PostApiBody({ useTabInfo }) {
   const [theme, setTheme] = useState(() => readSetting(THEME_KEY, 'light'))
   const [env, setEnv] = useState(() => readSetting(ENV_KEY, ''))
   const [keyword, setKeyword] = useState('')
-  // 当前打开的浮层分组 id（null = 全关）。点同图标切回关闭。
-  const [openGroup, setOpenGroup] = useState(null)
-  // 帮助浮层（原右上下文栏的内容，收进顶栏一个 ? 图标）
+  // 帮助卡片（原右上下文栏的内容，收进侧栏底部一项）
   const [helpOpen, setHelpOpen] = useState(false)
   const shellRef = useRef(null)
   // 页面组件每次渲染查注册表：页面可能在 body 已挂载后才自注册。
@@ -241,22 +236,18 @@ export function PostApiBody({ useTabInfo }) {
   const activeGroup = groupOfRoute(route.name)
   const api = typeof window !== 'undefined' ? window.__postapiApi : undefined
 
-  // Esc 关闭浮层；点浮层外关闭。
+  // Esc 关闭帮助卡片；点卡片外关闭。
   useEffect(() => {
     const onKey = (event) => {
-      if (event && event.key === 'Escape') {
-        setOpenGroup(null)
-        setHelpOpen(false)
-      }
+      if (event && event.key === 'Escape') setHelpOpen(false)
     }
     const onDown = (event) => {
       const target = event && event.target
       if (!target || !shellRef.current) return
       if (typeof shellRef.current.contains === 'function' && shellRef.current.contains(target)) {
-        // 点在轨或浮层内部：交给各自的 onClick 处理
-        if (target.closest && (target.closest('.pp-rail') || target.closest('.pp-flyout'))) return
+        // 点在侧栏或帮助卡片内部：交给各自的 onClick 处理
+        if (target.closest && (target.closest('.pp-sider') || target.closest('.pp-help-card'))) return
       }
-      setOpenGroup(null)
       setHelpOpen(false)
     }
     if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
@@ -270,8 +261,8 @@ export function PostApiBody({ useTabInfo }) {
     return undefined
   }, [])
 
-  // 路由变化时收起浮层（跳转后菜单不该留在屏幕上）。
-  useEffect(() => { setOpenGroup(null) }, [route.name, route.arg])
+  // 路由变化时收起帮助卡片（跳转后说明卡不该留在屏幕上）。
+  useEffect(() => { setHelpOpen(false) }, [route.name, route.arg])
 
   const toggleTheme = () => {
     const next = nextTheme(theme)
@@ -293,16 +284,7 @@ export function PostApiBody({ useTabInfo }) {
     if (q === '') return
     goto(searchHash(q))
   }
-  const toggleGroup = (id) => {
-    setHelpOpen(false)
-    setOpenGroup((prev) => (prev === id ? null : id))
-  }
-  const toggleHelp = () => {
-    setOpenGroup(null)
-    setHelpOpen((prev) => !prev)
-  }
-
-  const openGroupDef = NAV_GROUPS.find((g) => g.id === openGroup) || null
+  const toggleHelp = () => setHelpOpen((prev) => !prev)
 
   return (
     <div className="pp-scope pp-workbench-v2" data-theme={theme} data-route={route.name}>
@@ -343,52 +325,60 @@ export function PostApiBody({ useTabInfo }) {
         </button>
       </header>
       <div className="pp-shell" ref={shellRef}>
-        <nav className="pp-rail" aria-label={zh['aside.nav']}>
+        {/* 左侧 240px 常驻文字菜单（Apifox .sider-bxNtfB 同规格）：
+            分组标题 + 组内路由，全部文字直接可见，不再有「图标看不懂」与「二级要点开」两个问题。 */}
+        <nav className="pp-sider" aria-label={zh['aside.nav']}>
           {NAV_GROUPS.map((group) => (
-            <button key={group.id} type="button" className="pp-rail-btn"
-              data-active={openGroup === group.id || (openGroup === null && activeGroup.id === group.id) ? 'true' : 'false'}
-              title={zh[group.labelKey]} aria-label={zh[group.labelKey]}
-              aria-expanded={openGroup === group.id ? 'true' : 'false'}
-              onClick={() => toggleGroup(group.id)}>
-              <Icon name={group.icon} size={20} />
-              {/* 图标下方常显分组名：只给 title 提示的话，用户看不出这一列是什么功能 */}
-              <span className="pp-rail-label">{zh[group.labelKey]}</span>
-            </button>
-          ))}
-          <span className="pp-rail-spacer" />
-        </nav>
-        {openGroupDef ? (
-          <div className="pp-flyout" role="menu" aria-label={zh[openGroupDef.labelKey]}>
-            <div className="pp-flyout-title">{zh[openGroupDef.labelKey]}</div>
-            {routesOfGroup(openGroupDef).map((item) => (
-              <a key={item.name} className="pp-flyout-item" role="menuitem"
-                href={routeHref(item, route)}
-                data-active={route.name === item.name ? 'true' : 'false'}
-                onClick={() => setOpenGroup(null)}>
-                {zh[item.labelKey]}
-              </a>
-            ))}
-          </div>
-        ) : null}
-        {helpOpen ? (
-          <div className="pp-flyout" role="dialog" aria-label={zh['aside.about']}>
-            <div className="pp-flyout-title">
-              {zh['aside.about']}
-              <button type="button" className="pp-icon-btn" onClick={() => setHelpOpen(false)}
-                aria-label={zh['aside.shortcuts']}>
-                <Icon name="close" size={14} />
-              </button>
+            <div key={group.id}>
+              <div className="pp-sider-group">{zh[group.labelKey]}</div>
+              {routesOfGroup(group).map((item) => (
+                <a key={item.name} className="pp-sider-item"
+                  href={routeHref(item, route)}
+                  data-active={route.name === item.name ? 'true' : 'false'}>
+                  <Icon name={group.icon} size={16} />
+                  <span className="pp-sider-label">{zh[item.labelKey]}</span>
+                </a>
+              ))}
             </div>
-            <div className="pp-help">{zh['aside.page.' + route.name] || zh['aside.noContext']}</div>
-            <div className="pp-flyout-title">{zh['aside.shortcuts']}</div>
-            {SHORTCUTS.map((item) => (
-              <a key={item.name} className="pp-flyout-item" href={item.hash}
-                onClick={() => setHelpOpen(false)}>{zh[item.labelKey]}</a>
-            ))}
-          </div>
-        ) : null}
+          ))}
+          <span className="pp-sider-spacer" />
+          <button type="button" className="pp-sider-item" onClick={toggleHelp}
+            data-active={helpOpen ? 'true' : 'false'}>
+            <Icon name="help" size={16} />
+            <span className="pp-sider-label">{zh['aside.about']}</span>
+          </button>
+        </nav>
         <main className="pp-main-v2">
+          {/* 页签条：Apifox 主页签条 44px（docs/apifox-visual-parity-spec.md §6）。
+              当前只承载「当前页」一个页签，结构按卡片式页签建好，后续多开接口时直接复用。 */}
+          <div className="pp-tabbar" role="tablist" aria-label={zh[active.labelKey]}>
+            <button type="button" className="pp-tabbar-item" role="tab"
+              data-active="true" aria-selected="true">
+              <span className="pp-sider-label">{zh[active.labelKey]}</span>
+            </button>
+          </div>
           <PageHead active={active} />
+          {helpOpen ? (
+            <div className="pp-help-card" role="dialog" aria-label={zh['aside.about']}>
+              <div className="pp-help-card-head">
+                <span className="pp-help-card-title">{zh['aside.about']}</span>
+                <button type="button" className="pp-icon-btn" onClick={() => setHelpOpen(false)}
+                  aria-label={zh['aside.shortcuts']}>
+                  <Icon name="close" size={14} />
+                </button>
+              </div>
+              <div className="pp-help">{zh['aside.page.' + route.name] || zh['aside.noContext']}</div>
+              <div className="pp-help-card-title">{zh['aside.shortcuts']}</div>
+              <div className="pp-help-links">
+                {SHORTCUTS.map((item) => (
+                  <a key={item.name} className="pp-sider-item" href={item.hash}
+                    onClick={() => setHelpOpen(false)}>
+                    <span className="pp-sider-label">{zh[item.labelKey]}</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          ) : null}
           {Page ? <Page route={route} api={api} /> : <Placeholder route={route} />}
         </main>
       </div>

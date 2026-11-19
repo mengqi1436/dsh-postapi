@@ -298,90 +298,85 @@ t('纯函数 nextTheme / readSetting / writeSetting：localStorage 读写与缺�
   store.delete('postapi.settings.probe')
 })
 
-t('骨架容器 v2：.pp-workbench-v2 包 .pp-topbar + .pp-shell（轨 + 主区）', async () => {
+t('骨架容器 v3：.pp-workbench-v2 包 .pp-topbar + .pp-shell（240px 侧栏 + 主区）', async () => {
   loc.hash = '#/overview'
   const { tree } = await render()
   assert(cls(tree).split(/\s+/).includes('pp-scope'), '根元素应带 pp-scope')
   assert(cls(tree).split(/\s+/).includes('pp-workbench-v2'), '根元素应带 pp-workbench-v2')
   assert(byClass(tree, 'pp-topbar').length === 1, '应渲染 1 个 .pp-topbar')
   assert(byClass(tree, 'pp-shell').length === 1, '应渲染 .pp-shell 容器')
-  assert(byClass(tree, 'pp-rail').length === 1, '应有图标轨 .pp-rail')
+  // v3 照 Apifox 用 240px 常驻文字菜单（docs/apifox-visual-parity-spec.md §12.1）
+  assert(byClass(tree, 'pp-sider').length === 1, '应有左侧文字菜单 .pp-sider')
   assert(byClass(tree, 'pp-main-v2').length === 1, '应有主区 .pp-main-v2')
-  // v1 的三段式骨架类必须彻底消失：它们会被导航挤压主区
-  assert(byClass(tree, 'pp-body-3col').length === 0, 'v2 不应再有 .pp-body-3col（会挤压主区）')
-  assert(byClass(tree, 'pp-col-right').length === 0, 'v2 不应再有右栏 .pp-col-right（信息已收进 ? 浮层）')
-  assert(byClass(tree, 'pp-col-left').length === 0, 'v2 不应再有通栏左列 .pp-col-left（改图标轨）')
-  // 水平全局页签条也必须消失（与轨重复且吃 40px 纵向）
-  assert(byClass(tree, 'pp-tabs').length === 0, 'v2 不应再有水平全局页签条')
+  // 主页签条 44px 必须存在（Apifox .layoutTabBar）
+  assert(byClass(tree, 'pp-tabbar').length === 1, '应有主页签条 .pp-tabbar')
+  // 已废弃骨架类必须彻底消失
+  for (const gone of ['pp-rail', 'pp-flyout', 'pp-body-3col', 'pp-col-right', 'pp-col-left', 'pp-tabs']) {
+    assert(byClass(tree, gone).length === 0, 'v3 不应再有 ' + gone)
+  }
   assert(byClass(tree, 'pp-page-head').length === 1, '主区应有页头 .pp-page-head')
 })
 
-t('图标轨：5 个分组按钮，当前分组 data-active=true，默认无浮层', async () => {
+t('侧栏菜单：5 个分组标题 + 12 条路由，当前路由 data-active=true', async () => {
   loc.hash = '#/history'
   const { tree, mod } = await render()
-  const railBtns = byClass(tree, 'pp-rail-btn')
-  assert(railBtns.length === 5, '图标轨应有 5 个分组按钮，实际 ' + railBtns.length)
-  const actives = railBtns.filter((n) => String(n.props['data-active']) === 'true')
-  assert(actives.length === 1, '当前分组应恰好 1 个激活，实际 ' + actives.length)
-  // history 属于「质量」分组
+  const groups = byClass(tree, 'pp-sider-group')
+  assert(groups.length === 5, '侧栏应有 5 个分组标题，实际 ' + groups.length)
+  const items = byClass(tree, 'pp-sider-item').filter((n) => n.type === 'a')
+  assert(items.length === 12, '侧栏应有 12 条路由条目，实际 ' + items.length)
+  const actives = items.filter((n) => String(n.props['data-active']) === 'true')
+  assert(actives.length === 1, '当前路由应恰好 1 条激活，实际 ' + actives.length)
+  // 路由条目必须是 <a> 且带 hash，直接可读文字（不靠 title）
+  for (const n of items) assert(n.type === 'a' && String(n.props.href).indexOf('#/') === 0, '路由条目应为带 hash 的 <a>')
   const quality = mod.exports.NAV_GROUPS.find((g) => g.id === 'quality')
   assert(quality && quality.routes.indexOf('history') >= 0, 'history 应归入 quality 分组')
-  // 图标是 SVG 组件（Icon），按组件 props.name 判定分组
-  const glyph = collectNodes(actives[0]).find((n) => n.type === 'svg' || (n.props && n.props.viewBox === '0 0 24 24'))
-  assert(glyph, '激活按钮应含 SVG 图标')
-  assert(quality.icon === 'check', 'quality 分组图标应为 check，实际 ' + quality.icon)
-  assert(byClass(tree, 'pp-flyout').length === 0, '默认不应展开浮层')
 })
 
-t('浮层二级菜单：点分组展开，覆盖主区而不改变主区宽度', async () => {
+t('侧栏常驻：所有分组与路由一次全显示，无需点击展开', async () => {
   loc.hash = '#/overview'
-  const first = await render()
-  const railBtns = byClass(first.tree, 'pp-rail-btn')
-  const apiBtn = railBtns[1] // 第二组 = 接口
-  assert(apiBtn, '未找到接口分组按钮')
-  apiBtn.props.onClick()
-  const second = await render(first.stub)
-  const flyouts = byClass(second.tree, 'pp-flyout')
-  assert(flyouts.length === 1, '点分组后应展开 1 个浮层，实际 ' + flyouts.length)
-  const items = byClass(flyouts[0], 'pp-flyout-item')
-  assert(items.length === 3, '接口分组应有 3 条路由（文档/调试/Mock），实际 ' + items.length)
-  for (const n of items) assert(n.type === 'a', '浮层条目应为 <a>（保留 hash 路由）')
-  // 主区仍在，且不是被浮层替换：浮层与主区并存
-  assert(byClass(second.tree, 'pp-main-v2').length === 1, '浮层展开时主区仍应存在')
-  // 再点同一分组应收起
-  const apiBtn2 = byClass(second.tree, 'pp-rail-btn')[1]
-  apiBtn2.props.onClick()
-  const third = await render(first.stub)
-  assert(byClass(third.tree, 'pp-flyout').length === 0, '再点同一分组应收起浮层')
+  const { tree } = await render()
+  // Apifox 侧栏是常驻文字菜单：分组内路由始终可见，没有「点开才看到」的二级
+  const items = byClass(tree, 'pp-sider-item').filter((n) => n.type === 'a')
+  assert(items.length === 12, '侧栏应一次显示全部 12 条路由，实际 ' + items.length)
+  const labels = items.map((n) => collectText(n))
+  for (const must of ['接口文档', '调试发送', '自动化测试']) {
+    assert(labels.some((l) => l.indexOf(must) >= 0 || must.indexOf(l) >= 0), '侧栏应显示「' + must + '」类文字标签')
+  }
+  assert(byClass(tree, 'pp-main-v2').length === 1, '主区应存在')
 })
 
-t('浮层关闭：点浮层条目后收起（跳转即关）', async () => {
+t('侧栏跳转：每条路由条目都带可用 hash 链接', async () => {
   loc.hash = '#/overview'
-  const first = await render()
-  byClass(first.tree, 'pp-rail-btn')[2].props.onClick() // 数据分组
-  const second = await render(first.stub)
-  const item = byClass(second.tree, 'pp-flyout-item')[0]
-  assert(item, '数据分组应至少一条条目')
-  item.props.onClick()
-  const third = await render(first.stub)
-  assert(byClass(third.tree, 'pp-flyout').length === 0, '点条目后浮层应收起')
+  const { tree, mod } = await render()
+  const items = byClass(tree, 'pp-sider-item').filter((n) => n.type === 'a')
+  // Apifox 侧栏是原生 <a href="#/...">：浏览器直接改 hash，不需要 onClick 拦截
+  for (const n of items) {
+    const href = String(n.props.href)
+    assert(href.indexOf('#/') === 0, '条目 href 应以 #/ 开头，实际 ' + href)
+  }
+  const debugItem = items.find((n) => String(n.props.href) === '#/debug')
+  assert(debugItem, '侧栏应有「调试」条目')
+  const testItem = items.find((n) => String(n.props.href) === '#/test')
+  assert(testItem, '侧栏应有「自动化测试」条目')
+  // 12 条路由与 ROUTES 定义一一对应
+  const routes = mod.exports.ROUTES
+  assert(items.length === routes.length, '侧栏条目数应与 ROUTES 一致（' + routes.length + '），实际 ' + items.length)
 })
 
-t('帮助浮层：? 按钮展开当前页说明与四条快捷入口', async () => {
+t('帮助卡片：侧栏底部「关于」展开当前页说明与四条快捷入口', async () => {
   loc.hash = '#/flow'
   const first = await render()
-  // v2 帮助按钮是 SVG 图标按钮，按 title 定位（title 取 aside.about 文案）
   const helpBtn = collectNodes(first.tree).find((n) => n.type === 'button'
-    && n.props.title === first.mod.exports.zh['aside.about'])
-  assert(helpBtn, '未找到帮助按钮')
+    && cls(n).split(/\s+/).includes('pp-sider-item'))
+  assert(helpBtn, '未找到侧栏「关于」按钮')
   helpBtn.props.onClick()
   const second = await render(first.stub)
-  const flyout = byClass(second.tree, 'pp-flyout')[0]
-  assert(flyout, '? 应展开帮助浮层')
-  const text = collectText(flyout)
-  assert(text.includes(second.mod.exports.zh['aside.page.flow']), '帮助浮层应含当前页说明')
-  const links = byClass(flyout, 'pp-flyout-item')
-  assert(links.length === 4, '帮助浮层应有 4 条快捷入口，实际 ' + links.length)
+  const card = byClass(second.tree, 'pp-help-card')[0]
+  assert(card, '点「关于」应展开帮助卡片')
+  const text = collectText(card)
+  assert(text.includes(second.mod.exports.zh['aside.page.flow']), '帮助卡片应含当前页说明')
+  const links = collectNodes(card).filter((n) => n.type === 'a' && String(n.props.href).indexOf('#/') === 0)
+  assert(links.length === 4, '帮助卡片应有 4 条快捷入口，实际 ' + links.length)
 })
 
 t('顶栏 v2：面包屑 + 搜索 + 新建接口 + 环境 + 三个图标动作', async () => {
@@ -460,7 +455,8 @@ t('所有路由都用同一 v2 骨架（无按页切换列数）', async () => {
   for (const item of ['overview', 'doc', 'debug', 'mock', 'schema', 'env', 'history', 'test', 'import', 'flow', 'search', 'settings']) {
     loc.hash = '#/' + item
     const { tree } = await render()
-    assert(byClass(tree, 'pp-rail').length === 1, item + ' 应有图标轨')
+    assert(byClass(tree, 'pp-sider').length === 1, item + ' 应有侧栏菜单')
+    assert(byClass(tree, 'pp-tabbar').length === 1, item + ' 应有页签条')
     assert(byClass(tree, 'pp-main-v2').length === 1, item + ' 应有主区')
     assert(byClass(tree, 'pp-body-3col').length === 0, item + ' 不应有 v1 三段式')
     assert(byClass(tree, 'pp-body-2col').length === 0, item + ' 不应有 v1 两段式')
