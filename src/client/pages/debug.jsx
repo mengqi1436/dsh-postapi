@@ -365,6 +365,8 @@ export function DebugPage({ route, api }) {
         <section className="pp-pane">
           {/* URL 行（Apifox .main-input-bar）：40px 高，方法 + baseUrl 胶囊 + path + 发送按钮组 */}
           <div className="pp-url-row">
+            {/* 方法徽标：Apifox .url-col-method 在 URL 行首显示彩色方法块 */}
+            <span className="pp-method" data-method={draft.method}>{draft.method}</span>
             <select
               className="pp-select pp-url-method"
               value={draft.method}
