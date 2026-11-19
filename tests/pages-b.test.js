@@ -1005,16 +1005,25 @@ t('import 真接 api：api.import.openapi 缺失报错，存在时接已解析 J
   if (!stateTexts(r2.stub).join('|').includes('接口 2 条')) throw new Error('计数摘要缺失')
 })
 
-t('import 渲染：导入导出卡片 .pp-card + 按钮组 .pp-btn + 结果 .pp-pre + 语言 .pp-select', async () => {
+t('import 渲染：页签分区 .pp-io-layout + 左格式列表 .pp-io-side + 按钮组 .pp-btn + 结果 .pp-pre', async () => {
   const r = await drive('import', {
     storage: { listProjects: async () => [{ id: 'p1', name: 'P1' }], getProject: async () => ({ id: 'p1' }) },
     export: { markdown: async () => '# doc' },
-  }, null, async (tree) => { await buttonByText(tree, 'Markdown').props.onClick() })
+  }, null, async (tree, stub, rerender) => {
+    // 导出在「导出」页签里：先切页签，再点 Markdown 格式，最后点导出
+    await buttonByText(tree, '导出').props.onClick()
+    let t2 = await rerender()
+    await buttonByText(t2, 'Markdown').props.onClick()
+    t2 = await rerender()
+    await buttonByText(t2, '导出 Markdown').props.onClick()
+  })
   const nodes = collectNodes(r.tree)
-  if (!nodes.some((n) => String(n.props.className || '').includes('pp-card'))) throw new Error('缺 .pp-card')
+  const has = (cls) => nodes.some((n) => String(n.props.className || '').split(/\s+/).includes(cls))
+  for (const cls of ['pp-io-layout', 'pp-io-side', 'pp-io-item', 'pp-io-main']) {
+    if (!has(cls)) throw new Error('缺 .' + cls)
+  }
   if (!nodes.some((n) => n.type === 'button' && String(n.props.className || '').includes('pp-btn'))) throw new Error('按钮未使用 .pp-btn')
   if (!nodes.some((n) => n.type === 'pre' && String(n.props.className || '').includes('pp-pre'))) throw new Error('结果未使用 .pp-pre')
-  if (!nodes.some((n) => n.type === 'select' && String(n.props.className || '').includes('pp-select'))) throw new Error('语言下拉未使用 .pp-select')
 })
 
 t('import 真接 api：非法 JSON 在页面内报错且不调用 import', async () => {
@@ -1040,13 +1049,23 @@ t('import 真接 api：export 接 project 对象、codegen 接 { endpoint, env, 
     export: { markdown: async (arg) => { calls.push(['export', arg]); return '# doc' } },
     codegen: { run: async (opts) => { calls.push(['codegen', opts]); return 'curl x' } },
   }
-  const r = await drive('import', api, null, async (tree) => { await buttonByText(tree, 'Markdown').props.onClick() })
+  const r = await drive('import', api, null, async (tree, stub, rerender) => {
+    await buttonByText(tree, '导出').props.onClick()
+    let t2 = await rerender()
+    await buttonByText(t2, 'Markdown').props.onClick()
+    t2 = await rerender()
+    await buttonByText(t2, '导出 Markdown').props.onClick()
+  })
   const expCall = calls.find((c) => c[0] === 'export')
   if (!expCall) throw new Error('export.markdown 未调用')
   if (expCall[1] !== project) throw new Error('export 未接 project 对象：' + JSON.stringify(expCall[1] && expCall[1].id))
   if (!stateTexts(r.stub).join('|').includes('# doc')) throw new Error('导出结果未展示')
 
-  const r2 = await drive('import', api, null, async (tree) => { await buttonByText(tree, '生成代码').props.onClick() })
+  const r2 = await drive('import', api, null, async (tree, stub, rerender) => {
+    await buttonByText(tree, '代码生成').props.onClick()
+    const t2 = await rerender()
+    await buttonByText(t2, '生成代码').props.onClick()
+  })
   const cgCall = calls.find((c) => c[0] === 'codegen')
   if (!cgCall) throw new Error('codegen.run 未调用')
   if (cgCall[1].lang !== 'curl' || !cgCall[1].endpoint) throw new Error('codegen 入参错误：' + JSON.stringify(cgCall[1]))
@@ -1057,7 +1076,13 @@ t('import 真接 api：export 在缺 getProject 时页面内报错', async () =>
   const r = await drive('import', {
     storage: { listProjects: async () => [{ id: 'p1', name: 'P1' }] },
     export: { markdown: async () => '# x' },
-  }, null, async (tree) => { await buttonByText(tree, 'Markdown').props.onClick() })
+  }, null, async (tree, stub, rerender) => {
+    await buttonByText(tree, '导出').props.onClick()
+    let t2 = await rerender()
+    await buttonByText(t2, 'Markdown').props.onClick()
+    t2 = await rerender()
+    await buttonByText(t2, '导出 Markdown').props.onClick()
+  })
   if (!stateTexts(r.stub).join('|').includes('getProject')) throw new Error('缺 getProject 未报错')
 })
 

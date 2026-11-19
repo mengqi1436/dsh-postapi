@@ -1051,6 +1051,141 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+/* 导入导出页（Apifox「导入导出数据」同构）：页签分区 + 左格式列表 + 右内容。
+   原来「导入 / 导出」两列并排，各只剩 240px：textarea 与按钮组都换行，
+   代码生成再单独占一整张卡，三块高度参差。 */
+.pp-io-layout {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+}
+.pp-io-layout > .pp-tabs {
+  border-bottom: 1px solid var(--border);
+}
+.pp-io-body {
+  display: grid;
+  grid-template-columns: 168px minmax(0, 1fr);
+  min-height: 0;
+}
+@container ppmain (max-width: 720px) {
+  .pp-io-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  /* 堆叠后格式列表改成横向可滚的一行 */
+  .pp-io-layout .pp-io-side {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    padding: var(--sp-2);
+  }
+  .pp-io-layout .pp-io-side-title {
+    display: none;
+  }
+  .pp-io-layout .pp-io-item {
+    flex: none;
+    white-space: nowrap;
+  }
+  /* 堆叠后主区独占整宽，但 grid 子项默认 min-width:auto 会被内容顶开，
+     表现为「清空」按钮被切掉一半。这里显式压到 0。 */
+  .pp-io-layout .pp-io-main {
+    min-width: 0;
+    padding: var(--sp-3);
+    padding-right: calc(var(--sp-3) + var(--sp-1));
+  }
+}
+.pp-io-side {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: var(--sp-2);
+  border-right: 1px solid var(--border);
+  background: var(--bg-app);
+}
+.pp-io-side-title {
+  padding: var(--sp-1) var(--sp-2) var(--sp-2);
+  font-size: var(--fs-12);
+  color: var(--fg-tertiary);
+}
+.pp-io-item {
+  display: flex;
+  align-items: center;
+  height: var(--ctl-h);
+  padding: 0 var(--sp-2);
+  font-family: var(--font-sans);
+  font-size: var(--fs-13);
+  color: var(--fg-secondary);
+  text-align: left;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-ctl);
+  cursor: pointer;
+}
+.pp-io-item:hover {
+  color: var(--fg);
+  background: var(--bg-hover);
+}
+.pp-io-item[data-active="true"] {
+  color: var(--accent);
+  background: var(--accent-tint);
+  font-weight: var(--fw-medium);
+}
+.pp-io-main {
+  min-width: 0;
+  /* 右侧比左侧多留 4px：卡片右边框 + 滚动条在窄栏里会贴住 textarea/按钮 */
+  padding: var(--sp-4) var(--sp-4) var(--sp-4) var(--sp-4);
+  padding-right: calc(var(--sp-4) + var(--sp-1));
+}
+.pp-io-head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+  margin-bottom: var(--sp-2);
+}
+.pp-io-title {
+  font-size: var(--fs-14);
+  font-weight: var(--fw-semibold);
+  color: var(--fg-strong);
+}
+/* head 是 flex + flex-wrap：子项默认可收缩，窄栏里「清空」会被压到 42px 把字裁掉。
+   标题允许省略，按钮一律不收缩。 */
+.pp-io-head > .pp-io-title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pp-io-head > .pp-btn {
+  flex: none;
+  /* 两字按钮（清空）在 42px 时贴边，给一点余量 */
+  min-width: 56px;
+}
+.pp-io-head > .pp-btn:last-child {
+  margin-left: auto;
+}
+.pp-io-input {
+  margin-top: var(--sp-2);
+}
+.pp-io-stats {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+  margin-top: var(--sp-2);
+}
+.pp-io-pre {
+  margin-top: var(--sp-3);
+}
+.pp-io-sample {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-top: var(--sp-2);
+  min-width: 0;
+}
 /* 环境页（Apifox「环境管理」同构）：左环境列表 + 右编辑区。
    左列宽与文档页目录树共用 --panel-w，右区顶上是页签（环境变量 / 全局变量 / 优先级）。
    原来的一行三卡在 500px 主区里每卡只剩 250px，变量表要横向滚动、

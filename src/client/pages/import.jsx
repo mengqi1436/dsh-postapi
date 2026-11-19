@@ -8,18 +8,31 @@ import { applyTheme } from './theme.js'
 
 ;(window.__postapiQueue = window.__postapiQueue || []).push(['import', ImportPage]) // 注册表就绪前入队
 
+/** 顶部页签（Apifox「导入导出数据」把导入 / 导出分成两页，代码生成单列一块） */
+const IO_TABS = [
+  { id: 'import', label: '导入' },
+  { id: 'export', label: '导出' },
+  { id: 'codegen', label: '代码生成' },
+]
+
+/** 占位提示：用数组 join 构造多行文本，避免在源码里出现裸换行 */
+const PH_OPENAPI = ['{', '  "openapi": "3.0.0",', '  "info": { "title": "示例", "version": "1.0.0" },', '  "paths": {}', '}'].join('\n')
+const PH_POSTMAN = ['{', '  "info": { "name": "示例" },', '  "item": []', '}'].join('\n')
+const PH_HAR = ['{', '  "log": { "version": "1.2", "entries": [] }', '}'].join('\n')
+const PH_CURL = "curl -X GET 'https://api.example.com/pets' -H 'Accept: application/json'"
+
 const IMPORT_KINDS = [
-  { id: 'openapi', label: 'OpenAPI / Swagger', hint: '粘贴 OpenAPI 3 或 Swagger 2 JSON/YAML 文本' },
-  { id: 'postman', label: 'Postman', hint: '粘贴 Postman Collection v2.1 JSON 文本' },
-  { id: 'har', label: 'HAR', hint: '粘贴浏览器导出的 HAR JSON 文本' },
-  { id: 'curl', label: 'cURL', hint: '粘贴 cURL 命令（可多条，逐行）' },
+  { id: 'openapi', label: 'OpenAPI / Swagger', hint: '粘贴 OpenAPI 3 或 Swagger 2 JSON/YAML 文本', placeholder: PH_OPENAPI },
+  { id: 'postman', label: 'Postman', hint: '粘贴 Postman Collection v2.1 JSON 文本', placeholder: PH_POSTMAN },
+  { id: 'har', label: 'HAR', hint: '粘贴浏览器导出的 HAR JSON 文本', placeholder: PH_HAR },
+  { id: 'curl', label: 'cURL', hint: '粘贴 cURL 命令（可多条，逐行）', placeholder: PH_CURL },
 ]
 
 const EXPORT_KINDS = [
-  { id: 'openapi', label: 'OpenAPI 3' },
-  { id: 'postman', label: 'Postman' },
-  { id: 'har', label: 'HAR' },
-  { id: 'markdown', label: 'Markdown' },
+  { id: 'openapi', label: 'OpenAPI 3', hint: '标准 OpenAPI 3.0 文档' },
+  { id: 'postman', label: 'Postman', hint: 'Postman Collection v2.1' },
+  { id: 'har', label: 'HAR', hint: 'HTTP Archive 1.2' },
+  { id: 'markdown', label: 'Markdown', hint: '可读文档' },
 ]
 
 const LANGS = [
@@ -75,6 +88,7 @@ export function ImportPage(props) {
   const [isMock, setIsMock] = useState(true)
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
+  const [ioTab, setIoTab] = useState('import')
   const [importKind, setImportKind] = useState('openapi')
   const [importText, setImportText] = useState(MOCK_CURL)
   const [importOut, setImportOut] = useState('')
@@ -241,6 +255,8 @@ export function ImportPage(props) {
   }
 
   const currentImport = IMPORT_KINDS.find((k) => k.id === importKind) || IMPORT_KINDS[0]
+  const currentExport = EXPORT_KINDS.find((k) => k.id === exportKind) || EXPORT_KINDS[0]
+  const currentLang = LANGS.find((l) => l.id === lang) || LANGS[0]
 
   return (
     <div className="pp-scope pp-page" data-page="import" ref={rootRef}>
@@ -261,59 +277,119 @@ export function ImportPage(props) {
         </div>
         {error ? <p className="pp-error-text">{error}</p> : null}
         {notice ? <p className="pp-muted">{notice}</p> : null}
-  
-        <div className="pp-cols-2">
-          <div className="pp-card pp-card-hover">
-            <div className="pp-card-title">导入</div>
-            <div className="pp-tabs">
-              {IMPORT_KINDS.map((k) => (
-                <button key={k.id} className="pp-tab" data-active={importKind === k.id ? 'true' : 'false'}
-                  onClick={() => pickImportKind(k.id)}>{k.label}</button>
-              ))}
-            </div>
-            <div className="pp-note" style={{ marginTop: 'var(--sp-2)' }}>{currentImport.hint}</div>
-            <textarea className="pp-textarea" rows={8} value={importText}
-              onChange={(e) => setImportText(e.target.value)} />
-            <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
-              <button className="pp-btn pp-btn-primary" onClick={runImport} disabled={busy}>开始导入</button>
-              <button className="pp-btn" onClick={saveImport} disabled={busy || !bundle}>保存到项目</button>
-              <button className="pp-btn" onClick={() => copy(importOut, '导入结果')}>复制结果</button>
-            </div>
-            {importOut ? <pre className="pp-pre pp-pre-scroll" style={{ marginTop: 'var(--sp-2)' }}>{importOut}</pre> : null}
+
+        {/* Apifox 导入导出同构：顶部页签分区（导入 / 导出 / 代码生成），
+            每区「左格式列表 + 右内容」。原来「导入 + 导出」两列并排各占 240px，
+            textarea 与按钮组都被压到换行；代码生成又单独占一整张卡，三块高度参差。 */}
+        <div className="pp-io-layout">
+          <div className="pp-tabs">
+            {IO_TABS.map((t) => (
+              <button key={t.id} className="pp-tab" data-active={ioTab === t.id ? 'true' : 'false'}
+                onClick={() => setIoTab(t.id)}>{t.label}</button>
+            ))}
           </div>
-  
-          <div className="pp-card pp-card-hover">
-            <div className="pp-card-title">导出</div>
-            <div className="pp-note">导出读取当前项目对象后交给 api.export，结果可直接复制。</div>
-            <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
-              {EXPORT_KINDS.map((k) => (
-                <button key={k.id} className="pp-btn" onClick={() => runExport(k.id)} disabled={busy}>{k.label}</button>
-              ))}
-              <button className="pp-btn" onClick={() => copy(exportOut, '导出结果')}>复制结果</button>
+
+          <div className="pp-io-body">
+            <nav className="pp-io-side" aria-label={ioTab === 'export' ? '导出格式' : ioTab === 'codegen' ? '目标语言' : '导入格式'}>
+              {ioTab === 'import' ? (
+                <>
+                  <div className="pp-io-side-title">导入来源</div>
+                  {IMPORT_KINDS.map((k) => (
+                    <button key={k.id} className="pp-io-item" data-active={importKind === k.id ? 'true' : 'false'}
+                      onClick={() => pickImportKind(k.id)}>{k.label}</button>
+                  ))}
+                </>
+              ) : null}
+              {ioTab === 'export' ? (
+                <>
+                  <div className="pp-io-side-title">导出格式</div>
+                  {EXPORT_KINDS.map((k) => (
+                    <button key={k.id} className="pp-io-item" data-active={exportKind === k.id ? 'true' : 'false'}
+                      onClick={() => setExportKind(k.id)}>{k.label}</button>
+                  ))}
+                </>
+              ) : null}
+              {ioTab === 'codegen' ? (
+                <>
+                  <div className="pp-io-side-title">目标语言</div>
+                  {LANGS.map((l) => (
+                    <button key={l.id} className="pp-io-item" data-active={lang === l.id ? 'true' : 'false'}
+                      onClick={() => setLang(l.id)}>{l.label}</button>
+                  ))}
+                </>
+              ) : null}
+            </nav>
+
+            <div className="pp-io-main">
+              {ioTab === 'import' ? (
+                <>
+                  <div className="pp-io-head">
+                    <span className="pp-io-title">{currentImport.label}</span>
+                    <button className="pp-btn pp-btn-sm" onClick={() => setImportText('')} disabled={busy || !importText}>
+                      清空
+                    </button>
+                  </div>
+                  <div className="pp-note">{currentImport.hint}</div>
+                  <textarea className="pp-textarea pp-io-input" rows={10} value={importText}
+                    placeholder={currentImport.placeholder}
+                    onChange={(e) => setImportText(e.target.value)} />
+                  <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
+                    <button className="pp-btn pp-btn-primary" onClick={runImport} disabled={busy}>开始导入</button>
+                    <button className="pp-btn" onClick={saveImport} disabled={busy || !bundle}>保存到项目</button>
+                    <button className="pp-btn" onClick={() => copy(importOut, '导入结果')} disabled={!importOut}>复制结果</button>
+                  </div>
+                  {bundle ? (
+                    <div className="pp-io-stats">
+                      <span className="pp-pill pp-pill-ok">已解析</span>
+                      <span className="pp-meta">接口 {importSummary(bundle).endpoints} 条</span>
+                      <span className="pp-meta">目录 {importSummary(bundle).folders} 个</span>
+                      <span className="pp-meta">模型 {importSummary(bundle).schemas} 个</span>
+                    </div>
+                  ) : null}
+                  {importOut ? <pre className="pp-pre pp-pre-scroll pp-io-pre">{importOut}</pre> : null}
+                </>
+              ) : null}
+
+              {ioTab === 'export' ? (
+                <>
+                  <div className="pp-io-head">
+                    <span className="pp-io-title">{currentExport.label}</span>
+                    <span className="pp-meta">{currentExport.hint}</span>
+                  </div>
+                  <div className="pp-note">导出读取当前项目对象后交给 api.export，结果可直接复制或另存。</div>
+                  <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
+                    <button className="pp-btn pp-btn-primary" onClick={() => runExport(exportKind)} disabled={busy}>
+                      导出 {currentExport.label}
+                    </button>
+                    <button className="pp-btn" onClick={() => copy(exportOut, '导出结果')} disabled={!exportOut}>复制结果</button>
+                  </div>
+                  <div className="pp-meta" style={{ marginTop: 'var(--sp-2)' }}>
+                    当前项目：{projectId} · 格式：{exportKind}
+                  </div>
+                  {exportOut ? <pre className="pp-pre pp-pre-scroll pp-io-pre">{exportOut}</pre> : null}
+                </>
+              ) : null}
+
+              {ioTab === 'codegen' ? (
+                <>
+                  <div className="pp-io-head">
+                    <span className="pp-io-title">{currentLang.label}</span>
+                  </div>
+                  <div className="pp-io-sample">
+                    <span className="pp-meta">示例接口</span>
+                    <span className="pp-method" data-method={MOCK_ENDPOINT.method}>{MOCK_ENDPOINT.method}</span>
+                    <span className="pp-mono pp-ellipsis">{MOCK_ENDPOINT.url}</span>
+                  </div>
+                  <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
+                    <button className="pp-btn pp-btn-primary" onClick={runCodegen} disabled={busy}>生成代码</button>
+                    <button className="pp-btn" onClick={() => copy(codeOut, '生成代码')} disabled={!codeOut}>复制代码</button>
+                  </div>
+                  {codeOut ? <pre className="pp-pre pp-pre-scroll pp-io-pre">{codeOut}</pre> : null}
+                </>
+              ) : null}
             </div>
-            <div className="pp-meta" style={{ marginTop: 'var(--sp-2)' }}>当前导出格式：{exportKind}</div>
-            {exportOut ? <pre className="pp-pre pp-pre-scroll" style={{ marginTop: 'var(--sp-2)' }}>{exportOut}</pre> : null}
           </div>
         </div>
-  
-        <div className="pp-card" style={{ marginTop: 'var(--sp-4)' }}>
-          <div className="pp-card-title">代码生成</div>
-          <div className="pp-form-row">
-            <label className="pp-form-label">语言</label>
-            <select className="pp-select" value={lang} onChange={(e) => setLang(e.target.value)}>
-              {LANGS.map((l) => <option key={l.id} value={l.id}>{l.label}</option>)}
-            </select>
-            <button className="pp-btn pp-btn-primary" onClick={runCodegen} disabled={busy}>生成代码</button>
-            <button className="pp-btn" onClick={() => copy(codeOut, '生成代码')}>复制代码</button>
-          </div>
-          <div className="pp-meta" style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-2)' }}>
-            示例接口：
-            <span className="pp-method" data-method={MOCK_ENDPOINT.method}>{MOCK_ENDPOINT.method}</span>
-            <span className="pp-mono">{MOCK_ENDPOINT.url}</span>
-          </div>
-          {codeOut ? <pre className="pp-pre pp-pre-scroll" style={{ marginTop: 'var(--sp-2)' }}>{codeOut}</pre> : null}
-        </div>
-      
       </div>
     </div>
   )
