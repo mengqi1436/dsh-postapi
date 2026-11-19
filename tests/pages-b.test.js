@@ -801,6 +801,27 @@ t('flow 渲染：左步骤列表 .pp-flow-side + 时序画布 .pp-seq-wrap + 属
   }
 })
 
+t('flow 选中联动：左列表选中态与画布高亮绑定同一步', async () => {
+  const steps = [
+    { actor: 'A', action: 'call', target: 'B', message: 'm1' },
+    { actor: 'B', action: 'return', target: 'A', message: 'm2' },
+    { actor: 'A', action: 'self', target: '', message: 'm3' },
+  ]
+  const r = await drive('flow', { storage: {
+    listProjects: async () => [{ id: 'p1', name: 'P1' }],
+    getProject: async () => ({ id: 'p1', flow: { name: 'F', steps } }),
+  } })
+  const nodes = collectNodes(r.tree)
+  // 左列表：恰好一条 data-active=true
+  const rowsActive = nodes.filter((n) => String(n.props.className || '').split(/\s+/).includes('pp-flow-step') && n.props['data-active'] === 'true')
+  if (rowsActive.length !== 1) throw new Error('左列表选中态应恰好 1 条，实际 ' + rowsActive.length)
+  // 画布：传入的 activeIndex 必须与左列表选中项一致（第 0 步）
+  const seq = nodes.find((n) => n.props && 'activeIndex' in n.props && 'steps' in n.props)
+  if (!seq) throw new Error('画布未收到 activeIndex')
+  if (seq.props.activeIndex !== 0) throw new Error('画布 activeIndex 应为 0，实际 ' + seq.props.activeIndex)
+  if (typeof seq.props.onSelectRow !== 'function') throw new Error('画布缺少 onSelectRow，无法从图元反选左侧列表')
+})
+
 t('flow.flowPayload：载荷结构 name + 规整 steps', async () => {
   const f = await ex('flow', 'flowPayload')
   const got = f('时序', [{ actor: 'A', action: 'return', target: 'B', message: 'm' }])

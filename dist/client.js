@@ -3978,7 +3978,9 @@ var import_react16 = __toESM(require("react"), 1);
 
 // src/client/pages/sequence.jsx
 var import_react15 = require("react");
-var W = 960;
+var ACTOR_GAP = 150;
+var MIN_W = 480;
+var MAX_W = 960;
 var MARGIN_X = 64;
 var ACTOR_W = 132;
 var ACTOR_H = 36;
@@ -4008,13 +4010,18 @@ function collectActors(steps) {
   }
   return actors;
 }
-function centerX(i, n) {
-  if (n <= 1) return W / 2;
-  return MARGIN_X + i * (W - 2 * MARGIN_X) / (n - 1);
+function sequenceWidth(n) {
+  if (n <= 1) return MIN_W;
+  return Math.max(MIN_W, Math.min(MAX_W, MARGIN_X * 2 + (n - 1) * ACTOR_GAP));
+}
+function centerX(i, n, width) {
+  if (n <= 1) return width / 2;
+  return MARGIN_X + i * (width - 2 * MARGIN_X) / (n - 1);
 }
 function layoutSequence(steps) {
   const actors = collectActors(steps);
-  const centers = actors.map((_, i) => centerX(i, actors.length));
+  const width = sequenceWidth(actors.length);
+  const centers = actors.map((_, i) => centerX(i, actors.length, width));
   const idxOf = (name) => actors.indexOf(name);
   const rows = [];
   let y = MSG_START;
@@ -4078,7 +4085,7 @@ function layoutSequence(steps) {
     activations.push({ cx: centers[idxOf(s.target)], fromY: row.y, toY: endY });
   });
   const height = contentBottom + BOTTOM_PAD + LEGEND_H;
-  return { actors, centers, idxOf, rows, frames, activations, width: W, height, lifelineBottom: contentBottom + 8 };
+  return { actors, centers, idxOf, rows, frames, activations, width, height, lifelineBottom: contentBottom + 8 };
 }
 function exportSequenceSvg(svgEl, filename = "flow-sequence.svg") {
   if (!svgEl) return;
@@ -4105,7 +4112,7 @@ function msgLabel(row) {
 function maskWidth(text) {
   return Math.max(24, Math.round(text.length * 5 + 10));
 }
-function SequenceDiagram({ steps, idPrefix = "flow-seq", title = "\u65F6\u5E8F\u56FE", desc = "\u63A5\u53E3\u8C03\u7528\u65F6\u5E8F", svgRef: externalSvgRef }) {
+function SequenceDiagram({ steps, idPrefix = "flow-seq", title = "\u65F6\u5E8F\u56FE", desc = "\u63A5\u53E3\u8C03\u7528\u65F6\u5E8F", svgRef: externalSvgRef, activeIndex = -1, onSelectRow }) {
   const innerRef = (0, import_react15.useRef)(null);
   const svgRef = externalSvgRef || innerRef;
   if (!steps || steps.length === 0) return null;
@@ -4142,11 +4149,38 @@ function SequenceDiagram({ steps, idPrefix = "flow-seq", title = "\u65F6\u5E8F\u
       strokeWidth: "0.8"
     }
   ));
+  const highlightBands = rows.map((row, i) => {
+    if (i !== activeIndex) return null;
+    return /* @__PURE__ */ (0, import_react.createElement)("g", { key: "hl-" + i, pointerEvents: "none" }, /* @__PURE__ */ (0, import_react.createElement)(
+      "rect",
+      {
+        x: 8,
+        y: row.y - 14,
+        width: width - 16,
+        height: 28,
+        rx: "4",
+        fill: ACCENT,
+        fillOpacity: "0.08"
+      }
+    ), /* @__PURE__ */ (0, import_react.createElement)("circle", { cx: MARGIN_X - 32, cy: row.y, r: "8", fill: ACCENT }), /* @__PURE__ */ (0, import_react.createElement)(
+      "text",
+      {
+        x: MARGIN_X - 32,
+        y: row.y + 3,
+        fill: "var(--fg-on-accent)",
+        fontSize: "var(--fs-chart)",
+        fontFamily: FONT_MONO,
+        textAnchor: "middle"
+      },
+      i + 1
+    ));
+  });
   const messages = rows.map((row, i) => {
     const s = row.step;
     const y = row.y;
+    const isActive = i === activeIndex;
     if (s.action === "note") {
-      const cx = centers[idxOf(s.actor)] ?? W / 2;
+      const cx = centers[idxOf(s.actor)] ?? width / 2;
       return /* @__PURE__ */ (0, import_react.createElement)("g", { key: "m-" + i }, /* @__PURE__ */ (0, import_react.createElement)(
         "rect",
         {
@@ -4175,7 +4209,7 @@ function SequenceDiagram({ steps, idPrefix = "flow-seq", title = "\u65F6\u5E8F\u
       ));
     }
     if (s.action === "self") {
-      const cx = centers[idxOf(s.actor)] ?? W / 2;
+      const cx = centers[idxOf(s.actor)] ?? width / 2;
       const label2 = msgLabel(row);
       return /* @__PURE__ */ (0, import_react.createElement)("g", { key: "m-" + i }, /* @__PURE__ */ (0, import_react.createElement)(
         "path",
@@ -4208,7 +4242,7 @@ function SequenceDiagram({ steps, idPrefix = "flow-seq", title = "\u65F6\u5E8F\u
     const x1 = from < to ? from + ACT_W / 2 : from - ACT_W / 2;
     const x2 = from < to ? to - ACT_W / 2 : to + ACT_W / 2;
     const isReturn = s.action === "return";
-    const headline = s.headline === true;
+    const headline = s.headline === true || isActive;
     const stroke = headline ? ACCENT : MUTED;
     const marker = headline ? idPrefix + "-arrow-accent" : idPrefix + "-arrow";
     const label = msgLabel(row);
@@ -4221,7 +4255,7 @@ function SequenceDiagram({ steps, idPrefix = "flow-seq", title = "\u65F6\u5E8F\u
         x2,
         y2: y,
         stroke,
-        strokeWidth: "1",
+        strokeWidth: isActive ? 2 : 1,
         strokeDasharray: isReturn && !headline ? "5,4" : void 0,
         markerEnd: `url(#${marker})`
       }
@@ -4230,7 +4264,8 @@ function SequenceDiagram({ steps, idPrefix = "flow-seq", title = "\u65F6\u5E8F\u
       {
         x: (left + right) / 2,
         y: y - 11,
-        fill: MUTED,
+        fill: isActive ? ACCENT : MUTED,
+        fontWeight: isActive ? 600 : void 0,
         fontSize: "var(--fs-chart)",
         fontFamily: FONT_MONO,
         textAnchor: "middle",
@@ -4239,6 +4274,19 @@ function SequenceDiagram({ steps, idPrefix = "flow-seq", title = "\u65F6\u5E8F\u
       label
     ));
   });
+  const hitAreas = onSelectRow ? rows.map((row, i) => /* @__PURE__ */ (0, import_react.createElement)(
+    "rect",
+    {
+      key: "hit-" + i,
+      x: MARGIN_X - 48,
+      y: row.y - 14,
+      width: width - MARGIN_X * 2 + 96,
+      height: 28,
+      fill: "transparent",
+      style: { cursor: "pointer" },
+      onClick: () => onSelectRow(i)
+    }
+  )) : null;
   const frameEls = frames.map((f, i) => /* @__PURE__ */ (0, import_react.createElement)("g", { key: "f-" + i }, /* @__PURE__ */ (0, import_react.createElement)(
     "rect",
     {
@@ -4278,10 +4326,20 @@ function SequenceDiagram({ steps, idPrefix = "flow-seq", title = "\u65F6\u5E8F\u
       letterSpacing: "0.12em"
     },
     f.op.toUpperCase()
-  ), f.guards.map((g, gi) => /* @__PURE__ */ (0, import_react.createElement)(
+  ), f.guards.map((g, gi) => /* @__PURE__ */ (0, import_react.createElement)("g", { key: "g-" + gi }, /* @__PURE__ */ (0, import_react.createElement)(
+    "rect",
+    {
+      x: f.x + 8,
+      y: g.y - 11,
+      width: Math.max(40, g.text.length * 6 + 12),
+      height: 14,
+      rx: "2",
+      fill: PAPER,
+      fillOpacity: "0.92"
+    }
+  ), /* @__PURE__ */ (0, import_react.createElement)(
     "text",
     {
-      key: "g-" + gi,
       x: f.x + 12,
       y: g.y,
       fill: MUTED,
@@ -4290,7 +4348,7 @@ function SequenceDiagram({ steps, idPrefix = "flow-seq", title = "\u65F6\u5E8F\u
       letterSpacing: "0.04em"
     },
     g.text
-  )), f.dividers.map((dy, di) => /* @__PURE__ */ (0, import_react.createElement)(
+  ))), f.dividers.map((dy, di) => /* @__PURE__ */ (0, import_react.createElement)(
     "line",
     {
       key: "d-" + di,
@@ -4365,11 +4423,13 @@ function SequenceDiagram({ steps, idPrefix = "flow-seq", title = "\u65F6\u5E8F\u
     /* @__PURE__ */ (0, import_react.createElement)("title", { id: aId }, title),
     /* @__PURE__ */ (0, import_react.createElement)("desc", { id: dId }, desc),
     markers,
+    highlightBands,
     frameEls,
     lifelines,
     acts,
     messages,
     actorBoxes,
+    hitAreas,
     legend
   );
 }
@@ -4592,7 +4652,9 @@ function FlowPage(props) {
       svgRef,
       idPrefix: "flow-page-seq",
       title: flowName || "\u63A5\u53E3\u8C03\u8BD5\u65F6\u5E8F",
-      desc: "\u9875\u9762\u7ECF Storage \u8F7D\u5165\u9879\u76EE\u3001Request \u53D1\u8D77 HTTP \u8C03\u7528\uFF0C\u5E76\u6309\u54CD\u5E94\u72B6\u6001\u6E32\u67D3\u6216\u63D0\u793A\u9519\u8BEF\u7684\u65F6\u5E8F\u56FE"
+      desc: "\u9875\u9762\u7ECF Storage \u8F7D\u5165\u9879\u76EE\u3001Request \u53D1\u8D77 HTTP \u8C03\u7528\uFF0C\u5E76\u6309\u54CD\u5E94\u72B6\u6001\u6E32\u67D3\u6216\u63D0\u793A\u9519\u8BEF\u7684\u65F6\u5E8F\u56FE",
+      activeIndex: activeIdx,
+      onSelectRow: setActiveIdx
     }
   ) : /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u6682\u65E0\u53EF\u6E32\u67D3\u7684\u65F6\u5E8F", hint: "\u6DFB\u52A0\u6B65\u9AA4\u540E\u81EA\u52A8\u751F\u6210" })), active ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-flow-props" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u6B65\u9AA4 ", activeIdx + 1), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-flow-prop-grid" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u53D1\u8D77\u65B9"), /* @__PURE__ */ (0, import_react.createElement)(
     "input",

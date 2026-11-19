@@ -4,7 +4,11 @@
 import { useRef } from 'react'
 
 // —— 几何常量（4px 网格）——
-const W = 960
+// 画布宽度按参与方数量自适应：固定 960 在 545px 的右栏里被缩到 0.57 倍，
+// 8px 的图注变成 4.5px 完全读不出。间距 150 是 actor 框 132 + 呼吸 18 的下限。
+const ACTOR_GAP = 150
+const MIN_W = 480
+const MAX_W = 960
 const MARGIN_X = 64
 const ACTOR_W = 132
 const ACTOR_H = 36
@@ -38,15 +42,22 @@ function collectActors(steps) {
   return actors
 }
 
-function centerX(i, n) {
-  if (n <= 1) return W / 2
-  return MARGIN_X + (i * (W - 2 * MARGIN_X)) / (n - 1)
+/** 画布宽度：随参与方数量增长，夹在 [MIN_W, MAX_W] 之间。 */
+export function sequenceWidth(n) {
+  if (n <= 1) return MIN_W
+  return Math.max(MIN_W, Math.min(MAX_W, MARGIN_X * 2 + (n - 1) * ACTOR_GAP))
+}
+
+function centerX(i, n, width) {
+  if (n <= 1) return width / 2
+  return MARGIN_X + (i * (width - 2 * MARGIN_X)) / (n - 1)
 }
 
 // —— 布局计算：rows / frames / activations ——
 export function layoutSequence(steps) {
   const actors = collectActors(steps)
-  const centers = actors.map((_, i) => centerX(i, actors.length))
+  const width = sequenceWidth(actors.length)
+  const centers = actors.map((_, i) => centerX(i, actors.length, width))
   const idxOf = (name) => actors.indexOf(name)
 
   const rows = []
@@ -114,7 +125,7 @@ export function layoutSequence(steps) {
   })
 
   const height = contentBottom + BOTTOM_PAD + LEGEND_H
-  return { actors, centers, idxOf, rows, frames, activations, width: W, height, lifelineBottom: contentBottom + 8 }
+  return { actors, centers, idxOf, rows, frames, activations, width, height, lifelineBottom: contentBottom + 8 }
 }
 
 // —— SVG 导出：clone 后把 var(--x) 解析为计算值，Blob 下载 ——
@@ -149,7 +160,7 @@ function maskWidth(text) {
   return Math.max(24, Math.round(text.length * 5 + 10))
 }
 
-export function SequenceDiagram({ steps, idPrefix = 'flow-seq', title = '时序图', desc = '接口调用时序', svgRef: externalSvgRef }) {
+export function SequenceDiagram({ steps, idPrefix = 'flow-seq', title = '时序图', desc = '接口调用时序', svgRef: externalSvgRef, activeIndex = -1, onSelectRow }) {
   const innerRef = useRef(null)
   const svgRef = externalSvgRef || innerRef
   if (!steps || steps.length === 0) return null
@@ -181,12 +192,28 @@ export function SequenceDiagram({ steps, idPrefix = 'flow-seq', title = '时序�
       fill={INK} fillOpacity="0.06" stroke={MUTED} strokeWidth="0.8" />
   ))
 
+  // 选中行：主色半透明底条 + 左侧序号徽标，让「左列表选中 ↔ 图元」一一对上。
+  // 之前画布只画整图、不标选中项，切哪一步看起来都一样。
+  const highlightBands = rows.map((row, i) => {
+    if (i !== activeIndex) return null
+    return (
+      <g key={'hl-' + i} pointerEvents="none">
+        <rect x={8} y={row.y - 14} width={width - 16} height={28} rx="4"
+          fill={ACCENT} fillOpacity="0.08" />
+        <circle cx={MARGIN_X - 32} cy={row.y} r="8" fill={ACCENT} />
+        <text x={MARGIN_X - 32} y={row.y + 3} fill="var(--fg-on-accent)" fontSize="var(--fs-chart)"
+          fontFamily={FONT_MONO} textAnchor="middle">{i + 1}</text>
+      </g>
+    )
+  })
+
   // 消息箭头 / 自消息 / note
   const messages = rows.map((row, i) => {
     const s = row.step
     const y = row.y
+    const isActive = i === activeIndex
     if (s.action === 'note') {
-      const cx = centers[idxOf(s.actor)] ?? W / 2
+      const cx = centers[idxOf(s.actor)] ?? width / 2
       return (
         <g key={'m-' + i}>
           <rect x={cx - 60} y={y - 12} width={120} height={20} rx="4" fill={PAPER}
@@ -197,7 +224,7 @@ export function SequenceDiagram({ steps, idPrefix = 'flow-seq', title = '时序�
       )
     }
     if (s.action === 'self') {
-      const cx = centers[idxOf(s.actor)] ?? W / 2
+      const cx = centers[idxOf(s.actor)] ?? width / 2
       const label = msgLabel(row)
       return (
         <g key={'m-' + i}>
@@ -217,23 +244,36 @@ export function SequenceDiagram({ steps, idPrefix = 'flow-seq', title = '时序�
     const x1 = from < to ? from + ACT_W / 2 : from - ACT_W / 2
     const x2 = from < to ? to - ACT_W / 2 : to + ACT_W / 2
     const isReturn = s.action === 'return'
-    const headline = s.headline === true
+    // 选中行按 headline 处理：主色实线箭头，一眼看出改的是哪一步
+    const headline = s.headline === true || isActive
     const stroke = headline ? ACCENT : MUTED
     const marker = headline ? idPrefix + '-arrow-accent' : idPrefix + '-arrow'
     const label = msgLabel(row)
     const mw = maskWidth(label)
     return (
       <g key={'m-' + i}>
-        <line x1={x1} y1={y} x2={x2} y2={y} stroke={stroke} strokeWidth="1"
+        <line x1={x1} y1={y} x2={x2} y2={y} stroke={stroke} strokeWidth={isActive ? 2 : 1}
           strokeDasharray={isReturn && !headline ? '5,4' : undefined}
           markerEnd={`url(#${marker})`} />
         {/* 标签 mask：底边距箭头 8px（skill 规则 6-10px） */}
         <rect x={(left + right) / 2 - mw / 2} y={y - 20} width={mw} height={12} rx="2" fill={PAPER} />
-        <text x={(left + right) / 2} y={y - 11} fill={MUTED} fontSize="var(--fs-chart)" fontFamily={FONT_MONO}
+        <text x={(left + right) / 2} y={y - 11} fill={isActive ? ACCENT : MUTED}
+          fontWeight={isActive ? 600 : undefined}
+          fontSize="var(--fs-chart)" fontFamily={FONT_MONO}
           textAnchor="middle" letterSpacing="0.06em">{label}</text>
       </g>
     )
   })
+
+  // 行命中区：点画布上的任意一行，左侧步骤列表同步选中（双向联动）。
+  // 只在传入 onSelectRow 时渲染，导出 SVG 不含这些热区。
+  const hitAreas = onSelectRow
+    ? rows.map((row, i) => (
+      <rect key={'hit-' + i} x={MARGIN_X - 48} y={row.y - 14}
+        width={width - MARGIN_X * 2 + 96} height={28} fill="transparent"
+        style={{ cursor: 'pointer' }} onClick={() => onSelectRow(i)} />
+    ))
+    : null
 
   // fragment 框（alt/opt 最小集：单层、tab 左上、guard mono、divider 虚线）
   const frameEls = frames.map((f, i) => (
@@ -245,8 +285,13 @@ export function SequenceDiagram({ steps, idPrefix = 'flow-seq', title = '时序�
       <text x={f.x + 20} y={f.y + 12} fill={MUTED} fontSize="var(--fs-chart)" fontFamily={FONT_MONO}
         textAnchor="middle" letterSpacing="0.12em">{f.op.toUpperCase()}</text>
       {f.guards.map((g, gi) => (
-        <text key={'g-' + gi} x={f.x + 12} y={g.y} fill={MUTED} fontSize="var(--fs-chart)"
-          fontFamily={FONT_MONO} letterSpacing="0.04em">{g.text}</text>
+        <g key={'g-' + gi}>
+          {/* 条件文字加底色遮罩：直接压线会与生命线/箭头糊在一起 */}
+          <rect x={f.x + 8} y={g.y - 11} width={Math.max(40, g.text.length * 6 + 12)} height={14} rx="2"
+            fill={PAPER} fillOpacity="0.92" />
+          <text x={f.x + 12} y={g.y} fill={MUTED} fontSize="var(--fs-chart)"
+            fontFamily={FONT_MONO} letterSpacing="0.04em">{g.text}</text>
+        </g>
       ))}
       {f.dividers.map((dy, di) => (
         <line key={'d-' + di} x1={f.x + 8} y1={dy} x2={f.x + f.w - 8} y2={dy}
@@ -286,11 +331,13 @@ export function SequenceDiagram({ steps, idPrefix = 'flow-seq', title = '时序�
       <title id={aId}>{title}</title>
       <desc id={dId}>{desc}</desc>
       {markers}
+      {highlightBands}
       {frameEls}
       {lifelines}
       {acts}
       {messages}
       {actorBoxes}
+      {hitAreas}
       {legend}
     </svg>
   )

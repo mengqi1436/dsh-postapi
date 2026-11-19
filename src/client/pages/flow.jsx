@@ -276,6 +276,8 @@ export function FlowPage(props) {
                   idPrefix="flow-page-seq"
                   title={flowName || '接口调试时序'}
                   desc="页面经 Storage 载入项目、Request 发起 HTTP 调用，并按响应状态渲染或提示错误的时序图"
+                  activeIndex={activeIdx}
+                  onSelectRow={setActiveIdx}
                 />
               ) : <EmptyState text="暂无可渲染的时序" hint="添加步骤后自动生成" />}
             </div>
