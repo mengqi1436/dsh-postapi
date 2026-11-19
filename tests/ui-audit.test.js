@@ -79,20 +79,24 @@ export const SPEC_SIZE_TOKENS = {
   '--ctl-h': '32px',
   '--ctl-h-sm': '24px',
   '--ctl-h-lg': '40px',
-  '--row-h': '36px',
+  '--row-h': '32px',
   '--pill-h': '22px',
-  // v2（docs/nav-layout-v2-spec.md）：顶栏压到 44px，把纵向让给内容
-  '--topbar-h': '44px',
-  // v2 导航 token
-  '--rail-w': '64px',
-  '--rail-btn-h': '52px',
-  '--flyout-w': '200px',
-  '--flyout-w-sm': '176px',
-  // 接口树面板：280px 下限 / 380px 上限，中间按容器 32% 自适应
-  '--panel-w': '280px',
-  '--panel-w-max': '380px',
+  // v3（docs/apifox-visual-parity-spec.md §1）：顶栏 48px、页签条 44px、左导航 240px
+  '--topbar-h': '48px',
+  '--tabbar-h': '44px',
+  '--sider-w': '240px',
+  '--sider-pad': '20px',
+  '--sider-item-h': '32px',
+  '--sider-group-h': '24px',
+  '--tree-row-h': '22px',
+  '--content-max-w': '1512px',
+  '--page-pad': '10px',
+  '--layout-pad': '8px',
+  // 实体树面板与 Apifox sider 同宽
+  '--panel-w': '240px',
+  '--panel-w-max': '320px',
   '--hit': '28px',
-  '--rail-icon': '20px',
+
   '--z-flyout': '30',
   '--motion-fast': '120ms',
   '--fs-12': '12px',
@@ -104,10 +108,10 @@ export const SPEC_SIZE_TOKENS = {
   '--lh-20': '20px',
   '--lh-22': '22px',
   '--lh-24': '24px',
-  '--radius-sm': '4px',
+  '--radius-sm': '6px',
   '--radius-ctl': '6px',
   '--radius-card': '8px',
-  '--radius-lg': '12px',
+  '--radius-lg': '10px',
   '--sp-1': '4px',
   '--sp-2': '8px',
   '--sp-3': '12px',
@@ -327,6 +331,14 @@ export function auditClassNames() {
   return { checks, failures }
 }
 
+/** 取顶层选择器规则的声明体；选择器须位于规则起点（行首或 } 之后）并紧跟 {。 */
+export function ruleBody(css, selector) {
+  const re = new RegExp('(?:^|[}\n])\\s*' + escapeRe(selector) + '\\s*\\{')
+  const m = re.exec(css)
+  if (!m) return null
+  return balancedExpr(css, m.index + m[0].length - 1)
+}
+
 /* ============================ SOFT：问题清单收集 ============================ */
 
 const HEX_OR_RGB = /#[0-9a-fA-F]{3,8}\b|rgba?\(/
@@ -484,7 +496,8 @@ export function collectMethodBadges() {
 /** 布局骨架：Body.js 必须含 v2 骨架（.pp-workbench-v2 / .pp-topbar / .pp-shell / .pp-rail / .pp-main-v2 / .pp-page-head）。 */
 export function collectShellSkeleton() {
   const issues = []
-  const targets = ['pp-workbench-v2', 'pp-topbar', 'pp-shell', 'pp-rail', 'pp-main-v2', 'pp-page-head']
+  // v3 骨架：图标轨（pp-rail/pp-flyout）已按 spec §12.6 删除，改为 240px 文字侧栏 + 44px 页签条
+  const targets = ['pp-workbench-v2', 'pp-topbar', 'pp-shell', 'pp-sider', 'pp-main-v2', 'pp-page-head', 'pp-tabbar']
   const body = readText(path.join(SHELL, 'Body.js'))
   if (body === null) {
     return {
@@ -499,7 +512,7 @@ export function collectShellSkeleton() {
         file: 'src/client/shell/Body.js',
         line: 0,
         detail: '缺少 ' + t,
-        suggestion: '按 docs/nav-layout-v2-spec.md：顶栏 44px + .pp-shell(grid: var(--rail-w) minmax(0,1fr)) + 浮层导航',
+        suggestion: '按 docs/apifox-visual-parity-spec.md：顶栏 48px + .pp-shell(grid: var(--sider-w) minmax(0,1fr)) + 240px 文字侧栏 + 44px 页签条',
       })
     }
   }
@@ -728,6 +741,90 @@ export const tests = [
     fn: async () => {
       const r = collectPageRegistration()
       console.log('       [收集] 自注册问题 ' + r.issues.length + ' 处')
+    },
+  },
+  {
+    name: 'HARD Apifox 骨架一致性：顶栏/页签条/侧栏/树/内容宽/页面间距 token 就位',
+    fn: async () => {
+      const css = readText(CSS_FILE)
+      if (css === null) throw new Error('design-tokens.css 不存在')
+      const skeleton = {
+        '--topbar-h': '48px',
+        '--tabbar-h': '44px',
+        '--sider-w': '240px',
+        '--sider-pad': '20px',
+        '--sider-item-h': '32px',
+        '--sider-group-h': '24px',
+        '--tree-row-h': '22px',
+        '--content-max-w': '1512px',
+        '--page-pad': '10px',
+        '--layout-pad': '8px',
+      }
+      const failures = []
+      for (const [name, value] of Object.entries(skeleton)) {
+        if (!tokenDefined(css, name, value)) failures.push(name + ' 缺失或 ≠ ' + value)
+      }
+      assertNoFailures('Apifox 骨架 token 偏离 spec §1', { checks: Object.keys(skeleton).length, failures })
+    },
+  },
+  {
+    name: 'HARD 树规格：行高/字号/文字色走 token，hover 只变色不换底',
+    fn: async () => {
+      const css = readText(CSS_FILE)
+      if (css === null) throw new Error('design-tokens.css 不存在')
+      const failures = []
+      const row = ruleBody(css, '.pp-tree-row')
+      const want = [
+        [/height\s*:\s*var\(--tree-row-h\)/, 'height: var(--tree-row-h)'],
+        [/font-size\s*:\s*var\(--fs-12\)/, 'font-size: var(--fs-12)'],
+        [/color\s*:\s*var\(--fg-secondary\)/, 'color: var(--fg-secondary)'],
+      ]
+      for (const [re, label] of want) {
+        if (row === null || !re.test(row)) failures.push('.pp-tree-row 缺 ' + label)
+      }
+      const hover = ruleBody(css, '.pp-tree-row:hover')
+      if (hover === null) failures.push('.pp-tree-row:hover 规则缺失')
+      else if (/background/.test(hover)) failures.push('.pp-tree-row:hover 出现 background（Apifox 树 hover 只变文字色）')
+      assertNoFailures('树规格偏离 spec §4', { checks: 4, failures })
+    },
+  },
+  {
+    name: 'HARD 调试台规格：URL 行 40px / 分组标题 3px 主色竖线 / 胶囊圆角',
+    fn: async () => {
+      const css = readText(CSS_FILE)
+      if (css === null) throw new Error('design-tokens.css 不存在')
+      const failures = []
+      const urlRow = ruleBody(css, '.pp-url-row')
+      if (urlRow === null || !/height\s*:\s*var\(--ctl-h-lg\)/.test(urlRow)) {
+        failures.push('.pp-url-row 缺 height: var(--ctl-h-lg)')
+      }
+      const group = ruleBody(css, '.pp-group-title')
+      if (group === null || !/border-left\s*:\s*3px\s+solid\s+var\(--accent\)/.test(group)) {
+        failures.push('.pp-group-title 缺 border-left: 3px solid var(--accent)')
+      }
+      const pill = ruleBody(css, '.pp-url-pill')
+      if (pill === null || !/border-radius\s*:/.test(pill)) {
+        failures.push('.pp-url-pill 缺 border-radius')
+      }
+      assertNoFailures('调试台规格偏离 spec §5', { checks: 3, failures })
+    },
+  },
+  {
+    name: 'HARD 页头规格：概览/文档标题 18px + 700',
+    fn: async () => {
+      const css = readText(CSS_FILE)
+      if (css === null) throw new Error('design-tokens.css 不存在')
+      const failures = []
+      for (const sel of ['.pp-overview-title', '.pp-doc-title']) {
+        const body = ruleBody(css, sel)
+        if (body === null) {
+          failures.push(sel + ' 规则缺失')
+          continue
+        }
+        if (!/font-size\s*:\s*var\(--fs-18\)/.test(body)) failures.push(sel + ' 缺 font-size: var(--fs-18)')
+        if (!/font-weight\s*:\s*700/.test(body)) failures.push(sel + ' 缺 font-weight: 700')
+      }
+      assertNoFailures('页头规格偏离 spec §7', { checks: 4, failures })
     },
   },
 ]

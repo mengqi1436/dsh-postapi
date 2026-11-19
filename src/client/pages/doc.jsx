@@ -131,6 +131,9 @@ const AUTH_LABEL = {
   digest: 'Digest（规划中：仅保留类型位）',
 }
 
+/** 接口状态胶囊文案（Apifox 文档页头右侧状态位）。 */
+const STATUS_LABEL = { developing: '开发中', testing: '测试中', done: '已完成', deprecated: '已废弃' }
+
 function resolveApi() {
   return typeof window !== 'undefined' ? window.__postapiApi : null
 }
@@ -397,12 +400,28 @@ export function DocPage({ route, api }) {
     )
   }
 
+  // 文档页头：Apifox .overview-header-container 同规格（18px/700 标题 + 右侧动作区，下边框）
+  const statusLabel = STATUS_LABEL[ep.status] || ep.status || ''
+  const docHead = (
+    <div className="pp-doc-head">
+      <span className="pp-doc-title">{ep.name}</span>
+      <div className="pp-overview-actions">
+        {copied ? (
+          <span className={'pp-note ' + (copied === '已复制' ? 'pp-note-ok' : 'pp-note-bad')}>{copied}</span>
+        ) : null}
+        {statusLabel ? <span className="pp-pill pp-pill-accent">{statusLabel}</span> : null}
+        <button className="pp-btn pp-btn-sm" onClick={copyCurl}>复制为 cURL</button>
+      </div>
+    </div>
+  )
+
   return (
     <div className="pp-scope pp-page-flush" data-page="doc" ref={rootRef}>
       <div className="pp-split">
         <nav className="pp-panel" aria-label="接口目录">{tree}</nav>
 
         <div className="pp-doc-main">
+          {docHead}
           {anchorBar}
           <div className="pp-page">
             {isMock ? <p className="pp-note pp-note-warn">示例数据 — window.__postapiApi 未注入或读取失败，以下为文件内 mock</p> : null}
@@ -418,12 +437,6 @@ export function DocPage({ route, api }) {
                 <p className="pp-meta">协议 {ep.protocol}：规划中（仅保留类型位，发送回落 HTTP）</p>
               ) : null}
               <div style={{ marginTop: 'var(--sp-2)' }}><Markdown text={ep.description} /></div>
-              <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
-                <button className="pp-btn pp-btn-sm" onClick={copyCurl}>复制为 cURL</button>
-                {copied ? (
-                  <span className={'pp-note ' + (copied === '已复制' ? 'pp-note-ok' : 'pp-note-bad')}>{copied}</span>
-                ) : null}
-              </div>
             </section>
 
             <section id="sec-path" className="pp-doc-section">

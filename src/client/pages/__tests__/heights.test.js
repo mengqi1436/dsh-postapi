@@ -24,7 +24,7 @@ const REGISTERED_PAGES = [
 
 // 允许的高度值：尺寸 token 引用 / 含 token 或 100% 的 calc / 自适应关键字
 // 尺寸 token 家族：主控件 / 小控件 / 大控件 / 行 / 胶囊 / 顶栏（Apifox 版新增三档控件高）
-const TOKEN_HEIGHT_RE = /^var\(--(ctl-h|ctl-h-sm|ctl-h-lg|row-h|pill-h|topbar-h|hit|rail-w|rail-btn-h|rail-icon)\)$/
+const TOKEN_HEIGHT_RE = /^var\(--(ctl-h|ctl-h-sm|ctl-h-lg|row-h|tree-row-h|pill-h|topbar-h|tabbar-h|sider-item-h|sider-group-h|hit|sider-w|content-max-w)\)$/
 const AUTO_VALUES = new Set(['100%', 'auto', 'inherit', 'fit-content', 'min-content', 'max-content'])
 
 function checkHeightValue(value) {
@@ -56,11 +56,15 @@ export function run() {
     '--ctl-h': /--ctl-h:\s*32px/.test(css),
     '--ctl-h-sm': /--ctl-h-sm:\s*24px/.test(css),
     '--ctl-h-lg': /--ctl-h-lg:\s*40px/.test(css),
-    '--row-h': /--row-h:\s*36px/.test(css),
+    '--row-h': /--row-h:\s*32px/.test(css),
+    '--tree-row-h': /--tree-row-h:\s*22px/.test(css),
     '--pill-h': /--pill-h:\s*22px/.test(css),
-    '--topbar-h': /--topbar-h:\s*44px/.test(css),
-    '--rail-w': /--rail-w:\s*64px/.test(css),
-    '--rail-btn-h': /--rail-btn-h:\s*52px/.test(css),
+    '--topbar-h': /--topbar-h:\s*48px/.test(css),
+    '--tabbar-h': /--tabbar-h:\s*44px/.test(css),
+    '--sider-w': /--sider-w:\s*240px/.test(css),
+    '--sider-item-h': /--sider-item-h:\s*32px/.test(css),
+    '--sider-group-h': /--sider-group-h:\s*24px/.test(css),
+    '--content-max-w': /--content-max-w:\s*1512px/.test(css),
     '--hit': /--hit:\s*28px/.test(css),
   }
   for (const [name, ok] of Object.entries(tokenDefs)) {

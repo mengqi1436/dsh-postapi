@@ -368,7 +368,7 @@ export function DebugPage({ route, api }) {
 
   return (
     <div className="pp-scope pp-page-flush" data-page="debug" ref={rootRef}>
-      <div className="pp-debug-layout" style={{ margin: 'var(--sp-3)' }}>
+      <div className="pp-debug-page pp-debug-layout">
         {/* 左：接口树 */}
         <nav className="pp-pane" style={{ padding: 'var(--sp-2)' }}>
           <FolderTree
@@ -388,29 +388,42 @@ export function DebugPage({ route, api }) {
 
         {/* 中：URL 行 + 页签请求编辑 */}
         <section className="pp-pane">
+          {/* URL 行（Apifox .main-input-bar）：方法 + baseUrl 胶囊 + path 输入 + 发送按钮组 */}
           <div className="pp-toolbar-inline" style={{ marginBottom: 'var(--sp-2)' }}>
             <span className="pp-form-label">环境</span>
             <select className="pp-select" value={envId} onChange={(e) => setEnvId(e.target.value)}>
               {envs.length === 0 ? <option value="">（无环境）</option> : null}
               {envs.map((e) => <option key={e.id} value={e.id}>{e.name}</option>)}
             </select>
-            <span className="pp-meta">{env && env.baseUrl ? env.baseUrl : '未配置 baseUrl'}</span>
           </div>
 
           <div className="pp-url-row">
-            <select className="pp-select" value={draft.method} onChange={(e) => patch('method', e.target.value)}>
+            {/* 方法徽标：Apifox 在 URL 行首用彩色方法块，选中的方法同时以徽标呈现 */}
+            <span className="pp-method" data-method={draft.method}>{draft.method}</span>
+            <select
+              className="pp-select pp-url-method"
+              value={draft.method}
+              onChange={(e) => patch('method', e.target.value)}
+              aria-label="请求方法"
+            >
               {METHODS.map((m) => <option key={m} value={m}>{m}</option>)}
             </select>
+            <span className="pp-url-pill" title={env && env.baseUrl ? env.baseUrl : '未配置 baseUrl'}>
+              {env && env.baseUrl ? env.baseUrl : '未配置 baseUrl'}
+            </span>
             <input
               className="pp-input pp-input-mono"
               value={draft.url}
               placeholder="/api/v1/... 或 https://TARGET/endpoint，支持 {{var}}"
               onChange={(e) => patch('url', e.target.value)}
+              aria-label="请求路径"
             />
-            <button className="pp-btn pp-btn-primary" onClick={send} disabled={sending}>
-              {sending ? '发送中…' : '发送'}
-            </button>
-            <button className="pp-btn" onClick={cancel} disabled={!sending}>取消</button>
+            <span className="pp-send-group">
+              <button className="pp-btn pp-btn-primary" onClick={send} disabled={sending}>
+                {sending ? '发送中…' : '发送'}
+              </button>
+              <button className="pp-btn" onClick={cancel} disabled={!sending} title="取消本次发送">✕</button>
+            </span>
           </div>
 
           <p className="pp-mono pp-meta" style={{ margin: 'var(--sp-2) 0 0 0' }}>
@@ -434,17 +447,17 @@ export function DebugPage({ route, api }) {
           <div style={{ marginTop: 'var(--sp-2)' }}>
             {tab === 'params' ? (
               <div>
-                <div className="pp-card-title">Path 参数</div>
+                <div className="pp-group-title">Path 参数</div>
                 <div className="pp-table-wrap"><ParamTable rows={draft.pathParams} onChange={(rows) => patch('pathParams', rows)} emptyText="无 Path 参数" /></div>
-                <div className="pp-card-title" style={{ marginTop: 'var(--sp-3)' }}>Query 参数</div>
+                <div className="pp-group-title">Query 参数</div>
                 <div className="pp-table-wrap"><ParamTable rows={draft.params} onChange={(rows) => patch('params', rows)} emptyText="无 Query 参数" /></div>
               </div>
             ) : null}
             {tab === 'headers' ? (
               <div>
-                <div className="pp-card-title">请求头</div>
+                <div className="pp-group-title">请求头</div>
                 <div className="pp-table-wrap"><ParamTable rows={draft.headers} onChange={(rows) => patch('headers', rows)} emptyText="无请求头" /></div>
-                <div className="pp-card-title" style={{ marginTop: 'var(--sp-3)' }}>Cookies</div>
+                <div className="pp-group-title">Cookies</div>
                 <div className="pp-table-wrap"><ParamTable rows={draft.cookies} onChange={(rows) => patch('cookies', rows)} emptyText="无 Cookies" /></div>
               </div>
             ) : null}
