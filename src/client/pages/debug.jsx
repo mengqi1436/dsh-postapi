@@ -7,6 +7,7 @@ import { ParamTable } from './components/ParamTable.jsx'
 import { JsonEditor } from './components/JsonEditor.jsx'
 import { EmptyState } from './components/EmptyState.jsx'
 import { StatusPill } from './components/StatusPill.jsx'
+import { COMMON_HEADERS, filterHeaders } from './components/headerPresets.js'
 
 ;(window.__postapiQueue = window.__postapiQueue || []).push(['debug', DebugPage]) // 注册表就绪前入队，ensureGlobals 统一重放（模块求值顺序无关）
 
@@ -143,6 +144,28 @@ function joinUrl(baseUrl, url) {
   return base + (raw.charAt(0) === '/' ? raw : '/' + raw)
 }
 
+/** 追加常用请求头：跳过已存在（key 大小写不敏感）的项，按清单顺序补最多 limit 条。
+ *  行结构与 ParamTable 的 blankParamRow 一致，可直接交给 patch('headers', rows)。 */
+export function appendCommonHeaders(rows, limit = 3) {
+  const list = Array.isArray(rows) ? rows.slice() : []
+  const exists = (key) => list.some((r) => String((r && r.key) || '').trim().toLowerCase() === String(key).toLowerCase())
+  let added = 0
+  for (const h of Array.isArray(COMMON_HEADERS) ? COMMON_HEADERS : []) {
+    if (added >= limit) break
+    if (!h || !h.key || exists(h.key)) continue
+    list.push({
+      key: h.key,
+      value: h.value == null ? '' : h.value,
+      enabled: true,
+      type: 'string',
+      required: false,
+      description: h.description == null ? '' : h.description,
+    })
+    added += 1
+  }
+  return list
+}
+
 /** JSON 美化；失败返回原文（原文/美化切换用）。 */
 export function prettyJson(text) {
   if (text == null) return ''
@@ -212,6 +235,8 @@ export function DebugPage({ route, api }) {
 
   const patch = (field, value) => setDraft((prev) => ({ ...prev, [field]: value }))
   const patchAuth = (field, value) => setDraft((prev) => ({ ...prev, auth: { ...prev.auth, [field]: value } }))
+  // 「+ 常用请求头」：按 COMMON_HEADERS 顺序补 3 条未出现的头，已存在的跳过（函数式更新避免拿到旧 draft）
+  const addCommonHeaders = () => setDraft((prev) => ({ ...prev, headers: appendCommonHeaders(prev.headers, 3) }))
 
   const send = () => {
     const requestApi = apiRef && apiRef.request
@@ -431,8 +456,20 @@ export function DebugPage({ route, api }) {
             ) : null}
             {tab === 'headers' ? (
               <div>
-                <div className="pp-group-title">请求头</div>
-                <div className="pp-table-wrap"><ParamTable rows={draft.headers} onChange={(rows) => patch('headers', rows)} emptyText="无请求头" /></div>
+                {/* 分组标题行：标题靠左、动作靠右（.pp-group-head 布局类见 design-tokens.css） */}
+                <div className="pp-group-head">
+                  {/* 右对齐由 .pp-group-head 的 space-between 与 > .pp-group-title 的 margin-right:auto 负责 */}
+                  <span className="pp-group-title">请求头</span>
+                  <button className="pp-btn pp-btn-link" onClick={addCommonHeaders} title="追加 3 条常用请求头">+ 常用请求头</button>
+                </div>
+                <div className="pp-table-wrap">
+                  <ParamTable
+                    rows={draft.headers}
+                    onChange={(rows) => patch('headers', rows)}
+                    suggest={filterHeaders}
+                    emptyText="无请求头"
+                  />
+                </div>
                 <div className="pp-group-title">Cookies</div>
                 <div className="pp-table-wrap"><ParamTable rows={draft.cookies} onChange={(rows) => patch('cookies', rows)} emptyText="无 Cookies" /></div>
               </div>

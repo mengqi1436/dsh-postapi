@@ -2461,3 +2461,45 @@
   border-color: var(--accent);
 }
 
+/* —— 分组标题行：标题靠左、动作靠右 —— */
+/* 调试台参数区（如 Headers 组）用它在分组标题右侧挂「常用请求头」按钮；
+   .pp-group-title 自带 3px 主色竖线，这里只负责行内左右分栏。 */
+.pp-group-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-2);
+  min-width: 0;
+}
+.pp-group-head > .pp-group-title {
+  min-width: 0;
+  margin-right: auto;
+}
+
+/* —— 行内文字按钮：无边框、主色文字，hover 只换主色悬停色 —— */
+/* 表格与分组标题里的轻量动作（「常用请求头」「清空」等），
+   高度走 --ctl-h-sm 与 .pp-btn-sm 对齐，避免与表格行高打架。 */
+.pp-btn-link {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  height: var(--ctl-h-sm);
+  padding: 0 var(--sp-1);
+  font-family: var(--font-sans);
+  font-size: var(--fs-12);
+  line-height: var(--lh-18);
+  color: var(--accent);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.pp-btn-link:hover {
+  color: var(--accent-hover);
+}
+.pp-btn-link:disabled {
+  color: var(--fg-tertiary);
+  cursor: not-allowed;
+}
+

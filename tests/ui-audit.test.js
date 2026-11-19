@@ -860,6 +860,68 @@ export const tests = [
       assertNoFailures('窄容器适配规则缺失', { checks: 7, failures })
     },
   },
+  {
+    name: 'HARD 常用请求头建议：headerPresets 导出 / ParamTable 建议下拉 / debug 接线 / 样式就位',
+    fn: async () => {
+      const failures = []
+      let checks = 0
+
+      // 1) headerPresets.js 契约：COMMON_HEADERS 常量 + filterHeaders / isCommonHeader 两个具名导出
+      const presets = readText(path.join(COMPONENTS, 'headerPresets.js'))
+      if (presets === null) {
+        checks += 1
+        failures.push('components/headerPresets.js 不存在')
+      } else {
+        for (const name of ['COMMON_HEADERS', 'filterHeaders', 'isCommonHeader']) {
+          checks += 1
+          const re = new RegExp('export\\s+(?:const|let|var|function)\\s+' + name + '\\b')
+          if (!re.test(presets)) failures.push('headerPresets.js 缺导出 ' + name)
+        }
+      }
+
+      // 2) ParamTable 支持建议下拉：源码须出现 suggest 入参与 datalist 元素
+      const paramTable = readText(path.join(COMPONENTS, 'ParamTable.jsx'))
+      if (paramTable === null) {
+        checks += 1
+        failures.push('components/ParamTable.jsx 不存在')
+      } else {
+        checks += 2
+        if (!/suggest/.test(paramTable)) failures.push('ParamTable.jsx 未出现 suggest 入参')
+        if (!/datalist/i.test(paramTable)) failures.push('ParamTable.jsx 未出现 datalist 元素')
+      }
+
+      // 3) debug.jsx 的请求头表必须接上过滤函数（其余参数表不传，避免误判）
+      const debugSrc = readText(path.join(PAGES, 'debug.jsx'))
+      checks += 1
+      if (debugSrc === null) failures.push('debug.jsx 不存在')
+      else if (!/suggest\s*=\s*\{\s*filterHeaders\s*\}/.test(debugSrc)) {
+        failures.push('debug.jsx 的请求头 ParamTable 未传 suggest={filterHeaders}')
+      }
+
+      // 4) 样式就位：分组标题行左右分栏 + 行内文字按钮（全部走 token，无颜色字面量）
+      const css = readText(CSS_FILE)
+      if (css === null) {
+        checks += 1
+        failures.push('design-tokens.css 不存在')
+      } else {
+        checks += 2
+        const head = ruleBody(css, '.pp-group-head')
+        if (head === null) failures.push('.pp-group-head 规则缺失')
+        else if (!/justify-content\s*:\s*space-between/.test(head)) {
+          failures.push('.pp-group-head 缺 justify-content: space-between')
+        }
+        const link = ruleBody(css, '.pp-btn-link')
+        if (link === null) failures.push('.pp-btn-link 规则缺失')
+        else {
+          checks += 1
+          if (!/color\s*:\s*var\(--accent\)/.test(link)) failures.push('.pp-btn-link 缺 color: var(--accent)')
+          if (!/border\s*:\s*1px\s+solid\s+transparent/.test(link)) failures.push('.pp-btn-link 缺无边框声明')
+        }
+      }
+
+      assertNoFailures('常用请求头建议链路不完整', { checks, failures })
+    },
+  },
 ]
 
 /* ============================ 直接执行 mini runner ============================ */

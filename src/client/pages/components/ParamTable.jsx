@@ -1,6 +1,9 @@
 // ParamTable — 参数表（doc 页只读展示 / debug 页可编辑，四组参数共用一套列定义）
 // Apifox 规格：固定列宽 + table-layout:fixed，横向滚动由调用方的 .pp-table-wrap 承担，
 // 窄容器里是整体滚动而不是列被压塌；单元格内编辑用无边框 .pp-cell-input，聚焦才显边框。
+// 可选 suggest（query => [{ key, value, description }]）：key 列挂 <datalist> 常用建议，
+// 选中建议时把该条的 value / description 回填到本行空字段；suggest 缺省时渲染与原行为完全一致。
+import { useState } from 'react'
 import { EmptyState } from './EmptyState.jsx'
 
 /** 列定义：width 写死（description 吃剩余宽度，最小 160px 由 design-tokens.css 表格段兜住）。 */
@@ -28,6 +31,35 @@ export function blankParamRow() {
 const DESC_MIN_WIDTH = 120
 const OP_WIDTH = 52
 
+/* ---------------- 常用建议（suggest）辅助 ---------------- */
+
+/** datalist id 自增序号：每张表一个稳定唯一 id。用模块级计数器而不是随机数——
+ *  随机数会让每次渲染 id 变化，input 的 list 关联随之失效。 */
+let suggestSeq = 0
+
+function nextSuggestId() {
+  suggestSeq += 1
+  return 'pp-param-suggest-' + suggestSeq
+}
+
+/** 空值判定：null / undefined / 空串都算「用户还没填」。 */
+function isBlank(v) {
+  return v == null || v === ''
+}
+
+/** 取建议清单：suggest 缺省、返回非数组或抛错一律按「无建议」处理，
+ *  建议源有问题也不能把表格本身带崩。 */
+function collectSuggestions(suggest, query) {
+  if (typeof suggest !== 'function') return []
+  try {
+    const items = suggest(query)
+    if (!Array.isArray(items)) return []
+    return items.filter((it) => it && !isBlank(it.key))
+  } catch {
+    return []
+  }
+}
+
 function headStyle(col) {
   const meta = COLUMN_META[col]
   return meta && meta.width && meta.width !== 'auto' ? { width: meta.width } : undefined
@@ -43,7 +75,7 @@ export function tableMinWidth(columns, editable) {
   return total
 }
 
-function renderCell(col, row, index, editable, patch) {
+function renderCell(col, row, index, editable, patch, ctx) {
   const meta = COLUMN_META[col] || {}
   const value = row ? row[col] : undefined
 
@@ -62,6 +94,17 @@ function renderCell(col, row, index, editable, patch) {
     const blank = value == null || value === ''
     const text = blank ? (col === 'type' ? 'string' : '-') : String(value)
     return <span className={meta.mono ? 'pp-table-mono' : undefined}>{text}</span>
+  }
+  if (col === 'key' && ctx) {
+    // key 列挂 datalist：浏览器原生下拉列出常用建议，选中后由 ctx.onKeyChange 回填。
+    return (
+      <input
+        className={'pp-cell-input pp-input-sm' + (meta.mono ? ' pp-input-mono' : '')}
+        list={ctx.suggestId}
+        value={value == null ? '' : String(value)}
+        onChange={(e) => ctx.onKeyChange(index, e.target.value)}
+      />
+    )
   }
   if (col === 'type') {
     return (
@@ -91,15 +134,40 @@ export function ParamTable({
   emptyText = '无',
   emptyHint = '',
   addLabel = '+ 添加参数',
+  suggest,
 }) {
   const list = Array.isArray(rows) ? rows : []
   const editable = !readOnly && typeof onChange === 'function'
+  const hasSuggest = editable && typeof suggest === 'function'
+  // 每张表一个稳定 datalist id：首次渲染定下来，后续渲染不变（useState 惰性初始化）。
+  const [suggestId] = useState(nextSuggestId)
 
+  /** 单字段或整行补丁：value 传对象时按多字段合并。 */
   const patch = (index, field, value) => {
     const next = list.slice()
-    next[index] = { ...next[index], [field]: value }
+    const fields = field && typeof field === 'object' ? field : { [field]: value }
+    next[index] = { ...next[index], ...fields }
     onChange(next)
   }
+
+  /**
+   * key 列输入：先写 key；若输入值恰好等于某条建议的 key，则把该条的 value / description
+   * 一并回填——只填空字段，用户已经填过的内容一律保留。
+   */
+  const onKeyChange = (index, value) => {
+    const row = list[index] || {}
+    const hit = collectSuggestions(suggest, value).find((it) => it.key === value)
+    if (!hit) {
+      patch(index, 'key', value)
+      return
+    }
+    const fill = { key: value }
+    if (isBlank(row.value) && !isBlank(hit.value)) fill.value = hit.value
+    if (isBlank(row.description) && !isBlank(hit.description)) fill.description = hit.description
+    patch(index, fill)
+  }
+
+  const cellCtx = hasSuggest ? { suggestId, onKeyChange } : undefined
   const remove = (index) => {
     const next = list.slice()
     next.splice(index, 1)
@@ -107,6 +175,15 @@ export function ParamTable({
   }
 
   if (list.length === 0 && !editable) return <EmptyState text={emptyText} hint={emptyHint} />
+
+  // datalist：option 的 value 是建议 key，label 用 description（浏览器下拉里显示为副标题）。
+  const datalist = hasSuggest
+    ? <datalist id={suggestId}>
+        {collectSuggestions(suggest, '').map((it, i) => (
+          <option key={it.key + '-' + i} value={it.key} label={it.description || undefined} />
+        ))}
+      </datalist>
+    : null
 
   return (
     <table className="pp-table pp-table-params" data-param-table style={{ minWidth: tableMinWidth(columns, editable) }}>
@@ -124,7 +201,7 @@ export function ParamTable({
         {list.map((row, index) => (
           <tr key={index}>
             {columns.map((col) => (
-              <td key={col} data-col={col}>{renderCell(col, row, index, editable, patch)}</td>
+              <td key={col} data-col={col}>{renderCell(col, row, index, editable, patch, cellCtx)}</td>
             ))}
             {editable ? (
               <td data-col="op">
@@ -143,6 +220,7 @@ export function ParamTable({
           </tr>
         ) : null}
       </tbody>
+      {datalist}
     </table>
   )
 }
