@@ -4,7 +4,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { applyTheme } from './theme.js'
 import { ParamTable } from './components/ParamTable.jsx'
-import { FolderTree } from './components/FolderTree.jsx'
 import { JsonEditor } from './components/JsonEditor.jsx'
 import { EmptyState } from './components/EmptyState.jsx'
 import { StatusPill } from './components/StatusPill.jsx'
@@ -171,7 +170,6 @@ export function DebugPage({ route, api }) {
   const [draft, setDraft] = useState(() => emptyDraft(MOCK_PROJECT.endpoints[0]))
   const [tab, setTab] = useState('params')
   // 左树折叠态：{ folderId: true } 表示该目录已收起
-  const [collapsed, setCollapsed] = useState({})
   const [resp, setResp] = useState(null)
   const [sending, setSending] = useState(false)
   const [bodyView, setBodyView] = useState('pretty')
@@ -206,18 +204,11 @@ export function DebugPage({ route, api }) {
     return () => { cancelled = true }
   }, [apiRef])
 
-  const endpoints = useMemo(() => (Array.isArray(project && project.endpoints) ? project.endpoints : []), [project])
   const envs = useMemo(() => (Array.isArray(project && project.environments) ? project.environments : []), [project])
   const { table, env } = useMemo(() => varTable(project, envId), [project, envId])
   const varRefs = useMemo(() => collectVarRefs(draft), [draft])
   const missingVars = useMemo(() => varRefs.filter((k) => !(k in table)), [varRefs, table])
   const finalUrl = useMemo(() => joinUrl(env && env.baseUrl, draft.url), [env, draft.url])
-
-  const loadEndpoint = (ep) => {
-    setDraft(emptyDraft(ep))
-    setResp(null)
-    setSavedHint('')
-  }
 
   const patch = (field, value) => setDraft((prev) => ({ ...prev, [field]: value }))
   const patchAuth = (field, value) => setDraft((prev) => ({ ...prev, auth: { ...prev.auth, [field]: value } }))
@@ -368,38 +359,12 @@ export function DebugPage({ route, api }) {
 
   return (
     <div className="pp-scope pp-page-flush" data-page="debug" ref={rootRef}>
-      <div className="pp-debug-page pp-debug-layout">
-        {/* 左：接口树 */}
-        <nav className="pp-pane" style={{ padding: 'var(--sp-2)' }}>
-          <FolderTree
-            project={project}
-            activeEndpointId={draft.id}
-            collapsed={collapsed}
-            onPick={(endpointId) => {
-              const target = endpoints.find((e) => e.id === endpointId)
-              if (target) loadEndpoint(target)
-            }}
-            onToggle={(folderId) => setCollapsed((prev) => ({ ...prev, [folderId]: !prev[folderId] }))}
-          />
-          <div style={{ marginTop: 'var(--sp-3)' }}>
-            <a className="pp-toc-item" href="#/history">请求历史 / 回放</a>
-          </div>
-        </nav>
-
-        {/* 中：URL 行 + 页签请求编辑 */}
+      {/* Apifox 调试页是单栏：接口树就是左侧全局导航，页面内不再自带一份。
+          之前自带 .pp-pane 树面板，窄容器下收成单列后变成一张铺满宽度的空白卡。 */}
+      <div className="pp-debug-page">
         <section className="pp-pane">
-          {/* URL 行（Apifox .main-input-bar）：方法 + baseUrl 胶囊 + path 输入 + 发送按钮组 */}
-          <div className="pp-toolbar-inline" style={{ marginBottom: 'var(--sp-2)' }}>
-            <span className="pp-form-label">环境</span>
-            <select className="pp-select" value={envId} onChange={(e) => setEnvId(e.target.value)}>
-              {envs.length === 0 ? <option value="">（无环境）</option> : null}
-              {envs.map((e) => <option key={e.id} value={e.id}>{e.name}</option>)}
-            </select>
-          </div>
-
+          {/* URL 行（Apifox .main-input-bar）：40px 高，方法 + baseUrl 胶囊 + path + 发送按钮组 */}
           <div className="pp-url-row">
-            {/* 方法徽标：Apifox 在 URL 行首用彩色方法块，选中的方法同时以徽标呈现 */}
-            <span className="pp-method" data-method={draft.method}>{draft.method}</span>
             <select
               className="pp-select pp-url-method"
               value={draft.method}
@@ -426,25 +391,34 @@ export function DebugPage({ route, api }) {
             </span>
           </div>
 
-          <p className="pp-mono pp-meta" style={{ margin: 'var(--sp-2) 0 0 0' }}>
-            实际地址：{finalUrl || '（未填写 URL）'}
-          </p>
-          {varRefs.length > 0 ? (
-            <p className="pp-meta">
-              变量 {varRefs.join('、')}
-              {missingVars.length > 0 ? '（未定义：' + missingVars.join('、') + '）' : '（均已定义）'}
-            </p>
-          ) : null}
+          {/* 环境 + 实际地址 + 变量：压成一行元信息，不再各占一行 */}
+          <div className="pp-debug-meta">
+            <select className="pp-select pp-input-sm" value={envId} onChange={(e) => setEnvId(e.target.value)}
+              aria-label="环境">
+              {envs.length === 0 ? <option value="">（无环境）</option> : null}
+              {envs.map((e) => <option key={e.id} value={e.id}>{e.name}</option>)}
+            </select>
+            <span className="pp-mono pp-meta pp-ellipsis" title={finalUrl || ''}>
+              {finalUrl || '（未填写 URL）'}
+            </span>
+            {varRefs.length > 0 ? (
+              <span className="pp-meta">
+                变量 {varRefs.join('、')}
+                {missingVars.length > 0 ? '（未定义：' + missingVars.join('、') + '）' : '（均已定义）'}
+              </span>
+            ) : null}
+            <a className="pp-meta" href="#/history">请求历史</a>
+          </div>
           {isMock ? <p className="pp-note pp-note-warn">示例数据 — window.__postapiApi 未注入或读取失败，发送将返回 mock 响应</p> : null}
           {error ? <p className="pp-note pp-note-bad">{error}</p> : null}
 
-          <div className="pp-tabs" style={{ marginTop: 'var(--sp-3)' }}>
+          <div className="pp-tabs">
             {TABS.map((t) => (
               <button key={t.id} className="pp-tab" data-active={tab === t.id} onClick={() => setTab(t.id)}>{t.label}</button>
             ))}
           </div>
 
-          <div style={{ marginTop: 'var(--sp-2)' }}>
+          <div className="pp-debug-tabbody">
             {tab === 'params' ? (
               <div>
                 <div className="pp-group-title">Path 参数</div>

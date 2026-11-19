@@ -966,19 +966,22 @@
 }
 
 /* —— 调试：整页 padding 10px（Apifox .apiCase padding:10px）—— */
-/* 整页 10px + 外层收边 8px（Apifox --app-page-layout-size: 10px / --app-layout-padding-right|bottom: 8px） */
+/* 调试页：Apifox .apiCase 原文（width/height 100%、padding 10px、overflow auto）。
+   单栏结构——接口树由左侧全局导航承担，页面内不再自带。 */
 .pp-debug-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
   padding: var(--page-pad);
   padding-right: calc(var(--page-pad) - var(--sp-1) + var(--layout-pad));
   min-height: 0;
 }
-/* —— 调试：宽容器三栏 / 窄容器单列 —— */
-/* 三栏（树 / 请求编辑 / 响应）在 400~700px 的主区里每栏只剩 100 多像素，
-   参数表被挤成一条，这才是「布局错乱」的根因。窄容器下改为单列纵向堆叠。
-   首列与文档页共用 --panel-w，两页的接口树宽度保持一致。 */
+/* 元信息行：环境选择 + 实际地址 + 变量 + 历史入口，压成一行 */
+/* 通用两栏（左列表 + 右详情）：env / schema / test / mock 四页共用。
+   debug 页不用它——调试台是 Apifox 单栏结构。 */
 .pp-debug-layout {
   display: grid;
-  grid-template-columns: clamp(var(--panel-w), 32%, var(--panel-w-max)) minmax(0, 1.4fr) minmax(0, 1fr);
+  grid-template-columns: clamp(var(--panel-w), 32%, var(--panel-w-max)) minmax(0, 1fr);
   gap: var(--sp-3);
   align-items: start;
 }
@@ -987,6 +990,45 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+/* Mock 页：左表单 + 右规则表两栏，窄容器收单列 */
+.pp-mock-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--sp-4);
+  align-items: start;
+}
+@container ppmain (max-width: 900px) {
+  .pp-mock-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.pp-debug-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  margin-top: var(--sp-2);
+  font-size: var(--fs-12);
+}
+.pp-debug-meta .pp-select {
+  flex: none;
+  width: auto;
+  min-width: 96px;
+}
+.pp-debug-meta .pp-mono {
+  flex: 1;
+  min-width: 0;
+}
+/* 页签体：与页签条之间留 8px，内容区自己滚动 */
+.pp-debug-tabbody {
+  margin-top: var(--sp-2);
+  min-width: 0;
+}
+/* —— 调试：宽容器三栏 / 窄容器单列 —— */
+/* 三栏（树 / 请求编辑 / 响应）在 400~700px 的主区里每栏只剩 100 多像素，
+   参数表被挤成一条，这才是「布局错乱」的根因。窄容器下改为单列纵向堆叠。
+   首列与文档页共用 --panel-w，两页的接口树宽度保持一致。 */
+
 .pp-pane {
   background: var(--bg-surface);
   border: 1px solid var(--border);
@@ -1050,6 +1092,11 @@
   flex: 0 1 auto;
   min-width: 0;
   gap: 0;
+}
+/* Apifox .action-send 宽 95px：主按钮吃满、右端 25px 下拉位 */
+.pp-url-row .pp-send-group {
+  flex: none;
+  width: 95px;
 }
 .pp-send-group .pp-btn:first-child {
   border-top-right-radius: 0;

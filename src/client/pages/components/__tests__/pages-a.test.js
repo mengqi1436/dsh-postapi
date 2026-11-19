@@ -234,7 +234,11 @@ const pagesATests = [
       assert(src.includes('saveEndpoint'), 'debug.jsx 未接 storage.saveEndpoint')
       assert(src.includes('StatusPill'), 'debug.jsx 未使用 StatusPill')
       assert(src.includes('resp.tests'), 'debug.jsx 缺断言结果列表')
-      assert(src.includes('pp-debug-layout'), 'debug.jsx 缺紧凑三栏布局类')
+      // Apifox 调试页是单栏（.apiCase padding:10px）：接口树由左侧全局导航承担，
+      // 页面内不再自带树面板，所以断言单栏容器而不是旧的三栏 .pp-debug-layout。
+      assert(src.includes('pp-debug-page'), 'debug.jsx 缺单栏容器 .pp-debug-page')
+      assert(!src.includes('pp-debug-layout'), 'debug.jsx 不应再有自带树的三栏布局')
+      assert(!src.includes('FolderTree'), 'debug.jsx 不应再自渲染接口树（树在左侧全局导航）')
       assert(src.includes('#/history'), 'debug.jsx 缺历史回放入口')
       for (const tab of ["'params'", "'headers'", "'body'", "'auth'"]) {
         assert(src.includes(tab), 'debug.jsx 缺页签 ' + tab)

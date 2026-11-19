@@ -209,7 +209,7 @@ export function MockPage({ route, api }) {
         {error ? <p className="pp-muted">{error}</p> : null}
         {notice ? <p className="pp-muted">{notice}</p> : null}
   
-        <div className="pp-debug-layout">
+        <div className="pp-mock-layout">
           {/* 左：接口列表 */}
           <nav className="pp-pane" style={{ padding: 'var(--sp-2)' }}>
             <div className="pp-card-title" style={{ padding: '0 var(--sp-2)' }}>接口</div>
