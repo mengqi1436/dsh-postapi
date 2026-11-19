@@ -452,19 +452,23 @@
 .pp-table.pp-table-vars th:nth-child(4) { width: 52px; }
 .pp-table.pp-table-vars th:nth-child(5) { width: 64px; }
 .pp-table.pp-table-vars td { overflow: hidden; }
-/* 三卡并排时卡宽 250px 级：三列固定列压到 44/44/48，变量名 26%，值列吃剩余，
-   表格最小宽度降到 320px——只在小卡里滚 60px 级，不再把「启用」整列切掉。 */
-.pp-env-cards .pp-table.pp-table-vars {
-  min-width: 320px;
+/* 右编辑区变量表：五列在 480px 以上都能全显示，不需要横向滚动。
+   变量名 32% / 值列吃剩余 / 启用·密钥各 44px（只放复选框）/ 操作 48px（只放图标按钮）。 */
+.pp-env-main .pp-table.pp-table-vars {
+  min-width: 0;
+  width: 100%;
 }
-.pp-env-cards .pp-table.pp-table-vars th:nth-child(1) { width: 26%; }
-.pp-env-cards .pp-table.pp-table-vars th:nth-child(3),
-.pp-env-cards .pp-table.pp-table-vars th:nth-child(4) { width: 44px; }
-.pp-env-cards .pp-table.pp-table-vars th:nth-child(5) { width: 48px; }
-.pp-env-cards .pp-table.pp-table-vars th,
-.pp-env-cards .pp-table.pp-table-vars td {
-  padding: 0 var(--sp-1);
-  font-size: var(--fs-12);
+.pp-env-main .pp-table.pp-table-vars th:nth-child(1) { width: 32%; }
+.pp-env-main .pp-table.pp-table-vars th:nth-child(3),
+.pp-env-main .pp-table.pp-table-vars th:nth-child(4) { width: 44px; }
+.pp-env-main .pp-table.pp-table-vars th:nth-child(5) { width: 48px; }
+.pp-env-main .pp-table.pp-table-vars td:nth-child(3),
+.pp-env-main .pp-table.pp-table-vars td:nth-child(4),
+.pp-env-main .pp-table.pp-table-vars td:nth-child(5) {
+  text-align: center;
+}
+.pp-env-main .pp-table.pp-table-vars input[type="checkbox"] {
+  margin: 0;
 }
 .pp-table tbody tr:hover {
   background: var(--bg-hover);
@@ -1047,62 +1051,140 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
-/* 环境页：环境变量 / 全局变量 / 变量优先级 一行三卡。
-   720px 以上三列等宽（主区 800px 时每卡 250px，变量表横向滚动）；
-   低于 720px 三卡各只剩 160px 级，堆叠成单列。 */
-.pp-env-cards {
+/* 环境页（Apifox「环境管理」同构）：左环境列表 + 右编辑区。
+   左列宽与文档页目录树共用 --panel-w，右区顶上是页签（环境变量 / 全局变量 / 优先级）。
+   原来的一行三卡在 500px 主区里每卡只剩 250px，变量表要横向滚动、
+   优先级卡说明逐字折行，操作路径也不对——切换环境在左、编辑在右才对得上 Apifox。 */
+.pp-env-layout {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: var(--panel-w) minmax(0, 1fr);
   gap: var(--sp-4);
   align-items: start;
 }
-/* 三列时每卡只有 250px 级：label + input 并排会把输入框压到 70px，
-   卡内表单改「标签上、控件下」的单列，输入框吃满卡宽。 */
-.pp-env-cards .pp-form-grid {
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--sp-1);
-}
-.pp-env-cards .pp-form-label {
-  width: auto;
-}
-@container ppmain (max-width: 720px) {
-  .pp-env-cards {
+@container ppmain (max-width: 820px) {
+  .pp-env-layout {
     grid-template-columns: minmax(0, 1fr);
   }
-  /* 堆叠成单列后卡宽回到 470px 级，恢复「标签 + 控件」并排 */
-  .pp-env-cards .pp-form-grid {
-    grid-template-columns: fit-content(360px) minmax(0, 1fr);
-    gap: var(--sp-4);
-  }
-  .pp-env-cards .pp-form-label {
-    width: 104px;
+  /* 堆叠时左列表压成横向可滚的一行，不再占整屏高度 */
+  .pp-env-layout .pp-env-side {
+    max-height: none;
   }
 }
-/* 变量优先级：卡内纵向四级，每级「级别徽标 + 作用域 + 说明」两行 */
+.pp-env-side {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: var(--sp-2) 0;
+}
+.pp-env-side-head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 0 var(--sp-4) var(--sp-2);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: var(--sp-1);
+}
+.pp-env-side-head .pp-card-title {
+  margin: 0;
+  font-size: var(--fs-13);
+}
+.pp-env-side-head > .pp-btn:last-child {
+  margin-left: auto;
+}
+.pp-btn-accent {
+  color: var(--accent);
+}
+.pp-env-main {
+  min-width: 0;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+}
+.pp-env-main > .pp-tabs {
+  border-bottom: 1px solid var(--border);
+}
+.pp-env-pane {
+  padding: var(--sp-4);
+}
+.pp-env-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-4);
+}
+.pp-env-pane > .pp-card-title {
+  margin: 0 0 var(--sp-2) 0;
+}
+/* 变量表空行：左对齐一行提示，不要占满行高的居中留白 */
+.pp-env-vars-empty {
+  height: auto;
+  padding: var(--sp-2) var(--sp-1);
+  font-size: var(--fs-12);
+  line-height: var(--lh-18);
+  color: var(--fg-tertiary);
+  white-space: normal;
+}
+.pp-env-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  margin-bottom: var(--sp-3);
+}
+.pp-env-field .pp-form-label {
+  width: auto;
+}
+.pp-env-field-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+.pp-env-field-row .pp-input {
+  flex: 1;
+  min-width: 0;
+}
+.pp-env-check {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  flex: none;
+  font-size: var(--fs-12);
+  color: var(--fg-secondary);
+  white-space: nowrap;
+}
+/* 变量优先级：纵向四级，每级一行「序号 + 作用域」，说明缩进在下一行。
+   199px 的卡里「1（最高）」这种长徽标会把作用域挤成逐字换行，改成圆形序号。 */
 .pp-priority-list {
   display: flex;
   flex-direction: column;
-  gap: var(--sp-2);
+  gap: var(--sp-1);
 }
 .pp-priority-item {
-  display: flex;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
   gap: var(--sp-2);
-  padding: var(--sp-2);
-  background: var(--bg-subtle);
-  border-radius: var(--radius-ctl);
+  padding: var(--sp-2) 0;
+  border-bottom: 1px solid var(--border);
+}
+.pp-priority-item:last-child {
+  border-bottom: none;
 }
 .pp-priority-level {
-  flex: none;
-  padding: 0 var(--sp-2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
   font-size: var(--fs-12);
-  line-height: var(--lh-18);
-  font-weight: var(--fw-medium);
-  color: var(--fg-strong);
-  background: var(--bg-surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  white-space: nowrap;
+  line-height: 1;
+  font-weight: var(--fw-semibold);
+  color: var(--fg-secondary);
+  background: var(--bg-subtle);
+  border-radius: var(--radius-pill);
+}
+.pp-priority-item:first-child .pp-priority-level {
+  color: var(--fg-on-accent);
+  background: var(--accent);
 }
 .pp-priority-body {
   display: flex;
@@ -1278,6 +1360,153 @@
 }
 
 /* —— 流程图容器 —— */
+/* 流程图页（Apifox 测试场景同构）：左步骤列表 + 右画布 + 下方属性面板。
+   画布常驻，改任一步即时重绘；不再用「整宽画布 + 整宽表格」上下堆叠——
+   表格在 500px 主区里要横向滚 640px，改一步得来回滚两次。 */
+.pp-flow-layout {
+  display: grid;
+  grid-template-columns: var(--panel-w) minmax(0, 1fr);
+  gap: var(--sp-4);
+  align-items: start;
+}
+@container ppmain (max-width: 820px) {
+  .pp-flow-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.pp-flow-side {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: var(--sp-2) 0;
+}
+.pp-flow-side-head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 0 var(--sp-4) var(--sp-2);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: var(--sp-1);
+}
+.pp-flow-side-head .pp-card-title {
+  margin: 0;
+  font-size: var(--fs-13);
+}
+.pp-flow-side-head > .pp-btn:last-child {
+  margin-left: auto;
+}
+.pp-flow-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  max-height: calc(var(--row-h) * 16);
+  overflow: auto;
+}
+.pp-flow-step {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-1) var(--sp-3);
+  margin: 0 var(--sp-2);
+  font-size: var(--fs-12);
+  line-height: var(--lh-18);
+  color: var(--fg-secondary);
+  border-radius: var(--radius-ctl);
+  cursor: pointer;
+}
+.pp-flow-step:hover {
+  color: var(--fg);
+}
+.pp-flow-step[data-active="true"] {
+  color: var(--fg);
+  background: var(--bg-hover);
+  font-weight: var(--fw-medium);
+}
+.pp-flow-step-no {
+  flex: none;
+  width: 18px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-12);
+  color: var(--fg-tertiary);
+  text-align: right;
+}
+.pp-flow-step[data-active="true"] .pp-flow-step-no {
+  color: var(--accent);
+}
+.pp-flow-step-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+.pp-flow-step-name {
+  color: inherit;
+}
+.pp-flow-step-msg {
+  font-family: var(--font-mono);
+  font-size: var(--fs-12);
+  color: var(--fg-tertiary);
+}
+.pp-flow-step-act {
+  flex: none;
+  font-size: var(--fs-12);
+  color: var(--fg-tertiary);
+}
+.pp-flow-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  min-width: 0;
+}
+.pp-flow-canvas {
+  min-width: 0;
+  overflow-x: auto;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: var(--sp-4);
+}
+.pp-flow-canvas svg {
+  min-width: 100%;
+  display: block;
+}
+@container ppmain (max-width: 700px) {
+  .pp-flow-canvas svg {
+    min-width: 620px;
+  }
+}
+.pp-flow-props {
+  padding: var(--sp-4);
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+}
+.pp-flow-prop-grid {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: var(--sp-2) var(--sp-3);
+  align-items: center;
+}
+.pp-flow-prop-grid .pp-form-label {
+  width: auto;
+  font-size: var(--fs-13);
+}
+.pp-flow-prop-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  min-width: 0;
+}
+.pp-flow-prop-row .pp-input {
+  flex: 1;
+  min-width: 0;
+}
+.pp-flow-name {
+  width: 180px;
+}
+.pp-flow-source {
+  margin-bottom: var(--sp-2);
+}
 .pp-seq-wrap {
   overflow-x: auto;
   border: 1px solid var(--border);

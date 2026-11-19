@@ -25,11 +25,17 @@ const MOCK_PROJECT = {
 }
 
 const VAR_COLUMNS = ['变量名', '值', '启用', '密钥', '操作']
+/** 右编辑区页签（Apifox 环境管理把「环境变量 / 全局变量」放在同一页，这里补上优先级说明） */
+const ENV_TABS = [
+  { id: 'env', label: '环境变量' },
+  { id: 'globals', label: '全局变量' },
+  { id: 'priority', label: '优先级' },
+]
 const PRIORITY_ROWS = [
-  { level: '1（最高）', scope: '接口局部变量', note: '接口 params / headers / body 里直接写死的值' },
-  { level: '2', scope: '环境变量', note: '当前环境 environments[].variables（enabled 为 true 才参与替换）' },
-  { level: '3', scope: '全局变量', note: 'globals.variables，跨环境共用' },
-  { level: '4（最低）', scope: '动态变量', note: '{{$timestamp}} {{$uuid}} {{$randomInt}} 等，由 host-runtime 生成' },
+  { level: '1（最高）', scope: '接口局部变量', note: 'params / headers / body 里写死的值' },
+  { level: '2', scope: '环境变量', note: '当前环境 enabled 的变量' },
+  { level: '3', scope: '全局变量', note: '跨环境共用' },
+  { level: '4（最低）', scope: '动态变量', note: '{{$timestamp}} 等内置变量' },
 ]
 
 /** 变量行规整：补齐 enabled/secret 默认值，丢弃非对象项。 */
@@ -80,6 +86,7 @@ export function EnvPage(props) {
   const [notice, setNotice] = useState('')
   const [draft, setDraft] = useState(MOCK_PROJECT.environments[0])
   const [globals, setGlobals] = useState(normalizeVars(MOCK_PROJECT.globals.variables))
+  const [envTab, setEnvTab] = useState('env')
 
   useEffect(() => applyTheme(rootRef.current), [])
 
@@ -227,10 +234,14 @@ export function EnvPage(props) {
             <td>
               <input type="checkbox" checked={v.secret} onChange={(e) => onChange(i, { secret: e.target.checked })} />
             </td>
-            <td><button className="pp-btn pp-btn-sm pp-btn-danger" onClick={() => onRemove(i)}>删除</button></td>
+            <td>
+              <button className="pp-btn pp-btn-sm pp-btn-ghost pp-btn-danger pp-icon-btn" onClick={() => onRemove(i)} title="删除该变量" aria-label="删除该变量">×</button>
+            </td>
           </tr>
         ))}
-        {rows.length === 0 ? <tr><td colSpan={VAR_COLUMNS.length} className="pp-muted">暂无变量</td></tr> : null}
+        {rows.length === 0 ? (
+          <tr><td colSpan={VAR_COLUMNS.length} className="pp-env-vars-empty">暂无变量，点下方「+ 变量」添加</td></tr>
+        ) : null}
       </tbody>
     </table>
   )
@@ -256,78 +267,108 @@ export function EnvPage(props) {
         {error ? <p className="pp-error-text">{error}</p> : null}
         {notice ? <p className="pp-muted">{notice}</p> : null}
   
-        {/* 环境列表：横向一行一个，选中态与文档页目录树同规格 */}
-        <div className="pp-pane">
-          <div className="pp-card-title">环境</div>
-          <div className="pp-tree">
-            {envSummary(envs).map((e) => (
-              <div key={e.id} className="pp-tree-row" data-active={draft && draft.id === e.id ? 'true' : 'false'}
-                onClick={() => pickEnv(envs.find((x) => x.id === e.id) || blankEnv())}>
-                <span className="pp-ellipsis">{e.name}{e.isDefault ? ' · 默认' : ''}</span>
-                <span className="pp-tree-row-count">{e.varCount}</span>
-              </div>
-            ))}
-            {envs.length === 0 ? <EmptyState text="暂无环境" hint="点下方「新建环境」创建第一个环境" /> : null}
-          </div>
-          <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
-            <button className="pp-btn pp-btn-sm" onClick={() => pickEnv(blankEnv())}>新建环境</button>
-          </div>
-        </div>
-
-        {/* 一行三卡：环境变量 / 全局变量 / 变量优先级。
-            宽容器三列并排，窄容器（侧边栏 500px 级）自动堆叠成单列。 */}
-        <div className="pp-env-cards">
-          <div className="pp-card">
-            <div className="pp-card-title">环境变量</div>
-            <div className="pp-form-grid" style={{ marginBottom: 'var(--sp-3)' }}>
-              <label className="pp-form-label">名称</label>
-              <input className="pp-input" value={draft.name || ''}
-                onChange={(e) => patchDraft({ name: e.target.value })} />
-              <label className="pp-form-label">baseUrl</label>
-              <input className="pp-input pp-input-mono" value={draft.baseUrl || ''}
-                onChange={(e) => patchDraft({ baseUrl: e.target.value })} />
+        {/* Apifox 环境管理同构：左环境列表 + 右编辑区（页签分区）。
+            单列纵向堆叠在 500px 主区里要把「环境 / 变量 / 优先级」滚三次才能看全，
+            改成左列表 + 右页签后一屏就能切完三块。 */}
+        <div className="pp-env-layout">
+          <nav className="pp-panel pp-env-side" aria-label="环境列表">
+            <div className="pp-env-side-head">
+              <span className="pp-card-title">环境</span>
+              <button className="pp-btn pp-btn-sm pp-btn-ghost pp-btn-accent" onClick={() => pickEnv(blankEnv())}>
+                + 新建
+              </button>
             </div>
-            <div className="pp-form-row">
-              <label className="pp-form-label">设为默认</label>
-              <input type="checkbox" checked={draft.isDefault === true}
-                onChange={(e) => patchDraft({ isDefault: e.target.checked })} />
-            </div>
-            <div className="pp-table-wrap">{varTable(draftVars, setVarAt, removeVar)}</div>
-            <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
-              <button className="pp-btn" onClick={addVar}>新增变量</button>
-              <button className="pp-btn pp-btn-primary" onClick={saveEnv}>保存环境</button>
-              <button className="pp-btn pp-btn-danger" onClick={() => removeEnv(draft.id || '')}>删除环境</button>
-            </div>
-            <div className="pp-note" style={{ marginTop: 'var(--sp-3)' }}>
-              enabled 为 true 的变量才参与 {'{{key}}'} 替换；secret 为 true 时值以密码形式显示。
-            </div>
-          </div>
-
-          <div className="pp-card">
-            <div className="pp-card-title">全局变量</div>
-            <div className="pp-table-wrap">{varTable(globals, setGlobalAt, removeGlobal)}</div>
-            <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
-              <button className="pp-btn" onClick={addGlobal}>新增变量</button>
-              <button className="pp-btn pp-btn-primary" onClick={saveGlobals}>保存全局</button>
-            </div>
-            <div className="pp-note" style={{ marginTop: 'var(--sp-3)' }}>
-              全局变量跨环境共用，环境变量同名时优先环境。
-            </div>
-          </div>
-
-          <div className="pp-card">
-            <div className="pp-card-title">变量优先级</div>
-            <div className="pp-priority-list">
-              {priorityRows().map((r) => (
-                <div key={r.level} className="pp-priority-item">
-                  <span className="pp-priority-level">{r.level}</span>
-                  <div className="pp-priority-body">
-                    <span className="pp-priority-scope">{r.scope}</span>
-                    <span className="pp-priority-note">{r.note}</span>
-                  </div>
+            <div className="pp-tree">
+              {envSummary(envs).map((e) => (
+                <div key={e.id} className="pp-tree-row" data-active={draft && draft.id === e.id ? 'true' : 'false'}
+                  onClick={() => pickEnv(envs.find((x) => x.id === e.id) || blankEnv())}>
+                  <span className="pp-ellipsis">{e.name}{e.isDefault ? ' · 默认' : ''}</span>
+                  <span className="pp-tree-row-count">{e.varCount}</span>
                 </div>
               ))}
             </div>
+            {envs.length === 0 ? (
+              <EmptyState text="暂无环境" hint="点上方「+ 新建」创建第一个环境" />
+            ) : null}
+          </nav>
+
+          <div className="pp-env-main">
+            <div className="pp-tabs">
+              {ENV_TABS.map((t) => (
+                <button key={t.id} className="pp-tab" data-active={envTab === t.id ? 'true' : 'false'}
+                  onClick={() => setEnvTab(t.id)}>{t.label}</button>
+              ))}
+            </div>
+
+            {envTab === 'env' ? (
+              <div className="pp-env-pane">
+                <div className="pp-env-fields">
+                  <div className="pp-env-field">
+                    <label className="pp-form-label">名称</label>
+                    <div className="pp-env-field-row">
+                      <input className="pp-input" value={draft.name || ''}
+                        onChange={(e) => patchDraft({ name: e.target.value })} />
+                      <label className="pp-env-check">
+                        <input type="checkbox" checked={draft.isDefault === true}
+                          onChange={(e) => patchDraft({ isDefault: e.target.checked })} />
+                        <span>设为默认</span>
+                      </label>
+                    </div>
+                  </div>
+                  <div className="pp-env-field">
+                    <label className="pp-form-label">前置 URL</label>
+                    <input className="pp-input pp-input-mono" value={draft.baseUrl || ''}
+                      placeholder="https://api.example.com（末尾不加斜杠）"
+                      onChange={(e) => patchDraft({ baseUrl: e.target.value })} />
+                  </div>
+                </div>
+                <div className="pp-card-title">环境变量</div>
+                <div className="pp-table-wrap">{varTable(draftVars, setVarAt, removeVar)}</div>
+                <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
+                  <button className="pp-btn pp-btn-sm" onClick={addVar}>+ 变量</button>
+                  <button className="pp-btn pp-btn-sm pp-btn-primary" onClick={saveEnv}>保存环境</button>
+                  <button className="pp-btn pp-btn-sm pp-btn-danger" style={{ marginLeft: 'auto' }}
+                    onClick={() => removeEnv(draft.id || '')}>删除环境</button>
+                </div>
+                <div className="pp-meta" style={{ marginTop: 'var(--sp-2)' }}>
+                  仅启用的变量参与 {'{{key}}'} 替换；密钥变量以密码显示
+                </div>
+              </div>
+            ) : null}
+
+            {envTab === 'globals' ? (
+              <div className="pp-env-pane">
+                <div className="pp-card-title">全局变量</div>
+                <div className="pp-table-wrap">{varTable(globals, setGlobalAt, removeGlobal)}</div>
+                <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
+                  <button className="pp-btn pp-btn-sm" onClick={addGlobal}>+ 变量</button>
+                  <button className="pp-btn pp-btn-sm pp-btn-primary" onClick={saveGlobals}>保存全局</button>
+                </div>
+                <div className="pp-meta" style={{ marginTop: 'var(--sp-2)' }}>
+                  跨环境共用；与同名环境变量并存时环境优先
+                </div>
+              </div>
+            ) : null}
+
+            {envTab === 'priority' ? (
+              <div className="pp-env-pane">
+                <div className="pp-card-title">变量优先级</div>
+                <div className="pp-priority-list">
+                  {priorityRows().map((r, i) => (
+                    <div key={r.level} className="pp-priority-item">
+                      <span className="pp-priority-level">{i + 1}</span>
+                      <div className="pp-priority-body">
+                        <span className="pp-priority-scope">{r.scope}</span>
+                        <span className="pp-priority-note">{r.note}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="pp-meta" style={{ marginTop: 'var(--sp-3)' }}>
+                  同名变量按此顺序取第一个命中的值；越靠上优先级越高
+                </div>
+              </div>
+            ) : null}
           </div>
         </div>
       

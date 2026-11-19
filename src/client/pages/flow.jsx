@@ -6,10 +6,23 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { SequenceDiagram, exportSequenceSvg } from './sequence.jsx'
 import { applyTheme } from './theme.js'
+import { EmptyState } from './components/EmptyState.jsx'
 
 ;(window.__postapiQueue = window.__postapiQueue || []).push(['flow', FlowPage]) // 注册表就绪前入队
 
 const ACTIONS = ['call', 'return', 'self', 'note']
+const ACTION_LABEL = { call: '调用', return: '返回', self: '自调用', note: '备注' }
+
+/** 参与方去重（发起方 + 接收方），供属性面板的 datalist 与页头统计使用。 */
+export function collectActors(steps) {
+  const out = []
+  for (const s of Array.isArray(steps) ? steps : []) {
+    for (const name of [s.actor, s.target]) {
+      if (name && !out.includes(name)) out.push(name)
+    }
+  }
+  return out
+}
 
 // —— mock flow（契约 §2 flow 结构；后两条带 alt 片段扩展字段）——
 const DEFAULT_STEPS = [
@@ -81,6 +94,7 @@ export function FlowPage(props) {
   const [isMock, setIsMock] = useState(true)
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
+  const [activeIdx, setActiveIdx] = useState(0)
 
   useEffect(() => {
     applyTheme(rootRef.current)
@@ -187,111 +201,146 @@ export function FlowPage(props) {
   }
   const exportSvg = () => exportSequenceSvg(svgRef.current, 'flow-sequence.svg')
 
+  const active = steps[activeIdx] || null
+  const actors = collectActors(steps)
+
   return (
     <div className="pp-scope pp-page" data-page="flow" ref={rootRef}>
       <div className="pp-overview-head">
         <span className="pp-overview-title">流程图</span>
-        {/* 页头只留主动作；项目选择、图名与导出复制移进内容区工具条，
-            否则 528px 宽的主区里 7 个控件会把页头顶出 248px。 */}
         <div className="pp-overview-actions">
+          <span className="pp-pill">{steps.length} 步 · {actors.length} 参与方</span>
           <button className="pp-btn pp-btn-primary" onClick={persist}>保存到项目</button>
         </div>
       </div>
       <div className="pp-overview-content">
-        <div className="pp-card">
-          <div className="pp-card-title">图配置</div>
-          <div className="pp-form-grid">
-            <label className="pp-form-label">项目</label>
-            <select className="pp-select" value={projectId}
-              onChange={(e) => { setProjectId(e.target.value); reloadProject(e.target.value) }}>
-              {projects.map((p) => <option key={p.id} value={p.id}>{p.name || p.id}</option>)}
-            </select>
-            <label className="pp-form-label">图名</label>
-            <input className="pp-input" value={flowName}
-              onChange={(e) => { setFlowName(e.target.value); setNotice('') }} />
-          </div>
-          <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
-            <button className="pp-btn" onClick={exportSvg}>导出 SVG</button>
-            <button className="pp-btn" onClick={copyJson}>复制 JSON</button>
-          </div>
-        </div>
         <div className="pp-toolbar">
-          <span className="pp-meta">
-            {isMock
-              ? '示例数据 — api.storage.saveFlow 不可用，编排结果仅存本地草稿（' + DRAFT_KEY + '）'
-              : '数据来源：api.storage（getProject / saveFlow）'}
-          </span>
+          <label className="pp-meta">项目</label>
+          <select className="pp-select pp-input-sm" value={projectId}
+            onChange={(e) => { setProjectId(e.target.value); reloadProject(e.target.value) }}>
+            {projects.map((p) => <option key={p.id} value={p.id}>{p.name || p.id}</option>)}
+          </select>
+          <input className="pp-input pp-input-sm pp-flow-name" value={flowName}
+            placeholder="图名"
+            onChange={(e) => { setFlowName(e.target.value); setNotice('') }} />
+          <span className="pp-toolbar-spacer" />
+          <button className="pp-btn pp-btn-sm" onClick={exportSvg}>导出 SVG</button>
+          <button className="pp-btn pp-btn-sm" onClick={copyJson}>复制 JSON</button>
+        </div>
+        <div className="pp-meta pp-flow-source">
+          {isMock
+            ? '示例数据 — api.storage.saveFlow 不可用，编排结果仅存本地草稿（' + DRAFT_KEY + '）'
+            : '数据来源：api.storage（getProject / saveFlow）'}
         </div>
         {error ? <p className="pp-error-text">{error}</p> : null}
         {notice ? <p className="pp-muted">{notice}</p> : null}
-  
+
         {overBudget && (
-          <div className="pp-split-hint" style={{ marginBottom: 'var(--sp-3)' }}>
+          <div className="pp-split-hint">
             当前 {steps.length} 步，超过 9 步密度预算（4/10）——建议拆分为「主流程」与「分支/异常」两张图
           </div>
         )}
-  
-        <div className="pp-seq-wrap">
-          <SequenceDiagram
-            steps={steps}
-            svgRef={svgRef}
-            idPrefix="flow-page-seq"
-            title={flowName || '接口调试时序'}
-            desc="页面经 Storage 载入项目、Request 发起 HTTP 调用，并按响应状态渲染或提示错误的时序图"
-          />
-        </div>
-  
-        <div className="pp-card" style={{ marginTop: 'var(--sp-4)' }}>
-          <div className="pp-card-title">步骤编排</div>
-          <div className="pp-table-wrap">
-          <table className="pp-table pp-table-wide">
-            <thead>
-              <tr>
-                <th style={{ width: '40px' }}>#</th>
-                <th style={{ width: '110px' }}>发起方</th>
-                <th style={{ width: '110px' }}>动作</th>
-                <th style={{ width: '110px' }}>接收方</th>
-                <th>消息</th>
-                <th style={{ width: '140px' }}>操作</th>
-              </tr>
-            </thead>
-            <tbody>
+
+        {/* Apifox 测试场景同构：左侧步骤列表（可增删改序）+ 右侧时序画布。
+            画布常驻可见，改任一步即时重绘；选中步骤在下方属性面板编辑。 */}
+        <div className="pp-flow-layout">
+          <nav className="pp-panel pp-flow-side" aria-label="步骤列表">
+            <div className="pp-flow-side-head">
+              <span className="pp-card-title">步骤</span>
+              <button className="pp-btn pp-btn-sm pp-btn-ghost pp-btn-accent" onClick={add}>+ 添加</button>
+            </div>
+            <div className="pp-flow-steps">
               {steps.map((s, i) => (
-                <tr key={i}>
-                  <td className="pp-meta">{i + 1}</td>
-                  <td>
-                    <input className="pp-input pp-input-sm" style={{ width: '100%' }} value={s.actor}
-                      onChange={(e) => update(i, { actor: e.target.value })} />
-                  </td>
-                  <td>
-                    <select className="pp-select pp-input-sm" style={{ width: '100%' }} value={s.action}
-                      onChange={(e) => update(i, { action: e.target.value })}>
-                      {ACTIONS.map((a) => <option key={a} value={a}>{a}</option>)}
-                    </select>
-                  </td>
-                  <td>
-                    <input className="pp-input pp-input-sm" style={{ width: '100%' }} value={s.target || ''}
-                      onChange={(e) => update(i, { target: e.target.value })} />
-                  </td>
-                  <td>
-                    <input className="pp-input pp-input-sm" style={{ width: '100%' }} value={s.message || ''}
-                      onChange={(e) => update(i, { message: e.target.value })} />
-                  </td>
-                  <td>
-                    <button className="pp-btn pp-btn-sm" onClick={() => move(i, -1)} title="上移">↑</button>{' '}
-                    <button className="pp-btn pp-btn-sm" onClick={() => move(i, 1)} title="下移">↓</button>{' '}
-                    <button className="pp-btn pp-btn-sm pp-btn-danger" onClick={() => remove(i)} title="删除">×</button>
-                  </td>
-                </tr>
+                <div key={i} className="pp-flow-step" data-active={i === activeIdx ? 'true' : 'false'}
+                  onClick={() => setActiveIdx(i)}>
+                  <span className="pp-flow-step-no">{i + 1}</span>
+                  <div className="pp-flow-step-body">
+                    <span className="pp-ellipsis pp-flow-step-name">{s.actor || '—'} → {s.target || '—'}</span>
+                    <span className="pp-ellipsis pp-flow-step-msg">{s.message || '（空消息）'}</span>
+                  </div>
+                  <span className="pp-flow-step-act">{s.action}</span>
+                </div>
               ))}
-            </tbody>
-          </table>
-          </div>
-          <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
-            <button className="pp-btn pp-btn-primary" onClick={add}>+ 添加步骤</button>
+              {steps.length === 0 ? (
+                <EmptyState text="暂无步骤" hint="点上方「+ 添加」开始编排" />
+              ) : null}
+            </div>
+          </nav>
+
+          <div className="pp-flow-main">
+            <div className="pp-flow-canvas pp-seq-wrap">
+              {steps.length > 0 ? (
+                <SequenceDiagram
+                  steps={steps}
+                  svgRef={svgRef}
+                  idPrefix="flow-page-seq"
+                  title={flowName || '接口调试时序'}
+                  desc="页面经 Storage 载入项目、Request 发起 HTTP 调用，并按响应状态渲染或提示错误的时序图"
+                />
+              ) : <EmptyState text="暂无可渲染的时序" hint="添加步骤后自动生成" />}
+            </div>
+
+            {active ? (
+              <div className="pp-flow-props">
+                <div className="pp-card-title">步骤 {activeIdx + 1}</div>
+                <div className="pp-flow-prop-grid">
+                  <label className="pp-form-label">发起方</label>
+                  <input className="pp-input pp-input-sm" value={active.actor}
+                    list="pp-flow-actors" onChange={(e) => update(activeIdx, { actor: e.target.value })} />
+                  <label className="pp-form-label">动作</label>
+                  <select className="pp-select pp-input-sm" value={active.action}
+                    onChange={(e) => update(activeIdx, { action: e.target.value })}>
+                    {ACTIONS.map((a) => <option key={a} value={a}>{ACTION_LABEL[a] || a}</option>)}
+                  </select>
+                  <label className="pp-form-label">接收方</label>
+                  <input className="pp-input pp-input-sm" value={active.target || ''}
+                    list="pp-flow-actors" onChange={(e) => update(activeIdx, { target: e.target.value })} />
+                  <label className="pp-form-label">消息</label>
+                  <input className="pp-input pp-input-sm pp-input-mono" value={active.message || ''}
+                    onChange={(e) => update(activeIdx, { message: e.target.value })} />
+                  <label className="pp-form-label">备注</label>
+                  <input className="pp-input pp-input-sm" value={active.note || ''}
+                    onChange={(e) => update(activeIdx, { note: e.target.value })} />
+                  <label className="pp-form-label">分支</label>
+                  <div className="pp-flow-prop-row">
+                    <select className="pp-select pp-input-sm" value={active.op || ''}
+                      onChange={(e) => update(activeIdx, { op: e.target.value || undefined })}>
+                      <option value="">（无）</option>
+                      <option value="alt">alt 条件分支</option>
+                      <option value="opt">opt 可选片段</option>
+                    </select>
+                    <input className="pp-input pp-input-sm pp-input-mono" value={active.guard || ''}
+                      placeholder="[条件]"
+                      onChange={(e) => update(activeIdx, { guard: e.target.value || undefined })} />
+                  </div>
+                </div>
+                <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
+                  <label className="pp-env-check">
+                    <input type="checkbox" checked={active.headline === true}
+                      onChange={(e) => update(activeIdx, { headline: e.target.checked || undefined })} />
+                    <span>主色高亮</span>
+                  </label>
+                  <label className="pp-env-check">
+                    <input type="checkbox" checked={active.divider === true}
+                      onChange={(e) => update(activeIdx, { divider: e.target.checked || undefined })} />
+                    <span>分隔线</span>
+                  </label>
+                  <span className="pp-toolbar-spacer" />
+                  <button className="pp-btn pp-btn-sm" onClick={() => move(activeIdx, -1)} disabled={activeIdx === 0}>↑ 上移</button>
+                  <button className="pp-btn pp-btn-sm" onClick={() => move(activeIdx, 1)} disabled={activeIdx === steps.length - 1}>↓ 下移</button>
+                  <button className="pp-btn pp-btn-sm pp-btn-ghost pp-btn-danger" onClick={() => { remove(activeIdx); setActiveIdx(Math.max(0, activeIdx - 1)) }}>删除</button>
+                </div>
+                <datalist id="pp-flow-actors">
+                  {actors.map((a) => <option key={a} value={a} />)}
+                </datalist>
+              </div>
+            ) : (
+              <div className="pp-flow-props">
+                <EmptyState text="未选中步骤" hint="点左侧任一步骤编辑其属性" />
+              </div>
+            )}
           </div>
         </div>
-      
       </div>
     </div>
   )

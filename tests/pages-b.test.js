@@ -50,12 +50,12 @@ const PAGE_NAMES = ['overview', 'env', 'schema', 'history', 'test', 'import', 'f
  */
 const PAGE_CLASSES = {
   overview: ['pp-stats', 'pp-stat', 'pp-overview-grid', 'pp-card-hover', 'pp-table'],
-  env: ['pp-tree-row', 'pp-table', 'pp-toolbar', 'pp-note'],
+  env: ['pp-env-layout', 'pp-env-side', 'pp-table', 'pp-toolbar', 'pp-meta'],
   schema: ['pp-tree-row', 'pp-json-editor', 'pp-note-ok', 'pp-note-bad'],
   history: ['pp-table', 'pp-pill', 'pp-meta', 'pp-pane'],
   test: ['pp-tree-row', 'pp-table', 'pp-result-row', 'pp-pill'],
   import: ['pp-card', 'pp-btn', 'pp-pre', 'pp-select'],
-  flow: ['pp-seq-wrap', 'pp-table', 'pp-split-hint'],
+  flow: ['pp-flow-layout', 'pp-flow-side', 'pp-seq-wrap', 'pp-flow-props', 'pp-split-hint'],
   settings: ['pp-form-row', 'pp-form-label', 'pp-input', 'pp-note-ok'],
   search: ['pp-input', 'pp-tree-group', 'pp-list-row'],
 }
@@ -519,7 +519,7 @@ t('env.envSummary：摘要含名称/baseUrl/变量数/默认标记', async () =>
   if (f(null).length !== 0) throw new Error('非数组未返回空数组')
 })
 
-t('env 渲染：左环境列表 .pp-tree-row + 变量表 .pp-table + 工具条 .pp-toolbar + 说明 .pp-note', async () => {
+t('env 渲染：左环境列表 .pp-env-layout + 变量表 .pp-table + 工具条 .pp-toolbar + 说明 .pp-meta', async () => {
   const r = await drive('env', { storage: {
     listProjects: async () => [{ id: 'p1', name: 'P1' }],
     getProject: async () => ({
@@ -529,13 +529,14 @@ t('env 渲染：左环境列表 .pp-tree-row + 变量表 .pp-table + 工具条 .
     }),
   } })
   const nodes = collectNodes(r.tree)
-  if (!nodes.some((n) => String(n.props.className || '').includes('pp-tree-row'))) throw new Error('环境列表未使用 .pp-tree-row')
+  if (!nodes.some((n) => String(n.props.className || '').includes('pp-env-layout'))) throw new Error('缺 .pp-env-layout 左列表+右编辑区布局')
+  if (!nodes.some((n) => String(n.props.className || '').includes('pp-env-side'))) throw new Error('缺 .pp-env-side 环境列表')
   // 变量表挂 .pp-table 与 .pp-table-vars（固定列宽），按包含判定
   if (!nodes.some((n) => String(n.props.className || '').split(/\s+/).includes('pp-table'))) {
     throw new Error('变量表未使用 .pp-table')
   }
   if (!nodes.some((n) => String(n.props.className || '') === 'pp-toolbar')) throw new Error('缺 .pp-toolbar')
-  if (!nodes.some((n) => String(n.props.className || '').includes('pp-note'))) throw new Error('缺 .pp-note 说明')
+  if (!nodes.some((n) => String(n.props.className || '').includes('pp-meta'))) throw new Error('缺 .pp-meta 说明')
 })
 
 t('schema.localValidateSchema：非法 JSON/非对象/缺 shape/未知 type 均报错，合法通过', async () => {
@@ -775,17 +776,17 @@ t('flow.normalizeSteps：补 action 默认、丢弃非法项、保留扩展字�
   if ('op' in got[1]) throw new Error('无 op 时不应带 op 字段')
 })
 
-t('flow 渲染：时序容器 .pp-seq-wrap + 编排表 .pp-table + 超 9 步拆分提示 .pp-split-hint', async () => {
+t('flow 渲染：左步骤列表 .pp-flow-side + 时序画布 .pp-seq-wrap + 属性面板 + 超 9 步拆分提示 .pp-split-hint', async () => {
   const ten = Array.from({ length: 10 }, (_, i) => ({ actor: 'A', action: 'call', target: 'B', message: 'm' + i }))
   const r = await drive('flow', { storage: {
     listProjects: async () => [{ id: 'p1', name: 'P1' }],
     getProject: async () => ({ id: 'p1', flow: { name: 'F', steps: ten } }),
   } })
   const nodes = collectNodes(r.tree)
-  if (!nodes.some((n) => String(n.props.className || '') === 'pp-seq-wrap')) throw new Error('缺 .pp-seq-wrap')
-  // 编排表挂 .pp-table 与 .pp-table-wide（窄容器里横向滚动），按包含判定
-  if (!nodes.some((n) => String(n.props.className || '').split(/\s+/).includes('pp-table'))) {
-    throw new Error('编排表未使用 .pp-table')
+  const has = (cls) => nodes.some((n) => String(n.props.className || '').split(/\s+/).includes(cls))
+  // 左步骤列表 + 右画布 + 属性面板（Apifox 测试场景同构）
+  for (const cls of ['pp-flow-layout', 'pp-flow-side', 'pp-flow-steps', 'pp-seq-wrap', 'pp-flow-props']) {
+    if (!has(cls)) throw new Error('缺 .' + cls)
   }
   if (!nodes.some((n) => String(n.props.className || '').includes('pp-split-hint'))) {
     throw new Error('10 步时未显示 .pp-split-hint 拆分提示')
@@ -883,7 +884,12 @@ t('env 真接 api：saveGlobals 被调用且 payload 为 { variables[] }', async
       globals: { variables: [{ key: 'g', value: '1' }] },
     }),
     saveGlobals: async (pid, g) => { saved.push([pid, g]); return g },
-  } }, null, async (tree) => { await buttonByText(tree, '保存全局').props.onClick() })
+  } }, null, async (tree, stub, rerender) => {
+    // 全局变量在页签里：先切到「全局变量」页签再点保存
+    await buttonByText(tree, '全局变量').props.onClick()
+    tree = await rerender()
+    await buttonByText(tree, '保存全局').props.onClick()
+  })
   if (saved.length !== 1) throw new Error('saveGlobals 未调用')
   if (!Array.isArray(saved[0][1].variables)) throw new Error('payload 结构错误')
 })
@@ -1049,7 +1055,7 @@ t('search 真接 api：api.storage.search 被调用且结果分组渲染', async
 
 t('flow 真接 api：saveFlow 被调用且 payload 为 { name, steps[] }', async () => {
   const saved = []
-  await drive('flow', { storage: {
+  const added = await drive('flow', { storage: {
     listProjects: async () => [{ id: 'p1', name: 'P1' }],
     getProject: async () => ({ id: 'p1', flow: { name: 'F', steps: [{ actor: 'A', action: 'call', target: 'B', message: 'm' }] } }),
     saveFlow: async (pid, flow) => { saved.push([pid, flow]); return flow },
@@ -1061,15 +1067,16 @@ t('flow 真接 api：saveFlow 被调用且 payload 为 { name, steps[] }', async
   if (flow.steps[0].action !== 'call' || !('actor' in flow.steps[0])) throw new Error('步骤未规整：' + JSON.stringify(flow.steps[0]))
 })
 
-t('flow 真接 api：添加步骤写入状态并渲染新增行', async () => {
+t('flow 真接 api：添加步骤写入状态并渲染新增条目', async () => {
   const r = await drive('flow', { storage: {
     listProjects: async () => [{ id: 'p1', name: 'P1' }],
     getProject: async () => ({ id: 'p1', flow: { name: 'F', steps: [{ actor: 'A', action: 'call', target: 'B', message: 'm' }] } }),
-  } }, null, async (tree) => { await buttonByText(tree, '+ 添加步骤').props.onClick() })
+  } }, null, async (tree) => { await buttonByText(tree, '+ 添加').props.onClick() })
   const lens = stateValues(r.stub).filter((v) => Array.isArray(v)).map((v) => v.length)
   if (!lens.includes(2)) throw new Error('添加步骤未生效，数组态长度：' + JSON.stringify(lens))
-  const rows = collectNodes(r.tree).filter((n) => n.type === 'tr').length
-  if (rows < 3) throw new Error('步骤表未渲染新增行，tr 数 ' + rows)
+  // 左步骤列表应渲染 2 个条目
+  const items = collectNodes(r.tree).filter((n) => String(n.props.className || '').split(/\s+/).includes('pp-flow-step')).length
+  if (items !== 2) throw new Error('步骤列表未渲染新增条目，条目数 ' + items)
 })
 
 t('settings 真接 api：saveProjectSettings 被调用且数值被夹取', async () => {
