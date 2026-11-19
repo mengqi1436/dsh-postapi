@@ -827,6 +827,39 @@ export const tests = [
       assertNoFailures('页头规格偏离 spec §7', { checks: 4, failures })
     },
   },
+  {
+    name: 'HARD 窄容器适配：栅格单列 / 页签换行 / 表格容器收缩 / 变量表列宽',
+    fn: async () => {
+      const css = readText(CSS_FILE)
+      if (css === null) throw new Error('design-tokens.css 不存在')
+      const failures = []
+      const need = (body, needle, msg) => {
+        if (body === null || !body.includes(needle)) failures.push(msg)
+      }
+      // 双栏在窄容器必须降为单列，否则 import 的 textarea 与 settings 的输入框被截断
+      need(ruleBody(css, '.pp-cols-2'), 'minmax(0, 1fr) minmax(0, 1fr)', '.pp-cols-2 缺双列定义')
+      const marker = '@container ppmain (max-width: 900px)'
+      if (!css.includes(marker)) failures.push('缺 ' + marker + ' 块')
+      else {
+        // 每个 900px 容器块单独切片检查（顶栏块与双栏块是两处）
+        let at = css.indexOf(marker)
+        let hit = false
+        while (at >= 0) {
+          if (css.slice(at, at + 400).includes('.pp-cols-2')) { hit = true; break }
+          at = css.indexOf(marker, at + 1)
+        }
+        if (!hit) failures.push('900px 容器块里没有 .pp-cols-2 单列规则')
+      }
+      // 页签条允许换行且页签文字不折行
+      need(ruleBody(css, '.pp-tabs'), 'flex-wrap: wrap', '.pp-tabs 缺 flex-wrap: wrap')
+      need(ruleBody(css, '.pp-tab'), 'white-space: nowrap', '.pp-tab 缺 white-space: nowrap')
+      // 表格容器必须能收缩（flex/grid 子项默认 min-width:auto 会被表格顶破）
+      need(ruleBody(css, '.pp-table-wrap'), 'min-width: 0', '.pp-table-wrap 缺 min-width: 0')
+      // 变量表固定布局，避免五列按内容撑破容器
+      need(ruleBody(css, '.pp-table.pp-table-vars'), 'table-layout: fixed', '.pp-table-vars 缺 table-layout: fixed')
+      assertNoFailures('窄容器适配规则缺失', { checks: 7, failures })
+    },
+  },
 ]
 
 /* ============================ 直接执行 mini runner ============================ */
