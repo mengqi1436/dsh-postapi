@@ -349,6 +349,18 @@
   border-collapse: collapse;
   font-size: var(--fs-14);
 }
+/* 参数表（ParamTable）专属：列宽写死在 COLUMN_META，fixed 布局下窄容器由 .pp-table-wrap
+   整体横向滚动，而不是各列按内容互相挤压塌陷成 num…/P…。
+   用属性选择器而不是新类名：.pp-table 是其它 9 个页面的共用类，不能在此改全局布局。
+   最小宽度由组件按列宽合计内联给出（默认六列 + 操作列 = 806px），此处不重复声明。 */
+.pp-table[data-param-table] {
+  table-layout: fixed;
+}
+/* fixed 布局下列宽已定，长文本必须裁在自己的格子里（不能靠 max-width:0 那套，
+   它会把整个表格压塌）；裁切只作用于参数表，其它 .pp-table 保持原行为。 */
+.pp-table[data-param-table] td {
+  overflow: hidden;
+}
 .pp-table th {
   height: var(--row-h);
   padding: 0 var(--sp-2);
@@ -364,11 +376,9 @@
   height: var(--row-h);
   padding: 0 var(--sp-2);
   border-bottom: 1px solid var(--border);
-  /* Apifox 表格不折行：窄容器里靠横向滚动，中文逐字断行会把「查询」竖排 */
+  /* Apifox 表格不折行：窄容器里靠 .pp-table-wrap 横向滚动，中文逐字断行会把「查询」竖排。
+     此处不得再写 max-width:0 + ellipsis——那组是窄容器列塌陷的元凶。 */
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 0;
 }
 .pp-table tbody tr:hover {
   background: var(--bg-hover);
@@ -379,6 +389,30 @@
 .pp-table-mono {
   font-family: var(--font-mono);
   font-size: var(--fs-13);
+}
+/* 单元格内编辑：无边框输入，聚焦才显边框（Apifox 表格内编辑观感） */
+.pp-cell-input {
+  width: 100%;
+  min-width: 0;
+  color: var(--fg);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+}
+.pp-cell-input:hover {
+  border-color: var(--border);
+}
+.pp-cell-input:focus {
+  outline: none;
+  background: var(--bg-surface);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-tint);
+}
+/* 表尾「+ 添加参数」：占满整行，左对齐 */
+.pp-table-add {
+  width: 100%;
+  justify-content: flex-start;
+  color: var(--accent);
 }
 
 /* —— 胶囊 / 方法徽标：高度一律 var(--pill-h) —— */
@@ -802,13 +836,12 @@
   overflow: auto;
   min-height: calc(var(--row-h) * 0);
 }
-/* 表格容器：窄栏里横向滚动，保持列宽可读 */
+/* 表格容器：窄栏里横向滚动，保持列宽可读。
+   不要再写 .pp-table-wrap .pp-table{min-width:100%}：表格最小宽度由 ParamTable
+   按列宽合计内联给出，这条选择器会把它覆盖成 100%，列就又能被压塌。 */
 .pp-table-wrap {
   overflow-x: auto;
   overflow-y: hidden;
-}
-.pp-table-wrap .pp-table {
-  min-width: 100%;
 }
 .pp-aside-sticky {
   position: sticky;
@@ -859,12 +892,19 @@
   gap: var(--sp-4);
 }
 
-/* —— 调试：紧凑三栏 —— */
+/* —— 调试：宽容器三栏 / 窄容器单列 —— */
+/* 三栏（树 / 请求编辑 / 响应）在 400~700px 的主区里每栏只剩 100 多像素，
+   参数表被挤成一条，这才是「布局错乱」的根因。窄容器下改为单列纵向堆叠。 */
 .pp-debug-layout {
   display: grid;
   grid-template-columns: var(--nav-w) minmax(0, 1.4fr) minmax(0, 1fr);
   gap: var(--sp-3);
   align-items: start;
+}
+@container ppmain (max-width: 980px) {
+  .pp-debug-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 .pp-pane {
   background: var(--bg-surface);
@@ -1071,11 +1111,15 @@
 }
 
 /* —— 主区（v2：占满剩余宽度）—— */
+/* 主区是容器查询的锚点：侧边栏里的宽度只有 400~700px，页面内部布局必须按
+   「容器宽度」而不是「视口宽度」自适应——用 @media 判断视口永远命中不了窄态。 */
 .pp-main-v2 {
   min-width: 0;
   min-height: 0;
   overflow: auto;
   background: var(--bg-app);
+  container-type: inline-size;
+  container-name: ppmain;
 }
 
 /* —— 页头 —— */
@@ -1125,6 +1169,16 @@
   align-items: start;
   padding: var(--sp-4) var(--sp-5);
   min-height: 0;
+}
+/* 窄容器：目录树与正文并排会把正文压到 200px 级，改为上下堆叠 */
+@container ppmain (max-width: 720px) {
+  .pp-split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .pp-split .pp-panel {
+    width: auto;
+    max-height: calc(var(--row-h) * 6);
+  }
 }
 /* 文档页主列：锚点条 sticky 在顶部，正文在下方独立滚动 */
 .pp-doc-main {
