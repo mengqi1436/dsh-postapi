@@ -64,7 +64,7 @@ profile 的 `package.json` 里 `dsh.profile.bundles` 必须同时含：
 
 - **侧边栏**：全部使用 DSH 官方组件 —— 右栏 `@deepseek-ai/dsh-client-ui-sidebar-right`（`sidebarRightTabs` 两段式注册，`keepMounted` + guide 单入口）；左栏走桌面端原生（官方 sidebar 包 SlotMap 无插件可用席位，不自制侧边栏）；会话输入框 `conversation.composer.dock` 徽章保留。
 - **client ↔ host 通信**：DSH 官方 webServer prefix 桥 —— host 挂 `/dsh-postapi/api`（handler 首行 `connection.requestRejection` 鉴权栅栏，401/403 兜底写 JSON），client 同源 `fetch`；桥不可达时 client 自动降级内存桩（签名不变，页面不白屏）。
-- **路由**：48 条唯一路由（`GET|POST /<domain>/<method>`），覆盖 storage CRUD、`request/send|preview`、`script/run`、`mock/start|stop|status`、`schema/validate|example`、`test/runCase|runScenario`、`import/*`、`export/*`、`codegen/run`、`storage/search|getHistory|appendHistory|clearHistory`。`db/*` 四条固定返回 `501 NOT_IMPLEMENTED`（P2 占位）。
+- **路由**：48 条唯一路由（`GET|POST /<domain>/<method>`），覆盖 storage CRUD、`request/send|preview`、`script/run`、`mock/start|stop|status`、`schema/validate|example`、`test/runCase|runScenario`、`import/*`、`export/*`、`codegen/run`、`storage/search|getHistory|appendHistory|clearHistory`。`/db/query|test|close` 三条固定返回 `501 NOT_IMPLEMENTED`（P2 占位）。
 - **存储 v2**：`index.json`（`version`）+ `<projectId>/project.json`（folders/endpoints/schemas/environments/globals/mocks/testCases/testScenarios/flow/settings）+ `<projectId>/history.json`；tmp+rename 原子写、写操作串行队列、损坏隔离 `.corrupt-<ts>`、删项目 `.trash` 备份；v1 数据读入自动升级 v2。
 - **请求管线**：`{{var}}` 与 11 个 `{{$dynamic}}`（`$timestamp`/`$isoTimestamp`/`$randomInt`/`$randomString`/`$uuid`/`$randomEmail`/`$randomPhone`/`$randomBoolean`/`$randomFloat`/`$datetime`/`$date`），优先级 局部 > 环境 > 全局 → 前置脚本（`node:vm` 沙箱，`pm.*` 兼容面）→ `fetch` + AbortController（默认 30s）→ 后置脚本 → 断言（status/body/header/time × 9 种 op：`eq`/`neq`/`gt`/`lt`/`contains`/`notContains`/`exists`/`notExists`/`regex`）→ 历史落盘；响应 >2MB 截断标注。
 - **Mock 服务**：`node:http` 独立端口（默认 4010），两种命中路径，规则优先、默认响应回落。
@@ -113,7 +113,7 @@ npm run verify       # 上面三步串跑
 ## 已知边界（0.0.1 Demo）
 
 - gRPC / Dubbo / Tars：只有协议字段与 UI 提示，未做真实收发。
-- 数据库操作：`/db/*` 四条路由固定 `501 NOT_IMPLEMENTED`，UI 保留占位。
+- 数据库操作：`/db/query|test|close` 三条路由固定 `501 NOT_IMPLEMENTED`，UI 保留占位。
 - 无云端账号、团队协作、在线分享；无 AI 生成用例。
 - 自动化测试运行器在宿主侧串行执行，无并发/重试策略。
 - 只支持 `platform: web`（桌面端与 web 端共用右侧栏组件）；无原生客户端实现。
