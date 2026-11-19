@@ -5,14 +5,11 @@ name: Publish to npm
 #   2) 推 master：   package.json 版本在 npm 上还不存在时自动发布
 #   3) 手动：        Actions 页面 Run workflow
 #
-# 认证（二选一，优先 OIDC）：
-#   - OIDC trusted publishing：npm 11.5.1+ 在 OIDC 环境自动优先使用，无需任何 secret。
-#     前置：npmjs.com → 包 Settings → Trusted Publisher → GitHub Actions
-#           Organization or user: mengqi1436
-#           Repository:          dsh-postapi
-#           Workflow filename:   publish.yml
-#   - 回退：仓库 secret NPM_TOKEN（granular access token，需 Bypass 2FA）。
-#     两者都配时 npm 自动用 OIDC，token 只在 OIDC 不可用时生效。
+# 认证：npm trusted publishing（OIDC），不使用任何 npm token / secret。
+#   前置（已在 npmjs.com 配好并验证 Status: Valid）：
+#     Organization or user: mengqi1436
+#     Repository:          dsh-postapi
+#     Workflow filename:   publish.yml
 on:
   push:
     branches: [master]
@@ -104,18 +101,12 @@ jobs:
       - name: 发布到 npm（OIDC trusted publishing）
         if: steps.check.outputs.needed == 'true'
         env:
-          # 只透传 OIDC 请求用的 id-token，不注入 NPM_TOKEN。
-          # 一旦 NODE_AUTH_TOKEN 存在，npm 会优先走 token 认证而不是 OIDC，
-          # trusted publisher 也就不会被真正使用；NPM_TOKEN 仅作回退保留在仓库 secret 里。
+          # 不注入任何 NODE_AUTH_TOKEN：一旦它存在，npm 会优先走 token 认证而非 OIDC，
+          # trusted publisher 就形同虚设。这里只让 npm 走 OIDC 并生成 provenance。
           NPM_CONFIG_PROVENANCE: 'true'
         run: |
-          if [ -n "${{ secrets.NPM_TOKEN }}" ] && [ "${{ vars.FORCE_TOKEN_PUBLISH }}" = "true" ]; then
-            echo "::warning::回退模式：使用 NPM_TOKEN 发布（不走 OIDC）"
-            NODE_AUTH_TOKEN="${{ secrets.NPM_TOKEN }}" npm publish --access public
-          else
-            echo "OIDC 模式：由 trusted publisher 授权，npm 自动签发短期凭证"
-            npm publish --access public --provenance
-          fi
+          echo "OIDC 模式：由 trusted publisher 授权，npm 自动签发短期凭证"
+          npm publish --access public --provenance
 
       - name: 写入运行摘要
         if: steps.check.outputs.needed == 'true'
