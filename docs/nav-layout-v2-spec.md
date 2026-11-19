@@ -1,5 +1,16 @@
 # 导航与布局 v2（人体工学版）
 
+> ## ⚠ 已废弃（2026-11-19）
+>
+> **本文的 64px 图标轨（`.pp-rail`）+ 浮层二级菜单（`.pp-flyout`）方案已被 v3 取代**：
+> v3 采用 **240px 常驻文字菜单**（`.pp-sider`，实测对齐 Apifox `.sider-bxNtfB` 的 240px / padding 20px）
+> + **44px 卡片式主页签条**（`.pp-tabbar`），顶栏 48px。
+>
+> - 现行规范：**[docs/apifox-visual-parity-spec.md](./apifox-visual-parity-spec.md)**（§1 全局尺寸、§12 类名契约、§13 落地核对表）
+> - `.pp-rail` / `.pp-rail-btn` / `.pp-rail-label` / `.pp-flyout` 在 `src/` 与 `design-tokens.css` 中已全部删除（grep 0 命中）
+> - 本文正文仅作**历史记录**保留，不再作为实现依据；其中 §8 移除项、§9 验收标准均已失效
+> - 本文件中的 `--rail-w` token 亦已不存在，勿再引用
+
 > lead 产出 · 2026-11-18 · 分支 feature/apifox-ui-parity
 > 背景：v1 把 12 条路由平铺在左树 + 又平铺一遍在水平页签条（重复导航），且右侧栏实际可用宽约 500px，
 > 240px 左树 + 主区 + 240px 右栏三段式在窄容器里必然拥挤；doc/test/schema/env/mock/debug 页内又各自带左树，
