@@ -1126,6 +1126,22 @@
   padding: var(--sp-4) var(--sp-5);
   min-height: 0;
 }
+/* 文档页主列：锚点条 sticky 在顶部，正文在下方独立滚动 */
+.pp-doc-main {
+  min-width: 0;
+  min-height: 0;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  overflow: auto;
+}
+.pp-doc-main .pp-page {
+  padding: var(--sp-5);
+}
+/* 锚点条吸顶时给跳转目标留出高度，避免标题被条挡住 */
+.pp-doc-main [id^="sec-"] {
+  scroll-margin-top: calc(var(--ctl-h-lg) + var(--sp-3));
+}
 .pp-split-wide {
   grid-template-columns: var(--panel-w) minmax(0, 1.4fr) minmax(0, 1fr);
 }
@@ -1172,5 +1188,51 @@
   font-size: var(--fs-13);
   line-height: var(--lh-20);
   color: var(--fg-secondary);
+}
+
+
+/* —— 页内锚点条（原右栏「本页目录」的替代）：主区顶部 sticky 横向 chips ——
+   窄容器里右侧常驻 TOC 会吃掉 240px，把主区挤到不可读；改成横向条后
+   只占一行纵向高度，主区宽度不受影响，滚动时仍能跳转。 */
+.pp-anchor-bar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-1);
+  height: var(--ctl-h-lg);
+  padding: 0 var(--sp-4);
+  overflow-x: auto;
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border);
+  scrollbar-width: none;
+}
+.pp-anchor-bar::-webkit-scrollbar {
+  height: calc(var(--scrollbar) * 0);
+}
+.pp-anchor-chip {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  height: var(--ctl-h-sm);
+  padding: 0 var(--sp-2);
+  font-size: var(--fs-12);
+  line-height: var(--lh-18);
+  color: var(--fg-secondary);
+  text-decoration: none;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.pp-anchor-chip:hover {
+  color: var(--fg);
+  background: var(--bg-hover);
+}
+.pp-anchor-chip[data-active="true"] {
+  color: var(--accent);
+  background: var(--accent-tint);
+  border-color: var(--accent);
 }
 

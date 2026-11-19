@@ -1,7 +1,9 @@
 // doc.jsx — 接口文档页（#/doc/:endpointId）
-// Apifox 三段式：左树（.pp-col-left + .pp-tree，目录 .pp-tree-group / 接口行 .pp-tree-row）
-// + 主区（.pp-main，.pp-doc-h1 + .pp-doc-section + .pp-doc-h2 + .pp-table）
-// + 右 TOC（.pp-col-right + .pp-toc + .pp-toc-item）。
+// v2 布局（docs/nav-layout-v2-spec.md）：.pp-split 两栏
+//   左：面板化接口树 .pp-panel（.pp-tree / .pp-tree-group / .pp-tree-row / .pp-tree-row-count）
+//   右：主列 .pp-doc-main（顶部 sticky 锚点条 .pp-anchor-bar + 正文 .pp-page）
+// 刻意不用右栏常驻 TOC：窄容器里它会吃掉 240px，把正文挤成窄条；
+// 改成主区顶部横向 chips 后只占一行纵向，正文宽度完全不受影响。
 // 方法徽标统一用 Apifox 白字彩底 .pp-method[data-method]；颜色/字号全部来自 token，内联只放 layout。
 // 数据走 window.__postapiApi.storage（listProjects / getProject / saveResponse），
 // 未注入时渲染文件内 mock 并可见标注「示例数据」。
@@ -392,13 +394,16 @@ export function DocPage({ route, api }) {
     </div>
   )
 
-  const toc = (
-    <div className="pp-toc">
-      <div className="pp-tree-group">本页目录</div>
+  /**
+   * 页内锚点条：原先的右栏「本页目录」在窄容器里要吃掉 240px，把正文挤成窄条。
+   * 改成主区顶部 sticky 的横向 chips——只占一行纵向，正文宽度完全不受影响。
+   */
+  const anchorBar = (
+    <div className="pp-anchor-bar" role="navigation" aria-label="本页目录">
       {TOC.map((t) => (
         <a
           key={t.id}
-          className="pp-toc-item"
+          className="pp-anchor-chip"
           data-active={activeSec === t.id}
           onClick={(e) => { e.preventDefault(); jump(t.id) }}
           href={'#/doc/' + encodeURIComponent(ep ? ep.id : '')}
@@ -412,14 +417,12 @@ export function DocPage({ route, api }) {
   if (!ep) {
     return (
       <div className="pp-scope pp-page-flush" data-page="doc" ref={rootRef}>
-        <div className="pp-body-2col" style={{ height: '100%' }}>
-          <nav className="pp-col pp-col-left">{tree}</nav>
-          <main className="pp-main">
-            <div className="pp-page">
-              <h1 className="pp-doc-h1">接口文档</h1>
-              <EmptyState text="暂无接口" hint="先在总览页创建项目与接口" />
-            </div>
-          </main>
+        <div className="pp-split">
+          <nav className="pp-panel" aria-label="接口目录">{tree}</nav>
+          <div>
+            <h1 className="pp-doc-h1">接口文档</h1>
+            <EmptyState text="暂无接口" hint="先在总览页创建项目与接口" />
+          </div>
         </div>
       </div>
     )
@@ -427,10 +430,11 @@ export function DocPage({ route, api }) {
 
   return (
     <div className="pp-scope pp-page-flush" data-page="doc" ref={rootRef}>
-      <div className="pp-body-3col" style={{ height: '100%' }}>
-        <nav className="pp-col pp-col-left">{tree}</nav>
+      <div className="pp-split">
+        <nav className="pp-panel" aria-label="接口目录">{tree}</nav>
 
-        <main className="pp-main">
+        <div className="pp-doc-main">
+          {anchorBar}
           <div className="pp-page">
             {isMock ? <p className="pp-note pp-note-warn">示例数据 — window.__postapiApi 未注入或读取失败，以下为文件内 mock</p> : null}
             {error ? <p className="pp-note pp-note-bad">{error}</p> : null}
@@ -546,9 +550,7 @@ export function DocPage({ route, api }) {
               <pre className="pp-pre pp-pre-scroll">{buildCurl(ep, baseUrl)}</pre>
             </section>
           </div>
-        </main>
-
-        <aside className="pp-col pp-col-right">{toc}</aside>
+        </div>
       </div>
     </div>
   )

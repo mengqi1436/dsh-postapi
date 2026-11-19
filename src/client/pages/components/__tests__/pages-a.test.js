@@ -222,7 +222,8 @@ const pagesATests = [
       assert(src.includes('ParamTable'), 'doc.jsx 未使用 ParamTable')
       assert(src.includes('复制为 cURL'), 'doc.jsx 缺「复制为 cURL」')
       assert(src.includes('navigator.clipboard'), 'doc.jsx 未走剪贴板 API')
-      assert(src.includes('pp-toc-item'), 'doc.jsx 缺右 TOC')
+      // v2：右 TOC 改成主区顶部锚点条（.pp-anchor-chip），窄容器里不再吃 240px
+      assert(src.includes('pp-anchor-chip'), 'doc.jsx 缺页内锚点条（v2 取代右 TOC）')
     },
   },
   {

@@ -92,17 +92,22 @@ function bareMethodBadges(src) {
 
 export const tests = [
   {
-    name: 'apifox-ui: doc 页三段式骨架（左树 / 主区 / 右 TOC）齐全',
+    name: 'apifox-ui: doc 页 v2 骨架（面板树 + 主列 + 顶部锚点条，无右栏）',
     fn() {
       const src = read(FILE.doc)
-      for (const cls of ['pp-body-3col', 'pp-col-left', 'pp-col-right', 'pp-main']) {
-        assert(src.includes(cls), 'doc.jsx 缺三段式类 ' + cls)
+      // v2：左树改面板 .pp-panel，右 TOC 改成主区顶部 sticky 锚点条 .pp-anchor-bar
+      for (const cls of ['pp-split', 'pp-panel', 'pp-doc-main', 'pp-anchor-bar']) {
+        assert(src.includes(cls), 'doc.jsx 缺 v2 骨架类 ' + cls)
+      }
+      // 右栏常驻 TOC 必须彻底消失：它会在窄容器里吃掉 240px
+      for (const cls of ['pp-col-right', 'pp-body-3col', 'pp-toc']) {
+        assert(!src.includes(cls), 'doc.jsx 不应再出现 ' + cls + '（v2 已改锚点条）')
       }
       for (const cls of ['pp-tree', 'pp-tree-group', 'pp-tree-row', 'pp-tree-row-count']) {
         assert(src.includes(cls), 'doc.jsx 左树缺 ' + cls)
       }
-      for (const cls of ['pp-toc', 'pp-toc-item']) {
-        assert(src.includes(cls), 'doc.jsx 右 TOC 缺 ' + cls)
+      for (const cls of ['pp-anchor-chip']) {
+        assert(src.includes(cls), 'doc.jsx 锚点条缺 ' + cls)
       }
       for (const cls of ['pp-doc-h1', 'pp-doc-section', 'pp-doc-h2']) {
         assert(src.includes(cls), 'doc.jsx 主区缺 ' + cls)
