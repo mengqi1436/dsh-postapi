@@ -32,9 +32,9 @@ jobs:
     name: 构建与测试
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: '24'
 
@@ -69,9 +69,9 @@ jobs:
     needs: verify
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: '24'
           registry-url: 'https://registry.npmjs.org'
@@ -119,5 +119,5 @@ jobs:
             echo "### 已发布 ${{ steps.check.outputs.name }}@${{ steps.check.outputs.version }}"
             echo ""
             echo "- registry: https://www.npmjs.com/package/${{ steps.check.outputs.name }}"
-            echo "- 用户安装：`dsh plugin --profile desktop add ${{ steps.check.outputs.name }}@${{ steps.check.outputs.version }} --registry=https://registry.npmjs.org/`"
+            echo '- 用户安装：dsh plugin --profile desktop add '${{ steps.check.outputs.name }}'@'${{ steps.check.outputs.version }}' --registry=https://registry.npmjs.org/'
           } >> "$GITHUB_STEP_SUMMARY"
