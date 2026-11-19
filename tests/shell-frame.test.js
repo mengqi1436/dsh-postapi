@@ -314,7 +314,9 @@ t('骨架容器 v3：.pp-workbench-v2 包 .pp-topbar + .pp-shell（240px 侧栏 
   for (const gone of ['pp-rail', 'pp-flyout', 'pp-body-3col', 'pp-col-right', 'pp-col-left', 'pp-tabs']) {
     assert(byClass(tree, gone).length === 0, 'v3 不应再有 ' + gone)
   }
-  assert(byClass(tree, 'pp-page-head').length === 1, '主区应有页头 .pp-page-head')
+  // v3 删掉了独立说明行 .pp-page-head：顶栏面包屑 + 页签条 + 页面内页头已经两层，
+  // 再加一行说明就是四层标题叠在一起（用户报的「布局错乱」之一）。
+  assert(byClass(tree, 'pp-page-head').length === 0, 'v3 不应再有 .pp-page-head 说明行')
 })
 
 t('侧栏菜单：5 个分组标题 + 12 条路由，当前路由 data-active=true', async () => {
@@ -384,11 +386,13 @@ t('顶栏 v2：面包屑 + 搜索 + 新建接口 + 环境 + 三个图标动作',
   const { tree, mod } = await render()
   const bar = byClass(tree, 'pp-topbar')[0]
   const nodes = collectNodes(bar)
-  const title = nodes.find((n) => cls(n).split(/\s+/).includes('pp-topbar-title'))
-  assert(title && collectText(title).includes(mod.exports.zh['nav.test']), '顶栏标题应取当前路由 labelKey')
-  // 面包屑显示当前分组
+  // v3 顶栏左侧是产品标识，当前页名移进面包屑（分组 / 当前页），不再单独一行标题
+  const brand = nodes.find((n) => cls(n).split(/\s+/).includes('pp-topbar-brand'))
+  assert(brand && collectText(brand).includes(mod.exports.zh['type.label']), '顶栏左侧应为产品标识')
   const crumb = nodes.find((n) => cls(n).split(/\s+/).includes('pp-crumb'))
-  assert(crumb && collectText(crumb).includes(mod.exports.zh['group.quality']), '面包屑应显示当前分组（test 属质量组）')
+  const crumbText = crumb ? collectText(crumb) : ''
+  assert(crumbText.includes(mod.exports.zh['group.quality']), '面包屑应显示当前分组（test 属质量组）')
+  assert(crumbText.includes(mod.exports.zh['nav.test']), '面包屑应含当前路由 labelKey')
   const input = nodes.find((n) => n.type === 'input')
   assert(input, '顶栏应有搜索输入框')
   assert(cls(input).split(/\s+/).includes('pp-topbar-search'), '搜索框应带 .pp-topbar-search')
@@ -486,12 +490,20 @@ t('页面渲染：从注册表取组件，props 为 { route, api }；未注册�
   assert(collectText(second.tree).includes(ex.zh['placeholder.title']), '占位应带「页面未注册」文案')
 })
 
-t('页头描述：主区页头取 aside.page.<route> 文案', async () => {
+t('页面说明：收进帮助卡片，不再常驻占一行高度', async () => {
   loc.hash = '#/flow'
-  const { tree, mod } = await render()
-  const head = byClass(tree, 'pp-page-head')[0]
-  const text = collectText(head)
-  assert(text.includes(mod.exports.zh['aside.page.flow']), '页头应展示当前页面说明，实际：' + text.slice(0, 120))
+  const first = await render()
+  // 常驻区域不应出现说明文案（说明只在帮助卡里）
+  assert(!collectText(first.tree).includes(first.mod.exports.zh['aside.page.flow']),
+    '页面说明不应常驻显示（v3 已收进帮助卡）')
+  const helpBtn = collectNodes(first.tree).find((n) => n.type === 'button'
+    && cls(n).split(/\s+/).includes('pp-sider-item'))
+  assert(helpBtn, '侧栏应有「当前页面」按钮')
+  helpBtn.props.onClick()
+  const second = await render(first.stub)
+  const card = byClass(second.tree, 'pp-help-card')[0]
+  assert(card && collectText(card).includes(second.mod.exports.zh['aside.page.flow']),
+    '帮助卡应展示当前页面说明')
 })
 
 t('locales：zh/en 键集对齐，topbar / aside 文案齐全', async () => {

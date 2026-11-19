@@ -497,7 +497,7 @@ export function collectMethodBadges() {
 export function collectShellSkeleton() {
   const issues = []
   // v3 骨架：图标轨（pp-rail/pp-flyout）已按 spec §12.6 删除，改为 240px 文字侧栏 + 44px 页签条
-  const targets = ['pp-workbench-v2', 'pp-topbar', 'pp-shell', 'pp-sider', 'pp-main-v2', 'pp-page-head', 'pp-tabbar']
+  const targets = ['pp-workbench-v2', 'pp-topbar', 'pp-shell', 'pp-sider', 'pp-main-v2', 'pp-tabbar']
   const body = readText(path.join(SHELL, 'Body.js'))
   if (body === null) {
     return {

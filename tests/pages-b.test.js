@@ -817,8 +817,13 @@ t('overview 真接 api：listProjects 被调用；失败在页面内显示错误
 
 t('overview 真接 api：空项目名被拦截（页面内提示，不调用 createProject）', async () => {
   const calls = []
+  // v3：新建/重命名表单收进内容区折叠卡，先点页头「新建项目」展开，再点卡内「新建」
   const r = await drive('overview', { storage: okStorage({ createProject: async () => { calls.push('createProject') } }).storage },
-    null, async (tree) => { await buttonByText(tree, '新建').props.onClick() })
+    null, async (tree, stub, rerender) => {
+      await buttonByText(tree, '新建项目').props.onClick()
+      const tree2 = await rerender()
+      await buttonByText(tree2, '新建').props.onClick()
+    })
   if (calls.length > 0) throw new Error('空名仍调用了 createProject')
   if (!stateTexts(r.stub).join('|').includes('项目名不能为空')) throw new Error('未提示项目名为空')
 })
@@ -828,7 +833,9 @@ t('overview 真接 api：非空项目名调用 createProject 并给出创建提�
   const r = await drive('overview', {
     storage: okStorage({ createProject: async (name) => { calls.push(name); return { id: 'p9', name } } }).storage,
   }, null, async (tree, stub, rerender) => {
-    const input = collectNodes(tree).find((n) => n.type === 'input' && n.props.placeholder === '项目名')
+    await buttonByText(tree, '新建项目').props.onClick()
+    const tree1 = await rerender()
+    const input = collectNodes(tree1).find((n) => n.type === 'input' && n.props.placeholder === '项目名')
     input.props.onChange({ target: { value: '新项目X' } })
     const tree2 = await rerender()
     await buttonByText(tree2, '新建').props.onClick()
