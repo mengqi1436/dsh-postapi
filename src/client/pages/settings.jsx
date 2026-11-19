@@ -127,7 +127,12 @@ export function SettingsPage(props) {
 
   return (
     <div className="pp-scope pp-page" data-page="settings" ref={rootRef}>
-      <h1 className="pp-page-title">设置</h1>
+      <div className="pp-overview-head" style={{ margin: 'calc(var(--sp-5) * -1) calc(var(--sp-6) * -1) var(--sp-4)' }}>
+        <span className="pp-overview-title">设置</span>
+        <div className="pp-overview-actions">
+          <button className="pp-btn pp-btn-primary" onClick={persist}>保存项目设置</button>
+        </div>
+      </div>
       <div className="pp-toolbar">
         <span className="pp-meta">
           {isMock
@@ -145,14 +150,12 @@ export function SettingsPage(props) {
             <label className="pp-form-label">存储路径</label>
             <input className="pp-input pp-input-mono" style={{ flex: 1 }} readOnly value={storeRoot} />
           </div>
-          <div className="pp-form-row">
+          <div className="pp-form-grid" style={{ marginBottom: 'var(--sp-3)' }}>
             <label className="pp-form-label">主题</label>
             <select className="pp-select" value={theme} onChange={(e) => applyThemeChoice(e.target.value)}>
               <option value="light">浅色</option>
               <option value="dark">深色</option>
             </select>
-          </div>
-          <div className="pp-form-row">
             <label className="pp-form-label">语言</label>
             <select className="pp-select" value={locale} onChange={(e) => applyLocaleChoice(e.target.value)}>
               <option value="zh-CN">简体中文</option>
@@ -166,34 +169,25 @@ export function SettingsPage(props) {
 
         <div className="pp-pane">
           <div className="pp-card-title">项目设置</div>
-          <div className="pp-form-row">
+          <div className="pp-form-grid" style={{ marginBottom: 'var(--sp-3)' }}>
             <label className="pp-form-label">项目</label>
             <select className="pp-select" value={projectId}
               onChange={(e) => { setProjectId(e.target.value); reloadProject(e.target.value) }}>
               {projects.map((p) => <option key={p.id} value={p.id}>{p.name || p.id}</option>)}
             </select>
-          </div>
-          <div className="pp-form-row">
             <label className="pp-form-label">Mock 端口</label>
-            <input className="pp-input pp-input-mono" style={{ width: '120px' }} value={settings.mockPort}
+            <input className="pp-input pp-input-mono" value={settings.mockPort}
               onChange={(e) => patch({ mockPort: e.target.value })} />
-          </div>
-          <div className="pp-form-row">
             <label className="pp-form-label">代理</label>
-            <input className="pp-input pp-input-mono" style={{ flex: 1 }} placeholder="http://127.0.0.1:7890（留空为直连）"
+            <input className="pp-input pp-input-mono" placeholder="http://127.0.0.1:7890（留空为直连）"
               value={settings.proxyUrl} onChange={(e) => patch({ proxyUrl: e.target.value })} />
-          </div>
-          <div className="pp-form-row">
             <label className="pp-form-label">超时 (ms)</label>
-            <input className="pp-input pp-input-mono" style={{ width: '120px' }} value={settings.requestTimeoutMs}
+            <input className="pp-input pp-input-mono" value={settings.requestTimeoutMs}
               onChange={(e) => patch({ requestTimeoutMs: e.target.value })} />
-          </div>
-          <div className="pp-form-row">
             <label className="pp-form-label">历史条数</label>
-            <input className="pp-input pp-input-mono" style={{ width: '120px' }} value={settings.historyLimit}
+            <input className="pp-input pp-input-mono" value={settings.historyLimit}
               onChange={(e) => patch({ historyLimit: e.target.value })} />
           </div>
-          <button className="pp-btn pp-btn-primary" onClick={persist}>保存项目设置</button>
         </div>
       </div>
 

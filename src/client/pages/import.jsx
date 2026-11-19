@@ -244,16 +244,19 @@ export function ImportPage(props) {
 
   return (
     <div className="pp-scope pp-page" data-page="import" ref={rootRef}>
-      <h1 className="pp-page-title">导入导出与代码生成</h1>
+      <div className="pp-overview-head" style={{ margin: 'calc(var(--sp-5) * -1) calc(var(--sp-6) * -1) var(--sp-4)' }}>
+        <span className="pp-overview-title">导入导出与代码生成</span>
+        <div className="pp-overview-actions">
+          <label className="pp-meta">项目</label>
+          <select className="pp-select" value={projectId} onChange={(e) => setProjectId(e.target.value)}>
+            {projects.map((p) => <option key={p.id} value={p.id}>{p.name || p.id}</option>)}
+          </select>
+        </div>
+      </div>
       <div className="pp-toolbar">
         <span className="pp-meta">
           {isMock ? '示例数据 — api 桥不可用，操作按钮会提示缺失的方法' : '数据来源：api.import / api.export / api.codegen'}
         </span>
-        <span className="pp-toolbar-spacer" />
-        <label className="pp-meta">项目</label>
-        <select className="pp-select" value={projectId} onChange={(e) => setProjectId(e.target.value)}>
-          {projects.map((p) => <option key={p.id} value={p.id}>{p.name || p.id}</option>)}
-        </select>
       </div>
       {error ? <p className="pp-error-text">{error}</p> : null}
       {notice ? <p className="pp-muted">{notice}</p> : null}

@@ -116,20 +116,23 @@ export function SearchPage(props) {
 
   return (
     <div className="pp-scope pp-page" data-page="search" ref={rootRef}>
-      <h1 className="pp-page-title">全局搜索</h1>
+      <div className="pp-overview-head" style={{ margin: 'calc(var(--sp-5) * -1) calc(var(--sp-6) * -1) var(--sp-4)' }}>
+        <span className="pp-overview-title">全局搜索</span>
+        <div className="pp-overview-actions">
+          <select className="pp-select" value={projectId} onChange={(e) => setProjectId(e.target.value)}>
+            {projects.map((p) => <option key={p.id} value={p.id}>{p.name || p.id}</option>)}
+          </select>
+          <input className="pp-input" style={{ width: '260px' }} placeholder="关键字（回车搜索）" value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter') runSearch() }} />
+          <button className="pp-btn pp-btn-primary" onClick={runSearch}>搜索</button>
+          <span className="pp-meta">{searched ? '命中 ' + total + ' 条' : '尚未搜索'}</span>
+        </div>
+      </div>
       <div className="pp-toolbar">
         <span className="pp-meta">
           {isMock ? '示例数据 — api.storage.search 不可用，以下为文件内 mock' : '数据来源：api.storage.search（名称 / url / 描述，大小写不敏感）'}
         </span>
-        <span className="pp-toolbar-spacer" />
-        <select className="pp-select" value={projectId} onChange={(e) => setProjectId(e.target.value)}>
-          {projects.map((p) => <option key={p.id} value={p.id}>{p.name || p.id}</option>)}
-        </select>
-        <input className="pp-input" style={{ width: '260px' }} placeholder="关键字（回车搜索）" value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
-          onKeyDown={(e) => { if (e.key === 'Enter') runSearch() }} />
-        <button className="pp-btn pp-btn-primary" onClick={runSearch}>搜索</button>
-        <span className="pp-meta">{searched ? '命中 ' + total + ' 条' : '尚未搜索'}</span>
       </div>
       {error ? <p className="pp-error-text">{error}</p> : null}
 

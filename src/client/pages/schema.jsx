@@ -240,18 +240,19 @@ export function SchemaPage(props) {
 
   return (
     <div className="pp-scope pp-page" data-page="schema" ref={rootRef}>
-      <h1 className="pp-page-title">数据模型</h1>
-      <div className="pp-toolbar">
-        <span className="pp-meta">
-          {isMock ? '示例数据 — api.storage 不可用，以下为文件内 mock' : '数据来源：api.storage（saveSchema / deleteSchema）'}
-        </span>
-        <span className="pp-toolbar-spacer" />
-        <label className="pp-meta">项目</label>
-        <select className="pp-select" value={projectId}
-          onChange={(e) => { setProjectId(e.target.value); loadProject(e.target.value) }}>
-          {projects.map((p) => <option key={p.id} value={p.id}>{p.name || p.id}</option>)}
-        </select>
+      <div className="pp-overview-head" style={{ margin: 'calc(var(--sp-5) * -1) calc(var(--sp-6) * -1) var(--sp-4)' }}>
+        <span className="pp-overview-title">数据模型</span>
+        <div className="pp-overview-actions">
+          <label className="pp-meta">项目</label>
+          <select className="pp-select" value={projectId}
+            onChange={(e) => { setProjectId(e.target.value); loadProject(e.target.value) }}>
+            {projects.map((p) => <option key={p.id} value={p.id}>{p.name || p.id}</option>)}
+          </select>
+        </div>
       </div>
+      <p className="pp-muted">
+        {isMock ? '示例数据 — api.storage 不可用，以下为文件内 mock' : '数据来源：api.storage（saveSchema / deleteSchema）'}
+      </p>
       {error ? <p className="pp-error-text">{error}</p> : null}
       {notice ? <p className="pp-muted">{notice}</p> : null}
 
@@ -273,13 +274,11 @@ export function SchemaPage(props) {
 
         <div className="pp-pane">
           <div className="pp-card-title">编辑</div>
-          <div className="pp-form-row">
+          <div className="pp-form-grid" style={{ marginBottom: 'var(--sp-3)' }}>
             <label className="pp-form-label">名称</label>
-            <input className="pp-input" style={{ flex: 1 }} value={name} onChange={(e) => setName(e.target.value)} />
-          </div>
-          <div className="pp-form-row">
+            <input className="pp-input" value={name} onChange={(e) => setName(e.target.value)} />
             <label className="pp-form-label">说明</label>
-            <input className="pp-input" style={{ flex: 1 }} value={description} onChange={(e) => setDescription(e.target.value)} />
+            <input className="pp-input" value={description} onChange={(e) => setDescription(e.target.value)} />
           </div>
           <textarea className="pp-json-editor" rows={14} value={text}
             onChange={(e) => { setText(e.target.value); setCheckResult(null) }} />

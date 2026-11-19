@@ -236,17 +236,20 @@ export function EnvPage(props) {
 
   return (
     <div className="pp-scope pp-page" data-page="env" ref={rootRef}>
-      <h1 className="pp-page-title">环境与变量</h1>
+      <div className="pp-overview-head" style={{ margin: 'calc(var(--sp-5) * -1) calc(var(--sp-6) * -1) var(--sp-4)' }}>
+        <span className="pp-overview-title">环境与变量</span>
+        <div className="pp-overview-actions">
+          <label className="pp-meta">项目</label>
+          <select className="pp-select" value={projectId}
+            onChange={(e) => { setProjectId(e.target.value); loadProject(e.target.value) }}>
+            {projects.map((p) => <option key={p.id} value={p.id}>{p.name || p.id}</option>)}
+          </select>
+        </div>
+      </div>
       <div className="pp-toolbar">
         <span className="pp-meta">
           {isMock ? '示例数据 — api.storage 不可用，以下为文件内 mock' : '数据来源：api.storage（saveEnvironment / saveGlobals）'}
         </span>
-        <span className="pp-toolbar-spacer" />
-        <label className="pp-meta">项目</label>
-        <select className="pp-select" value={projectId}
-          onChange={(e) => { setProjectId(e.target.value); loadProject(e.target.value) }}>
-          {projects.map((p) => <option key={p.id} value={p.id}>{p.name || p.id}</option>)}
-        </select>
       </div>
       {error ? <p className="pp-error-text">{error}</p> : null}
       {notice ? <p className="pp-muted">{notice}</p> : null}
@@ -271,14 +274,12 @@ export function EnvPage(props) {
 
         <div className="pp-pane">
           <div className="pp-card-title">环境变量</div>
-          <div className="pp-form-row">
+          <div className="pp-form-grid" style={{ marginBottom: 'var(--sp-3)' }}>
             <label className="pp-form-label">名称</label>
-            <input className="pp-input" style={{ flex: 1 }} value={draft.name || ''}
+            <input className="pp-input" value={draft.name || ''}
               onChange={(e) => patchDraft({ name: e.target.value })} />
-          </div>
-          <div className="pp-form-row">
             <label className="pp-form-label">baseUrl</label>
-            <input className="pp-input pp-input-mono" style={{ flex: 1 }} value={draft.baseUrl || ''}
+            <input className="pp-input pp-input-mono" value={draft.baseUrl || ''}
               onChange={(e) => patchDraft({ baseUrl: e.target.value })} />
           </div>
           <div className="pp-form-row">
@@ -286,7 +287,7 @@ export function EnvPage(props) {
             <input type="checkbox" checked={draft.isDefault === true}
               onChange={(e) => patchDraft({ isDefault: e.target.checked })} />
           </div>
-          {varTable(draftVars, setVarAt, removeVar)}
+          <div className="pp-table-wrap">{varTable(draftVars, setVarAt, removeVar)}</div>
           <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
             <button className="pp-btn" onClick={addVar}>新增变量</button>
             <button className="pp-btn pp-btn-primary" onClick={saveEnv}>保存环境</button>
@@ -299,7 +300,7 @@ export function EnvPage(props) {
 
         <div className="pp-pane">
           <div className="pp-card-title">全局变量</div>
-          {varTable(globals, setGlobalAt, removeGlobal)}
+          <div className="pp-table-wrap">{varTable(globals, setGlobalAt, removeGlobal)}</div>
           <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
             <button className="pp-btn" onClick={addGlobal}>新增变量</button>
             <button className="pp-btn pp-btn-primary" onClick={saveGlobals}>保存全局</button>
@@ -309,6 +310,7 @@ export function EnvPage(props) {
 
       <div className="pp-card" style={{ marginTop: 'var(--sp-5)' }}>
         <div className="pp-card-title">变量优先级</div>
+        <div className="pp-table-wrap">
         <table className="pp-table">
           <thead>
             <tr><th style={{ width: '110px' }}>优先级</th><th style={{ width: '160px' }}>作用域</th><th>说明</th></tr>
@@ -323,6 +325,7 @@ export function EnvPage(props) {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   )

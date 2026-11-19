@@ -284,20 +284,23 @@ export function TestPage(props) {
 
   return (
     <div className="pp-scope pp-page" data-page="test" ref={rootRef}>
-      <h1 className="pp-page-title">自动化测试</h1>
+      <div className="pp-overview-head" style={{ margin: 'calc(var(--sp-5) * -1) calc(var(--sp-6) * -1) var(--sp-4)' }}>
+        <span className="pp-overview-title">自动化测试</span>
+        <div className="pp-overview-actions">
+          <label className="pp-meta">项目</label>
+          <select className="pp-select" value={projectId}
+            onChange={(e) => { setProjectId(e.target.value); loadProject(e.target.value) }}>
+            {projects.map((p) => <option key={p.id} value={p.id}>{p.name || p.id}</option>)}
+          </select>
+          <button className="pp-btn" onClick={persist}>保存用例与场景</button>
+        </div>
+      </div>
       <div className="pp-toolbar">
         <span className="pp-meta">
           {isMock
             ? '示例数据 — api.storage 不可用，以下为文件内 mock'
             : '数据来源：api.storage.getProject（用例与场景存 project.settings.testCases / testScenarios）；运行走 api.test.runCase / runScenario'}
         </span>
-        <span className="pp-toolbar-spacer" />
-        <label className="pp-meta">项目</label>
-        <select className="pp-select" value={projectId}
-          onChange={(e) => { setProjectId(e.target.value); loadProject(e.target.value) }}>
-          {projects.map((p) => <option key={p.id} value={p.id}>{p.name || p.id}</option>)}
-        </select>
-        <button className="pp-btn" onClick={persist}>保存用例与场景</button>
       </div>
       {error ? <p className="pp-error-text">{error}</p> : null}
       {notice ? <p className="pp-muted">{notice}</p> : null}
@@ -325,19 +328,18 @@ export function TestPage(props) {
             <div className="pp-card-title">断言</div>
             {activeCase ? (
               <div>
-                <div className="pp-form-row">
+                <div className="pp-form-grid" style={{ marginBottom: 'var(--sp-3)' }}>
                   <label className="pp-form-label">名称</label>
-                  <input className="pp-input" style={{ flex: 1 }} value={activeCase.name || ''}
+                  <input className="pp-input" value={activeCase.name || ''}
                     onChange={(e) => patchCase({ name: e.target.value })} />
-                </div>
-                <div className="pp-form-row">
                   <label className="pp-form-label">接口</label>
-                  <select className="pp-select" style={{ flex: 1 }} value={activeCase.endpointId || ''}
+                  <select className="pp-select" value={activeCase.endpointId || ''}
                     onChange={(e) => patchCase({ endpointId: e.target.value })}>
                     <option value="">（未绑定）</option>
                     {endpoints.map((ep) => <option key={ep.id} value={ep.id}>{ep.method} {ep.url}</option>)}
                   </select>
                 </div>
+                <div className="pp-table-wrap">
                 <table className="pp-table">
                   <thead>
                     <tr>
@@ -374,6 +376,7 @@ export function TestPage(props) {
                     {caseAssertions.length === 0 ? <tr><td colSpan={6} className="pp-muted">暂无断言</td></tr> : null}
                   </tbody>
                 </table>
+                </div>
                 <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
                   <button className="pp-btn" onClick={addAssertion}>新增断言</button>
                   <button className="pp-btn pp-btn-primary" onClick={runCase} disabled={running}>运行用例</button>
@@ -402,11 +405,12 @@ export function TestPage(props) {
             <div className="pp-card-title">步骤编排</div>
             {activeScenario ? (
               <div>
-                <div className="pp-form-row">
+                <div className="pp-form-grid" style={{ marginBottom: 'var(--sp-3)' }}>
                   <label className="pp-form-label">场景名</label>
-                  <input className="pp-input" style={{ flex: 1 }} value={activeScenario.name || ''}
+                  <input className="pp-input" value={activeScenario.name || ''}
                     onChange={(e) => patchScenario({ name: e.target.value })} />
                 </div>
+                <div className="pp-table-wrap">
                 <table className="pp-table">
                   <thead>
                     <tr>
@@ -444,6 +448,7 @@ export function TestPage(props) {
                     {(activeScenario.steps || []).length === 0 ? <tr><td colSpan={4} className="pp-muted">暂无步骤</td></tr> : null}
                   </tbody>
                 </table>
+                </div>
                 <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
                   <button className="pp-btn" onClick={addStep}>添加步骤</button>
                   <button className="pp-btn pp-btn-primary" onClick={runScenario} disabled={running}>运行场景</button>

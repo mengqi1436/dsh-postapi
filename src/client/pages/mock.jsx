@@ -194,7 +194,14 @@ export function MockPage({ route, api }) {
 
   return (
     <div className="pp-scope pp-page" data-page="mock" ref={rootRef}>
-      <h1 className="pp-page-title">Mock</h1>
+      <div className="pp-overview-head" style={{ margin: 'calc(var(--sp-5) * -1) calc(var(--sp-6) * -1) var(--sp-4)' }}>
+        <span className="pp-overview-title">Mock</span>
+        <div className="pp-overview-actions">
+          <span className="pp-pill">{service.running ? '运行中' : '已停止'}</span>
+          <button className="pp-btn pp-btn-primary" onClick={startService} disabled={busy || service.running}>启动</button>
+          <button className="pp-btn" onClick={stopService} disabled={busy || !service.running}>停止</button>
+        </div>
+      </div>
       <p className="pp-muted">
         {isMock ? '示例数据 — window.__postapiApi 未注入或读取失败，以下为文件内 mock' : '数据来源：postapi.storage + postapi.mock'}
       </p>
@@ -217,15 +224,12 @@ export function MockPage({ route, api }) {
         {/* 中：规则表 + 延迟 */}
         <section className="pp-pane">
           <div className="pp-card-title">{current ? current.name : '未选择接口'}</div>
-          <div className="pp-form-row">
+          <div className="pp-form-grid" style={{ marginBottom: 'var(--sp-3)' }}>
             <label className="pp-form-label">启用 Mock</label>
             <input type="checkbox" checked={mockEnabled} onChange={(e) => setMockEnabled(e.target.checked)} />
-          </div>
-          <div className="pp-form-row">
             <label className="pp-form-label">延迟 (ms)</label>
             <input
               className="pp-input pp-input-mono"
-              style={{ width: '120px' }}
               value={String(delayMs)}
               onChange={(e) => setDelayMs(e.target.value.replace(/[^0-9]/g, ''))}
             />
@@ -234,6 +238,7 @@ export function MockPage({ route, api }) {
           <div className="pp-card-title" style={{ marginTop: 'var(--sp-3)' }}>字段规则</div>
           {rules.length === 0 ? <EmptyState text="尚无规则" hint="未命中规则时回落默认响应" /> : null}
           {rules.length > 0 ? (
+            <div className="pp-table-wrap">
             <table className="pp-table">
               <thead>
                 <tr>
@@ -268,6 +273,7 @@ export function MockPage({ route, api }) {
                 ))}
               </tbody>
             </table>
+            </div>
           ) : null}
           <div style={{ display: 'flex', gap: 'var(--sp-2)', marginTop: 'var(--sp-2)' }}>
             <button className="pp-btn" onClick={() => setRules(rules.concat([blankRule(current && current.id)]))}>+ 添加规则</button>
@@ -279,12 +285,7 @@ export function MockPage({ route, api }) {
         <section className="pp-pane">
           <div className="pp-card-title">本地 Mock 服务</div>
           <div style={{ display: 'flex', gap: 'var(--sp-2)', alignItems: 'center', flexWrap: 'wrap' }}>
-            <span className="pp-pill">{service.running ? '运行中' : '已停止'}</span>
             <span className="pp-muted">端口 {service.port || port}</span>
-          </div>
-          <div style={{ display: 'flex', gap: 'var(--sp-2)', marginTop: 'var(--sp-2)' }}>
-            <button className="pp-btn pp-btn-primary" onClick={startService} disabled={busy || service.running}>启动</button>
-            <button className="pp-btn" onClick={stopService} disabled={busy || !service.running}>停止</button>
           </div>
 
           <div className="pp-card-title" style={{ marginTop: 'var(--sp-3)' }}>命中地址</div>

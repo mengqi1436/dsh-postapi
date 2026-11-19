@@ -189,25 +189,28 @@ export function FlowPage(props) {
 
   return (
     <div className="pp-scope pp-page" data-page="flow" ref={rootRef}>
-      <h1 className="pp-page-title">流程图</h1>
+      <div className="pp-overview-head" style={{ margin: 'calc(var(--sp-5) * -1) calc(var(--sp-6) * -1) var(--sp-4)' }}>
+        <span className="pp-overview-title">流程图</span>
+        <div className="pp-overview-actions">
+          <label className="pp-meta">项目</label>
+          <select className="pp-select" value={projectId}
+            onChange={(e) => { setProjectId(e.target.value); reloadProject(e.target.value) }}>
+            {projects.map((p) => <option key={p.id} value={p.id}>{p.name || p.id}</option>)}
+          </select>
+          <label className="pp-meta">图名</label>
+          <input className="pp-input" style={{ width: '200px' }} value={flowName}
+            onChange={(e) => { setFlowName(e.target.value); setNotice('') }} />
+          <button className="pp-btn pp-btn-primary" onClick={persist}>保存到项目</button>
+          <button className="pp-btn" onClick={exportSvg}>导出 SVG</button>
+          <button className="pp-btn" onClick={copyJson}>复制 JSON</button>
+        </div>
+      </div>
       <div className="pp-toolbar">
         <span className="pp-meta">
           {isMock
             ? '示例数据 — api.storage.saveFlow 不可用，编排结果仅存本地草稿（' + DRAFT_KEY + '）'
             : '数据来源：api.storage（getProject / saveFlow）'}
         </span>
-        <span className="pp-toolbar-spacer" />
-        <label className="pp-meta">项目</label>
-        <select className="pp-select" value={projectId}
-          onChange={(e) => { setProjectId(e.target.value); reloadProject(e.target.value) }}>
-          {projects.map((p) => <option key={p.id} value={p.id}>{p.name || p.id}</option>)}
-        </select>
-        <label className="pp-meta">图名</label>
-        <input className="pp-input" style={{ width: '200px' }} value={flowName}
-          onChange={(e) => { setFlowName(e.target.value); setNotice('') }} />
-        <button className="pp-btn pp-btn-primary" onClick={persist}>保存到项目</button>
-        <button className="pp-btn" onClick={exportSvg}>导出 SVG</button>
-        <button className="pp-btn" onClick={copyJson}>复制 JSON</button>
       </div>
       {error ? <p className="pp-error-text">{error}</p> : null}
       {notice ? <p className="pp-muted">{notice}</p> : null}
@@ -230,6 +233,7 @@ export function FlowPage(props) {
 
       <div className="pp-card" style={{ marginTop: 'var(--sp-4)' }}>
         <div className="pp-card-title">步骤编排</div>
+        <div className="pp-table-wrap">
         <table className="pp-table">
           <thead>
             <tr>
@@ -272,6 +276,7 @@ export function FlowPage(props) {
             ))}
           </tbody>
         </table>
+        </div>
         <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
           <button className="pp-btn pp-btn-primary" onClick={add}>+ 添加步骤</button>
         </div>

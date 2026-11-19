@@ -220,7 +220,17 @@ export function OverviewPage(props) {
 
   return (
     <div className="pp-scope pp-page" data-page="overview" ref={rootRef}>
-      <h1 className="pp-page-title">项目总览</h1>
+      <div className="pp-overview-head" style={{ margin: 'calc(var(--sp-5) * -1) calc(var(--sp-6) * -1) var(--sp-4)' }}>
+        <span className="pp-overview-title">项目总览</span>
+        <div className="pp-overview-actions">
+          <input className="pp-input" style={{ width: '200px' }} placeholder="项目名"
+            value={newName} onChange={(e) => { setNewName(e.target.value); setNotice('') }} />
+          <button className="pp-btn pp-btn-primary" onClick={createProject}>新建</button>
+          <input className="pp-input" style={{ width: '180px' }} placeholder="重命名"
+            value={renameName} onChange={(e) => { setRenameName(e.target.value); setNotice('') }} />
+          <button className="pp-btn" onClick={renameProject}>重命名</button>
+        </div>
+      </div>
       <p className="pp-muted">
         {isMock
           ? '示例数据 — api.storage 未注入或不可用，以下为文件内 mock'
@@ -248,16 +258,9 @@ export function OverviewPage(props) {
         </div>
       </div>
 
-      <div className="pp-toolbar" style={{ marginTop: 'var(--sp-4)' }}>
-        <input className="pp-input" style={{ width: '200px' }} placeholder="项目名"
-          value={newName} onChange={(e) => { setNewName(e.target.value); setNotice('') }} />
-        <button className="pp-btn pp-btn-primary" onClick={createProject}>新建</button>
-        <span className="pp-toolbar-spacer" />
+      <div className="pp-toolbar-inline" style={{ marginBottom: 'var(--sp-4)' }}>
         <span className="pp-meta">当前项目</span>
         <input className="pp-input pp-input-mono" style={{ width: '180px' }} readOnly value={currentId || '-'} />
-        <input className="pp-input" style={{ width: '180px' }} placeholder="重命名"
-          value={renameName} onChange={(e) => { setRenameName(e.target.value); setNotice('') }} />
-        <button className="pp-btn" onClick={renameProject}>重命名</button>
       </div>
 
       <div className="pp-overview-grid">
@@ -280,6 +283,7 @@ export function OverviewPage(props) {
 
       <div className="pp-card" style={{ marginTop: 'var(--sp-5)' }}>
         <div className="pp-card-title">最近接口</div>
+        <div className="pp-table-wrap">
         <table className="pp-table">
           <thead>
             <tr>
@@ -303,6 +307,7 @@ export function OverviewPage(props) {
             ) : null}
           </tbody>
         </table>
+        </div>
       </div>
 
       <div className="pp-toolbar" style={{ marginTop: 'var(--sp-5)' }}>
