@@ -1,0 +1,123 @@
+name: Publish to npm
+
+# 触发方式：
+#   1) 推 tag：      git tag v0.0.1 && git push origin v0.0.1
+#   2) 推 master：   package.json 版本在 npm 上还不存在时自动发布
+#   3) 手动：        Actions 页面 Run workflow
+#
+# 认证（二选一，优先 OIDC）：
+#   - OIDC trusted publishing：npm 11.5.1+ 在 OIDC 环境自动优先使用，无需任何 secret。
+#     前置：npmjs.com → 包 Settings → Trusted Publisher → GitHub Actions
+#           Organization or user: mengqi1436
+#           Repository:          dsh-postapi
+#           Workflow filename:   publish.yml
+#   - 回退：仓库 secret NPM_TOKEN（granular access token，需 Bypass 2FA）。
+#     两者都配时 npm 自动用 OIDC，token 只在 OIDC 不可用时生效。
+on:
+  push:
+    branches: [master]
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: publish-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: 构建与测试
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: 安装依赖
+        run: npm install --no-audit --no-fund
+
+      - name: 构建客户端产物
+        run: npm run build
+
+      - name: 单元测试
+        run: npm test
+
+      - name: 宿主端冒烟
+        run: npm run smoke
+
+      - name: tag 与 package.json 版本一致性
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          PKG="$(node -p "require('./package.json').version")"
+          echo "tag=$TAG package=$PKG"
+          [ "$TAG" = "$PKG" ] || { echo "::error::tag $TAG 与 package.json 版本 $PKG 不一致"; exit 1; }
+
+      - name: 提示 dist 未提交（不阻断）
+        run: |
+          if [ -n "$(git status --porcelain dist)" ]; then
+            echo "::warning::构建后 dist 与仓库内容不同，记得本地 npm run build 后提交"
+          fi
+
+  publish:
+    name: 发布到 npm
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: 安装支持 OIDC 的 npm
+        run: npm install -g npm@^11.5.1
+
+      - name: 安装依赖
+        run: npm install --no-audit --no-fund
+
+      - name: 判断是否需要发布
+        id: check
+        run: |
+          NAME="$(node -p "require('./package.json').name")"
+          VERSION="$(node -p "require('./package.json').version")"
+          echo "name=$NAME" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          if npm view "$NAME@$VERSION" version >/dev/null 2>&1; then
+            echo "$NAME@$VERSION 已存在于 npm，跳过发布"
+            echo "needed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "$NAME@$VERSION 尚未发布，准备发布"
+            echo "needed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: 打包预览
+        if: steps.check.outputs.needed == 'true'
+        run: npm pack --dry-run
+
+      - name: 发布到 npm（OIDC 优先，NPM_TOKEN 回退）
+        if: steps.check.outputs.needed == 'true'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          if [ -n "$NODE_AUTH_TOKEN" ]; then
+            npm publish --access public --provenance
+          else
+            npm publish --access public
+          fi
+
+      - name: 写入运行摘要
+        if: steps.check.outputs.needed == 'true'
+        run: |
+          {
+            echo "### 已发布 ${{ steps.check.outputs.name }}@${{ steps.check.outputs.version }}"
+            echo ""
+            echo "- registry: https://www.npmjs.com/package/${{ steps.check.outputs.name }}"
+            echo "- 用户安装：`dsh plugin --profile desktop add ${{ steps.check.outputs.name }}@${{ steps.check.outputs.version }} --registry=https://registry.npmjs.org/`"
+          } >> "$GITHUB_STEP_SUMMARY"

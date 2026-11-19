@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: 构建 / 测试 / 冒烟
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: 安装依赖
+        run: npm install --no-audit --no-fund
+
+      - name: 构建（含 vm smoke）
+        run: npm run build
+
+      - name: 单元测试
+        run: npm test
+
+      - name: 宿主端端到端冒烟
+        run: npm run smoke
