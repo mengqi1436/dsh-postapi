@@ -45,7 +45,11 @@
   --rail-btn-h: 52px;
   --flyout-w: 200px;
   --flyout-w-sm: 176px;
-  --panel-w: 200px;
+  /* 实体树面板宽：--panel-w 是下限，--panel-w-max 是上限，中间按容器 32% 自适应。
+     200px 时「查询订单列表」这类 6 字接口名会被省略号吃掉；280px 能放下约 11 个中文字，
+     容器够宽时再涨到 380px，长接口名不必靠省略号。 */
+  --panel-w: 280px;
+  --panel-w-max: 380px;
   --hit: 28px;
   --rail-icon: 20px;
   --z-flyout: 30;
@@ -894,10 +898,11 @@
 
 /* —— 调试：宽容器三栏 / 窄容器单列 —— */
 /* 三栏（树 / 请求编辑 / 响应）在 400~700px 的主区里每栏只剩 100 多像素，
-   参数表被挤成一条，这才是「布局错乱」的根因。窄容器下改为单列纵向堆叠。 */
+   参数表被挤成一条，这才是「布局错乱」的根因。窄容器下改为单列纵向堆叠。
+   首列与文档页共用 --panel-w，两页的接口树宽度保持一致。 */
 .pp-debug-layout {
   display: grid;
-  grid-template-columns: var(--nav-w) minmax(0, 1.4fr) minmax(0, 1fr);
+  grid-template-columns: clamp(var(--panel-w), 32%, var(--panel-w-max)) minmax(0, 1.4fr) minmax(0, 1fr);
   gap: var(--sp-3);
   align-items: start;
 }
@@ -1164,20 +1169,28 @@
 }
 .pp-split {
   display: grid;
-  grid-template-columns: var(--panel-w) minmax(0, 1fr);
+  /* 面板宽度随容器自适应：下限 --panel-w、上限 --panel-w-max、中间取 32%，
+     宽窗口里目录树自动变宽，长接口名不再被省略号截断。 */
+  grid-template-columns: clamp(var(--panel-w), 32%, var(--panel-w-max)) minmax(0, 1fr);
   gap: var(--sp-4);
   align-items: start;
   padding: var(--sp-4) var(--sp-5);
   min-height: 0;
 }
-/* 窄容器：目录树与正文并排会把正文压到 200px 级，改为上下堆叠 */
-@container ppmain (max-width: 720px) {
+/* 并排时面板宽度由 grid 轨道决定，自身不再定宽（否则比轨道窄会留白） */
+.pp-split > .pp-panel {
+  width: auto;
+}
+/* 窄容器：目录树与正文并排会把正文压到 200px 级，改为上下堆叠。
+   阈值 800px = 面板 280 + 间距 16 + 正文约 500（6 列参数表在此宽度下才不至于只剩表头）。 */
+@container ppmain (max-width: 800px) {
   .pp-split {
     grid-template-columns: minmax(0, 1fr);
   }
   .pp-split .pp-panel {
     width: auto;
-    max-height: calc(var(--row-h) * 6);
+    /* 堆叠时目录树占满整宽；高度给到 14 行（约 500px）——列表区太矮时翻目录很费劲 */
+    max-height: calc(var(--row-h) * 14);
   }
 }
 /* 文档页主列：锚点条 sticky 在顶部，正文在下方独立滚动 */

@@ -88,7 +88,9 @@ export const SPEC_SIZE_TOKENS = {
   '--rail-btn-h': '52px',
   '--flyout-w': '200px',
   '--flyout-w-sm': '176px',
-  '--panel-w': '200px',
+  // 接口树面板：280px 下限 / 380px 上限，中间按容器 32% 自适应
+  '--panel-w': '280px',
+  '--panel-w-max': '380px',
   '--hit': '28px',
   '--rail-icon': '20px',
   '--z-flyout': '30',
