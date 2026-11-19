@@ -87,6 +87,8 @@ export function ImportPage(props) {
   const [projectId, setProjectId] = useState('proj_demo01')
   const [isMock, setIsMock] = useState(true)
   const [error, setError] = useState('')
+  // 动作反馈（导入/导出/生成/复制）：挂在 io-main 内贴着触发按钮，不再上翻整页找结果
+  const [actionError, setActionError] = useState('')
   const [notice, setNotice] = useState('')
   const [ioTab, setIoTab] = useState('import')
   const [importKind, setImportKind] = useState('openapi')
@@ -123,18 +125,18 @@ export function ImportPage(props) {
     setImportKind(id)
     setImportOut('')
     setBundle(null)
-    setError('')
+    setActionError('')
   }
 
   const runImport = async () => {
     const fn = api && api.import && api.import[importKind]
     if (typeof fn !== 'function') {
-      setError('当前桥未提供 api.import.' + importKind + '（契约 §5 POST /import/' + importKind + '）')
+      setActionError('当前桥未提供 api.import.' + importKind + '（契约 §5 POST /import/' + importKind + '）')
       return
     }
     const raw = String(importText || '')
     if (!raw.trim()) {
-      setError('导入内容为空')
+      setActionError('导入内容为空')
       return
     }
     // 桥签名：curl 接字符串（api.import.curl(text)），其余三种接已解析的 JSON 对象。
@@ -143,12 +145,12 @@ export function ImportPage(props) {
       try {
         payload = JSON.parse(raw)
       } catch (err) {
-        setError('导入内容不是合法 JSON：' + errText(err))
+        setActionError('导入内容不是合法 JSON：' + errText(err))
         return
       }
     }
     setBusy(true)
-    setError('')
+    setActionError('')
     setImportOut('')
     setBundle(null)
     try {
@@ -159,7 +161,7 @@ export function ImportPage(props) {
       setBundle(res && res.data !== undefined ? res.data : res)
       setNotice('解析完成：接口 ' + summary.endpoints + ' 条 / 目录 ' + summary.folders + ' 个 / 模型 ' + summary.schemas + ' 个，点「保存到项目」写入当前项目')
     } catch (err) {
-      setError('导入失败：' + errText(err))
+      setActionError('导入失败：' + errText(err))
     } finally {
       setBusy(false)
     }
@@ -168,22 +170,22 @@ export function ImportPage(props) {
   /** 把上一次导入的骨架真正落盘：storage.importBundle 单次原子写入。 */
   const saveImport = async () => {
     if (!bundle || typeof bundle !== 'object') {
-      setError('还没有可保存的导入结果，先点「开始导入」')
+      setNotice('还没有可保存的导入结果，先点「开始导入」')
       return
     }
     if (!storage || typeof storage.importBundle !== 'function') {
-      setError('当前桥未提供 api.storage.importBundle（契约 §5 POST /storage/importBundle）')
+      setActionError('当前桥未提供 api.storage.importBundle（契约 §5 POST /storage/importBundle）')
       return
     }
     setBusy(true)
-    setError('')
+    setActionError('')
     try {
       const res = await storage.importBundle(projectId, bundle)
       const written = res && typeof res === 'object' ? res : {}
       const num = (v) => (typeof v === 'number' ? v : 0)
       setNotice('已保存到项目：目录 ' + num(written.folders) + ' 个 / 接口 ' + num(written.endpoints) + ' 个 / 模型 ' + num(written.schemas) + ' 个')
     } catch (err) {
-      setError('保存失败：' + errText(err))
+      setActionError('保存失败：' + errText(err))
     } finally {
       setBusy(false)
     }
@@ -193,15 +195,15 @@ export function ImportPage(props) {
     const id = kind || exportKind
     const fn = api && api.export && api.export[id]
     if (typeof fn !== 'function') {
-      setError('当前桥未提供 api.export.' + id + '（契约 §5 POST /export/' + id + '）')
+      setActionError('当前桥未提供 api.export.' + id + '（契约 §5 POST /export/' + id + '）')
       return
     }
     if (!storage || typeof storage.getProject !== 'function') {
-      setError('导出需要先读取项目：当前桥未提供 api.storage.getProject')
+      setActionError('导出需要先读取项目：当前桥未提供 api.storage.getProject')
       return
     }
     setBusy(true)
-    setError('')
+    setActionError('')
     setExportOut('')
     try {
       // 桥签名：export.<kind>(project) 接项目对象（不是 projectId），故先读盘再导出。
@@ -211,7 +213,7 @@ export function ImportPage(props) {
       setExportOut(resultText(res))
       setNotice('导出完成：' + id)
     } catch (err) {
-      setError('导出失败：' + errText(err))
+      setActionError('导出失败：' + errText(err))
     } finally {
       setBusy(false)
     }
@@ -219,11 +221,11 @@ export function ImportPage(props) {
 
   const runCodegen = async () => {
     if (!api || !api.codegen || typeof api.codegen.run !== 'function') {
-      setError('当前桥未提供 api.codegen.run（契约 §5 POST /codegen/run）')
+      setActionError('当前桥未提供 api.codegen.run（契约 §5 POST /codegen/run）')
       return
     }
     setBusy(true)
-    setError('')
+    setActionError('')
     setCodeOut('')
     try {
       // 桥签名：codegen.run({ endpoint, env, lang })，返回生成后的代码字符串。
@@ -231,7 +233,7 @@ export function ImportPage(props) {
       setCodeOut(resultText(res))
       setNotice('代码生成完成：' + lang)
     } catch (err) {
-      setError('代码生成失败：' + errText(err))
+      setActionError('代码生成失败：' + errText(err))
     } finally {
       setBusy(false)
     }
@@ -239,7 +241,7 @@ export function ImportPage(props) {
 
   const copy = async (text, label) => {
     if (!text) {
-      setError('没有可复制的内容（先执行一次）')
+      setActionError('没有可复制的内容（先执行一次）')
       return
     }
     try {
@@ -247,10 +249,10 @@ export function ImportPage(props) {
         await navigator.clipboard.writeText(text)
         setNotice(label + '已复制到剪贴板')
       } else {
-        setError('当前环境无剪贴板权限，请手动选中下方文本复制')
+        setActionError('当前环境无剪贴板权限，请手动选中下方文本复制')
       }
     } catch (err) {
-      setError('复制失败：' + errText(err))
+      setActionError('复制失败：' + errText(err))
     }
   }
 
@@ -276,7 +278,6 @@ export function ImportPage(props) {
           </span>
         </div>
         {error ? <p className="pp-error-text">{error}</p> : null}
-        {notice ? <p className="pp-muted">{notice}</p> : null}
 
         {/* Apifox 导入导出同构：顶部页签分区（导入 / 导出 / 代码生成），
             每区「左格式列表 + 右内容」。原来「导入 + 导出」两列并排各占 240px，
@@ -330,12 +331,13 @@ export function ImportPage(props) {
                     </button>
                   </div>
                   <div className="pp-note">{currentImport.hint}</div>
-                  <textarea className="pp-textarea pp-io-input" rows={10} value={importText}
+                  <textarea className="pp-textarea pp-io-input" value={importText}
                     placeholder={currentImport.placeholder}
                     onChange={(e) => setImportText(e.target.value)} />
-                  <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
+                  <div className="pp-toolbar-inline">
                     <button className="pp-btn pp-btn-primary" onClick={runImport} disabled={busy}>开始导入</button>
-                    <button className="pp-btn" onClick={saveImport} disabled={busy || !bundle}>保存到项目</button>
+                    <button className="pp-btn" onClick={saveImport} disabled={busy || !bundle}
+                      title={bundle ? '' : '先点「开始导入」解析出结果后可保存'}>保存到项目</button>
                     <button className="pp-btn" onClick={() => copy(importOut, '导入结果')} disabled={!importOut}>复制结果</button>
                   </div>
                   {bundle ? (
@@ -354,10 +356,11 @@ export function ImportPage(props) {
                 <>
                   <div className="pp-io-head">
                     <span className="pp-io-title">{currentExport.label}</span>
-                    <span className="pp-meta">{currentExport.hint}</span>
                   </div>
-                  <div className="pp-note">导出读取当前项目对象后交给 api.export，结果可直接复制或另存。</div>
-                  <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
+                  <div className="pp-note">
+                    {currentExport.hint} — 导出读取当前项目对象后交给 api.export，结果可直接复制或另存。
+                  </div>
+                  <div className="pp-toolbar-inline">
                     <button className="pp-btn pp-btn-primary" onClick={() => runExport(exportKind)} disabled={busy}>
                       导出 {currentExport.label}
                     </button>
@@ -375,18 +378,25 @@ export function ImportPage(props) {
                   <div className="pp-io-head">
                     <span className="pp-io-title">{currentLang.label}</span>
                   </div>
+                  <div className="pp-note">以示例接口生成目标语言代码，结果可复制；可先到「调试」页验证接口。</div>
                   <div className="pp-io-sample">
                     <span className="pp-meta">示例接口</span>
                     <span className="pp-method" data-method={MOCK_ENDPOINT.method}>{MOCK_ENDPOINT.method}</span>
                     <span className="pp-mono pp-ellipsis">{MOCK_ENDPOINT.url}</span>
                   </div>
-                  <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
+                  <div className="pp-toolbar-inline">
                     <button className="pp-btn pp-btn-primary" onClick={runCodegen} disabled={busy}>生成代码</button>
                     <button className="pp-btn" onClick={() => copy(codeOut, '生成代码')} disabled={!codeOut}>复制代码</button>
                   </div>
                   {codeOut ? <pre className="pp-pre pp-pre-scroll pp-io-pre">{codeOut}</pre> : null}
                 </>
               ) : null}
+
+              {/* 动作反馈贴着触发按钮：error/notice 不再挂整页顶部（窄容器里视线要跨整屏找结果） */}
+              <div className="pp-io-status">
+                {actionError ? <p className="pp-error-text">{actionError}</p> : null}
+                {notice ? <div className="pp-note pp-note-ok">{notice}</div> : null}
+              </div>
             </div>
           </div>
         </div>

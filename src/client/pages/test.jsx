@@ -162,6 +162,32 @@ export function TestPage(props) {
     assertions: normalizeAssertions(activeCase && activeCase.assertions).filter((_, idx) => idx !== i),
   })
 
+  // 新建用例/场景：只改页面内 state，与既有编辑一样靠页头「保存用例与场景」落盘
+  const addCase = () => {
+    const c = {
+      id: 'tc_' + Date.now().toString(36),
+      name: '新用例',
+      endpointId: (endpoints[0] && endpoints[0].id) || '',
+      assertions: [],
+      extractors: [],
+    }
+    setCases(cases.concat([c]))
+    setActiveCaseId(c.id)
+    setResult(null)
+    setNotice('已新建用例（未保存）：点页头「保存用例与场景」落盘')
+  }
+  const addScenario = () => {
+    const s = {
+      id: 'ts_' + Date.now().toString(36),
+      name: '新场景',
+      steps: [],
+    }
+    setScenarios(scenarios.concat([s]))
+    setActiveScenarioId(s.id)
+    setResult(null)
+    setNotice('已新建场景（未保存）：点页头「保存用例与场景」落盘')
+  }
+
   const patchScenario = (patch) => {
     setScenarios(scenarios.map((s) => (s.id === activeScenarioId ? { ...s, ...patch } : s)))
     setNotice('')
@@ -270,10 +296,10 @@ export function TestPage(props) {
             {result.rows.map((r, i) => (
               <div key={i} className="pp-result-row">
                 <span className="pp-ellipsis">{r.name || r.id || '-'}</span>
-                <span className={r.passed ? 'pp-pill pp-pill-ok' : 'pp-pill pp-pill-bad'} style={{ marginLeft: 'auto' }}>
+                <span className="pp-meta pp-ellipsis">{r.error || '-'}</span>
+                <span className={r.passed ? 'pp-pill pp-pill-ok' : 'pp-pill pp-pill-bad'}>
                   {r.passed ? '通过' : '失败'}
                 </span>
-                <span className="pp-meta pp-ellipsis">{r.error || '-'}</span>
               </div>
             ))}
             {result.rows.length === 0 ? <div className="pp-result-row pp-meta">无断言结果</div> : null}
@@ -305,17 +331,23 @@ export function TestPage(props) {
           </span>
         </div>
         {error ? <p className="pp-error-text">{error}</p> : null}
-        {notice ? <p className="pp-muted">{notice}</p> : null}
-  
-        <div className="pp-tabs">
-          <button className="pp-tab" data-active={tab === 'cases' ? 'true' : 'false'} onClick={() => setTab('cases')}>测试用例</button>
-          <button className="pp-tab" data-active={tab === 'scenarios' ? 'true' : 'false'} onClick={() => setTab('scenarios')}>测试场景</button>
+        {notice ? <p className="pp-note pp-note-ok">{notice}</p> : null}
+
+        {/* 页签条卡片壳：与 env 页 .pp-env-main 同构，页签不再悬空在内容区 */}
+        <div className="pp-test-tabs">
+          <div className="pp-tabs">
+            <button className="pp-tab" data-active={tab === 'cases' ? 'true' : 'false'} onClick={() => setTab('cases')}>测试用例</button>
+            <button className="pp-tab" data-active={tab === 'scenarios' ? 'true' : 'false'} onClick={() => setTab('scenarios')}>测试场景</button>
+          </div>
         </div>
-  
+
         {tab === 'cases' ? (
-          <div className="pp-debug-layout" style={{ marginTop: 'var(--sp-3)' }}>
+          <div className="pp-debug-layout">
             <div className="pp-pane">
-              <div className="pp-card-title">用例</div>
+              <div className="pp-pane-head">
+                <span className="pp-card-title">用例</span>
+                <button className="pp-btn pp-btn-sm pp-btn-ghost pp-btn-accent" onClick={addCase}>+ 新建用例</button>
+              </div>
               <div className="pp-tree">
                 {cases.map((c) => (
                   <div key={c.id} className="pp-tree-row" data-active={c.id === activeCaseId ? 'true' : 'false'}
@@ -325,9 +357,10 @@ export function TestPage(props) {
                 ))}
               </div>
               {cases.length === 0 ? (
-                <EmptyState text="暂无用例" hint="在调试页保存接口后，点「保存用例与场景」新建" />
+                <EmptyState text="暂无用例" hint="点右上「+ 新建用例」，或在调试页保存接口后「保存用例与场景」" />
               ) : null}
             </div>
+            <div className="pp-test-main">
             <div className="pp-pane">
               <div className="pp-card-title">断言</div>
               {activeCase ? (
@@ -347,12 +380,12 @@ export function TestPage(props) {
                   <table className="pp-table pp-table-wide">
                     <thead>
                       <tr>
-                        <th style={{ width: '90px' }}>来源</th>
+                        <th style={{ width: '88px' }}>来源</th>
                         <th>路径</th>
-                        <th style={{ width: '110px' }}>操作</th>
+                        <th style={{ width: '96px' }}>操作符</th>
                         <th>期望值</th>
                         <th>说明</th>
-                        <th style={{ width: '70px' }}>操作</th>
+                        <th style={{ width: '52px' }}>操作</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -363,21 +396,21 @@ export function TestPage(props) {
                               {SOURCES.map((s) => <option key={s} value={s}>{s}</option>)}
                             </select>
                           </td>
-                          <td><input className="pp-input pp-input-sm pp-input-mono" style={{ width: '100%' }} value={a.path}
+                          <td><input className="pp-input pp-input-sm pp-input-mono" value={a.path}
                             onChange={(e) => patchAssertion(i, { path: e.target.value })} /></td>
                           <td>
                             <select className="pp-select pp-input-sm" value={a.op} onChange={(e) => patchAssertion(i, { op: e.target.value })}>
                               {OPS.map((o) => <option key={o} value={o}>{o}</option>)}
                             </select>
                           </td>
-                          <td><input className="pp-input pp-input-sm pp-input-mono" style={{ width: '100%' }} value={a.value}
+                          <td><input className="pp-input pp-input-sm pp-input-mono" value={a.value}
                             onChange={(e) => patchAssertion(i, { value: e.target.value })} /></td>
-                          <td><input className="pp-input pp-input-sm" style={{ width: '100%' }} value={a.message}
+                          <td><input className="pp-input pp-input-sm" value={a.message}
                             onChange={(e) => patchAssertion(i, { message: e.target.value })} /></td>
-                          <td><button className="pp-btn pp-btn-sm pp-btn-danger" onClick={() => removeAssertion(i)}>删除</button></td>
+                          <td><span className="pp-row-actions"><button className="pp-btn pp-btn-sm pp-btn-danger" onClick={() => removeAssertion(i)}>删除</button></span></td>
                         </tr>
                       ))}
-                      {caseAssertions.length === 0 ? <tr><td colSpan={6} className="pp-muted">暂无断言</td></tr> : null}
+                      {caseAssertions.length === 0 ? <tr><td colSpan={6} className="pp-muted pp-table-empty">暂无断言</td></tr> : null}
                     </tbody>
                   </table>
                   </div>
@@ -389,11 +422,15 @@ export function TestPage(props) {
               ) : <EmptyState text="选择一个用例" hint="选中后可编辑断言并运行" />}
             </div>
             {resultPanel('尚未运行')}
+            </div>
           </div>
         ) : (
-          <div className="pp-debug-layout" style={{ marginTop: 'var(--sp-3)' }}>
+          <div className="pp-debug-layout">
             <div className="pp-pane">
-              <div className="pp-card-title">场景</div>
+              <div className="pp-pane-head">
+                <span className="pp-card-title">场景</span>
+                <button className="pp-btn pp-btn-sm pp-btn-ghost pp-btn-accent" onClick={addScenario}>+ 新建场景</button>
+              </div>
               <div className="pp-tree">
                 {scenarios.map((s) => (
                   <div key={s.id} className="pp-tree-row" data-active={s.id === activeScenarioId ? 'true' : 'false'}
@@ -403,8 +440,9 @@ export function TestPage(props) {
                   </div>
                 ))}
               </div>
-              {scenarios.length === 0 ? <EmptyState text="暂无场景" hint="点「保存用例与场景」新建场景" /> : null}
+              {scenarios.length === 0 ? <EmptyState text="暂无场景" hint="点右上「+ 新建场景」，或「保存用例与场景」新建" /> : null}
             </div>
+            <div className="pp-test-main">
             <div className="pp-pane">
               <div className="pp-card-title">步骤编排</div>
               {activeScenario ? (
@@ -421,14 +459,14 @@ export function TestPage(props) {
                         <th style={{ width: '40px' }}>#</th>
                         <th>步骤名</th>
                         <th>接口</th>
-                        <th style={{ width: '140px' }}>操作</th>
+                        <th style={{ width: '120px' }}>操作</th>
                       </tr>
                     </thead>
                     <tbody>
                       {(activeScenario.steps || []).map((s, i) => (
                         <tr key={s.id || i}>
                           <td className="pp-meta">{i + 1}</td>
-                          <td><input className="pp-input pp-input-sm" style={{ width: '100%' }} value={s.name || ''}
+                          <td><input className="pp-input pp-input-sm" value={s.name || ''}
                             onChange={(e) => patchStep(i, { name: e.target.value })} /></td>
                           <td>
                             <select className="pp-select pp-input-sm" style={{ width: '100%' }} value={s.endpointId || ''}
@@ -443,13 +481,15 @@ export function TestPage(props) {
                             ) : null}
                           </td>
                           <td>
-                            <button className="pp-btn pp-btn-sm" onClick={() => moveStep(i, -1)} title="上移">↑</button>{' '}
-                            <button className="pp-btn pp-btn-sm" onClick={() => moveStep(i, 1)} title="下移">↓</button>{' '}
-                            <button className="pp-btn pp-btn-sm pp-btn-danger" onClick={() => removeStep(i)} title="删除">×</button>
+                            <span className="pp-row-actions">
+                              <button className="pp-btn pp-btn-sm" onClick={() => moveStep(i, -1)} title="上移">↑</button>
+                              <button className="pp-btn pp-btn-sm" onClick={() => moveStep(i, 1)} title="下移">↓</button>
+                              <button className="pp-btn pp-btn-sm pp-btn-danger" onClick={() => removeStep(i)} title="删除">×</button>
+                            </span>
                           </td>
                         </tr>
                       ))}
-                      {(activeScenario.steps || []).length === 0 ? <tr><td colSpan={4} className="pp-muted">暂无步骤</td></tr> : null}
+                      {(activeScenario.steps || []).length === 0 ? <tr><td colSpan={4} className="pp-muted pp-table-empty">暂无步骤</td></tr> : null}
                     </tbody>
                   </table>
                   </div>
@@ -461,9 +501,10 @@ export function TestPage(props) {
               ) : <EmptyState text="选择一个场景" hint="选中后可编排步骤并运行" />}
             </div>
             {resultPanel('尚未运行')}
+            </div>
           </div>
         )}
-      
+
       </div>
     </div>
   )

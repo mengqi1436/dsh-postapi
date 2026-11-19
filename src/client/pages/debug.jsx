@@ -11,6 +11,7 @@ import { COMMON_HEADERS, filterHeaders } from './components/headerPresets.js'
 import { BodyEditor } from './components/BodyEditor.jsx'
 import { ScriptPanel } from './components/ScriptPanel.jsx'
 import { ResponsePanel } from './components/ResponsePanel.jsx'
+import { buildCurl } from './doc.jsx'
 
 ;(window.__postapiQueue = window.__postapiQueue || []).push(['debug', DebugPage]) // 注册表就绪前入队，ensureGlobals 统一重放（模块求值顺序无关）
 
@@ -378,10 +379,10 @@ export function DebugPage({ route, api }) {
         <section className="pp-pane pp-debug-request">
           {/* URL 行（Apifox .main-input-bar）：40px 高，方法 + baseUrl 胶囊 + path + 发送按钮组 */}
           <div className="pp-url-row">
-            {/* 方法徽标：Apifox .url-col-method 在 URL 行首显示彩色方法块 */}
-            <span className="pp-method" data-method={draft.method}>{draft.method}</span>
+            {/* 方法下拉本身承担方法色（data-method → CSS 变色）：不再「徽标 + 下拉」双元素并排 */}
             <select
               className="pp-select pp-url-method"
+              data-method={draft.method}
               value={draft.method}
               onChange={(e) => patch('method', e.target.value)}
               aria-label="请求方法"
@@ -424,6 +425,18 @@ export function DebugPage({ route, api }) {
               </span>
             ) : null}
             <a className="pp-meta" href="#/history">请求历史</a>
+            <button className="pp-btn pp-btn-sm pp-btn-ghost"
+              onClick={async () => {
+                try {
+                  await navigator.clipboard.writeText(buildCurl({
+                    method: draft.method, url: draft.url,
+                    params: draft.params, headers: draft.headers, auth: draft.auth, body: draft.body,
+                  }, env && env.baseUrl))
+                  setSavedHint('已复制 cURL')
+                } catch (err) {
+                  setSavedHint('复制失败：' + (err && err.message ? err.message : String(err)))
+                }
+              }}>复制 cURL</button>
           </div>
           {/* 空项目引导：真实项目还没有接口时，URL 为空、发送无意义，明确指引去哪里建 */}
           {!isMock && !String(draft.url || '').trim() ? (
@@ -483,12 +496,12 @@ export function DebugPage({ route, api }) {
                 <div className="pp-group-title">发送设置</div>
                 <div className="pp-form-row">
                   <label className="pp-form-label">超时 (ms)</label>
-                  <input className="pp-input pp-input-sm" style={{ flex: 1, maxWidth: 160 }} value={String(timeoutMs)}
+                  <input className="pp-input" style={{ flex: 1, maxWidth: 160 }} value={String(timeoutMs)}
                     onChange={(e) => setTimeoutMs(Number(e.target.value.replace(/[^0-9]/g, '')) || 0)} />
                 </div>
                 <div className="pp-form-row">
                   <label className="pp-form-label">等待 (ms)</label>
-                  <input className="pp-input pp-input-sm" style={{ flex: 1, maxWidth: 160 }} value={String(draft.waitMs || 0)}
+                  <input className="pp-input" style={{ flex: 1, maxWidth: 160 }} value={String(draft.waitMs || 0)}
                     onChange={(e) => patch('waitMs', Number(e.target.value.replace(/[^0-9]/g, '')) || 0)} />
                 </div>
                 <div className="pp-group-title">请求概览</div>
@@ -564,7 +577,7 @@ export function DebugPage({ route, api }) {
             />
             <button className="pp-btn" onClick={saveAsEndpoint}>保存为接口</button>
             {savedHint ? (
-              <span className={'pp-note ' + (savedHint.indexOf('已保存') === 0 ? 'pp-note-ok' : 'pp-note-bad')}>{savedHint}</span>
+              <span className={'pp-note ' + (savedHint.indexOf('已保存') === 0 || savedHint.indexOf('已复制') === 0 ? 'pp-note-ok' : 'pp-note-bad')}>{savedHint}</span>
             ) : null}
           </div>
         </section>
