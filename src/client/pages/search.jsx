@@ -4,6 +4,7 @@
 // 视觉基线：docs/apifox-design-spec.md —— .pp-input / .pp-tree-group / .pp-list-row
 import React, { useEffect, useRef, useState } from 'react'
 import { applyTheme } from './theme.js'
+import { EmptyState } from './components/EmptyState.jsx'
 
 ;(window.__postapiQueue = window.__postapiQueue || []).push(['search', SearchPage]) // 注册表就绪前入队
 
@@ -45,6 +46,30 @@ function errText(err) {
   return err && err.message ? err.message : String(err)
 }
 
+/** 把 highlight() 的三段拼成 JSX（命中段套 <mark>）。 */
+function markParts(text, keyword) {
+  const h = highlight(text, keyword)
+  if (!h.hit) return h.before
+  return [h.before, <mark key="hit" className="pp-search-mark">{h.hit}</mark>, h.after]
+}
+
+/**
+ * 关键字高亮：把命中的片段包进 <mark>（大小写不敏感，取第一处）。
+ * 搜索页最关键的信息是「为什么这条命中」，不高亮就得逐字比对。
+ */
+export function highlight(text, keyword) {
+  const raw = String(text || '')
+  const kw = String(keyword || '').trim()
+  if (!kw) return { before: raw, hit: '', after: '' }
+  const at = raw.toLowerCase().indexOf(kw.toLowerCase())
+  if (at < 0) return { before: raw, hit: '', after: '' }
+  return {
+    before: raw.slice(0, at),
+    hit: raw.slice(at, at + kw.length),
+    after: raw.slice(at + kw.length),
+  }
+}
+
 function readQueryKeyword(query) {
   const raw = String(query || '')
   const at = raw.indexOf('q=')
@@ -68,6 +93,7 @@ export function SearchPage(props) {
   const [groups, setGroups] = useState(groupResults(MOCK_RESULT))
   const [isMock, setIsMock] = useState(true)
   const [searched, setSearched] = useState(false)
+  const [collapsed, setCollapsed] = useState({})
   const [error, setError] = useState('')
 
   useEffect(() => applyTheme(rootRef.current), [])
@@ -114,59 +140,76 @@ export function SearchPage(props) {
 
   const total = GROUPS.reduce((n, g) => n + groups[g.key].length, 0)
 
+  const visibleGroups = GROUPS.filter((g) => groups[g.key].length > 0)
+  const kw = String(keyword || '').trim()
+
   return (
     <div className="pp-scope pp-page" data-page="search" ref={rootRef}>
       <div className="pp-overview-head">
         <span className="pp-overview-title">全局搜索</span>
-        {/* 页头只留主按钮；搜索条件移进内容区，避免在 528px 主区里换行堆叠 */}
         <div className="pp-overview-actions">
-          <button className="pp-btn pp-btn-primary" onClick={runSearch}>搜索</button>
+          <span className="pp-meta pp-search-summary">
+            {searched ? '命中 ' + total + ' 条 · ' + visibleGroups.length + ' 个分组' : '尚未搜索'}
+          </span>
         </div>
       </div>
       <div className="pp-overview-content">
-        <div className="pp-card">
-          <div className="pp-card-title">搜索条件</div>
-          <div className="pp-form-grid">
-            <label className="pp-form-label">项目</label>
-            <select className="pp-select" value={projectId} onChange={(e) => setProjectId(e.target.value)}>
-              {projects.map((p) => <option key={p.id} value={p.id}>{p.name || p.id}</option>)}
-            </select>
-            <label className="pp-form-label">关键字</label>
-            <input className="pp-input" placeholder="名称 / URL / 描述（回车搜索）" value={keyword}
-              onChange={(e) => setKeyword(e.target.value)}
-              onKeyDown={(e) => { if (e.key === 'Enter') runSearch() }} />
-          </div>
-          <p className="pp-meta" style={{ margin: 'var(--sp-2) 0 0 0' }}>
-            {searched ? '命中 ' + total + ' 条' : '尚未搜索'}
-          </p>
+        {/* 搜索条：项目 + 输入框 + 按钮挤在一行，回车即搜。
+            原来「搜索」按钮在页头、输入框在下方卡片里，一次搜索要跨两个区域移动视线。 */}
+        <div className="pp-search-bar">
+          <select className="pp-select pp-search-project" value={projectId}
+            onChange={(e) => setProjectId(e.target.value)}>
+            {projects.map((p) => <option key={p.id} value={p.id}>{p.name || p.id}</option>)}
+          </select>
+          <input className="pp-input pp-search-input" placeholder="搜索接口名称 / URL / 描述，回车即搜"
+            value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter') runSearch() }} />
+          <button className="pp-btn pp-btn-primary pp-search-btn" onClick={runSearch}>搜索</button>
         </div>
-        <div className="pp-toolbar">
-          <span className="pp-meta">
-            {isMock ? '示例数据 — api.storage.search 不可用，以下为文件内 mock' : '数据来源：api.storage.search（名称 / url / 描述，大小写不敏感）'}
-          </span>
+        <div className="pp-meta pp-search-source">
+          {isMock ? '示例数据 — api.storage.search 不可用，以下为文件内 mock' : '数据来源：api.storage.search（名称 / url / 描述，大小写不敏感）'}
         </div>
         {error ? <p className="pp-error-text">{error}</p> : null}
-  
-        <div className="pp-card">
-          {GROUPS.map((g) => (
-            <div key={g.key}>
-              <div className="pp-tree-group">{g.label}（{groups[g.key].length}）</div>
-              <div className="pp-list">
-                {groups[g.key].map((item) => (
-                  <div key={g.key + '-' + item.id} className="pp-list-row" onClick={() => jump(g.target(item.id))}>
-                    {item.method
-                      ? <span className="pp-method" data-method={item.method}>{item.method}</span>
-                      : <span className="pp-meta">-</span>}
-                    <span className="pp-ellipsis">{item.title}</span>
-                    <span className="pp-meta pp-ellipsis" style={{ marginLeft: 'auto' }}>{item.url || item.description || '-'}</span>
+
+        {!searched ? (
+          <div className="pp-search-hint">
+            <EmptyState text="输入关键字开始搜索" hint="可搜接口名称、URL、描述，也可搜数据模型与目录" />
+          </div>
+        ) : total === 0 ? (
+          <div className="pp-search-hint">
+            <EmptyState text={'没有匹配「' + kw + '」的结果'} hint="换个关键字，或检查是否选错了项目" />
+          </div>
+        ) : (
+          <div className="pp-search-results">
+            {visibleGroups.map((g) => (
+              <section key={g.key} className="pp-search-group">
+                <button className="pp-search-group-head" data-collapsed={collapsed[g.key] ? 'true' : 'false'}
+                  onClick={() => setCollapsed({ ...collapsed, [g.key]: !collapsed[g.key] })}>
+                  <span className="pp-search-caret">{collapsed[g.key] ? '▸' : '▾'}</span>
+                  <span className="pp-search-group-label">{g.label}</span>
+                  <span className="pp-search-count">{groups[g.key].length}</span>
+                </button>
+                {collapsed[g.key] ? null : (
+                  <div className="pp-list pp-search-list">
+                    {groups[g.key].map((item) => (
+                      <div key={g.key + '-' + item.id} className="pp-list-row pp-search-row"
+                        onClick={() => jump(g.target(item.id))}>
+                        {item.method
+                          ? <span className="pp-method" data-method={item.method}>{item.method}</span>
+                          : <span className="pp-search-dot" />}
+                        <span className="pp-ellipsis pp-search-name">{markParts(item.title, kw)}</span>
+                        <span className="pp-meta pp-ellipsis pp-search-sub">
+                          {item.url || item.description || ''}
+                        </span>
+                      </div>
+                    ))}
                   </div>
-                ))}
-                {groups[g.key].length === 0 ? <div className="pp-list-row pp-meta">无匹配</div> : null}
-              </div>
-            </div>
-          ))}
-        </div>
-      
+                )}
+              </section>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )

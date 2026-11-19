@@ -718,18 +718,23 @@ t('search.hasKeyword：空白视为无关键字', async () => {
   if (f(' a ') !== true) throw new Error('非空未通过')
 })
 
-t('search 渲染：搜索框 .pp-input + 分组 .pp-tree-group + 结果行 .pp-list-row', async () => {
+t('search 渲染：搜索条 .pp-search-bar + 分组 .pp-search-group + 结果行 .pp-list-row', async () => {
   const r = await drive('search', { storage: {
     listProjects: async () => [{ id: 'p1', name: 'P1' }],
     search: async () => ({ endpoints: [{ id: 'e1', name: 'A', method: 'GET' }], schemas: [], folders: [] }),
   } }, { name: 'search', arg: '', query: 'q=order' }, async (tree) => { await buttonByText(tree, '搜索').props.onClick() })
   const nodes = collectNodes(r.tree)
+  const has = (cls) => nodes.some((n) => String(n.props.className || '').split(/\s+/).includes(cls))
   if (!nodes.some((n) => n.type === 'input' && String(n.props.className || '').includes('pp-input'))) {
     throw new Error('搜索框未使用 .pp-input')
   }
-  const groups = nodes.filter((n) => String(n.props.className || '') === 'pp-tree-group')
-  if (groups.length < 3) throw new Error('.pp-tree-group 分组数不足 3：' + groups.length)
-  if (!nodes.some((n) => String(n.props.className || '') === 'pp-list-row')) throw new Error('结果行未使用 .pp-list-row')
+  // 搜索条：项目 + 输入框 + 按钮同一行
+  if (!has('pp-search-bar')) throw new Error('缺 .pp-search-bar 搜索条')
+  // 只渲染有命中的分组（空组隐藏）；本例 endpoints 有 1 条、另两组为 0
+  const groups = nodes.filter((n) => String(n.props.className || '').split(/\s+/).includes('pp-search-group'))
+  if (groups.length !== 1) throw new Error('空分组应隐藏，实际渲染分组数 ' + groups.length)
+  if (!has('pp-search-group-head')) throw new Error('缺可折叠的分组头')
+  if (!has('pp-list-row')) throw new Error('结果行未使用 .pp-list-row')
 })
 
 t('settings 渲染：表单 .pp-form-row/.pp-form-label，保存提示用 .pp-note-ok', async () => {
@@ -1086,6 +1091,23 @@ t('import 真接 api：export 在缺 getProject 时页面内报错', async () =>
   if (!stateTexts(r.stub).join('|').includes('getProject')) throw new Error('缺 getProject 未报错')
 })
 
+t('search.highlight：大小写不敏感切三段，无命中时 hit 为空', async () => {
+  const f = await ex('search', 'highlight')
+  const hit = f('查询订单列表', 'order')
+  if (hit.hit !== '') {
+    // 中文标题里没有 order，应整体不命中
+    if (hit.before !== '查询订单列表') throw new Error('中文标题不应被切开：' + JSON.stringify(hit))
+  }
+  const en = f('OrderItem', 'order')
+  if (en.before !== '' || en.hit !== 'Order' || en.after !== 'Item') {
+    throw new Error('大小写不敏感切分错误：' + JSON.stringify(en))
+  }
+  const none = f('abc', 'xyz')
+  if (none.hit !== '' || none.before !== 'abc') throw new Error('无命中应原样返回')
+  const empty = f('abc', '  ')
+  if (empty.hit !== '' || empty.before !== 'abc') throw new Error('空关键字应原样返回')
+})
+
 t('search 真接 api：api.storage.search 被调用且结果分组渲染', async () => {
   const calls = []
   const r = await drive('search', { storage: {
@@ -1096,7 +1118,10 @@ t('search 真接 api：api.storage.search 被调用且结果分组渲染', async
     },
   } }, { name: 'search', arg: '', query: 'q=order' }, async (tree) => { await buttonByText(tree, '搜索').props.onClick() })
   if (calls.length !== 1 || calls[0][1] !== 'order') throw new Error('search 调用异常：' + JSON.stringify(calls))
-  if (!collectText(r.tree).includes('接口（1）')) throw new Error('结果分组未渲染')
+  // 新结构：分组头「接口」+ 计数徽标「1」
+  const txt = collectText(r.tree)
+  if (!txt.includes('接口')) throw new Error('结果分组未渲染')
+  if (!txt.includes('命中 1 条')) throw new Error('未显示命中计数：' + txt.slice(0, 120))
 })
 
 t('flow 真接 api：saveFlow 被调用且 payload 为 { name, steps[] }', async () => {
