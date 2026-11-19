@@ -256,25 +256,28 @@ export function EnvPage(props) {
         {error ? <p className="pp-error-text">{error}</p> : null}
         {notice ? <p className="pp-muted">{notice}</p> : null}
   
-        <div className="pp-debug-layout">
-          <div className="pp-pane">
-            <div className="pp-card-title">环境</div>
-            <div className="pp-tree">
-              {envSummary(envs).map((e) => (
-                <div key={e.id} className="pp-tree-row" data-active={draft && draft.id === e.id ? 'true' : 'false'}
-                  onClick={() => pickEnv(envs.find((x) => x.id === e.id) || blankEnv())}>
-                  <span className="pp-ellipsis">{e.name}{e.isDefault ? ' · 默认' : ''}</span>
-                  <span className="pp-tree-row-count">{e.varCount}</span>
-                </div>
-              ))}
-              {envs.length === 0 ? <EmptyState text="暂无环境" hint="点下方「新建环境」创建第一个环境" /> : null}
-            </div>
-            <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
-              <button className="pp-btn pp-btn-sm" onClick={() => pickEnv(blankEnv())}>新建环境</button>
-            </div>
+        {/* 环境列表：横向一行一个，选中态与文档页目录树同规格 */}
+        <div className="pp-pane">
+          <div className="pp-card-title">环境</div>
+          <div className="pp-tree">
+            {envSummary(envs).map((e) => (
+              <div key={e.id} className="pp-tree-row" data-active={draft && draft.id === e.id ? 'true' : 'false'}
+                onClick={() => pickEnv(envs.find((x) => x.id === e.id) || blankEnv())}>
+                <span className="pp-ellipsis">{e.name}{e.isDefault ? ' · 默认' : ''}</span>
+                <span className="pp-tree-row-count">{e.varCount}</span>
+              </div>
+            ))}
+            {envs.length === 0 ? <EmptyState text="暂无环境" hint="点下方「新建环境」创建第一个环境" /> : null}
           </div>
-  
-          <div className="pp-pane">
+          <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
+            <button className="pp-btn pp-btn-sm" onClick={() => pickEnv(blankEnv())}>新建环境</button>
+          </div>
+        </div>
+
+        {/* 一行三卡：环境变量 / 全局变量 / 变量优先级。
+            宽容器三列并排，窄容器（侧边栏 500px 级）自动堆叠成单列。 */}
+        <div className="pp-env-cards">
+          <div className="pp-card">
             <div className="pp-card-title">环境变量</div>
             <div className="pp-form-grid" style={{ marginBottom: 'var(--sp-3)' }}>
               <label className="pp-form-label">名称</label>
@@ -299,34 +302,32 @@ export function EnvPage(props) {
               enabled 为 true 的变量才参与 {'{{key}}'} 替换；secret 为 true 时值以密码形式显示。
             </div>
           </div>
-  
-          <div className="pp-pane">
+
+          <div className="pp-card">
             <div className="pp-card-title">全局变量</div>
             <div className="pp-table-wrap">{varTable(globals, setGlobalAt, removeGlobal)}</div>
             <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
               <button className="pp-btn" onClick={addGlobal}>新增变量</button>
               <button className="pp-btn pp-btn-primary" onClick={saveGlobals}>保存全局</button>
             </div>
+            <div className="pp-note" style={{ marginTop: 'var(--sp-3)' }}>
+              全局变量跨环境共用，环境变量同名时优先环境。
+            </div>
           </div>
-        </div>
-  
-        <div className="pp-card" style={{ marginTop: 'var(--sp-5)' }}>
-          <div className="pp-card-title">变量优先级</div>
-          <div className="pp-table-wrap">
-          <table className="pp-table">
-            <thead>
-              <tr><th style={{ width: '110px' }}>优先级</th><th style={{ width: '160px' }}>作用域</th><th>说明</th></tr>
-            </thead>
-            <tbody>
+
+          <div className="pp-card">
+            <div className="pp-card-title">变量优先级</div>
+            <div className="pp-priority-list">
               {priorityRows().map((r) => (
-                <tr key={r.level}>
-                  <td className="pp-muted">{r.level}</td>
-                  <td>{r.scope}</td>
-                  <td className="pp-muted">{r.note}</td>
-                </tr>
+                <div key={r.level} className="pp-priority-item">
+                  <span className="pp-priority-level">{r.level}</span>
+                  <div className="pp-priority-body">
+                    <span className="pp-priority-scope">{r.scope}</span>
+                    <span className="pp-priority-note">{r.note}</span>
+                  </div>
+                </div>
               ))}
-            </tbody>
-          </table>
+            </div>
           </div>
         </div>
       

@@ -530,7 +530,10 @@ t('env 渲染：左环境列表 .pp-tree-row + 变量表 .pp-table + 工具条 .
   } })
   const nodes = collectNodes(r.tree)
   if (!nodes.some((n) => String(n.props.className || '').includes('pp-tree-row'))) throw new Error('环境列表未使用 .pp-tree-row')
-  if (!nodes.some((n) => String(n.props.className || '') === 'pp-table')) throw new Error('变量表未使用 .pp-table')
+  // 变量表挂 .pp-table 与 .pp-table-vars（固定列宽），按包含判定
+  if (!nodes.some((n) => String(n.props.className || '').split(/\s+/).includes('pp-table'))) {
+    throw new Error('变量表未使用 .pp-table')
+  }
   if (!nodes.some((n) => String(n.props.className || '') === 'pp-toolbar')) throw new Error('缺 .pp-toolbar')
   if (!nodes.some((n) => String(n.props.className || '').includes('pp-note'))) throw new Error('缺 .pp-note 说明')
 })

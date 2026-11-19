@@ -452,6 +452,20 @@
 .pp-table.pp-table-vars th:nth-child(4) { width: 52px; }
 .pp-table.pp-table-vars th:nth-child(5) { width: 64px; }
 .pp-table.pp-table-vars td { overflow: hidden; }
+/* 三卡并排时卡宽 250px 级：三列固定列压到 44/44/48，变量名 26%，值列吃剩余，
+   表格最小宽度降到 320px——只在小卡里滚 60px 级，不再把「启用」整列切掉。 */
+.pp-env-cards .pp-table.pp-table-vars {
+  min-width: 320px;
+}
+.pp-env-cards .pp-table.pp-table-vars th:nth-child(1) { width: 26%; }
+.pp-env-cards .pp-table.pp-table-vars th:nth-child(3),
+.pp-env-cards .pp-table.pp-table-vars th:nth-child(4) { width: 44px; }
+.pp-env-cards .pp-table.pp-table-vars th:nth-child(5) { width: 48px; }
+.pp-env-cards .pp-table.pp-table-vars th,
+.pp-env-cards .pp-table.pp-table-vars td {
+  padding: 0 var(--sp-1);
+  font-size: var(--fs-12);
+}
 .pp-table tbody tr:hover {
   background: var(--bg-hover);
 }
@@ -1032,6 +1046,80 @@
   .pp-debug-layout {
     grid-template-columns: minmax(0, 1fr);
   }
+}
+/* 环境页：环境变量 / 全局变量 / 变量优先级 一行三卡。
+   720px 以上三列等宽（主区 800px 时每卡 250px，变量表横向滚动）；
+   低于 720px 三卡各只剩 160px 级，堆叠成单列。 */
+.pp-env-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--sp-4);
+  align-items: start;
+}
+/* 三列时每卡只有 250px 级：label + input 并排会把输入框压到 70px，
+   卡内表单改「标签上、控件下」的单列，输入框吃满卡宽。 */
+.pp-env-cards .pp-form-grid {
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--sp-1);
+}
+.pp-env-cards .pp-form-label {
+  width: auto;
+}
+@container ppmain (max-width: 720px) {
+  .pp-env-cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  /* 堆叠成单列后卡宽回到 470px 级，恢复「标签 + 控件」并排 */
+  .pp-env-cards .pp-form-grid {
+    grid-template-columns: fit-content(360px) minmax(0, 1fr);
+    gap: var(--sp-4);
+  }
+  .pp-env-cards .pp-form-label {
+    width: 104px;
+  }
+}
+/* 变量优先级：卡内纵向四级，每级「级别徽标 + 作用域 + 说明」两行 */
+.pp-priority-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+.pp-priority-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-2);
+  padding: var(--sp-2);
+  background: var(--bg-subtle);
+  border-radius: var(--radius-ctl);
+}
+.pp-priority-level {
+  flex: none;
+  padding: 0 var(--sp-2);
+  font-size: var(--fs-12);
+  line-height: var(--lh-18);
+  font-weight: var(--fw-medium);
+  color: var(--fg-strong);
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+}
+.pp-priority-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.pp-priority-scope {
+  font-size: var(--fs-13);
+  line-height: var(--lh-18);
+  font-weight: var(--fw-medium);
+  color: var(--fg-strong);
+}
+.pp-priority-note {
+  font-size: var(--fs-12);
+  line-height: var(--lh-18);
+  color: var(--fg-secondary);
 }
 /* Mock 页：左接口列表（240px，与文档页目录树同宽）+ 右配置纵向两卡。
    之前是两列网格塞三个子项，第三块被挤到第二行左侧、与右侧形成高度差。 */
