@@ -1064,10 +1064,35 @@
 @container ppmain (max-width: 820px) {
   .pp-env-layout {
     grid-template-columns: minmax(0, 1fr);
+    gap: var(--sp-3);
   }
-  /* 堆叠时左列表压成横向可滚的一行，不再占整屏高度 */
+  /* 堆叠后左列表独占一行：环境条目改成横向可滚的胶囊，不再占掉整屏高度。
+     .pp-panel 自带 width:var(--panel-w) 与 overflow:auto，这里必须一起覆盖，
+     否则左列仍是 240px 定宽、右侧留一大片空白。 */
   .pp-env-layout .pp-env-side {
-    max-height: none;
+    width: auto;
+    padding: 0;
+    overflow: visible;
+  }
+  .pp-env-layout .pp-env-tree,
+  .pp-env-layout .pp-tree {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: var(--sp-2);
+    overflow-x: auto;
+    padding: var(--sp-1) var(--sp-3);
+  }
+  .pp-env-layout .pp-tree-row {
+    flex: none;
+    max-width: 200px;
+    margin: 0;
+    padding: 0 var(--sp-3);
+    height: var(--ctl-h);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+  }
+  .pp-env-layout .pp-tree-row[data-active="true"] {
+    border-color: var(--accent);
   }
 }
 .pp-env-side {
@@ -1372,6 +1397,15 @@
 @container ppmain (max-width: 820px) {
   .pp-flow-layout {
     grid-template-columns: minmax(0, 1fr);
+    gap: var(--sp-3);
+  }
+  /* 堆叠后步骤列表高度压到 8 行，避免把画布挤到首屏之外 */
+  .pp-flow-layout .pp-flow-steps {
+    max-height: calc(var(--row-h) * 8);
+  }
+  .pp-flow-layout .pp-flow-side {
+    width: auto;
+    overflow: visible;
   }
 }
 .pp-flow-side {
