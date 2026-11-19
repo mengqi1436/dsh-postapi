@@ -4,6 +4,7 @@
 // 视觉基线：docs/apifox-design-spec.md —— .pp-tree-row / .pp-table（表头 --bg-subtle）/ .pp-toolbar / .pp-note
 import React, { useEffect, useRef, useState } from 'react'
 import { applyTheme } from './theme.js'
+import { EmptyState } from './components/EmptyState.jsx'
 
 ;(window.__postapiQueue = window.__postapiQueue || []).push(['env', EnvPage]) // 注册表就绪前入队
 
@@ -204,7 +205,7 @@ export function EnvPage(props) {
 
   // 变量表：表头底色/行高由 .pp-table 统一（--bg-subtle / --row-h），单元格控件用 .pp-input-sm
   const varTable = (rows, onChange, onRemove) => (
-    <table className="pp-table">
+    <table className="pp-table pp-table-vars">
       <thead>
         <tr>{VAR_COLUMNS.map((c) => <th key={c}>{c}</th>)}</tr>
       </thead>
@@ -266,7 +267,7 @@ export function EnvPage(props) {
                   <span className="pp-tree-row-count">{e.varCount}</span>
                 </div>
               ))}
-              {envs.length === 0 ? <div className="pp-empty">暂无环境</div> : null}
+              {envs.length === 0 ? <EmptyState text="暂无环境" hint="点下方「新建环境」创建第一个环境" /> : null}
             </div>
             <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
               <button className="pp-btn pp-btn-sm" onClick={() => pickEnv(blankEnv())}>新建环境</button>

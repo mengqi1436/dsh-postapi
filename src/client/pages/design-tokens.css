@@ -433,6 +433,20 @@
      此处不得再写 max-width:0 + ellipsis——那组是窄容器列塌陷的元凶。 */
   white-space: nowrap;
 }
+/* 环境页变量表（env.jsx varTable）：五列固定宽度，值列吃剩余宽度。
+   不加 fixed 时五列按内容撑开，窄容器里整表 603px 顶破 438px 的容器。 */
+.pp-table.pp-table-vars {
+  table-layout: fixed;
+  /* 固定列 52+52+64=168px，变量名列 30%、值列吃剩余：360px 容器下值列仍有 110px，
+     再窄就横向滚动。不设 480——510px 主区里会被切掉「操作」列。 */
+  min-width: 360px;
+}
+.pp-table.pp-table-vars th:nth-child(1) { width: 30%; }
+.pp-table.pp-table-vars th:nth-child(2) { width: auto; }
+.pp-table.pp-table-vars th:nth-child(3),
+.pp-table.pp-table-vars th:nth-child(4) { width: 52px; }
+.pp-table.pp-table-vars th:nth-child(5) { width: 64px; }
+.pp-table.pp-table-vars td { overflow: hidden; }
 .pp-table tbody tr:hover {
   background: var(--bg-hover);
 }
@@ -529,7 +543,10 @@
   display: flex;
   align-items: center;
   gap: var(--sp-1);
-  height: var(--ctl-h-lg);
+  /* 窄容器里页签（如 import 的「OpenAPI / Swagger」）一行放不下：
+     允许换行并把高度交给内容，否则标签文字会被压成两行、页签条顶破卡片。 */
+  flex-wrap: wrap;
+  min-height: var(--ctl-h-lg);
   padding: 0 var(--sp-3);
   background: var(--bg-surface);
   border-bottom: 1px solid var(--border);
@@ -539,6 +556,8 @@
   align-items: center;
   height: var(--ctl-h);
   padding: 0 var(--sp-3);
+  /* 页签文字不折行：折行会把「查询」竖排成两行 */
+  white-space: nowrap;
   font-family: var(--font-sans);
   font-size: var(--fs-14);
   color: var(--fg-secondary);
@@ -734,6 +753,14 @@
   gap: var(--sp-4);
   align-items: start;
 }
+/* 窄容器：侧边栏主区实测 455~840px，两列各只剩 230~420px，
+   import 的 textarea 与 settings 的代理输入框会被截断。
+   900px = 两列各 440px 以上才够放这两类控件，低于此改上下堆叠。 */
+@container ppmain (max-width: 900px) {
+  .pp-cols-2 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
 .pp-field {
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.6fr) auto auto;
@@ -915,6 +942,10 @@
 .pp-table-wrap {
   overflow-x: auto;
   overflow-y: hidden;
+  /* flex/grid 子项默认 min-width:auto，会被表格内联 min-width 顶开容器，
+     在 .pp-pane / .pp-debug-tabbody 里表现为整页横向溢出。这里显式压到 0。 */
+  min-width: 0;
+  max-width: 100%;
 }
 .pp-aside-sticky {
   position: sticky;
@@ -1065,6 +1096,17 @@
 .pp-url-row .pp-input {
   flex: 1;
   height: var(--ctl-h-sm);
+}
+/* 窄容器：URL 行挤在一行时路径输入框只剩几十像素（"未配置 baseUrl" 胶囊本身就要 90px）。
+   让路径输入框独占第二行，宽度拉满，发送组仍留在第一行末尾。 */
+@container ppmain (max-width: 640px) {
+  .pp-url-row .pp-input {
+    order: 9;
+    flex-basis: 100%;
+  }
+  .pp-url-row .pp-url-pill {
+    max-width: 32%;
+  }
 }
 .pp-url-method {
   flex: none;
