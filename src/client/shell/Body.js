@@ -178,14 +178,6 @@ function MenuTree({ items, openPath, onOpen, onPick, depth = 1, pos }) {
   )
 }
 
-/** 帮助浮层里的快捷入口（固定四条，文案复用 nav.* 键）。 */
-export const SHORTCUTS = [
-  { name: 'debug', hash: '#/debug', labelKey: 'nav.debug' },
-  { name: 'doc', hash: '#/doc', labelKey: 'nav.doc' },
-  { name: 'test', hash: '#/test', labelKey: 'nav.test' },
-  { name: 'settings', hash: '#/settings', labelKey: 'nav.settings' },
-]
-
 /** 解析 hash 为 { name, arg, query }；未知路由回落 overview。 */
 export function parseHash(raw) {
   const source = raw === undefined ? (typeof location !== 'undefined' ? location.hash : '') : raw
@@ -467,12 +459,6 @@ export function PostApiBody({ useTabInfo }) {
               ))}
             </div>
           ))}
-          <span className="pp-sider-spacer" />
-          <button type="button" className="pp-sider-item" onClick={toggleHelp}
-            data-active={helpOpen ? 'true' : 'false'}>
-            <Icon name="help" size={16} />
-            <span className="pp-sider-label">{zh['aside.about']}</span>
-          </button>
         </nav>
         <main className="pp-main-v2">
           {/* 页签条：Apifox 主页签条 44px（docs/apifox-visual-parity-spec.md §6）。
@@ -493,15 +479,6 @@ export function PostApiBody({ useTabInfo }) {
                 </button>
               </div>
               <div className="pp-help">{PAGE_DESC(route.name)}</div>
-              <div className="pp-help-card-title">{zh['aside.shortcuts']}</div>
-              <div className="pp-help-links">
-                {SHORTCUTS.map((item) => (
-                  <a key={item.name} className="pp-sider-item" href={item.hash}
-                    onClick={() => setHelpOpen(false)}>
-                    <span className="pp-sider-label">{zh[item.labelKey]}</span>
-                  </a>
-                ))}
-              </div>
             </div>
           ) : null}
           {Page ? <Page route={route} api={api} /> : <Placeholder route={route} />}

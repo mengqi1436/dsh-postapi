@@ -365,20 +365,24 @@ t('侧栏跳转：每条路由条目都带可用 hash 链接', async () => {
   assert(items.length === routes.length, '侧栏条目数应与 ROUTES 一致（' + routes.length + '），实际 ' + items.length)
 })
 
-t('帮助卡片：侧栏底部「关于」展开当前页说明与四条快捷入口', async () => {
+t('帮助卡片：顶栏 ? 按钮是唯一入口，展开当前页说明', async () => {
   loc.hash = '#/flow'
   const first = await render()
-  const helpBtn = collectNodes(first.tree).find((n) => n.type === 'button'
-    && cls(n).split(/\s+/).includes('pp-sider-item'))
-  assert(helpBtn, '未找到侧栏「关于」按钮')
-  helpBtn.props.onClick()
+  // 入口只有顶栏 ? 一个：左下角曾有一个同样调 toggleHelp 的「当前页面」按钮，已删
+  const helpBtns = collectNodes(first.tree).filter((n) => n.type === 'button'
+    && n.props.title === first.mod.exports.zh['aside.about'])
+  assert(helpBtns.length === 1, '帮助入口应只有顶栏 1 个，实际 ' + helpBtns.length)
+  assert(byClass(first.tree, 'pp-sider-item').every((n) => n.type === 'a'),
+    '侧栏不应再有按钮型条目（「当前页面」按钮已删）')
+  helpBtns[0].props.onClick()
   const second = await render(first.stub)
   const card = byClass(second.tree, 'pp-help-card')[0]
-  assert(card, '点「关于」应展开帮助卡片')
+  assert(card, '点 ? 应展开帮助卡片')
   const text = collectText(card)
   assert(text.includes(second.mod.exports.zh['aside.page.flow']), '帮助卡片应含当前页说明')
+  // 快捷入口已删：那 4 条与侧栏 12 条路由重复
   const links = collectNodes(card).filter((n) => n.type === 'a' && String(n.props.href).indexOf('#/') === 0)
-  assert(links.length === 4, '帮助卡片应有 4 条快捷入口，实际 ' + links.length)
+  assert(links.length === 0, '帮助卡片不应再有快捷入口（与侧栏重复），实际 ' + links.length + ' 条')
 })
 
 t('顶栏 v2：面包屑 + 搜索 + 新建接口 + 环境 + 三个图标动作', async () => {
@@ -497,8 +501,8 @@ t('页面说明：收进帮助卡片，不再常驻占一行高度', async () =>
   assert(!collectText(first.tree).includes(first.mod.exports.zh['aside.page.flow']),
     '页面说明不应常驻显示（v3 已收进帮助卡）')
   const helpBtn = collectNodes(first.tree).find((n) => n.type === 'button'
-    && cls(n).split(/\s+/).includes('pp-sider-item'))
-  assert(helpBtn, '侧栏应有「当前页面」按钮')
+    && n.props.title === first.mod.exports.zh['aside.about'])
+  assert(helpBtn, '顶栏应有 ? 帮助按钮')
   helpBtn.props.onClick()
   const second = await render(first.stub)
   const card = byClass(second.tree, 'pp-help-card')[0]

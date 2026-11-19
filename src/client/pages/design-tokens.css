@@ -1406,6 +1406,8 @@
   background: var(--bg-app);
   container-type: inline-size;
   container-name: ppmain;
+  /* 帮助浮层的定位参照（.pp-help-card 用 absolute 贴右上角） */
+  position: relative;
 }
 
 /* —— 页头 —— */
@@ -1612,15 +1614,24 @@
   color: var(--fg-secondary);
 }
 /* 帮助卡片：原浮层改成主区顶部内嵌卡（不再遮挡内容） */
+/* 帮助卡片：浮在主区右上角，不占文档流。
+   之前是文档流内嵌卡，插在页签条与页头之间会把页面标题往下推一格，
+   视觉上像多了一个页签。浮层定位后与页面内容互不影响。 */
 .pp-help-card {
+  position: absolute;
+  top: calc(var(--tabbar-h) + var(--sp-2));
+  right: var(--sp-4);
+  z-index: var(--z-menu);
   display: flex;
   flex-direction: column;
   gap: var(--sp-1);
-  margin: var(--sp-2) var(--sp-5) 0;
+  width: var(--popover-w);
+  max-width: calc(100% - var(--sp-6));
   padding: var(--sp-3);
   background: var(--bg-surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-card);
+  box-shadow: var(--shadow-menu);
 }
 .pp-help-card-head {
   display: flex;
@@ -1633,11 +1644,7 @@
   font-weight: var(--fw-medium);
   color: var(--fg-tertiary);
 }
-.pp-help-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--sp-1);
-}
+
 
 
 /* —— 页内锚点条（原右栏「本页目录」的替代）：主区顶部 sticky 横向 chips ——
