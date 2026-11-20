@@ -296,6 +296,11 @@
   color: var(--fg-strong);
   margin: 0 0 var(--sp-2) 0;
 }
+/* 卡内多段标题（如 Mock 的「字段规则」「命中地址」）：与上方内容拉开一档，
+   统一规则替代页面里逐个手写的内联 marginTop；首个标题不缩进 */
+.pp-card > .pp-card-title:not(:first-child) {
+  margin-top: var(--sp-3);
+}
 .pp-card-hover:hover {
   border-color: var(--accent);
   box-shadow: var(--shadow-popover);
@@ -790,7 +795,14 @@
 }
 
 /* —— 文档正文分区 —— */
+/* 分区内部统一节拍：flex 纵排 + 一档间距 12px（--sp-3）——
+   原先「标题→内容」距离随分区类型漂移（h2 8px / h3 4px / 各处内联 margin 混用）。
+   分区之间：上间距 16px + 1px 分隔线；首个分区（基本信息）无线距 */
 .pp-doc-section {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--sp-3);
   padding-top: var(--sp-4);
   margin-top: var(--sp-4);
   border-top: 1px solid var(--border);
@@ -799,6 +811,40 @@
   padding-top: 0;
   margin-top: 0;
   border-top: none;
+}
+/* 标题不再自带下边距，间距全部交给分区的 gap（Markdown 里的 .pp-doc-h2 不在分区内，不受影响） */
+.pp-doc-section > .pp-doc-h1,
+.pp-doc-section > .pp-doc-h2 {
+  margin: 0;
+}
+/* 分区直下的裸 <p> 清掉 UA 默认上下边距（原先靠内联 margin 或 UA 1em，两种并存导致间距漂移） */
+.pp-doc-section > p,
+.pp-doc-sec-body > p {
+  margin: 0;
+}
+/* 响应区/响应头等嵌套块沿用同一节拍 */
+.pp-doc-sec-body {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--sp-3);
+  min-width: 0;
+}
+.pp-doc-sec-body > .pp-doc-h2,
+.pp-doc-sec-body > .pp-doc-h3 {
+  margin: 0;
+}
+/* 分区内空态：紧凑一行说明，不再是一张虚线大卡（与左树/面板空态同档） */
+.pp-doc-section .pp-empty {
+  max-width: none;
+  margin: 0;
+  padding: var(--sp-2) 0;
+  border: none;
+  background: transparent;
+  text-align: left;
+}
+.pp-doc-section .pp-empty-icon {
+  display: none;
 }
 /* 正文分节内的响应页签：去掉通栏页签条的左右 padding，与节标题左缘对齐 */
 .pp-doc-section .pp-tabs {

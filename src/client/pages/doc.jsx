@@ -443,16 +443,16 @@ export function DocPage({ route, api }) {
             {isMock ? <p className="pp-note pp-note-warn">示例数据 — window.__postapiApi 未注入或读取失败，以下为文件内 mock</p> : null}
             {error ? <p className="pp-note pp-note-bad">{error}</p> : null}
 
-            <section id="sec-info">
+            <section id="sec-info" className="pp-doc-section">
               <h1 className="pp-doc-h1">
                 <span className="pp-method" data-method={ep.method}>{ep.method}</span>
                 <span className="pp-ellipsis">{ep.name}</span>
               </h1>
-              <p className="pp-mono pp-muted" style={{ margin: '0 0 var(--sp-2) 0' }}>{ep.method} {ep.url}</p>
+              <p className="pp-mono pp-muted">{ep.method} {ep.url}</p>
               {ep.protocol && ep.protocol !== 'http' ? (
                 <p className="pp-meta">协议 {ep.protocol}：规划中（仅保留类型位，发送回落 HTTP）</p>
               ) : null}
-              <div style={{ marginTop: 'var(--sp-2)' }}><Markdown text={ep.description} /></div>
+              <div><Markdown text={ep.description} /></div>
             </section>
 
             <section id="sec-path" className="pp-doc-section">
@@ -514,8 +514,8 @@ export function DocPage({ route, api }) {
                     ))}
                   </div>
                   {activeResponse ? (
-                    <div style={{ marginTop: 'var(--sp-2)' }}>
-                      <div className="pp-toolbar-inline" style={{ marginBottom: 'var(--sp-2)' }}>
+                    <div className="pp-doc-sec-body">
+                      <div className="pp-toolbar-inline">
                         <StatusPill status={activeResponse.code} text={activeResponse.name || ''} />
                         <span className="pp-meta">{activeResponse.contentType || 'application/json'}</span>
                         {activeResponse.isDefault ? <span className="pp-pill pp-pill-accent">默认</span> : null}
@@ -532,7 +532,7 @@ export function DocPage({ route, api }) {
                         onChange={(next) => patchResponse({ body: next })}
                       />
                       {Array.isArray(activeResponse.headers) && activeResponse.headers.length > 0 ? (
-                        <div style={{ marginTop: 'var(--sp-2)' }}>
+                        <div className="pp-doc-sec-body">
                           <h3 className="pp-doc-h3">响应头</h3>
                           <div className="pp-table-wrap"><ParamTable rows={activeResponse.headers} readOnly columns={['key', 'value']} emptyText="无响应头" /></div>
                         </div>

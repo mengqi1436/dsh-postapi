@@ -269,7 +269,7 @@ export function MockPage({ route, api }) {
               />
             </div>
   
-            <div className="pp-card-title" style={{ marginTop: 'var(--sp-3)' }}>字段规则</div>
+            <div className="pp-card-title">字段规则</div>
             {rules.length === 0 ? <p className="pp-meta">尚无规则；未命中规则时回落默认响应</p> : null}
             {rules.length > 0 ? (
               <div className="pp-table-wrap">
@@ -327,7 +327,7 @@ export function MockPage({ route, api }) {
                 <span className="pp-mono">{service.port || port}</span>
               </div>
 
-            <div className="pp-card-title" style={{ marginTop: 'var(--sp-3)' }}>命中地址</div>
+            <div className="pp-card-title">命中地址</div>
             {urls.length === 0 ? (
               <p className="pp-meta">选择接口后显示命中地址</p>
             ) : (
