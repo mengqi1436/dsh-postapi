@@ -40,6 +40,16 @@ async function optionalPageSuite(relPath, exportName) {
 const pagesATests = await optionalPageSuite('src/client/pages/components/__tests__/pages-a.test.js', 'tests')
 const apifoxUiTests = await optionalPageSuite('src/client/pages/components/__tests__/apifox-ui.test.js', 'tests')
 const treeTests = await optionalPageSuite('src/client/pages/components/__tests__/tree.test.js', 'tests')
+// 高度纪律（heights）：文件头注释预留的「lead 统一接线」——套件导出 run() 而非 tests 数组，
+// 包装成一个用例接入；它红说明有高度绕开了尺寸 token（组件大小一致性契约 §7）。
+const heightsModule = await optionalPageSuite('src/client/pages/__tests__/heights.test.js', 'run')
+const heightsTests = heightsModule.length ? [{
+  name: 'heights: 全部高度声明引用尺寸 token（CSS + 页面内联）',
+  fn: async () => {
+    const { failures, checks } = heightsModule[0].run()
+    if (failures.length > 0) throw new Error(failures.join('；') + `（共 ${checks} 项检查）`)
+  },
+}] : []
 const headerPresetsTests = await optionalSuite('header-presets.test.js', 'tests')
 const bodyEditorTests = await optionalSuite('body-editor.test.js', 'tests')
 const prepostTests = await optionalSuite('prepost.test.js', 'tests')
@@ -58,6 +68,7 @@ const suites = [
   ['src/client/pages/components/__tests__/pages-a.test.js', pagesATests],
   ['src/client/pages/components/__tests__/apifox-ui.test.js', apifoxUiTests],
   ['src/client/pages/components/__tests__/tree.test.js', treeTests],
+  ['src/client/pages/__tests__/heights.test.js', heightsTests],
   ['tests/header-presets.test.js', headerPresetsTests],
   ['tests/body-editor.test.js', bodyEditorTests],
   ['tests/prepost.test.js', prepostTests],

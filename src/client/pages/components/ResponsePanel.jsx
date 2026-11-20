@@ -181,7 +181,7 @@ export function ResponsePanel({ resp, sending = false, onCancel }) {
   if (tab === 'body') {
     tabBody = (
       <div>
-        <div className="pp-tabs">
+        <div className="pp-tabs pp-sub-tabs">
           <button className="pp-tab" data-active={bodyView === 'pretty'} onClick={() => setBodyView('pretty')}>美化</button>
           <button className="pp-tab" data-active={bodyView === 'raw'} onClick={() => setBodyView('raw')}>原文</button>
         </div>

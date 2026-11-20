@@ -84,7 +84,7 @@ export function ScriptPanel({ value, onChange }) {
           <label className="pp-form-label" htmlFor="pp-wait-ms">等待</label>
           <input
             id="pp-wait-ms"
-            className="pp-input pp-input-sm"
+            className="pp-input"
             type="number"
             min="0"
             step="100"

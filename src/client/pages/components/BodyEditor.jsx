@@ -59,7 +59,7 @@ export function BodyEditor({ value, onChange }) {
       <div className="pp-body-head">
         <label className="pp-form-label">类型</label>
         <select
-          className="pp-select pp-input-sm"
+          className="pp-select"
           value={body.type}
           onChange={(e) => emit({ type: e.target.value })}
         >

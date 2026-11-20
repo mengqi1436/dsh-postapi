@@ -51,7 +51,7 @@ const PAGE_NAMES = ['overview', 'env', 'schema', 'history', 'test', 'import', 'f
 const PAGE_CLASSES = {
   overview: ['pp-stats', 'pp-stat', 'pp-overview-grid', 'pp-card-hover', 'pp-table'],
   env: ['pp-env-layout', 'pp-env-side', 'pp-table', 'pp-toolbar', 'pp-meta'],
-  schema: ['pp-tree-row', 'pp-json-editor', 'pp-note-ok', 'pp-note-bad'],
+  schema: ['pp-tree-row', 'pp-note-ok', 'pp-note-bad'],
   history: ['pp-table', 'pp-pill', 'pp-meta', 'pp-pane'],
   test: ['pp-tree-row', 'pp-table', 'pp-result-row', 'pp-pill'],
   import: ['pp-card', 'pp-btn', 'pp-pre', 'pp-select'],
@@ -611,14 +611,16 @@ t('history.replayPayload：折算成 debug 请求快照', async () => {
   if (bare.method !== 'GET' || bare.headers.length !== 0 || bare.body !== '') throw new Error('缺 request 时未回落')
 })
 
-t('schema 渲染：.pp-json-editor 编辑器 + 校验结果用 .pp-note-ok/.pp-note-bad', async () => {
+t('schema 渲染：JsonEditor 组件（.pp-json-editor）+ 校验结果用 .pp-note-ok/.pp-note-bad', async () => {
   const ok = await drive('schema', {
     storage: { listProjects: async () => [{ id: 'p1', name: 'P1' }], getProject: async () => ({ id: 'p1', schemas: [] }) },
   }, null, async (tree) => { await buttonByText(tree, '校验').props.onClick() })
   const okNodes = collectNodes(ok.tree)
-  if (!okNodes.some((n) => n.type === 'textarea' && String(n.props.className || '').includes('pp-json-editor'))) {
-    throw new Error('JSON 编辑区未使用 .pp-json-editor')
-  }
+  // schema 页复用共用的 JsonEditor 组件（与调试页同款，自带格式化/压缩工具条）：
+  // 组件是函数节点，collectNodes 不下钻，这里断言页面挂了 JsonEditor 元素本身
+  const findJsonEditor = (nodes) => nodes.find((n) => typeof n.type === 'function' && n.type.name === 'JsonEditor')
+  const je = findJsonEditor(okNodes)
+  if (!je) throw new Error('JSON 编辑区未复用 JsonEditor 组件')
   if (!okNodes.some((n) => String(n.props.className || '').includes('pp-note-ok'))) {
     throw new Error('校验通过未使用 .pp-note-ok：' + okNodes.map((n) => n.props.className).filter(Boolean).join('|'))
   }
@@ -626,8 +628,9 @@ t('schema 渲染：.pp-json-editor 编辑器 + 校验结果用 .pp-note-ok/.pp-n
   const bad = await drive('schema', {
     storage: { listProjects: async () => [{ id: 'p1', name: 'P1' }], getProject: async () => ({ id: 'p1', schemas: [] }) },
   }, null, async (tree, stub, rerender) => {
-    const ta = collectNodes(tree).find((n) => n.type === 'textarea')
-    ta.props.onChange({ target: { value: '{bad' } })
+    const editor = findJsonEditor(collectNodes(tree))
+    // JsonEditor 的 onChange 回传纯文本值（不是 event）
+    editor.props.onChange('{bad')
     const tree2 = await rerender()
     await buttonByText(tree2, '校验').props.onClick()
   })
@@ -1108,16 +1111,17 @@ t('search.highlight：大小写不敏感切三段，无命中时 hit 为空', as
   if (empty.hit !== '' || empty.before !== 'abc') throw new Error('空关键字应原样返回')
 })
 
-t('search 真接 api：api.storage.search 被调用且结果分组渲染', async () => {
+t('search 真接 api：URL 带 q= 时自动执行搜索并渲染分组结果', async () => {
   const calls = []
+  // 不点「搜索」：顶栏搜索落地（#/search?q=order）后页面应自动执行查询
   const r = await drive('search', { storage: {
     listProjects: async () => [{ id: 'p1', name: 'P1' }],
     search: async (pid, kw) => {
       calls.push([pid, kw])
       return { endpoints: [{ id: 'e1', name: 'A', method: 'GET' }], schemas: [], folders: [] }
     },
-  } }, { name: 'search', arg: '', query: 'q=order' }, async (tree) => { await buttonByText(tree, '搜索').props.onClick() })
-  if (calls.length !== 1 || calls[0][1] !== 'order') throw new Error('search 调用异常：' + JSON.stringify(calls))
+  } }, { name: 'search', arg: '', query: 'q=order' }, null)
+  if (!calls.some((c) => c[1] === 'order')) throw new Error('未自动执行搜索：' + JSON.stringify(calls))
   // 新结构：分组头「接口」+ 计数徽标「1」
   const txt = collectText(r.tree)
   if (!txt.includes('接口')) throw new Error('结果分组未渲染')
