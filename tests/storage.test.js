@@ -158,4 +158,152 @@ export const tests = [
       assert.equal(raw.endpoints.length, 10)
     }),
   },
+  {
+    name: 'storage: 新建 endpoint 字段全量补默认、order 追加末尾、getProject 读回逐字段一致',
+    fn: () => withTempStorage(async (storage, base) => {
+      const p = await storage.createProject('默认字段项目')
+      const first = await storage.saveEndpoint(p.id, { name: '第一', url: 'http://a/1', method: 'POST' })
+      const second = await storage.saveEndpoint(p.id, { name: '第二' })
+      assert.equal(first.order, 0)
+      assert.equal(second.order, 1) // 未传 order 时追加在末尾
+      assert.match(second.id, /^ep_[0-9a-z]+$/)
+      assert.ok(!Number.isNaN(Date.parse(second.createdAt)))
+      assert.ok(!Number.isNaN(Date.parse(second.updatedAt)))
+
+      // 契约 §2.2 默认值全量断言
+      const expectDefaults = {
+        folderId: null,
+        protocol: 'http',
+        params: [],
+        pathParams: [],
+        headers: [],
+        cookies: [],
+        body: { type: 'none', content: '', schema: null, examples: [] },
+        auth: { type: 'none', token: '', username: '', password: '', key: '', value: '', addTo: 'header' },
+        responses: [],
+        preProcessors: [],
+        postProcessors: [],
+        mock: { enabled: false, delayMs: 0, rules: [] },
+        description: '',
+        tags: [],
+        status: 'developing',
+      }
+      for (const [k, v] of Object.entries(expectDefaults)) {
+        assert.deepEqual(second[k], v, 'endpoint.' + k + ' 应补契约默认值')
+      }
+      assert.equal(second.method, 'GET')
+      assert.equal(second.url, '')
+
+      // 读回逐字段相等（含默认值），且落盘介质内容一致
+      const got = (await storage.getProject(p.id)).endpoints.find((e) => e.id === second.id)
+      assert.deepEqual(got, second)
+      const raw = JSON.parse(await fs.readFile(path.join(base, p.id, 'project.json'), 'utf8'))
+      assert.deepEqual(raw.endpoints.find((e) => e.id === second.id), second)
+      assert.deepEqual(raw.endpoints.map((e) => e.id), [first.id, second.id])
+    }),
+  },
+  {
+    name: 'storage: 更新只传 id + patch 时未传字段由 withEndpointDefaults 保留，createdAt 不变',
+    fn: () => withTempStorage(async (storage) => {
+      const p = await storage.createProject('patch 项目')
+      const ep = await storage.saveEndpoint(p.id, {
+        name: '原接口',
+        method: 'POST',
+        url: 'http://a/1',
+        params: [{ key: 'q', value: '1', enabled: true, description: '', required: false, type: 'string' }],
+        headers: [{ key: 'X-Trace', value: 'on', enabled: true, description: '', required: false, type: 'string' }],
+        body: { type: 'json', content: '{"a":1}' },
+        auth: { type: 'bearer', token: 'T' },
+        tags: ['x'],
+        description: '描述',
+        status: 'released',
+      })
+      await new Promise((r) => setTimeout(r, 5))
+      // 只传 id + 两个字段：其余字段必须从 prev 合并回来，不能被打回默认值
+      const merged = await storage.saveEndpoint(p.id, { id: ep.id, name: '改后接口', method: 'PUT' })
+      assert.equal(merged.id, ep.id)
+      assert.equal(merged.createdAt, ep.createdAt)
+      assert.ok(Date.parse(merged.updatedAt) >= Date.parse(ep.updatedAt))
+      assert.equal(merged.name, '改后接口')
+      assert.equal(merged.method, 'PUT')
+      assert.equal(merged.url, 'http://a/1')
+      assert.deepEqual(merged.params, ep.params)
+      assert.deepEqual(merged.headers, ep.headers)
+      assert.deepEqual(merged.body, ep.body)
+      assert.deepEqual(merged.auth, ep.auth)
+      assert.deepEqual(merged.tags, ['x'])
+      assert.equal(merged.description, '描述')
+      assert.equal(merged.status, 'released')
+
+      const project = await storage.getProject(p.id)
+      assert.equal(project.endpoints.length, 1, '更新不得新增条目')
+      assert.deepEqual(project.endpoints[0], merged)
+    }),
+  },
+  {
+    name: 'storage: endpoint 增删后 index.json updatedAt 与 project.updatedAt 同步，删除不影响其他条目',
+    fn: () => withTempStorage(async (storage, base) => {
+      const p = await storage.createProject('索引同步项目')
+      const readIndex = async () => JSON.parse(await fs.readFile(path.join(base, 'index.json'), 'utf8'))
+      const index0 = await readIndex()
+      assert.equal(index0.projects.length, 1)
+      assert.equal(index0.projects[0].updatedAt, p.updatedAt)
+
+      await new Promise((r) => setTimeout(r, 5))
+      const a = await storage.saveEndpoint(p.id, { name: 'A', url: 'http://a' })
+      const b = await storage.saveEndpoint(p.id, { name: 'B', url: 'http://b' })
+      const projectRaw = JSON.parse(await fs.readFile(path.join(base, p.id, 'project.json'), 'utf8'))
+      const index1 = await readIndex()
+      assert.equal(index1.projects[0].updatedAt, projectRaw.updatedAt, 'index.updatedAt 应随 endpoint 写入同步')
+      assert.equal(index1.projects[0].name, '索引同步项目')
+
+      await new Promise((r) => setTimeout(r, 5))
+      await storage.deleteEndpoint(p.id, a.id)
+      const after = await storage.getProject(p.id)
+      assert.deepEqual(after.endpoints.map((e) => e.id), [b.id])
+      assert.equal(after.endpoints[0].name, 'B', '删除 A 不应影响 B')
+      const index2 = await readIndex()
+      assert.equal(index2.projects[0].updatedAt, after.updatedAt, 'index.updatedAt 应随删除同步')
+      assert.ok(Date.parse(index2.projects[0].updatedAt) > Date.parse(index1.projects[0].updatedAt))
+
+      // 列表读到的 updatedAt 与磁盘一致（client 项目列表直接用这个值）
+      const list = await storage.listProjects()
+      assert.equal(list[0].updatedAt, index2.projects[0].updatedAt)
+    }),
+  },
+  {
+    name: 'storage: v1 index.json 升级与并发写不互相覆盖（listProjects 队列内重读磁盘）',
+    fn: async () => {
+      const base = await fs.mkdtemp(path.join(os.tmpdir(), 'postapi-storage-'))
+      try {
+        const pid = 'proj_v1'
+        const old = '2026-01-01T00:00:00.000Z'
+        await fs.mkdir(path.join(base, pid), { recursive: true })
+        await fs.writeFile(path.join(base, 'index.json'), JSON.stringify({
+          projects: [{ id: pid, name: '旧项目', updatedAt: old }],
+        }))
+        await fs.writeFile(path.join(base, pid, 'project.json'), JSON.stringify({
+          id: pid, name: '旧项目', createdAt: old, updatedAt: old, schemaVersion: 2,
+          folders: [], endpoints: [], schemas: [], environments: [], globals: { variables: [] },
+          mocks: [], testCases: [], testScenarios: [], flow: { name: '', steps: [] },
+          settings: { mockPort: 4010, proxyUrl: '', requestTimeoutMs: 30000, historyLimit: 200 },
+        }))
+        const storage = createStorageService(base)
+
+        // v1 升级写 与 endpoint 写 并发：升级写不得用读入时的旧快照覆盖新的 updatedAt
+        await Promise.all([
+          storage.listProjects(),
+          storage.saveEndpoint(pid, { name: '新接口', url: 'http://a/1' }),
+        ])
+        const index = JSON.parse(await fs.readFile(path.join(base, 'index.json'), 'utf8'))
+        const project = JSON.parse(await fs.readFile(path.join(base, pid, 'project.json'), 'utf8'))
+        assert.equal(index.version, 2, 'version 必须升级为 2')
+        assert.equal(index.projects[0].name, '旧项目', '升级不得丢项目条目')
+        assert.equal(index.projects[0].updatedAt, project.updatedAt, '升级写不得回退 updatedAt')
+        assert.equal(project.endpoints.length, 1, '并发写不得丢失')
+      } finally {
+        await fs.rm(base, { recursive: true, force: true })
+      }
+    },
+  },
 ]

@@ -286,8 +286,26 @@ export function createStorageService(basePath = DEFAULT_BASE_PATH) {
     }
   }
 
-  const saveProject = (project) =>
-    atomicWrite(projectFile(project.id), JSON.stringify(project, null, 2))
+  /**
+   * 写 project.json 并同步 index.json 的项目条目（name/updatedAt）。
+   * index.json 是 client 项目列表的唯一读源，不同步会让列表一直显示建项时的时间；
+   * 只同步已存在的条目（createProject 先写项目后 push 条目），index 损坏/写失败不阻断项目落盘——
+   * project.json 才是权威数据，索引可重建。
+   */
+  const saveProject = async (project) => {
+    await atomicWrite(projectFile(project.id), JSON.stringify(project, null, 2))
+    try {
+      const index = await readIndex()
+      const entry = index.projects.find((p) => p.id === project.id)
+      if (entry && (entry.updatedAt !== project.updatedAt || entry.name !== project.name)) {
+        entry.updatedAt = project.updatedAt
+        entry.name = project.name
+        await writeIndex(index)
+      }
+    } catch {
+      // 索引同步是尽力而为，不因索引异常回滚已落盘的项目数据
+    }
+  }
 
   /** 队列内取项目：损坏时直接重建落盘，v1 结构时升级落盘。 */
   async function loadProjectForWrite(id) {
@@ -313,8 +331,14 @@ export function createStorageService(basePath = DEFAULT_BASE_PATH) {
   return {
     async listProjects() {
       const { index, upgraded } = await readIndexState()
-      // v1 index.json 读入后升级落盘（契约 §2.1：自动补 version: 2 并保留 projects）
-      if (upgraded) await enqueue(() => writeIndex(index))
+      // v1 index.json 读入后升级落盘（契约 §2.1：自动补 version: 2 并保留 projects）。
+      // 队列内重读磁盘再判定：用读入时的快照写回会覆盖并发写路径刚同步的 updatedAt（丢写）。
+      if (upgraded) {
+        await enqueue(async () => {
+          const state = await readIndexState()
+          if (state.upgraded) await writeIndex(state.index)
+        })
+      }
       return index.projects
     },
 
