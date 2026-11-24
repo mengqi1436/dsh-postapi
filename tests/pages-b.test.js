@@ -848,6 +848,72 @@ t('overview 真接 api：listProjects 被调用；失败在页面内显示错误
   if (!texts.includes('加载项目列表失败')) throw new Error('错误文案缺少上下文')
 })
 
+t('overview 默认态：当前项目为空（不预填 id/名称），无项目时渲染空态', async () => {
+  const r = await drive('overview', { storage: { listProjects: async () => [], getProject: async () => null } })
+  const nodes = collectNodes(r.tree)
+  // 当前项目控件必须是空值：value 空且带「请选择项目 / 暂无项目」占位项
+  const sel = nodes.find((n) => n.type === 'select' && String(n.props.className || '').includes('pp-ov-current-value'))
+  if (!sel) throw new Error('缺当前项目选择控件 .pp-ov-current-value')
+  if (String(sel.props.value) !== '') throw new Error('当前项目默认值应为空，实际 ' + JSON.stringify(sel.props.value))
+  const optText = collectNodes(sel).filter((n) => n.type === 'option').map((n) => collectText(n)).join('|')
+  if (!/暂无项目|请选择项目/.test(optText)) throw new Error('空项目列表未给出占位项：' + optText)
+  // 名称输入框默认空
+  await buttonByText(r.tree, '新建项目').props.onClick()
+  const r2 = await drive('overview', { storage: { listProjects: async () => [], getProject: async () => null } }, null, async (tree) => {
+    await buttonByText(tree, '新建项目').props.onClick()
+  })
+  const input = collectNodes(r2.tree).find((n) => n.type === 'input' && n.props.placeholder === '项目名')
+  if (!input) throw new Error('缺项目名输入框')
+  if (String(input.props.value) !== '') throw new Error('项目名输入框默认值应为空，实际 ' + JSON.stringify(input.props.value))
+})
+
+t('overview 有项目时不自动打开：当前项目仍为空，需用户点「打开」', async () => {
+  const opened = []
+  const r = await drive('overview', { storage: okStorage({ getProject: async (id) => { opened.push(id); return { id, name: 'P1', endpoints: [] } } }).storage })
+  const nodes = collectNodes(r.tree)
+  const sel = nodes.find((n) => n.type === 'select' && String(n.props.className || '').includes('pp-ov-current-value'))
+  if (String(sel.props.value) !== '') throw new Error('列表非空时也不应自动选中项目，实际 ' + JSON.stringify(sel.props.value))
+  if (opened.length > 0) throw new Error('不应自动调用 getProject：' + JSON.stringify(opened))
+})
+
+t('overview Apifox 同构：统计卡 / 模块计数条 / 功能卡 / 右栏动作全部就位', async () => {
+  const a = okStorage()
+  const r = await drive('overview', { storage: a.storage })
+  const nodes = collectNodes(r.tree)
+  const has = (cls) => nodes.some((n) => String(n.props.className || '').split(/\s+/).includes(cls))
+  for (const cls of ['pp-ov-summary', 'pp-ov-summary-num', 'pp-ov-summary-desc', 'pp-ov-modules',
+    'pp-ov-counts', 'pp-ov-count', 'pp-ov-divider', 'pp-ov-functions', 'pp-ov-left', 'pp-ov-right',
+    'pp-ov-action', 'pp-ov-cards', 'pp-ov-card', 'pp-ov-current']) {
+    if (!has(cls)) throw new Error('缺 Apifox 同构类 .' + cls)
+  }
+  // 右栏动作 6 项（Apifox projectModule.action.*）
+  const actions = nodes.filter((n) => String(n.props.className || '').split(/\s+/).includes('pp-ov-action'))
+  if (actions.length !== 6) throw new Error('右栏动作应为 6 项，实际 ' + actions.length)
+  // 功能卡 3 张（分享列表 / 自动导入 / 代码生成）
+  const cardsOv = nodes.filter((n) => String(n.props.className || '').split(/\s+/).includes('pp-ov-card'))
+  if (cardsOv.length !== 3) throw new Error('功能卡应为 3 张，实际 ' + cardsOv.length)
+  const cardText = cardsOv.map((n) => collectText(n)).join('|')
+  for (const word of ['分享列表', '自动导入', '代码生成']) {
+    if (!cardText.includes(word)) throw new Error('功能卡缺 ' + word + '：' + cardText)
+  }
+})
+
+t('overview.moduleCounts / caseCounts：计数取项目实际条目，缺失回落 0', async () => {
+  const mf = await ex('overview', 'moduleCounts')
+  const got = mf({ endpoints: [{}, {}], schemas: [{}] })
+  if (got.endpointCount !== 2 || got.docsCount !== 2 || got.schemaCount !== 1) {
+    throw new Error('模块计数错误：' + JSON.stringify(got))
+  }
+  const zero = mf(null)
+  if (zero.endpointCount !== 0 || zero.docsCount !== 0 || zero.schemaCount !== 0) {
+    throw new Error('空入参未回落 0：' + JSON.stringify(zero))
+  }
+  const cf = await ex('overview', 'caseCounts')
+  const cases = cf({ testCases: [{}, {}, {}], testScenarios: [{}] })
+  if (cases.caseCount !== 3 || cases.scenarioCount !== 1) throw new Error('用例计数错误：' + JSON.stringify(cases))
+  if (cf(undefined).caseCount !== 0) throw new Error('空入参未回落 0')
+})
+
 t('overview 真接 api：空项目名被拦截（页面内提示，不调用 createProject）', async () => {
   const calls = []
   // v3：新建/重命名表单收进内容区折叠卡，先点页头「新建项目」展开，再点卡内「新建」
