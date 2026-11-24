@@ -117,3 +117,8 @@ jobs:
             echo "- registry: https://www.npmjs.com/package/${{ steps.check.outputs.name }}"
             echo '- 用户安装：dsh plugin --profile desktop add '${{ steps.check.outputs.name }}'@'${{ steps.check.outputs.version }}' --registry=https://registry.npmjs.org/'
           } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: 发布失败时提示绑定检查
+        if: failure()
+        run: |
+          echo "::warning::若上述发布步骤报 403/404/publish proof 等 OIDC 错误，先到 npmjs.com 包设置页核对 Trusted Publisher 绑定：mengqi1436/dsh-postapi + publish.yml 是否仍为 Valid"

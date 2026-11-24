@@ -895,7 +895,7 @@ var ROUTES = [
   { name: "search", hash: "#/search", labelKey: "nav.search", icon: "search" },
   { name: "settings", hash: "#/settings", labelKey: "nav.settings", icon: "gear" }
 ];
-var PARAM_ROUTES = ["doc", "schema"];
+var PARAM_ROUTES = ["doc", "schema", "debug"];
 var NAV_GROUPS = [
   { id: "project", labelKey: "group.project", icon: "grid", routes: ["overview"] },
   { id: "api", labelKey: "group.api", icon: "layers", routes: ["doc", "debug", "mock"] },
@@ -1282,7 +1282,7 @@ function ApiTitle({ useTabInfo }) {
 }
 
 // src/client/pages/design-tokens.css
-var design_tokens_default = '/* ============================================================\n   dsh-postapi \u8BBE\u8BA1 token \u2014 Apifox 2.8.55 \u590D\u523B\n   \u4F9D\u636E docs/apifox-design-spec.md\uFF08165 \u4E2A CSS chunk \u7EDF\u8BA1\uFF09\n   \u5C3A\u5BF8\u7EDF\u4E00\u5728 token \u5C42\uFF1A\u63A7\u4EF6 --ctl-h / \u8868\u884C --row-h / \u80F6\u56CA --pill-h\n   \u9875\u9762\u6837\u5F0F\u6240\u6709\u9AD8\u5EA6\u58F0\u660E\u5FC5\u987B\u5F15\u7528\u4E0A\u8FF0 token\uFF08__tests__/heights.test.js \u9759\u6001\u68C0\u67E5\uFF09\n   \u5BC6\u5EA6\u57FA\u8C03\uFF1AApifox \u5DE5\u4F5C\u53F0\u2014\u20141px \u8FB9\u6846\u5206\u533A\u3001\u5361\u7247\u5316\u3001\u6D6E\u5C42\u624D\u6295\u9634\u5F71\n   ============================================================ */\n\n.pp-scope {\n  /* \u2014\u2014 \u5B57\u4F53\uFF08Apifox: -apple-system,"BlinkMacSystemFont","Segoe UI",roboto,...\uFF09\u2014\u2014 */\n  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;\n  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;\n\n  /* \u2014\u2014 \u5B57\u9636\uFF08\u5BF9\u9F50 Apifox \u5B9E\u6D4B\uFF1A12/14/15/16/17/18/20/22\uFF09\u2014\u2014\n     Apifox \u7684 --ui-font-size-* \u539F\u503C\u89C1 docs/apifox-visual-parity-spec.md \xA72\uFF1B\n     13px \u4FDD\u7559\u662F\u56E0\u4E3A\u65E2\u6709\u9875\u9762\u7528\u5B83\u505A\u8F85\u52A9\u6587\u672C\uFF0C\u4E0D\u65B0\u5F15\u5165\u3002 */\n  --fs-12: 12px;\n  --fs-13: 13px;\n  --fs-14: 14px;\n  --fs-15: 15px;\n  --fs-16: 16px;\n  --fs-17: 17px;\n  --fs-18: 18px;\n  --fs-20: 20px;\n  --fs-22: 22px;\n  --fs-24: 24px;\n  --fw-regular: 400;\n  --fw-medium: 500;\n  --fw-semibold: 600;\n\n  /* \u2014\u2014 \u884C\u9AD8\uFF08Apifox \u56FA\u5B9A\u503C\uFF0C\u4E0D\u7528\u500D\u6570\uFF09\u2014\u2014 */\n  /* \u56FE\u8868\u4E13\u7528\u5B57\u9636\uFF1ASVG \u91CC\u7684\u5C0F\u5B57\uFF08\u56FE\u4F8B/\u6807\u8BB0\uFF09\u6BD4\u6B63\u6587\u66F4\u5C0F\uFF0C\u4F46\u4ECD\u8D70 token \u4E0D\u5199\u5B57\u9762\u91CF */\n  --fs-chart: 10px;\n  --lh-18: 18px;\n  --lh-20: 20px;\n  --lh-22: 22px;\n  --lh-24: 24px;\n\n  /* \u2014\u2014 \u5C3A\u5BF8\u7EDF\u4E00 token\uFF08\u5BF9\u9F50 Apifox \u5B9E\u6D4B\uFF0C\u89C1 docs/apifox-visual-parity-spec.md \xA71/\xA72\uFF09\u2014\u2014 */\n  --ctl-h: 32px;         /* Apifox --ui-height-base */\n  --ctl-h-sm: 24px;      /* Apifox --ui-height-sm */\n  --ctl-h-lg: 40px;      /* Apifox --ui-height-lg */\n  --row-h: 32px;         /* Apifox \u8868\u683C/\u5217\u8868\u884C 32px\uFF08\u539F 36px \u504F\u677E\uFF09 */\n  --tree-row-h: 22px;    /* Apifox --ui-tree-title-height: 22px */\n  --pill-h: 22px;\n  --topbar-h: 48px;      /* Apifox --ui-layout-header-height: 48px */\n  --tabbar-h: 44px;      /* Apifox --app-main-tabs-height: 44px */\n  --sider-w: 240px;      /* Apifox .sider-bxNtfB width: 240px */\n  --sider-pad: 20px;     /* Apifox .sider-bxNtfB padding: 20px */\n  --sider-item-h: 32px;  /* Apifox --ui-menu-item-height: 32px */\n  --sider-group-h: 24px; /* Apifox --ui-menu-item-group-height: 24px */\n  --nav-w: 240px;\n  --toc-w: 240px;\n  /* \u5B9E\u4F53\u6811\u9762\u677F\u4E0E Apifox sider \u540C\u5BBD */\n  --panel-w: 240px;\n  --panel-w-max: 320px;\n  --content-max-w: 1512px; /* Apifox .overview-header-container max-width */\n  --page-pad: 10px;        /* Apifox --app-page-layout-size */\n  --layout-pad: 8px;       /* Apifox --app-layout-padding-right/bottom */\n  --hit: 28px;\n  /* \u2014\u2014 \u5F39\u5C42\u83DC\u5355\uFF08\u5BF9\u9F50 Apifox .ui-dropdown-menu / .ui-menu-item \u5B9E\u6D4B\uFF09\u2014\u2014\n     \u9879\u9AD8 32px\u3001\u9762\u677F\u6700\u5C0F\u5BBD 150px\uFF08Apifox .project-module-menu-popup .ui-menu min-width:150px\uFF09\u3001\n     \u9634\u5F71\u53D6 Apifox .keywordSearchPopover .ui-popover-inner \u539F\u6587\u7684\u4E24\u6BB5\u5F0F\u6295\u5F71\u3002 */\n  --menu-w: 200px;\n  --menu-w-sm: 160px;\n  --menu-item-h: 32px;\n  --menu-pad: var(--sp-1);\n  --shadow-menu: 0 8px 8px -4px rgba(16, 24, 40, 0.03), 0 20px 24px -4px rgba(16, 24, 40, 0.08);\n  --z-menu: 40;\n  --z-flyout: 30;\n  --motion-fast: 120ms;\n  --card-pad: 16px;\n  --popover-w: 400px;\n  --empty-w: 360px;\n  --scrollbar: 6px;\n\n  /* \u2014\u2014 \u56FE\u6807\u5C3A\u5BF8 \u2014\u2014 */\n  --icon-sm: 14px;\n  --icon: 16px;\n  --icon-lg: 20px;\n  --icon-xl: 24px;\n\n  /* \u2014\u2014 \u95F4\u8DDD\u523B\u5EA6 4/8/12/16/20/24 \u2014\u2014 */\n  --sp-1: 4px;\n  --sp-2: 8px;\n  --sp-3: 12px;\n  --sp-4: 16px;\n  --sp-5: 20px;\n  --sp-6: 24px;\n\n  /* \u2014\u2014 \u5706\u89D2\uFF1A\u5BF9\u9F50 Apifox --ui-border-radius-sm/base/lg = 6/8/10 \u2014\u2014 */\n  --radius-sm: 6px;\n  --radius-ctl: 6px;\n  --radius-card: 8px;\n  --radius-lg: 10px;\n  --radius-pill: 999px;\n\n  /* \u2014\u2014 light \u76AE\u80A4\uFF08Apifox \u9AD8\u9891\u8272\uFF09\u2014\u2014 */\n  --bg-app: #f9fafb;\n  --bg-surface: #ffffff;\n  --bg-subtle: #f2f4f7;\n  --bg-hover: #f2f4f7;\n  --bg-selected: #f4f1fe;\n  --bg-stripe: #f5f5f5;\n  --fg: #344054;\n  --fg-strong: #101828;\n  --fg-secondary: #667085;\n  --fg-tertiary: #98a2b3;\n  --fg-on-accent: #ffffff;\n  --border: #eaecf0;\n  --border-strong: #d0d5dd;\n  --accent: #9373ee;\n  --accent-hover: #8276c9;\n  --accent-tint: rgba(147, 115, 238, 0.10);\n  --link: #6172f3;\n  --info: #2e90fa;\n  --success: #17b26a;\n  --warning: #f79009;\n  --error: #f04438;\n  --shadow-popover: 0 4px 16px rgba(16, 24, 40, 0.08);\n\n  /* \u2014\u2014 \u65B9\u6CD5\u5FBD\u6807\uFF08\u767D\u5B57\u5F69\u5E95\uFF0Cmono 12px \u7C97\u4F53\uFF09\u2014\u2014 */\n  --method-fs: 12px;\n  --method-get: #17b26a;\n  --method-post: #2e90fa;\n  --method-put: #f79009;\n  --method-delete: #f04438;\n  --method-patch: #ee46bc;\n  --method-other: #06aed4;\n}\n\n.pp-scope[data-theme="dark"] {\n  --bg-app: #101828;\n  --bg-surface: #1d2939;\n  --bg-subtle: #1d2939;\n  --bg-hover: #26334a;\n  --bg-selected: #2b2647;\n  --bg-stripe: #232f42;\n  --fg: #f9fafb;\n  --fg-strong: #ffffff;\n  --fg-secondary: #98a2b3;\n  --fg-tertiary: #667085;\n  --border: #344054;\n  --border-strong: #475467;\n  --accent-tint: rgba(147, 115, 238, 0.18);\n  --shadow-popover: 0 4px 16px rgba(0, 0, 0, 0.4);\n}\n\n/* \u2014\u2014 \u57FA\u7840 \u2014\u2014 */\n.pp-scope,\n.pp-scope * {\n  box-sizing: border-box;\n}\n.pp-scope {\n  font-family: var(--font-sans);\n  font-size: var(--fs-14);\n  line-height: var(--lh-22);\n  color: var(--fg);\n  background: var(--bg-app);\n}\n.pp-scope ::-webkit-scrollbar {\n  width: var(--scrollbar);\n  /* \u6EDA\u52A8\u6761\u9AD8\u5EA6\u4E0E\u5BBD\u5EA6\u540C\u6E90\uFF1A\u7528 calc \u5305\u4E00\u5C42\uFF0C\u9AD8\u5EA6\u7EAA\u5F8B\u68C0\u67E5\u53EA\u63A5\u53D7 token \u8868\u8FBE\u5F0F */\n  height: calc(var(--scrollbar) * 1);\n}\n.pp-scope ::-webkit-scrollbar-thumb {\n  background: var(--border-strong);\n  border-radius: var(--radius-pill);\n}\n\n/* \u2014\u2014 \u5DE5\u4F5C\u53F0\u9AA8\u67B6\uFF1A\u9876\u680F + \u4E09\u6BB5\u5F0F \u2014\u2014 */\n.pp-workbench {\n  display: grid;\n  grid-template-rows: var(--topbar-h) minmax(0, 1fr);\n  height: 100%;\n  min-height: 0;\n}\n/* \u9876\u680F\uFF1AApifox --ui-layout-header-height: 48px / --ui-layout-header-padding: 0 50px\u3002\n   50px \u5DE6\u53F3\u5185\u8FB9\u8DDD\u5728\u7A84\u5BB9\u5668\u91CC\u4F1A\u628A\u4E2D\u95F4\u641C\u7D22\u6846\u538B\u6CA1\uFF0C\u6545\u7528\u5BB9\u5668\u67E5\u8BE2\u964D\u5230 0 20px\u3002 */\n.pp-topbar {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  height: var(--topbar-h);\n  padding: 0 50px;\n  background: var(--bg-surface);\n  border-bottom: 1px solid var(--border);\n}\n@container ppmain (max-width: 900px) {\n  .pp-topbar { padding: 0 var(--sp-5); }\n}\n/* \u9876\u680F\u4EA7\u54C1\u6807\u8BC6\uFF1A\u56FE\u6807 + \u540D\u79F0\uFF08Apifox \u5DE6\u4E0A\u89D2\u662F\u4EA7\u54C1\u540D\uFF0C\u4E0D\u662F\u5F53\u524D\u9875\u540D\uFF09 */\n.pp-topbar-brand {\n  display: inline-flex;\n  align-items: center;\n  gap: var(--sp-2);\n  font-size: var(--fs-14);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-strong);\n  white-space: nowrap;\n  flex: none;\n}\n.pp-topbar-title {\n  font-size: var(--fs-14);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-strong);\n  white-space: nowrap;\n}\n.pp-topbar-spacer {\n  flex: 1;\n}\n.pp-topbar-search {\n  width: var(--nav-w);\n  flex: none;\n}\n.pp-body-3col {\n  display: grid;\n  grid-template-columns: var(--nav-w) minmax(0, 1fr) var(--toc-w);\n  min-height: 0;\n}\n.pp-body-2col {\n  display: grid;\n  grid-template-columns: var(--nav-w) minmax(0, 1fr);\n  min-height: 0;\n}\n.pp-col {\n  min-width: 0;\n  min-height: 0;\n  overflow: auto;\n  background: var(--bg-surface);\n}\n.pp-col-left {\n  border-right: 1px solid var(--border);\n}\n.pp-col-right {\n  border-left: 1px solid var(--border);\n}\n.pp-main {\n  min-width: 0;\n  min-height: 0;\n  overflow: auto;\n  background: var(--bg-surface);\n}\n\n/* \u2014\u2014 \u9875\u9762\u9AA8\u67B6\uFF08\u5BF9\u9F50 Apifox .doc-container + .overview-container\uFF09\u2014\u2014\n   Apifox \u7684\u9875\u9762\u662F\u300C\u9875\u5934\u901A\u680F + \u5185\u5BB9\u533A\u5404\u81EA padding\u300D\u4E24\u6BB5\uFF0C\u4E0D\u662F\u6574\u9875\u7EDF\u4E00 padding\u3002\n   \u6574\u9875 padding \u4F1A\u8BA9\u9875\u5934\u7684\u4E0B\u8FB9\u6846\u7F29\u8FDB\u3001\u8FD8\u8981\u9760\u5185\u8054\u8D1F margin \u62B5\u6D88\uFF0C10 \u4E2A\u9875\u9762\u91CD\u590D 10 \u6B21\u3002\n   \u8FD9\u91CC\u6539\u6210\uFF1A.pp-page \u53EA\u8D1F\u8D23\u7EB5\u5411\u6392\u5E03\uFF0C\u5185\u8FB9\u8DDD\u4EA4\u7ED9 .pp-overview-head \u4E0E .pp-overview-content\u3002 */\n.pp-page {\n  display: flex;\n  flex-direction: column;\n  min-width: 0;\n  min-height: 100%;\n  padding: 0;\n}\n.pp-page-flush {\n  padding: 0;\n  height: 100%;\n  min-height: 0;\n}\n/* \u5185\u5BB9\u533A\uFF1A\u9875\u5934\u4E0B\u65B9\u7684\u6EDA\u52A8\u4E3B\u4F53\uFF0C\u5185\u8FB9\u8DDD 16px\uFF08Apifox .overview-content padding:16px\uFF09 */\n.pp-overview-content {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-4);\n  min-width: 0;\n  min-height: 0;\n  padding: var(--sp-4);\n}\n.pp-page-title {\n  font-size: var(--fs-20);\n  line-height: var(--lh-24);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-strong);\n  margin: 0 0 var(--sp-3) 0;\n}\n.pp-muted {\n  color: var(--fg-secondary);\n}\n.pp-faint {\n  color: var(--fg-tertiary);\n}\n\n/* \u2014\u2014 \u5361\u7247\uFF1A1px \u8FB9\u6846\u30018px \u5706\u89D2\u300116px \u5185\u8FB9\u8DDD\u3001\u65E0\u9634\u5F71 \u2014\u2014 */\n.pp-card {\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  padding: var(--card-pad);\n}\n.pp-card-title {\n  font-size: var(--fs-14);\n  line-height: var(--lh-22);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-strong);\n  margin: 0 0 var(--sp-2) 0;\n}\n.pp-card-hover:hover {\n  border-color: var(--accent);\n  box-shadow: var(--shadow-popover);\n}\n\n/* \u2014\u2014 \u63A7\u4EF6\uFF1A\u9AD8\u5EA6\u4E00\u5F8B var(--ctl-h) \u2014\u2014 */\n.pp-btn {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  gap: var(--sp-1);\n  height: var(--ctl-h);\n  padding: 0 var(--sp-4);\n  font-family: var(--font-sans);\n  font-size: var(--fs-14);\n  line-height: var(--lh-22);\n  color: var(--fg);\n  background: var(--bg-surface);\n  border: 1px solid var(--border-strong);\n  border-radius: var(--radius-ctl);\n  cursor: pointer;\n  white-space: nowrap;\n}\n.pp-btn:hover {\n  border-color: var(--accent);\n  color: var(--accent);\n}\n.pp-btn:disabled {\n  color: var(--fg-tertiary);\n  border-color: var(--border);\n  cursor: not-allowed;\n}\n.pp-btn-primary {\n  color: var(--fg-on-accent);\n  background: var(--accent);\n  border-color: var(--accent);\n}\n.pp-btn-primary:hover {\n  color: var(--fg-on-accent);\n  background: var(--accent-hover);\n  border-color: var(--accent-hover);\n}\n.pp-btn-primary:disabled {\n  color: var(--fg-on-accent);\n  background: var(--border-strong);\n  border-color: var(--border-strong);\n}\n.pp-btn-sm {\n  height: var(--ctl-h-sm);\n  padding: 0 var(--sp-2);\n  font-size: var(--fs-12);\n}\n.pp-btn-ghost {\n  border-color: transparent;\n  background: transparent;\n}\n.pp-btn-ghost:hover {\n  background: var(--bg-hover);\n  border-color: transparent;\n  color: var(--fg);\n}\n.pp-btn-danger:hover {\n  border-color: var(--error);\n  color: var(--error);\n}\n\n.pp-input,\n.pp-select {\n  height: var(--ctl-h);\n  padding: 0 var(--sp-3);\n  font-family: var(--font-sans);\n  font-size: var(--fs-14);\n  line-height: var(--lh-22);\n  color: var(--fg);\n  background: var(--bg-surface);\n  border: 1px solid var(--border-strong);\n  border-radius: var(--radius-ctl);\n  min-width: 0;\n}\n.pp-input::placeholder {\n  color: var(--fg-tertiary);\n}\n.pp-input:focus,\n.pp-select:focus,\n.pp-btn:focus-visible {\n  outline: none;\n  border-color: var(--accent);\n  box-shadow: 0 0 0 2px var(--accent-tint);\n}\n.pp-input-mono {\n  font-family: var(--font-mono);\n  font-size: var(--fs-13);\n}\n.pp-input-sm {\n  height: var(--ctl-h-sm);\n  font-size: var(--fs-12);\n  padding: 0 var(--sp-2);\n}\n\n/* \u2014\u2014 \u8868\u683C\uFF1A\u884C\u9AD8\u4E00\u5F8B var(--row-h) \u2014\u2014 */\n.pp-table {\n  width: 100%;\n  border-collapse: collapse;\n  font-size: var(--fs-14);\n}\n/* \u53C2\u6570\u8868\uFF08ParamTable\uFF09\u4E13\u5C5E\uFF1A\u5217\u5BBD\u5199\u6B7B\u5728 COLUMN_META\uFF0Cfixed \u5E03\u5C40\u4E0B\u7A84\u5BB9\u5668\u7531 .pp-table-wrap\n   \u6574\u4F53\u6A2A\u5411\u6EDA\u52A8\uFF0C\u800C\u4E0D\u662F\u5404\u5217\u6309\u5185\u5BB9\u4E92\u76F8\u6324\u538B\u584C\u9677\u6210 num\u2026/P\u2026\u3002\n   \u7528\u5C5E\u6027\u9009\u62E9\u5668\u800C\u4E0D\u662F\u65B0\u7C7B\u540D\uFF1A.pp-table \u662F\u5176\u5B83 9 \u4E2A\u9875\u9762\u7684\u5171\u7528\u7C7B\uFF0C\u4E0D\u80FD\u5728\u6B64\u6539\u5168\u5C40\u5E03\u5C40\u3002\n   \u6700\u5C0F\u5BBD\u5EA6\u7531\u7EC4\u4EF6\u6309\u5217\u5BBD\u5408\u8BA1\u5185\u8054\u7ED9\u51FA\uFF08\u9ED8\u8BA4\u516D\u5217 + \u64CD\u4F5C\u5217 = 806px\uFF09\uFF0C\u6B64\u5904\u4E0D\u91CD\u590D\u58F0\u660E\u3002 */\n/* \u7C7B\u540D\u522B\u540D\uFF1AParamTable \u540C\u65F6\u6302 .pp-table-params\uFF0C\u4FBF\u4E8E\u6309\u7C7B\u5B9A\u4F4D\uFF08\u5C5E\u6027\u9009\u62E9\u5668\u4FDD\u7559\u517C\u5BB9\uFF09 */\n.pp-table.pp-table-params,\n.pp-table[data-param-table] {\n  table-layout: fixed;\n}\n/* fixed \u5E03\u5C40\u4E0B\u5217\u5BBD\u5DF2\u5B9A\uFF0C\u957F\u6587\u672C\u5FC5\u987B\u88C1\u5728\u81EA\u5DF1\u7684\u683C\u5B50\u91CC\uFF08\u4E0D\u80FD\u9760 max-width:0 \u90A3\u5957\uFF0C\n   \u5B83\u4F1A\u628A\u6574\u4E2A\u8868\u683C\u538B\u584C\uFF09\uFF1B\u88C1\u5207\u53EA\u4F5C\u7528\u4E8E\u53C2\u6570\u8868\uFF0C\u5176\u5B83 .pp-table \u4FDD\u6301\u539F\u884C\u4E3A\u3002 */\n.pp-table[data-param-table] td {\n  overflow: hidden;\n}\n.pp-table th {\n  height: var(--row-h);\n  padding: 0 var(--sp-2);\n  text-align: left;\n  font-weight: var(--fw-medium);\n  font-size: var(--fs-13);\n  color: var(--fg-secondary);\n  background: var(--bg-subtle);\n  border-bottom: 1px solid var(--border);\n  white-space: nowrap;\n}\n.pp-table td {\n  height: var(--row-h);\n  padding: 0 var(--sp-2);\n  border-bottom: 1px solid var(--border);\n  /* Apifox \u8868\u683C\u4E0D\u6298\u884C\uFF1A\u7A84\u5BB9\u5668\u91CC\u9760 .pp-table-wrap \u6A2A\u5411\u6EDA\u52A8\uFF0C\u4E2D\u6587\u9010\u5B57\u65AD\u884C\u4F1A\u628A\u300C\u67E5\u8BE2\u300D\u7AD6\u6392\u3002\n     \u6B64\u5904\u4E0D\u5F97\u518D\u5199 max-width:0 + ellipsis\u2014\u2014\u90A3\u7EC4\u662F\u7A84\u5BB9\u5668\u5217\u584C\u9677\u7684\u5143\u51F6\u3002 */\n  white-space: nowrap;\n}\n/* \u73AF\u5883\u9875\u53D8\u91CF\u8868\uFF08env.jsx varTable\uFF09\uFF1A\u4E94\u5217\u56FA\u5B9A\u5BBD\u5EA6\uFF0C\u503C\u5217\u5403\u5269\u4F59\u5BBD\u5EA6\u3002\n   \u4E0D\u52A0 fixed \u65F6\u4E94\u5217\u6309\u5185\u5BB9\u6491\u5F00\uFF0C\u7A84\u5BB9\u5668\u91CC\u6574\u8868 603px \u9876\u7834 438px \u7684\u5BB9\u5668\u3002 */\n/* \u591A\u5217\u7F16\u8F91\u8868\uFF08flow \u6B65\u9AA4\u7F16\u6392 / test \u65AD\u8A00\u4E0E\u6B65\u9AA4\uFF09\uFF1A\u5217\u5BBD\u5408\u8BA1 510~640px\uFF0C\n   \u7A84\u5BB9\u5668\u91CC\u65E0\u5BBD\u5EA6\u5217\uFF08\u6D88\u606F / \u8DEF\u5F84\uFF09\u4F1A\u88AB\u538B\u5230\u51E0\u50CF\u7D20\uFF0C\u8868\u683C\u6574\u4F53\u4EA4\u7ED9 .pp-table-wrap \u6A2A\u5411\u6EDA\u52A8\u3002 */\n.pp-table.pp-table-wide {\n  min-width: 640px;\n}\n.pp-table.pp-table-vars {\n  table-layout: fixed;\n  /* \u56FA\u5B9A\u5217 52+52+64=168px\uFF0C\u53D8\u91CF\u540D\u5217 30%\u3001\u503C\u5217\u5403\u5269\u4F59\uFF1A360px \u5BB9\u5668\u4E0B\u503C\u5217\u4ECD\u6709 110px\uFF0C\n     \u518D\u7A84\u5C31\u6A2A\u5411\u6EDA\u52A8\u3002\u4E0D\u8BBE 480\u2014\u2014510px \u4E3B\u533A\u91CC\u4F1A\u88AB\u5207\u6389\u300C\u64CD\u4F5C\u300D\u5217\u3002 */\n  min-width: 360px;\n}\n.pp-table.pp-table-vars th:nth-child(1) { width: 30%; }\n.pp-table.pp-table-vars th:nth-child(2) { width: auto; }\n.pp-table.pp-table-vars th:nth-child(3),\n.pp-table.pp-table-vars th:nth-child(4) { width: 52px; }\n.pp-table.pp-table-vars th:nth-child(5) { width: 64px; }\n.pp-table.pp-table-vars td { overflow: hidden; }\n/* \u53F3\u7F16\u8F91\u533A\u53D8\u91CF\u8868\uFF1A\u4E94\u5217\u5728 480px \u4EE5\u4E0A\u90FD\u80FD\u5168\u663E\u793A\uFF0C\u4E0D\u9700\u8981\u6A2A\u5411\u6EDA\u52A8\u3002\n   \u53D8\u91CF\u540D 32% / \u503C\u5217\u5403\u5269\u4F59 / \u542F\u7528\xB7\u5BC6\u94A5\u5404 44px\uFF08\u53EA\u653E\u590D\u9009\u6846\uFF09/ \u64CD\u4F5C 48px\uFF08\u53EA\u653E\u56FE\u6807\u6309\u94AE\uFF09\u3002 */\n.pp-env-main .pp-table.pp-table-vars {\n  min-width: 0;\n  width: 100%;\n}\n.pp-env-main .pp-table.pp-table-vars th:nth-child(1) { width: 32%; }\n.pp-env-main .pp-table.pp-table-vars th:nth-child(3),\n.pp-env-main .pp-table.pp-table-vars th:nth-child(4) { width: 44px; }\n.pp-env-main .pp-table.pp-table-vars th:nth-child(5) { width: 48px; }\n.pp-env-main .pp-table.pp-table-vars td:nth-child(3),\n.pp-env-main .pp-table.pp-table-vars td:nth-child(4),\n.pp-env-main .pp-table.pp-table-vars td:nth-child(5) {\n  text-align: center;\n}\n.pp-env-main .pp-table.pp-table-vars input[type="checkbox"] {\n  margin: 0;\n}\n.pp-table tbody tr:hover {\n  background: var(--bg-hover);\n}\n.pp-table tbody tr[data-active="true"] {\n  background: var(--bg-selected);\n}\n.pp-table-mono {\n  font-family: var(--font-mono);\n  font-size: var(--fs-13);\n}\n/* \u5355\u5143\u683C\u5185\u7F16\u8F91\uFF1A\u65E0\u8FB9\u6846\u8F93\u5165\uFF0C\u805A\u7126\u624D\u663E\u8FB9\u6846\uFF08Apifox \u8868\u683C\u5185\u7F16\u8F91\u89C2\u611F\uFF09 */\n.pp-cell-input {\n  width: 100%;\n  min-width: 0;\n  color: var(--fg);\n  background: transparent;\n  border: 1px solid transparent;\n  border-radius: var(--radius-sm);\n}\n.pp-cell-input:hover {\n  border-color: var(--border);\n}\n.pp-cell-input:focus {\n  outline: none;\n  background: var(--bg-surface);\n  border-color: var(--accent);\n  box-shadow: 0 0 0 2px var(--accent-tint);\n}\n/* \u8868\u5C3E\u300C+ \u6DFB\u52A0\u53C2\u6570\u300D\uFF1A\u5360\u6EE1\u6574\u884C\uFF0C\u5DE6\u5BF9\u9F50 */\n.pp-table-add {\n  width: 100%;\n  justify-content: flex-start;\n  color: var(--accent);\n}\n\n/* \u2014\u2014 \u80F6\u56CA / \u65B9\u6CD5\u5FBD\u6807\uFF1A\u9AD8\u5EA6\u4E00\u5F8B var(--pill-h) \u2014\u2014 */\n.pp-pill {\n  display: inline-flex;\n  align-items: center;\n  height: var(--pill-h);\n  padding: 0 var(--sp-2);\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-secondary);\n  border: 1px solid var(--border-strong);\n  border-radius: var(--radius-pill);\n  white-space: nowrap;\n}\n.pp-pill-ok {\n  color: var(--success);\n  border-color: var(--success);\n}\n.pp-pill-warn {\n  color: var(--warning);\n  border-color: var(--warning);\n}\n.pp-pill-bad {\n  color: var(--error);\n  border-color: var(--error);\n}\n.pp-pill-accent {\n  color: var(--accent);\n  border-color: var(--accent);\n}\n.pp-method {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  height: var(--pill-h);\n  min-width: 44px;\n  padding: 0 var(--sp-2);\n  font-family: var(--font-mono);\n  font-size: var(--method-fs);\n  font-weight: var(--fw-semibold);\n  line-height: var(--lh-18);\n  letter-spacing: 0.02em;\n  text-transform: uppercase;\n  color: var(--fg-on-accent);\n  background: var(--fg-tertiary);\n  border: none;\n  border-radius: var(--radius-sm);\n}\n.pp-method[data-method="GET"] { background: var(--method-get); }\n.pp-method[data-method="POST"] { background: var(--method-post); }\n.pp-method[data-method="PUT"] { background: var(--method-put); }\n.pp-method[data-method="DELETE"] { background: var(--method-delete); }\n.pp-method[data-method="PATCH"] { background: var(--method-patch); }\n.pp-method[data-method="HEAD"],\n.pp-method[data-method="OPTIONS"],\n.pp-method[data-method="TRACE"] { background: var(--method-other); }\n\n/* \u2014\u2014 \u9875\u7B7E\u6761 + \u9875\u7B7E \u2014\u2014 */\n.pp-tabs {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-1);\n  /* \u7A84\u5BB9\u5668\u91CC\u9875\u7B7E\uFF08\u5982 import \u7684\u300COpenAPI / Swagger\u300D\uFF09\u4E00\u884C\u653E\u4E0D\u4E0B\uFF1A\n     \u5141\u8BB8\u6362\u884C\u5E76\u628A\u9AD8\u5EA6\u4EA4\u7ED9\u5185\u5BB9\uFF0C\u5426\u5219\u6807\u7B7E\u6587\u5B57\u4F1A\u88AB\u538B\u6210\u4E24\u884C\u3001\u9875\u7B7E\u6761\u9876\u7834\u5361\u7247\u3002 */\n  flex-wrap: wrap;\n  min-height: var(--ctl-h-lg);\n  padding: 0 var(--sp-3);\n  background: var(--bg-surface);\n  border-bottom: 1px solid var(--border);\n}\n.pp-tab {\n  display: inline-flex;\n  align-items: center;\n  height: var(--ctl-h);\n  padding: 0 var(--sp-3);\n  /* \u9875\u7B7E\u6587\u5B57\u4E0D\u6298\u884C\uFF1A\u6298\u884C\u4F1A\u628A\u300C\u67E5\u8BE2\u300D\u7AD6\u6392\u6210\u4E24\u884C */\n  white-space: nowrap;\n  font-family: var(--font-sans);\n  font-size: var(--fs-14);\n  color: var(--fg-secondary);\n  background: transparent;\n  border: none;\n  border-bottom: 2px solid transparent;\n  cursor: pointer;\n}\n.pp-tab:hover {\n  color: var(--fg);\n}\n.pp-tab[data-active="true"] {\n  color: var(--accent);\n  font-weight: var(--fw-medium);\n  border-bottom-color: var(--accent);\n}\n\n/* \u2014\u2014 \u5206\u6BB5\u63A7\u4EF6 \u2014\u2014 */\n.pp-seg {\n  display: inline-flex;\n  border: 1px solid var(--border-strong);\n  border-radius: var(--radius-ctl);\n  overflow: hidden;\n}\n.pp-seg > button {\n  height: var(--ctl-h-sm);\n  padding: 0 var(--sp-3);\n  font-family: var(--font-sans);\n  font-size: var(--fs-13);\n  color: var(--fg-secondary);\n  background: var(--bg-surface);\n  border: none;\n  border-right: 1px solid var(--border);\n  cursor: pointer;\n}\n.pp-seg > button:last-child {\n  border-right: none;\n}\n.pp-seg > button[data-active="true"] {\n  color: var(--accent);\n  background: var(--accent-tint);\n  font-weight: var(--fw-medium);\n}\n\n/* \u2014\u2014 \u5DE6\u6811\uFF08\u5BF9\u9F50 Apifox .tree-bK2pJT / .treeList-ISn2t4 \u5B9E\u6D4B\uFF09\u2014\u2014\n   \u884C\u9AD8 22px\u3001\u5B57\u53F7 12px\u3001\u6587\u5B57\u8272\u53D6 --fg-secondary\u3001\u5DE6\u53F3\u5916\u8FB9\u8DDD 16px\uFF1B\n   hover \u53EA\u628A\u6587\u5B57\u8272\u63D0\u5230 --fg\uFF0C\u4E0D\u6362\u5E95\u2014\u2014\u8FD9\u662F Apifox \u6811\u6700\u5BB9\u6613\u88AB\u8BA4\u9519\u7684\u7279\u5F81\u3002 */\n.pp-tree {\n  padding: var(--sp-1) 0;\n}\n.pp-tree-row {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-1);\n  height: var(--tree-row-h);\n  margin: 0 var(--sp-4);\n  padding: 0 var(--sp-1);\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-secondary);\n  /* \u5DE6\u6811\u6761\u76EE\u5728\u9AA8\u67B6\u91CC\u662F <a>\uFF1A\u5FC5\u987B\u663E\u5F0F\u53BB\u6389\u94FE\u63A5\u4E0B\u5212\u7EBF\u4E0E\u7EE7\u627F\u8272\uFF0C\u5426\u5219\u6574\u5217\u90FD\u662F\u5E26\u4E0B\u5212\u7EBF\u7684\u94FE\u63A5 */\n  text-decoration: none;\n  border-radius: var(--radius-ctl);\n  cursor: pointer;\n  white-space: nowrap;\n  overflow: hidden;\n}\n.pp-tree-row:hover {\n  color: var(--fg);\n}\n.pp-tree-row[data-active="true"] {\n  color: var(--fg);\n  background: var(--bg-hover);\n  font-weight: var(--fw-medium);\n}\n/* \u5C55\u5F00\u7BAD\u5934\uFF1A\u5BBD 12px\uFF0C\u5DE6 12px \u53F3 4px\uFF08Apifox .tree-bK2pJT .ui-tree-switcher \u539F\u6587\uFF1A\n   width:12px; margin-left:12px; margin-right:4px\uFF09 */\n.pp-tree-switcher {\n  flex: none;\n  width: var(--sp-3);\n  margin-left: var(--sp-3);\n  margin-right: var(--sp-1);\n  text-align: center;\n  color: var(--fg-tertiary);\n}\n.pp-tree-icon {\n  flex: none;\n  width: var(--icon);\n  height: var(--icon);\n  color: var(--fg-tertiary);\n}\n.pp-tree-row-count {\n  margin-left: auto;\n  font-size: var(--fs-12);\n  color: var(--fg-tertiary);\n}\n.pp-tree-group {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-1);\n  height: var(--tree-row-h);\n  margin: 0 var(--sp-4);\n  padding: 0 var(--sp-1);\n  font-size: var(--fs-12);\n  font-weight: var(--fw-medium);\n  color: var(--fg-tertiary);\n  text-transform: none;\n}\n\n/* \u2014\u2014 \u53F3 TOC \u2014\u2014 */\n.pp-toc {\n  padding: var(--sp-3);\n}\n.pp-toc-item {\n  display: block;\n  height: var(--ctl-h-sm);\n  line-height: var(--ctl-h-sm);\n  padding: 0 var(--sp-2);\n  font-size: var(--fs-13);\n  color: var(--fg-secondary);\n  text-decoration: none;\n  border-left: 2px solid transparent;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.pp-toc-item:hover {\n  color: var(--fg);\n}\n.pp-toc-item[data-active="true"] {\n  color: var(--accent);\n  border-left-color: var(--accent);\n}\n\n/* \u2014\u2014 \u6587\u6863\u6B63\u6587\u5206\u533A \u2014\u2014 */\n.pp-doc-section {\n  padding-top: var(--sp-4);\n  margin-top: var(--sp-4);\n  border-top: 1px solid var(--border);\n}\n.pp-doc-section:first-child {\n  padding-top: 0;\n  margin-top: 0;\n  border-top: none;\n}\n.pp-doc-h1 {\n  font-size: var(--fs-20);\n  line-height: var(--lh-24);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-strong);\n  margin: 0 0 var(--sp-2) 0;\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n}\n.pp-doc-h2 {\n  font-size: var(--fs-16);\n  line-height: var(--lh-24);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-strong);\n  margin: 0 0 var(--sp-2) 0;\n}\n.pp-doc-h3 {\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-secondary);\n  margin: 0 0 var(--sp-1) 0;\n}\n\n/* \u2014\u2014 \u5DE5\u5177\u6761 \u2014\u2014 */\n.pp-toolbar {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  flex-wrap: wrap;\n  margin-bottom: var(--sp-3);\n}\n.pp-toolbar-inline {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  flex-wrap: wrap;\n}\n.pp-toolbar-spacer {\n  flex: 1;\n}\n\n/* \u2014\u2014 \u53CC\u680F / \u5B57\u6BB5\u884C \u2014\u2014 */\n.pp-cols-2 {\n  display: grid;\n  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);\n  gap: var(--sp-4);\n  align-items: start;\n}\n/* \u7A84\u5BB9\u5668\uFF1A\u4FA7\u8FB9\u680F\u4E3B\u533A\u5B9E\u6D4B 455~840px\uFF0C\u4E24\u5217\u5404\u53EA\u5269 230~420px\uFF0C\n   import \u7684 textarea \u4E0E settings \u7684\u4EE3\u7406\u8F93\u5165\u6846\u4F1A\u88AB\u622A\u65AD\u3002\n   900px = \u4E24\u5217\u5404 440px \u4EE5\u4E0A\u624D\u591F\u653E\u8FD9\u4E24\u7C7B\u63A7\u4EF6\uFF0C\u4F4E\u4E8E\u6B64\u6539\u4E0A\u4E0B\u5806\u53E0\u3002 */\n@container ppmain (max-width: 900px) {\n  .pp-cols-2 {\n    grid-template-columns: minmax(0, 1fr);\n  }\n}\n.pp-field {\n  display: grid;\n  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.6fr) auto auto;\n  gap: var(--sp-2);\n  align-items: center;\n  min-height: var(--ctl-h);\n}\n.pp-field-head {\n  font-size: var(--fs-12);\n  color: var(--fg-tertiary);\n  border-bottom: 1px solid var(--border);\n}\n.pp-form-row {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-3);\n  min-height: var(--ctl-h);\n  margin-bottom: var(--sp-3);\n}\n.pp-form-label {\n  width: 104px;\n  flex: none;\n  font-size: var(--fs-14);\n  color: var(--fg-secondary);\n}\n\n/* \u2014\u2014 \u4EE3\u7801 / \u9884\u89C8\u5757 \u2014\u2014 */\n.pp-pre {\n  margin: 0;\n  padding: var(--sp-3);\n  font-family: var(--font-mono);\n  font-size: var(--fs-13);\n  line-height: var(--lh-20);\n  color: var(--fg);\n  background: var(--bg-subtle);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-ctl);\n  overflow: auto;\n}\n.pp-pre-scroll {\n  max-height: calc(var(--row-h) * 12);\n}\n.pp-json-editor {\n  width: 100%;\n  min-height: calc(var(--row-h) * 6);\n  padding: var(--sp-3);\n  font-family: var(--font-mono);\n  font-size: var(--fs-13);\n  line-height: var(--lh-20);\n  color: var(--fg);\n  background: var(--bg-surface);\n  border: 1px solid var(--border-strong);\n  border-radius: var(--radius-ctl);\n  resize: vertical;\n}\n.pp-json-editor:focus {\n  outline: none;\n  border-color: var(--accent);\n  box-shadow: 0 0 0 2px var(--accent-tint);\n}\n.pp-textarea {\n  width: 100%;\n  min-height: calc(var(--row-h) * 6);\n  padding: var(--sp-3);\n  font-family: var(--font-mono);\n  font-size: var(--fs-13);\n  line-height: var(--lh-20);\n  color: var(--fg);\n  background: var(--bg-surface);\n  border: 1px solid var(--border-strong);\n  border-radius: var(--radius-ctl);\n  resize: vertical;\n}\n.pp-textarea:focus {\n  outline: none;\n  border-color: var(--accent);\n  box-shadow: 0 0 0 2px var(--accent-tint);\n}\n\n/* \u2014\u2014 \u63D0\u793A\u6761 \u2014\u2014 */\n.pp-note {\n  display: flex;\n  align-items: flex-start;\n  gap: var(--sp-2);\n  padding: var(--sp-2) var(--sp-3);\n  font-size: var(--fs-13);\n  line-height: var(--lh-20);\n  color: var(--fg);\n  background: var(--bg-subtle);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-ctl);\n}\n.pp-note-bad {\n  color: var(--error);\n  border-color: var(--error);\n  background: var(--bg-surface);\n}\n.pp-note-warn {\n  color: var(--warning);\n  border-color: var(--warning);\n  background: var(--bg-surface);\n}\n.pp-note-ok {\n  color: var(--success);\n  border-color: var(--success);\n  background: var(--bg-surface);\n}\n.pp-error-text {\n  color: var(--error);\n  font-size: var(--fs-13);\n  line-height: var(--lh-20);\n  margin: var(--sp-1) 0;\n}\n\n/* \u2014\u2014 \u5217\u8868 / \u7ED3\u679C\u884C \u2014\u2014 */\n.pp-list {\n  display: flex;\n  flex-direction: column;\n  gap: 1px;\n}\n.pp-list-row {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  min-height: var(--row-h);\n  padding: 0 var(--sp-2);\n  font-size: var(--fs-14);\n  color: var(--fg);\n  text-decoration: none;\n  border-radius: var(--radius-ctl);\n  cursor: pointer;\n}\n.pp-list-row:hover {\n  background: var(--bg-hover);\n}\n.pp-list-row[data-active="true"] {\n  background: var(--bg-selected);\n  color: var(--accent);\n}\n.pp-result-row {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  min-height: var(--ctl-h);\n  padding: 0 var(--sp-2);\n  font-size: var(--fs-13);\n  border-bottom: 1px solid var(--border);\n}\n\n/* \u2014\u2014 \u72B6\u6001\u8272\u6587\u672C \u2014\u2014 */\n.pp-ok { color: var(--success); }\n.pp-warn { color: var(--warning); }\n.pp-bad { color: var(--error); }\n.pp-accent { color: var(--accent); }\n\n/* \u2014\u2014 \u5143\u4FE1\u606F / \u7701\u7565 \u2014\u2014 */\n.pp-meta {\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-tertiary);\n}\n.pp-mono {\n  font-family: var(--font-mono);\n  font-size: var(--fs-13);\n}\n.pp-ellipsis {\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  min-width: 0;\n}\n.pp-scroll {\n  overflow: auto;\n  min-height: calc(var(--row-h) * 0);\n}\n/* \u8868\u683C\u5BB9\u5668\uFF1A\u7A84\u680F\u91CC\u6A2A\u5411\u6EDA\u52A8\uFF0C\u4FDD\u6301\u5217\u5BBD\u53EF\u8BFB\u3002\n   \u4E0D\u8981\u518D\u5199 .pp-table-wrap .pp-table{min-width:100%}\uFF1A\u8868\u683C\u6700\u5C0F\u5BBD\u5EA6\u7531 ParamTable\n   \u6309\u5217\u5BBD\u5408\u8BA1\u5185\u8054\u7ED9\u51FA\uFF0C\u8FD9\u6761\u9009\u62E9\u5668\u4F1A\u628A\u5B83\u8986\u76D6\u6210 100%\uFF0C\u5217\u5C31\u53C8\u80FD\u88AB\u538B\u584C\u3002 */\n.pp-table-wrap {\n  overflow-x: auto;\n  overflow-y: hidden;\n  /* flex/grid \u5B50\u9879\u9ED8\u8BA4 min-width:auto\uFF0C\u4F1A\u88AB\u8868\u683C\u5185\u8054 min-width \u9876\u5F00\u5BB9\u5668\uFF0C\n     \u5728 .pp-pane / .pp-debug-tabbody \u91CC\u8868\u73B0\u4E3A\u6574\u9875\u6A2A\u5411\u6EA2\u51FA\u3002\u8FD9\u91CC\u663E\u5F0F\u538B\u5230 0\u3002 */\n  min-width: 0;\n  max-width: 100%;\n}\n.pp-aside-sticky {\n  position: sticky;\n  top: var(--sp-4);\n}\n.pp-md-list {\n  margin: 0 0 var(--sp-2) 0;\n  padding-left: var(--sp-5);\n}\n\n/* \u2014\u2014 \u7EDF\u8BA1\u5757 \u2014\u2014 */\n.pp-stats {\n  display: grid;\n  /* \u4FA7\u8FB9\u680F\u53EF\u7528\u5BBD\u7EA6 500px\uFF1A96px \u8D77\u8DF3\u53EF\u7A33\u5B9A\u6392 4 \u5217\uFF08Apifox \u7EDF\u8BA1\u6761\u662F\u4E00\u884C\u56DB\u5757\uFF09 */\n  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));\n  gap: var(--sp-2);\n}\n/* \u7A84\u5BB9\u5668\uFF1A4 \u5757\u5404\u53EA\u5269 ~110px\uFF0C\u300C2026-11-19 09:41\u300D\u88AB\u622A\u6210\u300C2026-11-1\u2026\u300D\u3002\n   \u4E24\u5217\u8BA9\u6BCF\u5757 240px\uFF0C\u65F6\u95F4\u4E0E\u6570\u5B57\u90FD\u5B8C\u6574\u3002 */\n@container ppmain (max-width: 640px) {\n  .pp-stats {\n    grid-template-columns: repeat(2, minmax(0, 1fr));\n  }\n}\n.pp-stat {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-1);\n  padding: var(--sp-2) var(--sp-3);\n  min-width: 0;\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n}\n.pp-stat-value {\n  /* \u7EDF\u8BA1\u6570\u5B57\u5728\u7A84\u680F\u91CC\u4E0D\u80FD\u7528 24px\uFF08\u4F1A\u6362\u884C\u628A\u56DB\u5757\u6491\u6210\u4E24\u884C\uFF09\uFF0C18px \u4E0E Apifox \u9762\u677F\u5185\u6570\u503C\u540C\u6863 */\n  font-size: var(--fs-16);\n  line-height: var(--lh-24);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-strong);\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.pp-stat-label {\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-secondary);\n}\n\n/* \u2014\u2014 \u603B\u89C8\uFF1A\u9879\u76EE\u5361\u7247\u7F51\u683C \u2014\u2014 */\n.pp-overview-grid {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));\n  gap: var(--sp-4);\n}\n\n/* \u2014\u2014 \u8C03\u8BD5\uFF1A\u6574\u9875 padding 10px\uFF08Apifox .apiCase padding:10px\uFF09\u2014\u2014 */\n/* \u8C03\u8BD5\u9875\uFF1AApifox .apiCase \u539F\u6587\uFF08width/height 100%\u3001padding 10px\u3001overflow auto\uFF09\u3002\n   \u5355\u680F\u7ED3\u6784\u2014\u2014\u63A5\u53E3\u6811\u7531\u5DE6\u4FA7\u5168\u5C40\u5BFC\u822A\u627F\u62C5\uFF0C\u9875\u9762\u5185\u4E0D\u518D\u81EA\u5E26\u3002 */\n.pp-debug-page {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-3);\n  padding: var(--page-pad);\n  padding-right: calc(var(--page-pad) - var(--sp-1) + var(--layout-pad));\n  min-height: 0;\n}\n/* \u5143\u4FE1\u606F\u884C\uFF1A\u73AF\u5883\u9009\u62E9 + \u5B9E\u9645\u5730\u5740 + \u53D8\u91CF + \u5386\u53F2\u5165\u53E3\uFF0C\u538B\u6210\u4E00\u884C */\n/* \u901A\u7528\u4E24\u680F\uFF08\u5DE6\u5217\u8868 + \u53F3\u8BE6\u60C5\uFF09\uFF1Aenv / schema / test / mock \u56DB\u9875\u5171\u7528\u3002\n   debug \u9875\u4E0D\u7528\u5B83\u2014\u2014\u8C03\u8BD5\u53F0\u662F Apifox \u5355\u680F\u7ED3\u6784\u3002 */\n.pp-debug-layout {\n  display: grid;\n  grid-template-columns: clamp(var(--panel-w), 32%, var(--panel-w-max)) minmax(0, 1fr);\n  gap: var(--sp-3);\n  align-items: start;\n}\n@container ppmain (max-width: 980px) {\n  .pp-debug-layout {\n    grid-template-columns: minmax(0, 1fr);\n  }\n}\n/* \u5168\u5C40\u641C\u7D22\u9875\uFF1A\u4E00\u6761\u641C\u7D22\u6761 + \u5206\u7EC4\u7ED3\u679C\u3002\n   \u539F\u6765\u300C\u641C\u7D22\u300D\u6309\u94AE\u5728\u9875\u5934\u3001\u8F93\u5165\u6846\u5728\u4E0B\u65B9\u7684\u5361\u7247\u91CC\uFF0C\u4E00\u6B21\u641C\u7D22\u8981\u8DE8\u4E24\u4E2A\u533A\u57DF\uFF1B\n   \u4E09\u7EC4\u7ED3\u679C\u53C8\u90FD\u585E\u8FDB\u4E00\u5F20\u5361\u7247\uFF0C\u7A7A\u7EC4\u4E5F\u5360\u4F4D\uFF0CURL \u88AB margin-left:auto \u7529\u5230\u8FDC\u7AEF\u3002 */\n.pp-search-bar {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  flex-wrap: wrap;\n  padding: var(--sp-3);\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n}\n.pp-search-project {\n  flex: none;\n  width: 120px;\n}\n.pp-search-input {\n  flex: 1;\n  min-width: 160px;\n}\n.pp-search-btn {\n  flex: none;\n  min-width: 72px;\n}\n.pp-search-source {\n  margin: var(--sp-2) 0 var(--sp-3);\n}\n.pp-search-hint {\n  display: flex;\n  min-height: calc(var(--row-h) * 6);\n}\n.pp-search-results {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-3);\n}\n.pp-search-group {\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  overflow: hidden;\n}\n/* \u5206\u7EC4\u5934\uFF1A\u53EF\u6298\u53E0\uFF0C\u6574\u884C\u53EF\u70B9 */\n.pp-search-group-head {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  width: 100%;\n  height: var(--ctl-h);\n  padding: 0 var(--sp-3);\n  font-family: var(--font-sans);\n  font-size: var(--fs-13);\n  color: var(--fg-secondary);\n  text-align: left;\n  background: var(--bg-subtle);\n  border: none;\n  border-bottom: 1px solid var(--border);\n  cursor: pointer;\n}\n.pp-search-group-head:hover {\n  color: var(--fg);\n}\n.pp-search-caret {\n  flex: none;\n  width: 12px;\n  font-size: var(--fs-12);\n  color: var(--fg-tertiary);\n}\n.pp-search-group-label {\n  font-weight: var(--fw-medium);\n  color: var(--fg-strong);\n}\n.pp-search-count {\n  flex: none;\n  min-width: 18px;\n  padding: 0 var(--sp-1);\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-tertiary);\n  text-align: center;\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-pill);\n}\n.pp-search-list {\n  padding: var(--sp-1) var(--sp-2) var(--sp-2);\n}\n.pp-search-row {\n  gap: var(--sp-2);\n}\n/* \u975E\u63A5\u53E3\u6761\u76EE\uFF08\u6A21\u578B / \u76EE\u5F55\uFF09\u7528\u4E00\u4E2A\u5C0F\u5706\u70B9\u5360\u4F4D\uFF0C\u4FDD\u6301\u4E09\u884C\u7F29\u8FDB\u5BF9\u9F50 */\n/* \u975E\u63A5\u53E3\u6761\u76EE\uFF08\u6A21\u578B / \u76EE\u5F55\uFF09\uFF1A\u7528\u4E00\u4E2A\u4E0E method \u5FBD\u6807\u540C\u5BBD\u7684\u5C0F\u5706\u70B9\u5360\u4F4D\uFF0C\n   \u4FDD\u8BC1\u4E09\u7EC4\u7684\u540D\u79F0\u5217\u5DE6\u8FB9\u7F18\u5BF9\u9F50\u3002method \u5FBD\u6807 min-width 44px\u3002 */\n.pp-search-dot {\n  flex: none;\n  width: 6px;\n  height: 6px;\n  margin: 0 19px;\n  background: var(--fg-tertiary);\n  border-radius: var(--radius-pill);\n}\n.pp-search-name {\n  flex: 0 1 auto;\n  font-size: var(--fs-13);\n}\n.pp-search-sub {\n  /* \u9760\u53F3\u4F46\u4E0D\u5403\u6EE1\uFF1A\u540D\u79F0\u4E0E URL \u4E4B\u95F4\u7559 16px \u8D77\uFF0C\u957F\u540D\u79F0\u65F6 URL \u8BA9\u4F4D */\n  flex: 0 1 auto;\n  margin-left: var(--sp-4);\n  text-align: right;\n}\n/* \u9875\u5934\u7EDF\u8BA1\uFF1A\u4E0D\u53C2\u4E0E\u6536\u7F29\uFF0C\u7A84\u680F\u91CC\u4E5F\u5B8C\u6574\u663E\u793A */\n.pp-search-summary {\n  flex: none;\n  white-space: nowrap;\n}\n.pp-search-mark {\n  padding: 0 1px;\n  color: var(--fg-strong);\n  font-weight: var(--fw-semibold);\n  background: var(--accent-tint);\n  border-radius: 2px;\n}\n/* \u5BFC\u5165\u5BFC\u51FA\u9875\uFF08Apifox\u300C\u5BFC\u5165\u5BFC\u51FA\u6570\u636E\u300D\u540C\u6784\uFF09\uFF1A\u9875\u7B7E\u5206\u533A + \u5DE6\u683C\u5F0F\u5217\u8868 + \u53F3\u5185\u5BB9\u3002\n   \u539F\u6765\u300C\u5BFC\u5165 / \u5BFC\u51FA\u300D\u4E24\u5217\u5E76\u6392\uFF0C\u5404\u53EA\u5269 240px\uFF1Atextarea \u4E0E\u6309\u94AE\u7EC4\u90FD\u6362\u884C\uFF0C\n   \u4EE3\u7801\u751F\u6210\u518D\u5355\u72EC\u5360\u4E00\u6574\u5F20\u5361\uFF0C\u4E09\u5757\u9AD8\u5EA6\u53C2\u5DEE\u3002 */\n.pp-io-layout {\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  overflow: hidden;\n}\n.pp-io-layout > .pp-tabs {\n  border-bottom: 1px solid var(--border);\n}\n.pp-io-body {\n  display: grid;\n  grid-template-columns: 168px minmax(0, 1fr);\n  min-height: 0;\n}\n@container ppmain (max-width: 720px) {\n  .pp-io-body {\n    grid-template-columns: minmax(0, 1fr);\n  }\n  /* \u5806\u53E0\u540E\u683C\u5F0F\u5217\u8868\u6539\u6210\u6A2A\u5411\u53EF\u6EDA\u7684\u4E00\u884C */\n  .pp-io-layout .pp-io-side {\n    flex-direction: row;\n    flex-wrap: nowrap;\n    overflow-x: auto;\n    border-right: none;\n    border-bottom: 1px solid var(--border);\n    padding: var(--sp-2);\n  }\n  .pp-io-layout .pp-io-side-title {\n    display: none;\n  }\n  .pp-io-layout .pp-io-item {\n    flex: none;\n    white-space: nowrap;\n  }\n  /* \u5806\u53E0\u540E\u4E3B\u533A\u72EC\u5360\u6574\u5BBD\uFF0C\u4F46 grid \u5B50\u9879\u9ED8\u8BA4 min-width:auto \u4F1A\u88AB\u5185\u5BB9\u9876\u5F00\uFF0C\n     \u8868\u73B0\u4E3A\u300C\u6E05\u7A7A\u300D\u6309\u94AE\u88AB\u5207\u6389\u4E00\u534A\u3002\u8FD9\u91CC\u663E\u5F0F\u538B\u5230 0\u3002 */\n  .pp-io-layout .pp-io-main {\n    min-width: 0;\n    padding: var(--sp-3);\n    padding-right: calc(var(--sp-3) + var(--sp-1));\n  }\n}\n.pp-io-side {\n  display: flex;\n  flex-direction: column;\n  gap: 1px;\n  padding: var(--sp-2);\n  border-right: 1px solid var(--border);\n  background: var(--bg-app);\n}\n.pp-io-side-title {\n  padding: var(--sp-1) var(--sp-2) var(--sp-2);\n  font-size: var(--fs-12);\n  color: var(--fg-tertiary);\n}\n.pp-io-item {\n  display: flex;\n  align-items: center;\n  height: var(--ctl-h);\n  padding: 0 var(--sp-2);\n  font-family: var(--font-sans);\n  font-size: var(--fs-13);\n  color: var(--fg-secondary);\n  text-align: left;\n  background: transparent;\n  border: none;\n  border-radius: var(--radius-ctl);\n  cursor: pointer;\n}\n.pp-io-item:hover {\n  color: var(--fg);\n  background: var(--bg-hover);\n}\n.pp-io-item[data-active="true"] {\n  color: var(--accent);\n  background: var(--accent-tint);\n  font-weight: var(--fw-medium);\n}\n.pp-io-main {\n  min-width: 0;\n  /* \u53F3\u4FA7\u6BD4\u5DE6\u4FA7\u591A\u7559 4px\uFF1A\u5361\u7247\u53F3\u8FB9\u6846 + \u6EDA\u52A8\u6761\u5728\u7A84\u680F\u91CC\u4F1A\u8D34\u4F4F textarea/\u6309\u94AE */\n  padding: var(--sp-4) var(--sp-4) var(--sp-4) var(--sp-4);\n  padding-right: calc(var(--sp-4) + var(--sp-1));\n}\n.pp-io-head {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  flex-wrap: wrap;\n  margin-bottom: var(--sp-2);\n}\n.pp-io-title {\n  font-size: var(--fs-14);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-strong);\n}\n/* head \u662F flex + flex-wrap\uFF1A\u5B50\u9879\u9ED8\u8BA4\u53EF\u6536\u7F29\uFF0C\u7A84\u680F\u91CC\u300C\u6E05\u7A7A\u300D\u4F1A\u88AB\u538B\u5230 42px \u628A\u5B57\u88C1\u6389\u3002\n   \u6807\u9898\u5141\u8BB8\u7701\u7565\uFF0C\u6309\u94AE\u4E00\u5F8B\u4E0D\u6536\u7F29\u3002 */\n.pp-io-head > .pp-io-title {\n  min-width: 0;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.pp-io-head > .pp-btn {\n  flex: none;\n  /* \u4E24\u5B57\u6309\u94AE\uFF08\u6E05\u7A7A\uFF09\u5728 42px \u65F6\u8D34\u8FB9\uFF0C\u7ED9\u4E00\u70B9\u4F59\u91CF */\n  min-width: 56px;\n}\n.pp-io-head > .pp-btn:last-child {\n  margin-left: auto;\n}\n.pp-io-input {\n  margin-top: var(--sp-2);\n}\n.pp-io-stats {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  flex-wrap: wrap;\n  margin-top: var(--sp-2);\n}\n.pp-io-pre {\n  margin-top: var(--sp-3);\n}\n.pp-io-sample {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  margin-top: var(--sp-2);\n  min-width: 0;\n}\n/* \u73AF\u5883\u9875\uFF08Apifox\u300C\u73AF\u5883\u7BA1\u7406\u300D\u540C\u6784\uFF09\uFF1A\u5DE6\u73AF\u5883\u5217\u8868 + \u53F3\u7F16\u8F91\u533A\u3002\n   \u5DE6\u5217\u5BBD\u4E0E\u6587\u6863\u9875\u76EE\u5F55\u6811\u5171\u7528 --panel-w\uFF0C\u53F3\u533A\u9876\u4E0A\u662F\u9875\u7B7E\uFF08\u73AF\u5883\u53D8\u91CF / \u5168\u5C40\u53D8\u91CF / \u4F18\u5148\u7EA7\uFF09\u3002\n   \u539F\u6765\u7684\u4E00\u884C\u4E09\u5361\u5728 500px \u4E3B\u533A\u91CC\u6BCF\u5361\u53EA\u5269 250px\uFF0C\u53D8\u91CF\u8868\u8981\u6A2A\u5411\u6EDA\u52A8\u3001\n   \u4F18\u5148\u7EA7\u5361\u8BF4\u660E\u9010\u5B57\u6298\u884C\uFF0C\u64CD\u4F5C\u8DEF\u5F84\u4E5F\u4E0D\u5BF9\u2014\u2014\u5207\u6362\u73AF\u5883\u5728\u5DE6\u3001\u7F16\u8F91\u5728\u53F3\u624D\u5BF9\u5F97\u4E0A Apifox\u3002 */\n.pp-env-layout {\n  display: grid;\n  grid-template-columns: var(--panel-w) minmax(0, 1fr);\n  gap: var(--sp-4);\n  align-items: start;\n}\n@container ppmain (max-width: 820px) {\n  .pp-env-layout {\n    grid-template-columns: minmax(0, 1fr);\n    gap: var(--sp-3);\n  }\n  /* \u5806\u53E0\u540E\u5DE6\u5217\u8868\u72EC\u5360\u4E00\u884C\uFF1A\u73AF\u5883\u6761\u76EE\u6539\u6210\u6A2A\u5411\u53EF\u6EDA\u7684\u80F6\u56CA\uFF0C\u4E0D\u518D\u5360\u6389\u6574\u5C4F\u9AD8\u5EA6\u3002\n     .pp-panel \u81EA\u5E26 width:var(--panel-w) \u4E0E overflow:auto\uFF0C\u8FD9\u91CC\u5FC5\u987B\u4E00\u8D77\u8986\u76D6\uFF0C\n     \u5426\u5219\u5DE6\u5217\u4ECD\u662F 240px \u5B9A\u5BBD\u3001\u53F3\u4FA7\u7559\u4E00\u5927\u7247\u7A7A\u767D\u3002 */\n  .pp-env-layout .pp-env-side {\n    width: auto;\n    padding: 0;\n    overflow: visible;\n  }\n  .pp-env-layout .pp-env-tree,\n  .pp-env-layout .pp-tree {\n    display: flex;\n    flex-wrap: nowrap;\n    gap: var(--sp-2);\n    overflow-x: auto;\n    padding: var(--sp-1) var(--sp-3);\n  }\n  .pp-env-layout .pp-tree-row {\n    flex: none;\n    max-width: 200px;\n    margin: 0;\n    padding: 0 var(--sp-3);\n    height: var(--ctl-h);\n    border: 1px solid var(--border);\n    border-radius: var(--radius-pill);\n  }\n  .pp-env-layout .pp-tree-row[data-active="true"] {\n    border-color: var(--accent);\n  }\n}\n.pp-env-side {\n  display: flex;\n  flex-direction: column;\n  min-width: 0;\n  padding: var(--sp-2) 0;\n}\n.pp-env-side-head {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  padding: 0 var(--sp-4) var(--sp-2);\n  border-bottom: 1px solid var(--border);\n  margin-bottom: var(--sp-1);\n}\n.pp-env-side-head .pp-card-title {\n  margin: 0;\n  font-size: var(--fs-13);\n}\n.pp-env-side-head > .pp-btn:last-child {\n  margin-left: auto;\n}\n.pp-btn-accent {\n  color: var(--accent);\n}\n.pp-env-main {\n  min-width: 0;\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  overflow: hidden;\n}\n.pp-env-main > .pp-tabs {\n  border-bottom: 1px solid var(--border);\n}\n.pp-env-pane {\n  padding: var(--sp-4);\n}\n.pp-env-fields {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));\n  gap: var(--sp-3);\n  margin-bottom: var(--sp-4);\n}\n.pp-env-pane > .pp-card-title {\n  margin: 0 0 var(--sp-2) 0;\n}\n/* \u53D8\u91CF\u8868\u7A7A\u884C\uFF1A\u5DE6\u5BF9\u9F50\u4E00\u884C\u63D0\u793A\uFF0C\u4E0D\u8981\u5360\u6EE1\u884C\u9AD8\u7684\u5C45\u4E2D\u7559\u767D */\n.pp-env-vars-empty {\n  height: auto;\n  padding: var(--sp-2) var(--sp-1);\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-tertiary);\n  white-space: normal;\n}\n.pp-env-field {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-1);\n  margin-bottom: var(--sp-3);\n}\n.pp-env-field .pp-form-label {\n  width: auto;\n}\n.pp-env-field-row {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n}\n.pp-env-field-row .pp-input {\n  flex: 1;\n  min-width: 0;\n}\n.pp-env-check {\n  display: inline-flex;\n  align-items: center;\n  gap: var(--sp-1);\n  flex: none;\n  font-size: var(--fs-12);\n  color: var(--fg-secondary);\n  white-space: nowrap;\n}\n/* \u53D8\u91CF\u4F18\u5148\u7EA7\uFF1A\u7EB5\u5411\u56DB\u7EA7\uFF0C\u6BCF\u7EA7\u4E00\u884C\u300C\u5E8F\u53F7 + \u4F5C\u7528\u57DF\u300D\uFF0C\u8BF4\u660E\u7F29\u8FDB\u5728\u4E0B\u4E00\u884C\u3002\n   199px \u7684\u5361\u91CC\u300C1\uFF08\u6700\u9AD8\uFF09\u300D\u8FD9\u79CD\u957F\u5FBD\u6807\u4F1A\u628A\u4F5C\u7528\u57DF\u6324\u6210\u9010\u5B57\u6362\u884C\uFF0C\u6539\u6210\u5706\u5F62\u5E8F\u53F7\u3002 */\n.pp-priority-list {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-1);\n}\n.pp-priority-item {\n  display: grid;\n  grid-template-columns: 20px minmax(0, 1fr);\n  gap: var(--sp-2);\n  padding: var(--sp-2) 0;\n  border-bottom: 1px solid var(--border);\n}\n.pp-priority-item:last-child {\n  border-bottom: none;\n}\n.pp-priority-level {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  width: 20px;\n  height: 20px;\n  font-size: var(--fs-12);\n  line-height: 1;\n  font-weight: var(--fw-semibold);\n  color: var(--fg-secondary);\n  background: var(--bg-subtle);\n  border-radius: var(--radius-pill);\n}\n.pp-priority-item:first-child .pp-priority-level {\n  color: var(--fg-on-accent);\n  background: var(--accent);\n}\n.pp-priority-body {\n  display: flex;\n  flex-direction: column;\n  gap: 2px;\n  min-width: 0;\n}\n.pp-priority-scope {\n  font-size: var(--fs-13);\n  line-height: var(--lh-18);\n  font-weight: var(--fw-medium);\n  color: var(--fg-strong);\n}\n.pp-priority-note {\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-secondary);\n}\n/* Mock \u9875\uFF1A\u5DE6\u63A5\u53E3\u5217\u8868\uFF08240px\uFF0C\u4E0E\u6587\u6863\u9875\u76EE\u5F55\u6811\u540C\u5BBD\uFF09+ \u53F3\u914D\u7F6E\u7EB5\u5411\u4E24\u5361\u3002\n   \u4E4B\u524D\u662F\u4E24\u5217\u7F51\u683C\u585E\u4E09\u4E2A\u5B50\u9879\uFF0C\u7B2C\u4E09\u5757\u88AB\u6324\u5230\u7B2C\u4E8C\u884C\u5DE6\u4FA7\u3001\u4E0E\u53F3\u4FA7\u5F62\u6210\u9AD8\u5EA6\u5DEE\u3002 */\n.pp-mock-layout {\n  display: grid;\n  grid-template-columns: var(--panel-w) minmax(0, 1fr);\n  gap: var(--sp-4);\n  align-items: start;\n}\n.pp-mock-side {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-4);\n  min-width: 0;\n}\n@container ppmain (max-width: 900px) {\n  .pp-mock-layout {\n    grid-template-columns: minmax(0, 1fr);\n  }\n  .pp-mock-layout .pp-panel {\n    width: auto;\n    max-height: calc(var(--tree-row-h) * 10);\n  }\n}\n.pp-debug-meta {\n  display: flex;\n  align-items: center;\n  flex-wrap: wrap;\n  gap: var(--sp-2);\n  margin-top: var(--sp-2);\n  font-size: var(--fs-12);\n}\n.pp-debug-meta .pp-select {\n  flex: none;\n  width: auto;\n  min-width: 96px;\n}\n.pp-debug-meta .pp-mono {\n  flex: 1;\n  min-width: 0;\n}\n/* \u9875\u7B7E\u4F53\uFF1A\u4E0E\u9875\u7B7E\u6761\u4E4B\u95F4\u7559 8px\uFF0C\u5185\u5BB9\u533A\u81EA\u5DF1\u6EDA\u52A8 */\n.pp-debug-tabbody {\n  margin-top: var(--sp-2);\n  min-width: 0;\n}\n/* \u2014\u2014 \u8C03\u8BD5\uFF1A\u5BBD\u5BB9\u5668\u4E09\u680F / \u7A84\u5BB9\u5668\u5355\u5217 \u2014\u2014 */\n/* \u4E09\u680F\uFF08\u6811 / \u8BF7\u6C42\u7F16\u8F91 / \u54CD\u5E94\uFF09\u5728 400~700px \u7684\u4E3B\u533A\u91CC\u6BCF\u680F\u53EA\u5269 100 \u591A\u50CF\u7D20\uFF0C\n   \u53C2\u6570\u8868\u88AB\u6324\u6210\u4E00\u6761\uFF0C\u8FD9\u624D\u662F\u300C\u5E03\u5C40\u9519\u4E71\u300D\u7684\u6839\u56E0\u3002\u7A84\u5BB9\u5668\u4E0B\u6539\u4E3A\u5355\u5217\u7EB5\u5411\u5806\u53E0\u3002\n   \u9996\u5217\u4E0E\u6587\u6863\u9875\u5171\u7528 --panel-w\uFF0C\u4E24\u9875\u7684\u63A5\u53E3\u6811\u5BBD\u5EA6\u4FDD\u6301\u4E00\u81F4\u3002 */\n\n.pp-pane {\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  padding: var(--card-pad);\n  min-width: 0;\n}\n/* \u2014\u2014 \u8C03\u8BD5\u53F0 URL \u884C\uFF08\u5BF9\u9F50 Apifox .apiCase .main-input-bar\uFF09\u2014\u2014\n   \u6574\u884C\u9AD8 40px\uFF1Bmethod \u5DE6\u5185\u8FB9\u8DDD 12px \u53F3 8px\uFF1BbaseUrl / path \u662F\u4E24\u4E2A\u80F6\u56CA\n   \uFF08\u5706\u89D2 6px\u3001margin 5px\u3001\u5185\u8FB9\u8DDD 0 10px\u3001\u884C\u9AD8 28px\uFF09\uFF1B\u53D1\u9001\u6309\u94AE\u7EC4 \u4E3B + 25px \u4E0B\u62C9\u3002 */\n.pp-url-row {\n  display: flex;\n  align-items: center;\n  flex-wrap: wrap;\n  gap: var(--sp-2);\n  min-height: var(--ctl-h-lg);\n}\n.pp-url-row .pp-select {\n  width: 104px;\n  flex: none;\n  padding-left: var(--sp-3);\n}\n.pp-url-row .pp-input {\n  flex: 1;\n  height: var(--ctl-h-sm);\n}\n/* \u7A84\u5BB9\u5668\uFF1AURL \u884C\u6324\u5728\u4E00\u884C\u65F6\u8DEF\u5F84\u8F93\u5165\u6846\u53EA\u5269\u51E0\u5341\u50CF\u7D20\uFF08"\u672A\u914D\u7F6E baseUrl" \u80F6\u56CA\u672C\u8EAB\u5C31\u8981 90px\uFF09\u3002\n   \u8BA9\u8DEF\u5F84\u8F93\u5165\u6846\u72EC\u5360\u7B2C\u4E8C\u884C\uFF0C\u5BBD\u5EA6\u62C9\u6EE1\uFF0C\u53D1\u9001\u7EC4\u4ECD\u7559\u5728\u7B2C\u4E00\u884C\u672B\u5C3E\u3002 */\n@container ppmain (max-width: 640px) {\n  .pp-url-row .pp-input {\n    order: 9;\n    flex-basis: 100%;\n  }\n  .pp-url-row .pp-url-pill {\n    max-width: 32%;\n  }\n}\n.pp-url-method {\n  flex: none;\n  padding: 0 var(--sp-2) 0 var(--sp-3);\n  font-size: var(--fs-14);\n  font-weight: var(--fw-medium);\n  color: var(--fg-strong);\n  line-height: var(--ctl-h-lg);\n}\n/* baseUrl / path \u80F6\u56CA\uFF1AApifox \u628A\u4E24\u8005\u62C6\u6210\u72EC\u7ACB\u7684\u5706\u89D2\u5757\uFF0C\u89C6\u89C9\u4E0A\u533A\u5206\u300C\u73AF\u5883\u57DF\u300D\u4E0E\u300C\u8DEF\u5F84\u300D */\n.pp-url-pill {\n  display: inline-flex;\n  align-items: center;\n  flex: none;\n  max-width: 40%;\n  height: var(--ctl-h-sm);\n  margin: 0 var(--sp-1);\n  padding: 0 var(--sp-2);\n  font-family: var(--font-mono);\n  font-size: var(--fs-12);\n  line-height: var(--ctl-h-sm);\n  color: var(--fg-secondary);\n  background: var(--bg-subtle);\n  border-radius: var(--radius-ctl);\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.pp-url-pill-grow {\n  flex: 1;\n  max-width: none;\n}\n/* \u53D1\u9001\u6309\u94AE\u7EC4\uFF1A\u4E3B\u6309\u94AE\u5403\u6EE1\u5269\u4F59\u5BBD\u5EA6\uFF0C\u53F3\u7AEF 25px \u4E0B\u62C9\u7BAD\u5934\uFF08Apifox .send-btn .ui-btn-group\uFF09 */\n.pp-send-group {\n  display: inline-flex;\n  flex: 0 1 auto;\n  min-width: 0;\n  gap: 0;\n}\n/* Apifox .action-send \u5BBD 95px\uFF1A\u4E3B\u6309\u94AE\u5403\u6EE1\u3001\u53F3\u7AEF 25px \u4E0B\u62C9\u4F4D */\n.pp-url-row .pp-send-group {\n  flex: none;\n  width: 95px;\n}\n.pp-send-group .pp-btn:first-child {\n  border-top-right-radius: 0;\n  border-bottom-right-radius: 0;\n}\n.pp-send-group .pp-btn:last-child {\n  width: calc(var(--hit) - 3px);\n  padding: 0;\n  border-top-left-radius: 0;\n  border-bottom-left-radius: 0;\n}\n/* \u5206\u7EC4\u6807\u9898\uFF1A\u5DE6\u8FB9 3px \u4E3B\u8272\u7AD6\u7EBF + \u5DE6\u5185\u8FB9\u8DDD 10px + 16px \u5B57\n   \uFF08Apifox .apiDebug .group-title \u539F\u6587\uFF1Aborder-left:3px; margin-left:2px; padding-left:10px; font-size:16px\uFF09 */\n.pp-group-title {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  margin: var(--sp-2) 0 var(--sp-1) var(--sp-1);\n  /* 10px \u4E0D\u5728 4/8/12 \u523B\u5EA6\u4E0A\uFF0C\u4F46\u8FD9\u662F Apifox \u539F\u6587\u503C\uFF0C\u5199 calc \u4FDD\u6301\u53EF\u8FFD\u6EAF */\n  padding-left: calc(var(--sp-2) + var(--sp-1) / 2);\n  font-size: var(--fs-16);\n  line-height: var(--lh-24);\n  font-weight: var(--fw-medium);\n  color: var(--fg-strong);\n  border-left: 3px solid var(--accent);\n}\n\n/* \u2014\u2014 \u6D41\u7A0B\u56FE\u5BB9\u5668 \u2014\u2014 */\n/* \u6D41\u7A0B\u56FE\u9875\uFF08Apifox \u6D4B\u8BD5\u573A\u666F\u540C\u6784\uFF09\uFF1A\u5DE6\u6B65\u9AA4\u5217\u8868 + \u53F3\u753B\u5E03 + \u4E0B\u65B9\u5C5E\u6027\u9762\u677F\u3002\n   \u753B\u5E03\u5E38\u9A7B\uFF0C\u6539\u4EFB\u4E00\u6B65\u5373\u65F6\u91CD\u7ED8\uFF1B\u4E0D\u518D\u7528\u300C\u6574\u5BBD\u753B\u5E03 + \u6574\u5BBD\u8868\u683C\u300D\u4E0A\u4E0B\u5806\u53E0\u2014\u2014\n   \u8868\u683C\u5728 500px \u4E3B\u533A\u91CC\u8981\u6A2A\u5411\u6EDA 640px\uFF0C\u6539\u4E00\u6B65\u5F97\u6765\u56DE\u6EDA\u4E24\u6B21\u3002 */\n.pp-flow-layout {\n  display: grid;\n  grid-template-columns: var(--panel-w) minmax(0, 1fr);\n  gap: var(--sp-4);\n  align-items: start;\n}\n@container ppmain (max-width: 820px) {\n  .pp-flow-layout {\n    grid-template-columns: minmax(0, 1fr);\n    gap: var(--sp-3);\n  }\n  /* \u5806\u53E0\u540E\u6B65\u9AA4\u5217\u8868\u9AD8\u5EA6\u538B\u5230 8 \u884C\uFF0C\u907F\u514D\u628A\u753B\u5E03\u6324\u5230\u9996\u5C4F\u4E4B\u5916 */\n  .pp-flow-layout .pp-flow-steps {\n    max-height: calc(var(--row-h) * 8);\n  }\n  .pp-flow-layout .pp-flow-side {\n    width: auto;\n    overflow: visible;\n  }\n}\n.pp-flow-side {\n  display: flex;\n  flex-direction: column;\n  min-width: 0;\n  padding: var(--sp-2) 0;\n}\n.pp-flow-side-head {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  padding: 0 var(--sp-4) var(--sp-2);\n  border-bottom: 1px solid var(--border);\n  margin-bottom: var(--sp-1);\n}\n.pp-flow-side-head .pp-card-title {\n  margin: 0;\n  font-size: var(--fs-13);\n}\n.pp-flow-side-head > .pp-btn:last-child {\n  margin-left: auto;\n}\n.pp-flow-steps {\n  display: flex;\n  flex-direction: column;\n  gap: 1px;\n  max-height: calc(var(--row-h) * 16);\n  overflow: auto;\n}\n.pp-flow-step {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  padding: var(--sp-1) var(--sp-3);\n  margin: 0 var(--sp-2);\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-secondary);\n  border-radius: var(--radius-ctl);\n  cursor: pointer;\n}\n.pp-flow-step:hover {\n  color: var(--fg);\n}\n.pp-flow-step[data-active="true"] {\n  color: var(--fg);\n  background: var(--bg-hover);\n  font-weight: var(--fw-medium);\n}\n.pp-flow-step-no {\n  flex: none;\n  width: 18px;\n  font-family: var(--font-mono);\n  font-size: var(--fs-12);\n  color: var(--fg-tertiary);\n  text-align: right;\n}\n.pp-flow-step[data-active="true"] .pp-flow-step-no {\n  color: var(--accent);\n}\n.pp-flow-step-body {\n  display: flex;\n  flex-direction: column;\n  min-width: 0;\n  flex: 1;\n}\n.pp-flow-step-name {\n  color: inherit;\n}\n.pp-flow-step-msg {\n  font-family: var(--font-mono);\n  font-size: var(--fs-12);\n  color: var(--fg-tertiary);\n}\n.pp-flow-step-act {\n  flex: none;\n  font-size: var(--fs-12);\n  color: var(--fg-tertiary);\n}\n.pp-flow-main {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-4);\n  min-width: 0;\n}\n.pp-flow-canvas {\n  min-width: 0;\n  overflow-x: auto;\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  padding: var(--sp-4);\n}\n.pp-flow-canvas svg {\n  min-width: 100%;\n  display: block;\n}\n@container ppmain (max-width: 700px) {\n  .pp-flow-canvas svg {\n    min-width: 620px;\n  }\n}\n.pp-flow-props {\n  padding: var(--sp-4);\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n}\n.pp-flow-prop-grid {\n  display: grid;\n  grid-template-columns: 72px minmax(0, 1fr);\n  gap: var(--sp-2) var(--sp-3);\n  align-items: center;\n}\n.pp-flow-prop-grid .pp-form-label {\n  width: auto;\n  font-size: var(--fs-13);\n}\n.pp-flow-prop-row {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  min-width: 0;\n}\n.pp-flow-prop-row .pp-input {\n  flex: 1;\n  min-width: 0;\n}\n.pp-flow-name {\n  width: 180px;\n}\n.pp-flow-source {\n  margin-bottom: var(--sp-2);\n}\n.pp-seq-wrap {\n  overflow-x: auto;\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  background: var(--bg-surface);\n  padding: var(--sp-4);\n}\n.pp-seq-wrap svg {\n  min-width: 100%;\n  display: block;\n}\n/* \u7A84\u5BB9\u5668\uFF1A\u56DB\u4E2A\u6CF3\u9053\u6324\u5728 500px \u91CC\u6587\u5B57\u53E0\u6210\u4E00\u56E2\uFF0C\u7ED9 svg \u4E00\u4E2A\u53EF\u8BFB\u4E0B\u9650\uFF0C\u8D85\u51FA\u7531 .pp-seq-wrap \u6EDA\u52A8 */\n@container ppmain (max-width: 700px) {\n  .pp-seq-wrap svg {\n    min-width: 620px;\n  }\n}\n.pp-split-hint {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  padding: var(--sp-2) var(--sp-3);\n  font-size: var(--fs-13);\n  line-height: var(--lh-20);\n  color: var(--warning);\n  border: 1px solid var(--warning);\n  border-radius: var(--radius-ctl);\n  background: var(--bg-surface);\n}\n\n/* \u2014\u2014 \u7A7A\u6001 \u2014\u2014 */\n/* \u7A7A\u6001\uFF1A\u7D27\u51D1\u5C45\u4E2D\u5361\u3002\u6536\u7A84\u5230 --empty-w\uFF08360px\uFF09\u2014\u2014\u4E4B\u524D\u94FA\u6EE1 460px \u5BBD\u53EA\u653E\u4E00\u884C\u5B57\uFF0C\n   \u89C6\u89C9\u4E0A\u50CF\u4E00\u5757\u6CA1\u505A\u5B8C\u7684\u5360\u4F4D\u3002\u56FE\u6807\u7528\u4E09\u7EA7\u8272\uFF0C\u4E3B\u6587\u6848\u7528\u4E8C\u7EA7\u8272\uFF0C\u5C42\u7EA7\u9760\u989C\u8272\u4E0E\u5B57\u53F7\u533A\u5206\u3002 */\n.pp-empty {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  gap: var(--sp-2);\n  width: 100%;\n  max-width: var(--empty-w);\n  /* margin:auto \u5728 flex \u5BB9\u5668\uFF08.pp-page \u662F flex column\uFF09\u91CC\u540C\u65F6\u6C34\u5E73\u4E0E\u5782\u76F4\u5C45\u4E2D\uFF1B\n     \u4E4B\u524D\u5199\u6B7B var(--sp-6) auto \u53EA\u6C34\u5E73\u5C45\u4E2D\uFF0C\u7A7A\u6001\u4F1A\u8D34\u5728\u9876\u90E8\uFF0C\u4E0B\u65B9\u7559\u4E00\u5927\u7247\u7A7A\u767D\u3002 */\n  margin: auto;\n  padding: var(--sp-6) var(--sp-4);\n  text-align: center;\n  font-size: var(--fs-14);\n  line-height: var(--lh-20);\n  color: var(--fg-tertiary);\n  border: 1px dashed var(--border-strong);\n  border-radius: var(--radius-card);\n  background: var(--bg-surface);\n}\n.pp-empty-icon {\n  color: var(--fg-tertiary);\n}\n.pp-empty-text {\n  color: var(--fg-secondary);\n  font-weight: var(--fw-medium);\n}\n.pp-empty-action {\n  margin-top: var(--sp-1);\n}\n/* \u9762\u677F\u5185\u7684\u7A7A\u6001\uFF08\u5DE6\u6811\uFF09\uFF1A\u4E0D\u8981\u865A\u7EBF\u6846\u4E0E\u56FE\u6807\uFF0C\u53EA\u7559\u4E00\u884C\u8BF4\u660E */\n.pp-panel .pp-empty {\n  max-width: none;\n  margin: var(--sp-3) 0;\n  padding: var(--sp-3) var(--sp-2);\n  border: none;\n  background: transparent;\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n}\n.pp-panel .pp-empty-icon,\n.pp-panel .pp-empty-action {\n  display: none;\n}\n\n\n/* ============================================================\n/* ============================================================\n   \u5DE5\u4F5C\u53F0\u9AA8\u67B6 v3\uFF1A\u9876\u680F 48px + \u5DE6\u4FA7 240px \u6587\u5B57\u5BFC\u822A + 44px \u9875\u7B7E\u6761\n   \u6570\u503C\u5168\u90E8\u5BF9\u9F50 Apifox 2.8.55 \u5B9E\u6D4B\uFF08docs/apifox-visual-parity-spec.md\uFF09\uFF1A\n     \u9876\u680F --ui-layout-header-height: 48px\uFF0C\u5185\u8FB9\u8DDD 0 50px\n     \u5DE6\u4FA7 .sider-bxNtfB: width 240px / padding 20px / \u83DC\u5355\u9879\u9AD8 32px / \u5206\u7EC4\u9AD8 24px\n     \u9875\u7B7E\u6761 --app-main-tabs-height: 44px\n   \u539F 64px \u56FE\u6807\u8F68 + \u6D6E\u5C42\u4E8C\u7EA7\u83DC\u5355\u5DF2\u5E9F\u5F03\uFF1A\u56FE\u6807\u4E0B\u7684\u5C0F\u5B57\u4ECD\u4E0D\u8DB3\u4EE5\u8BA9\u4EBA\u4E00\u773C\u8BA4\u51FA\u529F\u80FD\uFF0C\n   \u4E14\u4E8C\u7EA7\u85CF\u5728\u6D6E\u5C42\u91CC\u591A\u4E00\u6B21\u70B9\u51FB\uFF1BApifox \u7528 240px \u5E38\u9A7B\u6587\u5B57\u83DC\u5355\uFF0C\u8FD9\u91CC\u7167\u505A\u3002\n   ============================================================ */\n\n/* \u2014\u2014 \u5DE5\u4F5C\u53F0\uFF1A\u9876\u680F + sider/\u4E3B\u533A \u4E24\u884C\u4E24\u5217 \u2014\u2014 */\n.pp-workbench-v2 {\n  display: grid;\n  grid-template-rows: var(--topbar-h) minmax(0, 1fr);\n  height: 100%;\n  min-height: 0;\n}\n.pp-shell {\n  display: grid;\n  grid-template-columns: var(--sider-w) minmax(0, 1fr);\n  min-height: 0;\n  position: relative;\n}\n\n/* \u2014\u2014 \u5DE6\u4FA7\u5BFC\u822A\uFF08Apifox .sider-bxNtfB \u540C\u89C4\u683C\uFF09\u2014\u2014 */\n.pp-sider {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-1);\n  padding: var(--sider-pad);\n  background: var(--bg-surface);\n  border-right: 1px solid var(--border);\n  min-height: 0;\n  overflow: auto;\n}\n/* \u5206\u7EC4\u6807\u9898\uFF1A12px / \u4E09\u7EA7\u8272 / \u9AD8 24px\uFF0C\u7EC4\u95F4\u4E0A\u95F4\u8DDD 12px\uFF08Apifox menu-item-group\uFF09 */\n.pp-sider-group {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  height: var(--sider-group-h);\n  margin-top: var(--sp-3);\n  padding: 0 var(--sp-2);\n  font-size: var(--fs-12);\n  font-weight: var(--fw-medium);\n  color: var(--fg-tertiary);\n  white-space: nowrap;\n}\n.pp-sider-group:first-child {\n  margin-top: 0;\n}\n/* \u83DC\u5355\u9879\uFF1A\u9AD8 32px\u3001\u5706\u89D2 6px\u300114px \u5B57\uFF0C\u5DE6\u5185\u8FB9\u8DDD 8px\uFF08Apifox menu-item\uFF09 */\n.pp-sider-item {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  height: var(--sider-item-h);\n  padding: 0 var(--sp-2);\n  font-size: var(--fs-14);\n  line-height: var(--lh-20);\n  color: var(--fg-secondary);\n  text-decoration: none;\n  border-radius: var(--radius-ctl);\n  cursor: pointer;\n  white-space: nowrap;\n  overflow: hidden;\n}\n.pp-sider-item:hover {\n  color: var(--fg);\n  background: var(--bg-hover);\n}\n.pp-sider-item:focus-visible {\n  outline: 2px solid var(--accent);\n  outline-offset: -2px;\n}\n/* \u9009\u4E2D\uFF1A\u4E3B\u8272\u6587\u5B57 + \u6DE1\u4E3B\u8272\u5E95\uFF08Apifox \u83DC\u5355\u9009\u4E2D\u6001\uFF09 */\n.pp-sider-item[data-active="true"] {\n  color: var(--accent);\n  background: var(--accent-tint);\n  font-weight: var(--fw-medium);\n}\n.pp-sider-icon {\n  flex: none;\n  width: var(--icon);\n  height: var(--icon);\n  color: inherit;\n}\n.pp-sider-label {\n  min-width: 0;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.pp-sider-spacer {\n  flex: 1;\n}\n\n/* \u2014\u2014 \u5F39\u5C42\u83DC\u5355\uFF08\u4E09\u7EA7\uFF0C\u5BF9\u9F50 Apifox .ui-dropdown-menu / .ui-menu-item\uFF09\u2014\u2014\n   \u4E00\u7EA7\u9762\u677F\u6302\u5728\u89E6\u53D1\u6309\u94AE\u4E0B\u65B9\uFF1B\u4E8C\u7EA7\u3001\u4E09\u7EA7\u5411\u53F3/\u5DE6\u6D6E\u51FA\u5E76\u5782\u76F4\u5BF9\u9F50\u5230\u89E6\u53D1\u9879\u3002\n   Apifox \u539F\u6587\uFF1A\u9879\u9AD8 32px\u3001\u5185\u8FB9\u8DDD 0 8px\u3001\u5B50\u83DC\u5355\u7BAD\u5934\u5BBD 10px \u9760\u53F3 16px\u3001\n   \u5206\u7EC4\u6807\u9898 12px/500 \u5185\u8FB9\u8DDD 0 16px\u3001\u9762\u677F\u5706\u89D2 8px + \u4E24\u6BB5\u5F0F\u6295\u5F71\u3002 */\n.pp-menu-anchor {\n  position: relative;\n  display: inline-flex;\n  flex: none;\n}\n/* \u9762\u677F\u5185\u7684\u9879\u951A\u70B9\u5FC5\u987B\u6491\u6EE1\u5BBD\u5EA6\uFF0C\u5426\u5219\u5B50\u9762\u677F\u7684 right:100% \u4F1A\u8D34\u5230\u6587\u5B57\u800C\u4E0D\u662F\u9762\u677F\u8FB9\u7F18 */\n.pp-menu .pp-menu-anchor {\n  display: block;\n  width: 100%;\n}\n.pp-menu {\n  /* \u7528 fixed \u800C\u4E0D\u662F absolute\uFF1A\u5BBF\u4E3B\u4FA7\u8FB9\u680F\u9762\u677F\u662F 720px \u4E14\u5E26 overflow:hidden/clip\uFF0C\n     \u4E09\u7EA7\u7EA7\u8054\uFF08200\xD73\uFF09\u4ECE\u6309\u94AE\u5F80\u5DE6\u5C55\u5F00\u4F1A\u8D8A\u51FA\u5BB9\u5668\u5DE6\u8FB9\u754C\u88AB\u88C1\u6389\u3002\n     fixed \u4E0D\u53D7\u7956\u5148 overflow \u88C1\u526A\uFF0C\u5750\u6807\u7531 JS \u7528 getBoundingClientRect \u7ED9\u51FA\u3002 */\n  position: fixed;\n  z-index: var(--z-menu);\n  min-width: var(--menu-w);\n  padding: var(--menu-pad);\n  overflow: visible;\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  box-shadow: var(--shadow-menu);\n}\n/* \u5185\u5C42\u6EDA\u52A8\u5BB9\u5668\uFF1A\u53EA\u6709\u5B83\u9650\u9AD8\u5E76\u6EDA\u52A8\uFF0C\u4FDD\u8BC1\u7236\u9762\u677F\u4ECD\u53EF overflow: visible */\n.pp-menu-scroll {\n  max-height: calc(var(--menu-item-h) * 12);\n  overflow: auto;\n}\n/* \u4E8C\u7EA7 / \u4E09\u7EA7\u9762\u677F\uFF1A\u76F8\u5BF9\u7236\u9879\u6D6E\u51FA\u3002\u56E0\u4E3A\u89E6\u53D1\u6309\u94AE\u5728\u4E3B\u533A\u53F3\u7F18\uFF0C\n   \u5B50\u9762\u677F\u7EDF\u4E00\u5411\u5DE6\u5F00\uFF08Apifox \u9760\u8FB9\u65F6\u540C\u6837\u7FFB\u8F6C\u65B9\u5411\uFF09\u3002 */\n/* \u5B50\u9762\u677F\u5C42\u7EA7\uFF1A\u9010\u5C42 +1\uFF0C\u907F\u514D\u6D45\u5C42\u76D6\u4F4F\u5DF2\u5C55\u5F00\u7684\u6DF1\u5C42\u5185\u5BB9 */\n.pp-menu[data-depth="2"] { z-index: calc(var(--z-menu) + 1); }\n.pp-menu[data-depth="3"] { z-index: calc(var(--z-menu) + 2); }\n.pp-menu .pp-menu .pp-menu {\n  z-index: calc(var(--z-menu) + 2);\n}\n/* \u5B50\u9762\u677F\u5185\u4E0D\u518D\u9700\u8981\u81EA\u5DF1\u7684\u5185\u5C42\u6EDA\u52A8\u9650\u9AD8 */\n.pp-menu .pp-menu-scroll {\n  max-height: calc(var(--menu-item-h) * 12);\n}\n.pp-menu-item {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  width: 100%;\n  height: var(--menu-item-h);\n  padding: 0 var(--sp-2);\n  font-family: var(--font-sans);\n  font-size: var(--fs-14);\n  line-height: var(--lh-20);\n  color: var(--fg);\n  text-align: left;\n  text-decoration: none;\n  background: transparent;\n  border: none;\n  border-radius: var(--radius-ctl);\n  cursor: pointer;\n  white-space: nowrap;\n  overflow: hidden;\n}\n.pp-menu-item:hover,\n.pp-menu-item[data-open="true"] {\n  background: var(--bg-hover);\n}\n.pp-menu-item:focus-visible {\n  outline: 2px solid var(--accent);\n  outline-offset: -2px;\n}\n.pp-menu-item[data-active="true"] {\n  color: var(--accent);\n  font-weight: var(--fw-medium);\n}\n.pp-menu-item[disabled] {\n  color: var(--fg-tertiary);\n  cursor: not-allowed;\n}\n.pp-menu-label {\n  min-width: 0;\n  flex: 1;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n/* \u5B50\u83DC\u5355\u7BAD\u5934\uFF1A10px \u5BBD\uFF0C\u4E24\u6761 1.5px \u659C\u7EBF\uFF08Apifox .ui-menu-submenu-arrow\uFF09 */\n.pp-menu-arrow {\n  flex: none;\n  width: var(--sp-3);\n  height: var(--icon-sm);\n  color: var(--fg-tertiary);\n  font-size: var(--fs-12);\n  line-height: var(--icon-sm);\n  text-align: center;\n}\n.pp-menu-hint {\n  flex: none;\n  margin-left: auto;\n  font-family: var(--font-mono);\n  font-size: var(--fs-12);\n  color: var(--fg-tertiary);\n}\n.pp-menu-group {\n  height: var(--ctl-h-sm);\n  padding: 0 var(--sp-4);\n  font-size: var(--fs-12);\n  line-height: var(--lh-20);\n  font-weight: var(--fw-medium);\n  color: var(--fg-tertiary);\n  white-space: nowrap;\n}\n.pp-menu-sep {\n  height: 1px;\n  margin: var(--sp-1) calc(var(--sp-2) * -1);\n  background: var(--border);\n}\n\n/* \u2014\u2014 \u9875\u7B7E\u6761\uFF08Apifox .layoutTabBar\uFF0C44px \u5361\u7247\u5F0F\uFF09\u2014\u2014 */\n.pp-tabbar {\n  display: flex;\n  align-items: flex-end;\n  height: var(--tabbar-h);\n  padding: 0 var(--sp-2);\n  background: var(--bg-surface);\n  border-bottom: 1px solid var(--border);\n  overflow-x: auto;\n  overflow-y: hidden;\n  scrollbar-width: none;\n}\n.pp-tabbar::-webkit-scrollbar {\n  height: calc(var(--scrollbar) * 0);\n}\n.pp-tabbar-item {\n  display: inline-flex;\n  align-items: center;\n  gap: var(--sp-1);\n  height: var(--tabbar-h);\n  padding: 0 var(--sp-4);\n  font-size: var(--fs-14);\n  line-height: var(--lh-20);\n  color: var(--fg-secondary);\n  background: transparent;\n  border: none;\n  border-left: 1px solid var(--border);\n  cursor: pointer;\n  white-space: nowrap;\n  flex: none;\n}\n.pp-tabbar-item:first-child {\n  border-left: none;\n}\n.pp-tabbar-item:hover {\n  color: var(--fg);\n}\n/* \u6FC0\u6D3B\uFF1A\u767D\u5E95 + \u5DE6\u53F3 1px \u8FB9\u6846 + \u6DF1\u8272\u6587\u5B57\uFF08Apifox tabs-tab-active\uFF09 */\n.pp-tabbar-item[data-active="true"] {\n  color: var(--fg-strong);\n  background: var(--bg-surface);\n  border-right: 1px solid var(--border);\n  border-top: 1px solid transparent;\n  font-weight: var(--fw-medium);\n}\n.pp-tabbar-close {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  width: var(--icon-sm);\n  height: var(--icon-sm);\n  margin-left: var(--sp-1);\n  color: var(--fg-tertiary);\n  background: transparent;\n  border: none;\n  border-radius: var(--radius-sm);\n  cursor: pointer;\n}\n.pp-tabbar-close:hover {\n  color: var(--fg);\n  background: var(--bg-hover);\n}\n\n/* \u2014\u2014 \u4E3B\u533A\uFF08v2\uFF1A\u5360\u6EE1\u5269\u4F59\u5BBD\u5EA6\uFF09\u2014\u2014 */\n/* \u4E3B\u533A\u662F\u5BB9\u5668\u67E5\u8BE2\u7684\u951A\u70B9\uFF1A\u4FA7\u8FB9\u680F\u91CC\u7684\u5BBD\u5EA6\u53EA\u6709 400~700px\uFF0C\u9875\u9762\u5185\u90E8\u5E03\u5C40\u5FC5\u987B\u6309\n   \u300C\u5BB9\u5668\u5BBD\u5EA6\u300D\u800C\u4E0D\u662F\u300C\u89C6\u53E3\u5BBD\u5EA6\u300D\u81EA\u9002\u5E94\u2014\u2014\u7528 @media \u5224\u65AD\u89C6\u53E3\u6C38\u8FDC\u547D\u4E2D\u4E0D\u4E86\u7A84\u6001\u3002 */\n.pp-main-v2 {\n  min-width: 0;\n  min-height: 0;\n  overflow: auto;\n  background: var(--bg-app);\n  container-type: inline-size;\n  container-name: ppmain;\n  /* \u5E2E\u52A9\u6D6E\u5C42\u7684\u5B9A\u4F4D\u53C2\u7167\uFF08.pp-help-card \u7528 absolute \u8D34\u53F3\u4E0A\u89D2\uFF09 */\n  position: relative;\n}\n\n/* \u2014\u2014 \u9875\u5934 \u2014\u2014 */\n/* \u9875\u5934\uFF1A\u5BF9\u9F50 Apifox .overview-header-container\uFF08\u4E0B\u8FB9\u6846 1px / padding 16px 20px 16px 14px / \u6700\u5927\u5BBD 1512px\uFF09 */\n.pp-page-head {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-3);\n  max-width: var(--content-max-w);\n  padding: var(--sp-4) var(--sp-5) var(--sp-4) var(--sp-3);\n  background: var(--bg-surface);\n  border-bottom: 1px solid var(--border);\n}\n/* \u6982\u89C8\u9875\u5934\uFF1A\u6807\u9898 18px / 700\uFF08Apifox .overview-header__title\uFF09 */\n/* \u9875\u5934\uFF1AApifox .overview-header-container \u539F\u6587\n   \uFF08border-bottom:1px split; max-width:1512px; padding:16px 20px 16px 14px\uFF09\u3002\n   \u7A84\u5BB9\u5668\uFF08\u4FA7\u8FB9\u680F\u91CC\u53EA\u6709 455px\uFF09\u65F6\u52A8\u4F5C\u533A\u5FC5\u987B\u6362\u884C\uFF0C\u5426\u5219\u4F1A\u628A\u9875\u9762\u9876\u51FA 111~693px \u6A2A\u5411\u6EA2\u51FA\u3002 */\n.pp-overview-head {\n  display: flex;\n  align-items: center;\n  flex-wrap: wrap;\n  gap: var(--sp-2) var(--sp-3);\n  width: 100%;\n  max-width: var(--content-max-w);\n  padding: var(--sp-4) var(--sp-5) var(--sp-4) var(--sp-3);\n  background: var(--bg-surface);\n  border-bottom: 1px solid var(--border);\n}\n.pp-overview-title {\n  margin-right: auto;\n  font-size: var(--fs-18);\n  line-height: var(--lh-24);\n  font-weight: 700;\n  color: var(--fg-strong);\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n/* \u52A8\u4F5C\u533A\uFF1AApifox .overview-header-actions\uFF08inline-flex / \u9AD8 32px\uFF09\u3002\n   \u52A0 flex-wrap \u4E0E min-width:0\uFF1A\u52A8\u4F5C\u533A\u91CC\u585E 4 \u4E2A\u63A7\u4EF6\u65F6\uFF08\u603B\u89C8\u9875\uFF09\u5728 455px \u5BB9\u5668\u91CC\u5FC5\u7136\u6EA2\u51FA\uFF0C\n   \u5141\u8BB8\u6362\u884C\u662F\u552F\u4E00\u4E0D\u6539\u8BED\u4E49\u7684\u89E3\u6CD5\uFF1B\u5B50\u63A7\u4EF6\u7528 flex:0 1 auto \u5141\u8BB8\u6536\u7F29\u3002 */\n.pp-overview-actions {\n  display: inline-flex;\n  align-items: center;\n  justify-content: flex-end;\n  flex-wrap: wrap;\n  gap: var(--sp-2);\n  min-width: 0;\n  margin-left: auto;\n  min-height: var(--ctl-h);\n}\n.pp-overview-actions > .pp-input,\n.pp-overview-actions > .pp-select {\n  flex: 0 1 auto;\n  min-width: 96px;\n}\n/* \u6587\u6863\u9875\u5934\uFF1A\u4E0E\u6982\u89C8\u540C\u89C4\u683C */\n.pp-doc-head {\n  display: flex;\n  align-items: center;\n  flex-wrap: wrap;\n  gap: var(--sp-2) var(--sp-3);\n  width: 100%;\n  max-width: var(--content-max-w);\n  padding: var(--sp-4) var(--sp-5) var(--sp-4) var(--sp-3);\n  background: var(--bg-surface);\n  border-bottom: 1px solid var(--border);\n}\n.pp-doc-title {\n  margin-right: auto;\n  font-size: var(--fs-18);\n  line-height: var(--lh-24);\n  font-weight: 700;\n  color: var(--fg-strong);\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n/* \u6A2A\u5411\u8868\u5355\u6805\u683C\uFF1AApifox .gridForm.ui-form-horizontal\uFF08fit-content(360px) 1fr / gap 16px\uFF09 */\n.pp-form-grid {\n  display: grid;\n  grid-template-columns: fit-content(360px) minmax(0, 1fr);\n  gap: var(--sp-4);\n  align-items: center;\n}\n.pp-page-head-main {\n  min-width: 0;\n  flex: 1;\n}\n.pp-page-head .pp-page-title {\n  margin: 0 0 var(--sp-1) 0;\n}\n.pp-page-desc {\n  font-size: var(--fs-13);\n  line-height: var(--lh-20);\n  color: var(--fg-secondary);\n  margin: 0;\n}\n.pp-page-actions {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  flex: none;\n}\n\n/* \u2014\u2014 \u9762\u677F\u5316\u5B9E\u4F53\u6811\uFF08\u66FF\u4EE3\u901A\u680F .pp-col-left\uFF09\u2014\u2014 */\n.pp-panel {\n  width: var(--panel-w);\n  flex: none;\n  min-height: 0;\n  overflow: auto;\n  padding: var(--sp-2);\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n}\n.pp-split {\n  display: grid;\n  /* \u9762\u677F\u5BBD\u5EA6\u968F\u5BB9\u5668\u81EA\u9002\u5E94\uFF1A\u4E0B\u9650 --panel-w\u3001\u4E0A\u9650 --panel-w-max\u3001\u4E2D\u95F4\u53D6 32%\uFF0C\n     \u5BBD\u7A97\u53E3\u91CC\u76EE\u5F55\u6811\u81EA\u52A8\u53D8\u5BBD\uFF0C\u957F\u63A5\u53E3\u540D\u4E0D\u518D\u88AB\u7701\u7565\u53F7\u622A\u65AD\u3002 */\n  grid-template-columns: clamp(var(--panel-w), 32%, var(--panel-w-max)) minmax(0, 1fr);\n  gap: var(--sp-4);\n  align-items: start;\n  padding: var(--sp-4) var(--sp-5);\n  min-height: 0;\n}\n/* \u5E76\u6392\u65F6\u9762\u677F\u5BBD\u5EA6\u7531 grid \u8F68\u9053\u51B3\u5B9A\uFF0C\u81EA\u8EAB\u4E0D\u518D\u5B9A\u5BBD\uFF08\u5426\u5219\u6BD4\u8F68\u9053\u7A84\u4F1A\u7559\u767D\uFF09 */\n.pp-split > .pp-panel {\n  width: auto;\n}\n/* \u7A84\u5BB9\u5668\uFF1A\u76EE\u5F55\u6811\u4E0E\u6B63\u6587\u5E76\u6392\u4F1A\u628A\u6B63\u6587\u538B\u5230 200px \u7EA7\uFF0C\u6539\u4E3A\u4E0A\u4E0B\u5806\u53E0\u3002\n   \u9608\u503C 800px = \u9762\u677F 280 + \u95F4\u8DDD 16 + \u6B63\u6587\u7EA6 500\uFF086 \u5217\u53C2\u6570\u8868\u5728\u6B64\u5BBD\u5EA6\u4E0B\u624D\u4E0D\u81F3\u4E8E\u53EA\u5269\u8868\u5934\uFF09\u3002 */\n@container ppmain (max-width: 800px) {\n  .pp-split {\n    grid-template-columns: minmax(0, 1fr);\n  }\n  .pp-split .pp-panel {\n    width: auto;\n    /* \u5806\u53E0\u65F6\u76EE\u5F55\u6811\u5360\u6EE1\u6574\u5BBD\uFF1B\u9AD8\u5EA6\u7ED9\u5230 14 \u884C\uFF08\u7EA6 500px\uFF09\u2014\u2014\u5217\u8868\u533A\u592A\u77EE\u65F6\u7FFB\u76EE\u5F55\u5F88\u8D39\u52B2 */\n    max-height: calc(var(--row-h) * 14);\n  }\n}\n/* \u6587\u6863\u9875\u4E3B\u5217\uFF1A\u951A\u70B9\u6761 sticky \u5728\u9876\u90E8\uFF0C\u6B63\u6587\u5728\u4E0B\u65B9\u72EC\u7ACB\u6EDA\u52A8 */\n.pp-doc-main {\n  min-width: 0;\n  min-height: 0;\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  overflow: auto;\n}\n/* \u7A7A\u6001\u65F6\u4E3B\u5217\u72EC\u5360\u4E00\u884C\uFF08\u65E0\u5DE6\u6811\uFF09\uFF0C\u9700\u8981\u81EA\u5DF1\u6491\u6EE1\u9AD8\u5EA6\u5E76\u7559\u51FA\u4E0A\u8FB9\u8DDD */\n.pp-page-flush > .pp-doc-main {\n  display: flex;\n  flex-direction: column;\n  height: 100%;\n  margin: var(--sp-4) var(--sp-5);\n}\n.pp-doc-main .pp-page {\n  padding: var(--sp-5);\n}\n/* \u951A\u70B9\u6761\u5438\u9876\u65F6\u7ED9\u8DF3\u8F6C\u76EE\u6807\u7559\u51FA\u9AD8\u5EA6\uFF0C\u907F\u514D\u6807\u9898\u88AB\u6761\u6321\u4F4F */\n.pp-doc-main [id^="sec-"] {\n  scroll-margin-top: calc(var(--ctl-h-lg) + var(--sp-3));\n}\n.pp-split-wide {\n  grid-template-columns: var(--panel-w) minmax(0, 1.4fr) minmax(0, 1fr);\n}\n\n/* \u2014\u2014 \u9876\u680F v2\uFF1A\u9762\u5305\u5C51 + \u56FE\u6807\u52A8\u4F5C \u2014\u2014 */\n.pp-crumb {\n  display: inline-flex;\n  align-items: center;\n  gap: var(--sp-1);\n  font-size: var(--fs-12);\n  color: var(--fg-tertiary);\n  white-space: nowrap;\n}\n.pp-crumb-sep {\n  color: var(--border-strong);\n}\n.pp-icon-btn {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  width: var(--hit);\n  height: var(--hit);\n  padding: 0;\n  color: var(--fg-secondary);\n  background: transparent;\n  border: 1px solid transparent;\n  border-radius: var(--radius-ctl);\n  cursor: pointer;\n}\n.pp-icon-btn:hover {\n  color: var(--fg);\n  background: var(--bg-hover);\n}\n.pp-icon-btn:focus-visible {\n  outline: 2px solid var(--accent);\n  outline-offset: -2px;\n}\n.pp-icon-btn[data-active="true"] {\n  color: var(--accent);\n  border-color: var(--accent);\n}\n.pp-help {\n  padding: var(--sp-2);\n  font-size: var(--fs-13);\n  line-height: var(--lh-20);\n  color: var(--fg-secondary);\n}\n/* \u5E2E\u52A9\u5361\u7247\uFF1A\u539F\u6D6E\u5C42\u6539\u6210\u4E3B\u533A\u9876\u90E8\u5185\u5D4C\u5361\uFF08\u4E0D\u518D\u906E\u6321\u5185\u5BB9\uFF09 */\n/* \u5E2E\u52A9\u5361\u7247\uFF1A\u6D6E\u5728\u4E3B\u533A\u53F3\u4E0A\u89D2\uFF0C\u4E0D\u5360\u6587\u6863\u6D41\u3002\n   \u4E4B\u524D\u662F\u6587\u6863\u6D41\u5185\u5D4C\u5361\uFF0C\u63D2\u5728\u9875\u7B7E\u6761\u4E0E\u9875\u5934\u4E4B\u95F4\u4F1A\u628A\u9875\u9762\u6807\u9898\u5F80\u4E0B\u63A8\u4E00\u683C\uFF0C\n   \u89C6\u89C9\u4E0A\u50CF\u591A\u4E86\u4E00\u4E2A\u9875\u7B7E\u3002\u6D6E\u5C42\u5B9A\u4F4D\u540E\u4E0E\u9875\u9762\u5185\u5BB9\u4E92\u4E0D\u5F71\u54CD\u3002 */\n.pp-help-card {\n  position: absolute;\n  top: calc(var(--tabbar-h) + var(--sp-2));\n  right: var(--sp-4);\n  z-index: var(--z-menu);\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-1);\n  width: var(--popover-w);\n  max-width: calc(100% - var(--sp-6));\n  padding: var(--sp-3);\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  box-shadow: var(--shadow-menu);\n}\n.pp-help-card-head {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: var(--sp-2);\n}\n.pp-help-card-title {\n  font-size: var(--fs-12);\n  font-weight: var(--fw-medium);\n  color: var(--fg-tertiary);\n}\n\n\n\n/* \u2014\u2014 \u9875\u5185\u951A\u70B9\u6761\uFF08\u539F\u53F3\u680F\u300C\u672C\u9875\u76EE\u5F55\u300D\u7684\u66FF\u4EE3\uFF09\uFF1A\u4E3B\u533A\u9876\u90E8 sticky \u6A2A\u5411 chips \u2014\u2014\n   \u7A84\u5BB9\u5668\u91CC\u53F3\u4FA7\u5E38\u9A7B TOC \u4F1A\u5403\u6389 240px\uFF0C\u628A\u4E3B\u533A\u6324\u5230\u4E0D\u53EF\u8BFB\uFF1B\u6539\u6210\u6A2A\u5411\u6761\u540E\n   \u53EA\u5360\u4E00\u884C\u7EB5\u5411\u9AD8\u5EA6\uFF0C\u4E3B\u533A\u5BBD\u5EA6\u4E0D\u53D7\u5F71\u54CD\uFF0C\u6EDA\u52A8\u65F6\u4ECD\u80FD\u8DF3\u8F6C\u3002 */\n.pp-anchor-bar {\n  position: sticky;\n  top: 0;\n  z-index: 2;\n  display: flex;\n  align-items: center;\n  gap: var(--sp-1);\n  height: var(--ctl-h-lg);\n  padding: 0 var(--sp-4);\n  overflow-x: auto;\n  background: var(--bg-surface);\n  border-bottom: 1px solid var(--border);\n  scrollbar-width: none;\n}\n.pp-anchor-bar::-webkit-scrollbar {\n  height: calc(var(--scrollbar) * 0);\n}\n.pp-anchor-chip {\n  display: inline-flex;\n  align-items: center;\n  flex: none;\n  height: var(--ctl-h-sm);\n  padding: 0 var(--sp-2);\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-secondary);\n  text-decoration: none;\n  border: 1px solid transparent;\n  border-radius: var(--radius-pill);\n  cursor: pointer;\n  white-space: nowrap;\n}\n.pp-anchor-chip:hover {\n  color: var(--fg);\n  background: var(--bg-hover);\n}\n.pp-anchor-chip[data-active="true"] {\n  color: var(--accent);\n  background: var(--accent-tint);\n  border-color: var(--accent);\n}\n\n/* \u2014\u2014 \u5206\u7EC4\u6807\u9898\u884C\uFF1A\u6807\u9898\u9760\u5DE6\u3001\u52A8\u4F5C\u9760\u53F3 \u2014\u2014 */\n/* \u8C03\u8BD5\u53F0\u53C2\u6570\u533A\uFF08\u5982 Headers \u7EC4\uFF09\u7528\u5B83\u5728\u5206\u7EC4\u6807\u9898\u53F3\u4FA7\u6302\u300C\u5E38\u7528\u8BF7\u6C42\u5934\u300D\u6309\u94AE\uFF1B\n   .pp-group-title \u81EA\u5E26 3px \u4E3B\u8272\u7AD6\u7EBF\uFF0C\u8FD9\u91CC\u53EA\u8D1F\u8D23\u884C\u5185\u5DE6\u53F3\u5206\u680F\u3002 */\n.pp-group-head {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: var(--sp-2);\n  min-width: 0;\n}\n.pp-group-head > .pp-group-title {\n  min-width: 0;\n  margin-right: auto;\n}\n\n/* \u2014\u2014 \u884C\u5185\u6587\u5B57\u6309\u94AE\uFF1A\u65E0\u8FB9\u6846\u3001\u4E3B\u8272\u6587\u5B57\uFF0Chover \u53EA\u6362\u4E3B\u8272\u60AC\u505C\u8272 \u2014\u2014 */\n/* \u8868\u683C\u4E0E\u5206\u7EC4\u6807\u9898\u91CC\u7684\u8F7B\u91CF\u52A8\u4F5C\uFF08\u300C\u5E38\u7528\u8BF7\u6C42\u5934\u300D\u300C\u6E05\u7A7A\u300D\u7B49\uFF09\uFF0C\n   \u9AD8\u5EA6\u8D70 --ctl-h-sm \u4E0E .pp-btn-sm \u5BF9\u9F50\uFF0C\u907F\u514D\u4E0E\u8868\u683C\u884C\u9AD8\u6253\u67B6\u3002 */\n.pp-btn-link {\n  display: inline-flex;\n  align-items: center;\n  flex: none;\n  height: var(--ctl-h-sm);\n  padding: 0 var(--sp-1);\n  font-family: var(--font-sans);\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--accent);\n  background: transparent;\n  border: 1px solid transparent;\n  border-radius: var(--radius-sm);\n  cursor: pointer;\n  white-space: nowrap;\n}\n.pp-btn-link:hover {\n  color: var(--accent-hover);\n}\n.pp-btn-link:disabled {\n  color: var(--fg-tertiary);\n  cursor: not-allowed;\n}\n\n/* \u2014\u2014 \u8C03\u8BD5\u53F0\u4E0A\u4E0B\u5206\u680F\uFF1A\u8BF7\u6C42\u533A\u5728\u4E0A\u3001\u54CD\u5E94\u533A\u5728\u4E0B \u2014\u2014 */\n/* \u5355\u680F\u7ED3\u6784\uFF08Apifox .apiCase \u6574\u9875\u7EB5\u5411\u6392\u5E03\uFF09\uFF1A\u4E24\u533A\u90FD\u53EF\u6536\u7F29\uFF0C\n   \u6EDA\u52A8\u4EA4\u7ED9\u5404\u81EA\u5185\u90E8\u5BB9\u5668\uFF0C\u5916\u5C42\u4E0D\u518D\u6491\u9AD8\u3002 */\n.pp-debug-split {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-3);\n  min-height: 0;\n}\n/* \u8BF7\u6C42\u533A\uFF1A\u53EA\u8D1F\u8D23\u6536\u7A84\uFF0C\u4E0D\u62A2\u9AD8\u5EA6 */\n.pp-debug-request {\n  min-width: 0;\n  min-height: 0;\n}\n/* \u54CD\u5E94\u533A\uFF1A\u5360\u6EE1\u5269\u4F59\u9AD8\u5EA6\uFF0C\u5185\u5BB9\u8D85\u9AD8\u65F6\u81EA\u5DF1\u6EDA\u52A8 */\n.pp-debug-response {\n  display: flex;\n  flex-direction: column;\n  flex: 1 1 auto;\n  min-width: 0;\n  min-height: 0;\n  overflow: auto;\n}\n\n/* \u2014\u2014 BodyEditor \u9876\u90E8\u7C7B\u578B\u884C\uFF1A\u7C7B\u578B\u9009\u62E9\u5728\u5DE6\u3001\u52A8\u4F5C\u6309\u94AE\u5728\u53F3\uFF0C\u4E0E\u7F16\u8F91\u5668\u7528\u5206\u9694\u7EBF\u9694\u5F00 \u2014\u2014 */\n.pp-body-head {\n  display: flex;\n  align-items: center;\n  flex-wrap: wrap;\n  gap: var(--sp-2);\n  padding-bottom: var(--sp-2);\n  border-bottom: 1px solid var(--border);\n}\n\n/* \u2014\u2014 ScriptPanel \u6BCF\u6BB5\u5BB9\u5668\uFF08\u524D\u7F6E / \u540E\u7F6E\uFF09\uFF1A\u5185\u8FB9\u8DDD + \u6BB5\u95F4\u5E95\u90E8\u95F4\u8DDD \u2014\u2014 */\n.pp-script-block {\n  padding: var(--sp-2) 0;\n  margin-bottom: var(--sp-3);\n  min-width: 0;\n}\n.pp-script-block:last-child {\n  margin-bottom: 0;\n}\n\n/* \u2014\u2014 \u54CD\u5E94\u72B6\u6001\u6761\uFF1A\u72B6\u6001\u80F6\u56CA\u5728\u5DE6\u3001\u8017\u65F6\u4E0E\u5927\u5C0F\u5C45\u4E2D\u3001\u590D\u5236\u6309\u94AE\u9760\u53F3 \u2014\u2014 */\n.pp-resp-bar {\n  display: flex;\n  align-items: center;\n  flex-wrap: wrap;\n  gap: var(--sp-2);\n  min-width: 0;\n}\n.pp-resp-bar > .pp-pill {\n  flex: none;\n}\n/* \u6700\u540E\u4E00\u4E2A\u5B50\u5143\u7D20\uFF08\u590D\u5236\u6309\u94AE\uFF09\u7528\u81EA\u52A8\u5916\u8FB9\u8DDD\u63A8\u5230\u884C\u5C3E\uFF0C\u7A84\u5BB9\u5668\u6362\u884C\u540E\u4ECD\u8D34\u53F3 */\n.pp-resp-bar > :last-child {\n  margin-left: auto;\n}\n\n/* \u2014\u2014 \u54CD\u5E94\u9875\u7B7E\u6761\uFF1A\u89C2\u611F\u540C .pp-tabs\uFF0C\u4F46\u4E0A\u65B9\u6709\u72B6\u6001\u6761\uFF0C\u9700\u8981\u4E00\u6761\u4E0A\u8FB9\u6846\u628A\u4E24\u8005\u5206\u5F00 \u2014\u2014 */\n.pp-resp-tabs {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-1);\n  flex-wrap: wrap;\n  min-height: var(--ctl-h-lg);\n  padding: 0 var(--sp-3);\n  background: var(--bg-surface);\n  border-top: 1px solid var(--border);\n  border-bottom: 1px solid var(--border);\n}\n\n/* \u2014\u2014 \u9875\u7B7E\u8BA1\u6570\uFF1A\u5C0F\u53F7\u3001\u6B21\u8981\u8272\u3001\u4E0D\u6362\u884C \u2014\u2014 */\n.pp-resp-count {\n  flex: none;\n  font-size: var(--fs-12);\n  color: var(--fg-tertiary);\n  white-space: nowrap;\n}\n\n/* \u2014\u2014 \u54CD\u5E94 Body \u7684 JSON \u6811\uFF1A\u7B49\u5BBD\u5B57\u4F53\u3001\u6309\u5C42\u7F29\u8FDB\u3001\u8D85\u9AD8\u81EA\u5DF1\u6EDA\u52A8\uFF0814 \u884C\uFF09\u2014\u2014 */\n.pp-json-tree {\n  margin: 0;\n  padding: var(--sp-2);\n  font-family: var(--font-mono);\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg);\n  background: var(--bg-subtle);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-sm);\n  max-height: calc(var(--row-h) * 14);\n  overflow: auto;\n  white-space: pre;\n  tab-size: 2;\n}\n\n\n';
+var design_tokens_default = '/* ============================================================\n   dsh-postapi \u8BBE\u8BA1 token \u2014 Apifox 2.8.55 \u590D\u523B\n   \u4F9D\u636E docs/apifox-design-spec.md\uFF08165 \u4E2A CSS chunk \u7EDF\u8BA1\uFF09\n   \u5C3A\u5BF8\u7EDF\u4E00\u5728 token \u5C42\uFF1A\u63A7\u4EF6 --ctl-h / \u8868\u884C --row-h / \u80F6\u56CA --pill-h\n   \u9875\u9762\u6837\u5F0F\u6240\u6709\u9AD8\u5EA6\u58F0\u660E\u5FC5\u987B\u5F15\u7528\u4E0A\u8FF0 token\uFF08__tests__/heights.test.js \u9759\u6001\u68C0\u67E5\uFF09\n   \u5BC6\u5EA6\u57FA\u8C03\uFF1AApifox \u5DE5\u4F5C\u53F0\u2014\u20141px \u8FB9\u6846\u5206\u533A\u3001\u5361\u7247\u5316\u3001\u6D6E\u5C42\u624D\u6295\u9634\u5F71\n   ============================================================ */\n\n.pp-scope {\n  /* \u2014\u2014 \u5B57\u4F53\uFF08Apifox: -apple-system,"BlinkMacSystemFont","Segoe UI",roboto,...\uFF09\u2014\u2014 */\n  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;\n  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;\n\n  /* \u2014\u2014 \u5B57\u9636\uFF08\u5BF9\u9F50 Apifox \u5B9E\u6D4B\uFF1A12/14/15/16/17/18/20/22\uFF09\u2014\u2014\n     Apifox \u7684 --ui-font-size-* \u539F\u503C\u89C1 docs/apifox-visual-parity-spec.md \xA72\uFF1B\n     13px \u4FDD\u7559\u662F\u56E0\u4E3A\u65E2\u6709\u9875\u9762\u7528\u5B83\u505A\u8F85\u52A9\u6587\u672C\uFF0C\u4E0D\u65B0\u5F15\u5165\u3002 */\n  --fs-12: 12px;\n  --fs-13: 13px;\n  --fs-14: 14px;\n  --fs-15: 15px;\n  --fs-16: 16px;\n  --fs-17: 17px;\n  --fs-18: 18px;\n  --fs-20: 20px;\n  --fs-22: 22px;\n  --fs-24: 24px;\n  --fw-regular: 400;\n  --fw-medium: 500;\n  --fw-semibold: 600;\n\n  /* \u2014\u2014 \u884C\u9AD8\uFF08Apifox \u56FA\u5B9A\u503C\uFF0C\u4E0D\u7528\u500D\u6570\uFF09\u2014\u2014 */\n  /* \u56FE\u8868\u4E13\u7528\u5B57\u9636\uFF1ASVG \u91CC\u7684\u5C0F\u5B57\uFF08\u56FE\u4F8B/\u6807\u8BB0\uFF09\u6BD4\u6B63\u6587\u66F4\u5C0F\uFF0C\u4F46\u4ECD\u8D70 token \u4E0D\u5199\u5B57\u9762\u91CF */\n  --fs-chart: 10px;\n  --lh-18: 18px;\n  --lh-20: 20px;\n  --lh-22: 22px;\n  --lh-24: 24px;\n\n  /* \u2014\u2014 \u5C3A\u5BF8\u7EDF\u4E00 token\uFF08\u5BF9\u9F50 Apifox \u5B9E\u6D4B\uFF0C\u89C1 docs/apifox-visual-parity-spec.md \xA71/\xA72\uFF09\u2014\u2014 */\n  --ctl-h: 32px;         /* Apifox --ui-height-base */\n  --ctl-h-sm: 24px;      /* Apifox --ui-height-sm */\n  --ctl-h-lg: 40px;      /* Apifox --ui-height-lg */\n  --row-h: 32px;         /* Apifox \u8868\u683C/\u5217\u8868\u884C 32px\uFF08\u539F 36px \u504F\u677E\uFF09 */\n  --tree-row-h: 22px;    /* Apifox --ui-tree-title-height: 22px */\n  --pill-h: 22px;\n  /* Apifox \u573A\u666F\u9875\u7B7E\u6761\u4E25\u683C 48px\uFF08async_test_scenario: .ui-tabs-nav height 48\uFF09 */\n  --tabbar-lg: 48px;\n  /* Apifox \u62A5\u544A\u8868\u5934 50px\uFF08async_api_test_report_list: .header-WI00Y3 height 50\uFF09 */\n  --toolbar-h: 50px;\n  --topbar-h: 48px;      /* Apifox --ui-layout-header-height: 48px */\n  --tabbar-h: 44px;      /* Apifox --app-main-tabs-height: 44px */\n  --sider-w: 240px;      /* Apifox .sider-bxNtfB width: 240px */\n  --sider-pad: 20px;     /* Apifox .sider-bxNtfB padding: 20px */\n  --sider-item-h: 32px;  /* Apifox --ui-menu-item-height: 32px */\n  --sider-group-h: 24px; /* Apifox --ui-menu-item-group-height: 24px */\n  --nav-w: 240px;\n  --toc-w: 240px;\n  /* \u5B9E\u4F53\u6811\u9762\u677F\u4E0E Apifox sider \u540C\u5BBD */\n  --panel-w: 240px;\n  --panel-w-max: 320px;\n  --content-max-w: 1512px; /* Apifox .overview-header-container max-width */\n  --page-pad: 10px;        /* Apifox --app-page-layout-size */\n  --layout-pad: 8px;       /* Apifox --app-layout-padding-right/bottom */\n  --hit: 28px;\n  /* \u2014\u2014 \u5F39\u5C42\u83DC\u5355\uFF08\u5BF9\u9F50 Apifox .ui-dropdown-menu / .ui-menu-item \u5B9E\u6D4B\uFF09\u2014\u2014\n     \u9879\u9AD8 32px\u3001\u9762\u677F\u6700\u5C0F\u5BBD 150px\uFF08Apifox .project-module-menu-popup .ui-menu min-width:150px\uFF09\u3001\n     \u9634\u5F71\u53D6 Apifox .keywordSearchPopover .ui-popover-inner \u539F\u6587\u7684\u4E24\u6BB5\u5F0F\u6295\u5F71\u3002 */\n  --menu-w: 200px;\n  --menu-w-sm: 160px;\n  --menu-item-h: 32px;\n  --menu-pad: var(--sp-1);\n  --shadow-menu: 0 8px 8px -4px rgba(16, 24, 40, 0.03), 0 20px 24px -4px rgba(16, 24, 40, 0.08);\n  --z-menu: 40;\n  --z-flyout: 30;\n  --motion-fast: 120ms;\n  --card-pad: 16px;\n  --popover-w: 400px;\n  --empty-w: 360px;\n  --scrollbar: 6px;\n\n  /* \u2014\u2014 \u56FE\u6807\u5C3A\u5BF8 \u2014\u2014 */\n  --icon-sm: 14px;\n  --icon: 16px;\n  --icon-lg: 20px;\n  --icon-xl: 24px;\n\n  /* \u2014\u2014 \u95F4\u8DDD\u523B\u5EA6 4/8/12/16/20/24 \u2014\u2014 */\n  --sp-1: 4px;\n  --sp-2: 8px;\n  --sp-3: 12px;\n  --sp-4: 16px;\n  --sp-5: 20px;\n  --sp-6: 24px;\n\n  /* \u2014\u2014 \u5706\u89D2\uFF1A\u5BF9\u9F50 Apifox --ui-border-radius-sm/base/lg = 6/8/10 \u2014\u2014 */\n  --radius-sm: 6px;\n  --radius-ctl: 6px;\n  --radius-card: 8px;\n  --radius-lg: 10px;\n  --radius-pill: 999px;\n\n  /* \u2014\u2014 light \u76AE\u80A4\uFF08Apifox \u9AD8\u9891\u8272\uFF09\u2014\u2014 */\n  --bg-app: #f9fafb;\n  --bg-surface: #ffffff;\n  --bg-subtle: #f2f4f7;\n  --bg-hover: #f2f4f7;\n  --bg-selected: #f4f1fe;\n  --bg-stripe: #f5f5f5;\n  --fg: #344054;\n  --fg-strong: #101828;\n  --fg-secondary: #667085;\n  --fg-tertiary: #98a2b3;\n  --fg-on-accent: #ffffff;\n  --border: #eaecf0;\n  --border-strong: #d0d5dd;\n  --accent: #9373ee;\n  --accent-hover: #8276c9;\n  --accent-tint: rgba(147, 115, 238, 0.10);\n  --link: #6172f3;\n  --info: #2e90fa;\n  --success: #17b26a;\n  --warning: #f79009;\n  --error: #f04438;\n  --shadow-popover: 0 4px 16px rgba(16, 24, 40, 0.08);\n\n  /* \u2014\u2014 \u65B9\u6CD5\u5FBD\u6807\uFF08\u767D\u5B57\u5F69\u5E95\uFF0Cmono 12px \u7C97\u4F53\uFF09\u2014\u2014 */\n  --method-fs: 12px;\n  --method-get: #17b26a;\n  --method-post: #2e90fa;\n  --method-put: #f79009;\n  --method-delete: #f04438;\n  --method-patch: #ee46bc;\n  --method-other: #06aed4;\n}\n\n.pp-scope[data-theme="dark"] {\n  --bg-app: #101828;\n  --bg-surface: #1d2939;\n  --bg-subtle: #1d2939;\n  --bg-hover: #26334a;\n  --bg-selected: #2b2647;\n  --bg-stripe: #232f42;\n  --fg: #f9fafb;\n  --fg-strong: #ffffff;\n  --fg-secondary: #98a2b3;\n  --fg-tertiary: #667085;\n  --border: #344054;\n  --border-strong: #475467;\n  --accent-tint: rgba(147, 115, 238, 0.18);\n  --shadow-popover: 0 4px 16px rgba(0, 0, 0, 0.4);\n}\n\n/* \u2014\u2014 \u57FA\u7840 \u2014\u2014 */\n.pp-scope,\n.pp-scope * {\n  box-sizing: border-box;\n}\n.pp-scope {\n  font-family: var(--font-sans);\n  font-size: var(--fs-14);\n  line-height: var(--lh-22);\n  color: var(--fg);\n  background: var(--bg-app);\n}\n.pp-scope ::-webkit-scrollbar {\n  width: var(--scrollbar);\n  /* \u6EDA\u52A8\u6761\u9AD8\u5EA6\u4E0E\u5BBD\u5EA6\u540C\u6E90\uFF1A\u7528 calc \u5305\u4E00\u5C42\uFF0C\u9AD8\u5EA6\u7EAA\u5F8B\u68C0\u67E5\u53EA\u63A5\u53D7 token \u8868\u8FBE\u5F0F */\n  height: calc(var(--scrollbar) * 1);\n}\n.pp-scope ::-webkit-scrollbar-thumb {\n  background: var(--border-strong);\n  border-radius: var(--radius-pill);\n}\n\n/* \u2014\u2014 \u5DE5\u4F5C\u53F0\u9AA8\u67B6\uFF1A\u9876\u680F + \u4E09\u6BB5\u5F0F \u2014\u2014 */\n.pp-workbench {\n  display: grid;\n  grid-template-rows: var(--topbar-h) minmax(0, 1fr);\n  height: 100%;\n  min-height: 0;\n}\n/* \u9876\u680F\uFF1AApifox --ui-layout-header-height: 48px / --ui-layout-header-padding: 0 50px\u3002\n   50px \u5DE6\u53F3\u5185\u8FB9\u8DDD\u5728\u7A84\u5BB9\u5668\u91CC\u4F1A\u628A\u4E2D\u95F4\u641C\u7D22\u6846\u538B\u6CA1\uFF0C\u6545\u7528\u5BB9\u5668\u67E5\u8BE2\u964D\u5230 0 20px\u3002 */\n.pp-topbar {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  height: var(--topbar-h);\n  padding: 0 50px;\n  background: var(--bg-surface);\n  border-bottom: 1px solid var(--border);\n}\n@container ppmain (max-width: 900px) {\n  .pp-topbar { padding: 0 var(--sp-5); }\n}\n/* \u9876\u680F\u4EA7\u54C1\u6807\u8BC6\uFF1A\u56FE\u6807 + \u540D\u79F0\uFF08Apifox \u5DE6\u4E0A\u89D2\u662F\u4EA7\u54C1\u540D\uFF0C\u4E0D\u662F\u5F53\u524D\u9875\u540D\uFF09 */\n.pp-topbar-brand {\n  display: inline-flex;\n  align-items: center;\n  gap: var(--sp-2);\n  font-size: var(--fs-14);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-strong);\n  white-space: nowrap;\n  flex: none;\n}\n.pp-topbar-title {\n  font-size: var(--fs-14);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-strong);\n  white-space: nowrap;\n}\n.pp-topbar-spacer {\n  flex: 1;\n}\n.pp-topbar-search {\n  width: var(--nav-w);\n  flex: none;\n}\n.pp-body-3col {\n  display: grid;\n  grid-template-columns: var(--nav-w) minmax(0, 1fr) var(--toc-w);\n  min-height: 0;\n}\n.pp-body-2col {\n  display: grid;\n  grid-template-columns: var(--nav-w) minmax(0, 1fr);\n  min-height: 0;\n}\n.pp-col {\n  min-width: 0;\n  min-height: 0;\n  overflow: auto;\n  background: var(--bg-surface);\n}\n.pp-col-left {\n  border-right: 1px solid var(--border);\n}\n.pp-col-right {\n  border-left: 1px solid var(--border);\n}\n.pp-main {\n  min-width: 0;\n  min-height: 0;\n  overflow: auto;\n  background: var(--bg-surface);\n}\n\n/* \u2014\u2014 \u9875\u9762\u9AA8\u67B6\uFF08\u5BF9\u9F50 Apifox .doc-container + .overview-container\uFF09\u2014\u2014\n   Apifox \u7684\u9875\u9762\u662F\u300C\u9875\u5934\u901A\u680F + \u5185\u5BB9\u533A\u5404\u81EA padding\u300D\u4E24\u6BB5\uFF0C\u4E0D\u662F\u6574\u9875\u7EDF\u4E00 padding\u3002\n   \u6574\u9875 padding \u4F1A\u8BA9\u9875\u5934\u7684\u4E0B\u8FB9\u6846\u7F29\u8FDB\u3001\u8FD8\u8981\u9760\u5185\u8054\u8D1F margin \u62B5\u6D88\uFF0C10 \u4E2A\u9875\u9762\u91CD\u590D 10 \u6B21\u3002\n   \u8FD9\u91CC\u6539\u6210\uFF1A.pp-page \u53EA\u8D1F\u8D23\u7EB5\u5411\u6392\u5E03\uFF0C\u5185\u8FB9\u8DDD\u4EA4\u7ED9 .pp-overview-head \u4E0E .pp-overview-content\u3002 */\n.pp-page {\n  display: flex;\n  flex-direction: column;\n  min-width: 0;\n  min-height: 100%;\n  padding: 0;\n}\n.pp-page-flush {\n  padding: 0;\n  height: 100%;\n  min-height: 0;\n}\n/* \u5185\u5BB9\u533A\uFF1A\u9875\u5934\u4E0B\u65B9\u7684\u6EDA\u52A8\u4E3B\u4F53\uFF0C\u5185\u8FB9\u8DDD 16px\uFF08Apifox .overview-content padding:16px\uFF09 */\n.pp-overview-content {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-4);\n  min-width: 0;\n  min-height: 0;\n  padding: var(--sp-4);\n}\n.pp-page-title {\n  font-size: var(--fs-20);\n  line-height: var(--lh-24);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-strong);\n  margin: 0 0 var(--sp-3) 0;\n}\n.pp-muted {\n  color: var(--fg-secondary);\n}\n.pp-faint {\n  color: var(--fg-tertiary);\n}\n\n/* \u2014\u2014 \u5361\u7247\uFF1A1px \u8FB9\u6846\u30018px \u5706\u89D2\u300116px \u5185\u8FB9\u8DDD\u3001\u65E0\u9634\u5F71 \u2014\u2014 */\n.pp-card {\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  padding: var(--card-pad);\n}\n.pp-card-title {\n  font-size: var(--fs-14);\n  line-height: var(--lh-22);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-strong);\n  margin: 0 0 var(--sp-2) 0;\n}\n.pp-card-hover:hover {\n  border-color: var(--accent);\n  box-shadow: var(--shadow-popover);\n}\n\n/* \u2014\u2014 \u63A7\u4EF6\uFF1A\u9AD8\u5EA6\u4E00\u5F8B var(--ctl-h) \u2014\u2014 */\n.pp-btn {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  gap: var(--sp-1);\n  height: var(--ctl-h);\n  padding: 0 var(--sp-4);\n  font-family: var(--font-sans);\n  font-size: var(--fs-14);\n  line-height: var(--lh-22);\n  color: var(--fg);\n  background: var(--bg-surface);\n  border: 1px solid var(--border-strong);\n  border-radius: var(--radius-ctl);\n  cursor: pointer;\n  white-space: nowrap;\n}\n.pp-btn:hover {\n  border-color: var(--accent);\n  color: var(--accent);\n}\n.pp-btn:disabled {\n  color: var(--fg-tertiary);\n  border-color: var(--border);\n  cursor: not-allowed;\n}\n.pp-btn-primary {\n  color: var(--fg-on-accent);\n  background: var(--accent);\n  border-color: var(--accent);\n}\n.pp-btn-primary:hover {\n  color: var(--fg-on-accent);\n  background: var(--accent-hover);\n  border-color: var(--accent-hover);\n}\n.pp-btn-primary:disabled {\n  color: var(--fg-on-accent);\n  background: var(--border-strong);\n  border-color: var(--border-strong);\n}\n.pp-btn-sm {\n  height: var(--ctl-h-sm);\n  padding: 0 var(--sp-2);\n  font-size: var(--fs-12);\n}\n.pp-btn-ghost {\n  border-color: transparent;\n  background: transparent;\n}\n.pp-btn-ghost:hover {\n  background: var(--bg-hover);\n  border-color: transparent;\n  color: var(--fg);\n}\n.pp-btn-danger:hover {\n  border-color: var(--error);\n  color: var(--error);\n}\n\n.pp-input,\n.pp-select {\n  height: var(--ctl-h);\n  padding: 0 var(--sp-3);\n  font-family: var(--font-sans);\n  font-size: var(--fs-14);\n  line-height: var(--lh-22);\n  color: var(--fg);\n  background: var(--bg-surface);\n  border: 1px solid var(--border-strong);\n  border-radius: var(--radius-ctl);\n  min-width: 0;\n}\n.pp-input::placeholder {\n  color: var(--fg-tertiary);\n}\n.pp-input:focus,\n.pp-select:focus,\n.pp-btn:focus-visible {\n  outline: none;\n  border-color: var(--accent);\n  box-shadow: 0 0 0 2px var(--accent-tint);\n}\n.pp-input-mono {\n  font-family: var(--font-mono);\n  font-size: var(--fs-13);\n}\n.pp-input-sm {\n  height: var(--ctl-h-sm);\n  font-size: var(--fs-12);\n  padding: 0 var(--sp-2);\n}\n\n/* \u2014\u2014 \u8868\u683C\uFF1A\u884C\u9AD8\u4E00\u5F8B var(--row-h) \u2014\u2014 */\n.pp-table {\n  width: 100%;\n  border-collapse: collapse;\n  font-size: var(--fs-14);\n}\n/* \u53C2\u6570\u8868\uFF08ParamTable\uFF09\u4E13\u5C5E\uFF1A\u5217\u5BBD\u5199\u6B7B\u5728 COLUMN_META\uFF0Cfixed \u5E03\u5C40\u4E0B\u7A84\u5BB9\u5668\u7531 .pp-table-wrap\n   \u6574\u4F53\u6A2A\u5411\u6EDA\u52A8\uFF0C\u800C\u4E0D\u662F\u5404\u5217\u6309\u5185\u5BB9\u4E92\u76F8\u6324\u538B\u584C\u9677\u6210 num\u2026/P\u2026\u3002\n   \u7528\u5C5E\u6027\u9009\u62E9\u5668\u800C\u4E0D\u662F\u65B0\u7C7B\u540D\uFF1A.pp-table \u662F\u5176\u5B83 9 \u4E2A\u9875\u9762\u7684\u5171\u7528\u7C7B\uFF0C\u4E0D\u80FD\u5728\u6B64\u6539\u5168\u5C40\u5E03\u5C40\u3002\n   \u6700\u5C0F\u5BBD\u5EA6\u7531\u7EC4\u4EF6\u6309\u5217\u5BBD\u5408\u8BA1\u5185\u8054\u7ED9\u51FA\uFF08\u9ED8\u8BA4\u516D\u5217 + \u64CD\u4F5C\u5217 = 806px\uFF09\uFF0C\u6B64\u5904\u4E0D\u91CD\u590D\u58F0\u660E\u3002 */\n/* \u7C7B\u540D\u522B\u540D\uFF1AParamTable \u540C\u65F6\u6302 .pp-table-params\uFF0C\u4FBF\u4E8E\u6309\u7C7B\u5B9A\u4F4D\uFF08\u5C5E\u6027\u9009\u62E9\u5668\u4FDD\u7559\u517C\u5BB9\uFF09 */\n.pp-table.pp-table-params,\n.pp-table[data-param-table] {\n  table-layout: fixed;\n}\n/* fixed \u5E03\u5C40\u4E0B\u5217\u5BBD\u5DF2\u5B9A\uFF0C\u957F\u6587\u672C\u5FC5\u987B\u88C1\u5728\u81EA\u5DF1\u7684\u683C\u5B50\u91CC\uFF08\u4E0D\u80FD\u9760 max-width:0 \u90A3\u5957\uFF0C\n   \u5B83\u4F1A\u628A\u6574\u4E2A\u8868\u683C\u538B\u584C\uFF09\uFF1B\u88C1\u5207\u53EA\u4F5C\u7528\u4E8E\u53C2\u6570\u8868\uFF0C\u5176\u5B83 .pp-table \u4FDD\u6301\u539F\u884C\u4E3A\u3002 */\n.pp-table[data-param-table] td {\n  overflow: hidden;\n}\n.pp-table th {\n  height: var(--row-h);\n  padding: 0 var(--sp-2);\n  text-align: left;\n  font-weight: var(--fw-medium);\n  font-size: var(--fs-13);\n  color: var(--fg-secondary);\n  background: var(--bg-subtle);\n  border-bottom: 1px solid var(--border);\n  white-space: nowrap;\n}\n.pp-table td {\n  height: var(--row-h);\n  padding: 0 var(--sp-2);\n  border-bottom: 1px solid var(--border);\n  /* Apifox \u8868\u683C\u4E0D\u6298\u884C\uFF1A\u7A84\u5BB9\u5668\u91CC\u9760 .pp-table-wrap \u6A2A\u5411\u6EDA\u52A8\uFF0C\u4E2D\u6587\u9010\u5B57\u65AD\u884C\u4F1A\u628A\u300C\u67E5\u8BE2\u300D\u7AD6\u6392\u3002\n     \u6B64\u5904\u4E0D\u5F97\u518D\u5199 max-width:0 + ellipsis\u2014\u2014\u90A3\u7EC4\u662F\u7A84\u5BB9\u5668\u5217\u584C\u9677\u7684\u5143\u51F6\u3002 */\n  white-space: nowrap;\n}\n/* \u73AF\u5883\u9875\u53D8\u91CF\u8868\uFF08env.jsx varTable\uFF09\uFF1A\u4E94\u5217\u56FA\u5B9A\u5BBD\u5EA6\uFF0C\u503C\u5217\u5403\u5269\u4F59\u5BBD\u5EA6\u3002\n   \u4E0D\u52A0 fixed \u65F6\u4E94\u5217\u6309\u5185\u5BB9\u6491\u5F00\uFF0C\u7A84\u5BB9\u5668\u91CC\u6574\u8868 603px \u9876\u7834 438px \u7684\u5BB9\u5668\u3002 */\n/* \u591A\u5217\u7F16\u8F91\u8868\uFF08flow \u6B65\u9AA4\u7F16\u6392 / test \u65AD\u8A00\u4E0E\u6B65\u9AA4\uFF09\uFF1A\u5217\u5BBD\u5408\u8BA1 510~640px\uFF0C\n   \u7A84\u5BB9\u5668\u91CC\u65E0\u5BBD\u5EA6\u5217\uFF08\u6D88\u606F / \u8DEF\u5F84\uFF09\u4F1A\u88AB\u538B\u5230\u51E0\u50CF\u7D20\uFF0C\u8868\u683C\u6574\u4F53\u4EA4\u7ED9 .pp-table-wrap \u6A2A\u5411\u6EDA\u52A8\u3002 */\n.pp-table.pp-table-wide {\n  min-width: 640px;\n}\n.pp-table.pp-table-vars {\n  table-layout: fixed;\n  /* \u56FA\u5B9A\u5217 52+52+64=168px\uFF0C\u53D8\u91CF\u540D\u5217 30%\u3001\u503C\u5217\u5403\u5269\u4F59\uFF1A360px \u5BB9\u5668\u4E0B\u503C\u5217\u4ECD\u6709 110px\uFF0C\n     \u518D\u7A84\u5C31\u6A2A\u5411\u6EDA\u52A8\u3002\u4E0D\u8BBE 480\u2014\u2014510px \u4E3B\u533A\u91CC\u4F1A\u88AB\u5207\u6389\u300C\u64CD\u4F5C\u300D\u5217\u3002 */\n  min-width: 360px;\n}\n.pp-table.pp-table-vars th:nth-child(1) { width: 30%; }\n.pp-table.pp-table-vars th:nth-child(2) { width: auto; }\n.pp-table.pp-table-vars th:nth-child(3),\n.pp-table.pp-table-vars th:nth-child(4) { width: 52px; }\n.pp-table.pp-table-vars th:nth-child(5) { width: 64px; }\n.pp-table.pp-table-vars td { overflow: hidden; }\n/* \u53F3\u7F16\u8F91\u533A\u53D8\u91CF\u8868\uFF1A\u4E94\u5217\u5728 480px \u4EE5\u4E0A\u90FD\u80FD\u5168\u663E\u793A\uFF0C\u4E0D\u9700\u8981\u6A2A\u5411\u6EDA\u52A8\u3002\n   \u53D8\u91CF\u540D 32% / \u503C\u5217\u5403\u5269\u4F59 / \u542F\u7528\xB7\u5BC6\u94A5\u5404 44px\uFF08\u53EA\u653E\u590D\u9009\u6846\uFF09/ \u64CD\u4F5C 48px\uFF08\u53EA\u653E\u56FE\u6807\u6309\u94AE\uFF09\u3002 */\n.pp-env-main .pp-table.pp-table-vars {\n  min-width: 0;\n  width: 100%;\n}\n.pp-env-main .pp-table.pp-table-vars th:nth-child(1) { width: 32%; }\n.pp-env-main .pp-table.pp-table-vars th:nth-child(3),\n.pp-env-main .pp-table.pp-table-vars th:nth-child(4) { width: 44px; }\n.pp-env-main .pp-table.pp-table-vars th:nth-child(5) { width: 48px; }\n.pp-env-main .pp-table.pp-table-vars td:nth-child(3),\n.pp-env-main .pp-table.pp-table-vars td:nth-child(4),\n.pp-env-main .pp-table.pp-table-vars td:nth-child(5) {\n  text-align: center;\n}\n.pp-env-main .pp-table.pp-table-vars input[type="checkbox"] {\n  margin: 0;\n}\n.pp-table tbody tr:hover {\n  background: var(--bg-hover);\n}\n.pp-table tbody tr[data-active="true"] {\n  background: var(--bg-selected);\n}\n.pp-table-mono {\n  font-family: var(--font-mono);\n  font-size: var(--fs-13);\n}\n/* \u5355\u5143\u683C\u5185\u7F16\u8F91\uFF1A\u65E0\u8FB9\u6846\u8F93\u5165\uFF0C\u805A\u7126\u624D\u663E\u8FB9\u6846\uFF08Apifox \u8868\u683C\u5185\u7F16\u8F91\u89C2\u611F\uFF09 */\n.pp-cell-input {\n  width: 100%;\n  min-width: 0;\n  color: var(--fg);\n  background: transparent;\n  border: 1px solid transparent;\n  border-radius: var(--radius-sm);\n}\n.pp-cell-input:hover {\n  border-color: var(--border);\n}\n.pp-cell-input:focus {\n  outline: none;\n  background: var(--bg-surface);\n  border-color: var(--accent);\n  box-shadow: 0 0 0 2px var(--accent-tint);\n}\n/* \u8868\u5C3E\u300C+ \u6DFB\u52A0\u53C2\u6570\u300D\uFF1A\u5360\u6EE1\u6574\u884C\uFF0C\u5DE6\u5BF9\u9F50 */\n.pp-table-add {\n  width: 100%;\n  justify-content: flex-start;\n  color: var(--accent);\n}\n\n/* \u2014\u2014 \u80F6\u56CA / \u65B9\u6CD5\u5FBD\u6807\uFF1A\u9AD8\u5EA6\u4E00\u5F8B var(--pill-h) \u2014\u2014 */\n.pp-pill {\n  display: inline-flex;\n  align-items: center;\n  height: var(--pill-h);\n  padding: 0 var(--sp-2);\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-secondary);\n  border: 1px solid var(--border-strong);\n  border-radius: var(--radius-pill);\n  white-space: nowrap;\n}\n.pp-pill-ok {\n  color: var(--success);\n  border-color: var(--success);\n}\n.pp-pill-warn {\n  color: var(--warning);\n  border-color: var(--warning);\n}\n.pp-pill-bad {\n  color: var(--error);\n  border-color: var(--error);\n}\n.pp-pill-accent {\n  color: var(--accent);\n  border-color: var(--accent);\n}\n.pp-method {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  height: var(--pill-h);\n  min-width: 44px;\n  padding: 0 var(--sp-2);\n  font-family: var(--font-mono);\n  font-size: var(--method-fs);\n  font-weight: var(--fw-semibold);\n  line-height: var(--lh-18);\n  letter-spacing: 0.02em;\n  text-transform: uppercase;\n  color: var(--fg-on-accent);\n  background: var(--fg-tertiary);\n  border: none;\n  border-radius: var(--radius-sm);\n}\n.pp-method[data-method="GET"] { background: var(--method-get); }\n.pp-method[data-method="POST"] { background: var(--method-post); }\n.pp-method[data-method="PUT"] { background: var(--method-put); }\n.pp-method[data-method="DELETE"] { background: var(--method-delete); }\n.pp-method[data-method="PATCH"] { background: var(--method-patch); }\n.pp-method[data-method="HEAD"],\n.pp-method[data-method="OPTIONS"],\n.pp-method[data-method="TRACE"] { background: var(--method-other); }\n\n/* \u2014\u2014 \u9875\u7B7E\u6761 + \u9875\u7B7E \u2014\u2014 */\n.pp-tabs {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-1);\n  /* \u7A84\u5BB9\u5668\u91CC\u9875\u7B7E\uFF08\u5982 import \u7684\u300COpenAPI / Swagger\u300D\uFF09\u4E00\u884C\u653E\u4E0D\u4E0B\uFF1A\n     \u5141\u8BB8\u6362\u884C\u5E76\u628A\u9AD8\u5EA6\u4EA4\u7ED9\u5185\u5BB9\uFF0C\u5426\u5219\u6807\u7B7E\u6587\u5B57\u4F1A\u88AB\u538B\u6210\u4E24\u884C\u3001\u9875\u7B7E\u6761\u9876\u7834\u5361\u7247\u3002 */\n  flex-wrap: wrap;\n  min-height: var(--ctl-h-lg);\n  padding: 0 var(--sp-3);\n  background: var(--bg-surface);\n  border-bottom: 1px solid var(--border);\n}\n.pp-tab {\n  display: inline-flex;\n  align-items: center;\n  height: var(--ctl-h);\n  padding: 0 var(--sp-3);\n  /* \u9875\u7B7E\u6587\u5B57\u4E0D\u6298\u884C\uFF1A\u6298\u884C\u4F1A\u628A\u300C\u67E5\u8BE2\u300D\u7AD6\u6392\u6210\u4E24\u884C */\n  white-space: nowrap;\n  font-family: var(--font-sans);\n  font-size: var(--fs-14);\n  color: var(--fg-secondary);\n  background: transparent;\n  border: none;\n  border-bottom: 2px solid transparent;\n  cursor: pointer;\n}\n.pp-tab:hover {\n  color: var(--fg);\n}\n.pp-tab[data-active="true"] {\n  color: var(--accent);\n  font-weight: var(--fw-medium);\n  border-bottom-color: var(--accent);\n}\n\n/* \u2014\u2014 \u5206\u6BB5\u63A7\u4EF6 \u2014\u2014 */\n.pp-seg {\n  display: inline-flex;\n  border: 1px solid var(--border-strong);\n  border-radius: var(--radius-ctl);\n  overflow: hidden;\n}\n.pp-seg > button {\n  height: var(--ctl-h-sm);\n  padding: 0 var(--sp-3);\n  font-family: var(--font-sans);\n  font-size: var(--fs-13);\n  color: var(--fg-secondary);\n  background: var(--bg-surface);\n  border: none;\n  border-right: 1px solid var(--border);\n  cursor: pointer;\n}\n.pp-seg > button:last-child {\n  border-right: none;\n}\n.pp-seg > button[data-active="true"] {\n  color: var(--accent);\n  background: var(--accent-tint);\n  font-weight: var(--fw-medium);\n}\n\n/* \u2014\u2014 \u5DE6\u6811\uFF08\u5BF9\u9F50 Apifox .tree-bK2pJT / .treeList-ISn2t4 \u5B9E\u6D4B\uFF09\u2014\u2014\n   \u884C\u9AD8 22px\u3001\u5B57\u53F7 12px\u3001\u6587\u5B57\u8272\u53D6 --fg-secondary\u3001\u5DE6\u53F3\u5916\u8FB9\u8DDD 16px\uFF1B\n   hover \u53EA\u628A\u6587\u5B57\u8272\u63D0\u5230 --fg\uFF0C\u4E0D\u6362\u5E95\u2014\u2014\u8FD9\u662F Apifox \u6811\u6700\u5BB9\u6613\u88AB\u8BA4\u9519\u7684\u7279\u5F81\u3002 */\n.pp-tree {\n  padding: var(--sp-1) 0;\n}\n.pp-tree-row {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-1);\n  height: var(--tree-row-h);\n  margin: 0 var(--sp-4);\n  padding: 0 var(--sp-1);\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-secondary);\n  /* \u5DE6\u6811\u6761\u76EE\u5728\u9AA8\u67B6\u91CC\u662F <a>\uFF1A\u5FC5\u987B\u663E\u5F0F\u53BB\u6389\u94FE\u63A5\u4E0B\u5212\u7EBF\u4E0E\u7EE7\u627F\u8272\uFF0C\u5426\u5219\u6574\u5217\u90FD\u662F\u5E26\u4E0B\u5212\u7EBF\u7684\u94FE\u63A5 */\n  text-decoration: none;\n  border-radius: var(--radius-ctl);\n  cursor: pointer;\n  white-space: nowrap;\n  overflow: hidden;\n}\n.pp-tree-row:hover {\n  color: var(--fg);\n}\n.pp-tree-row[data-active="true"] {\n  color: var(--fg);\n  background: var(--bg-hover);\n  font-weight: var(--fw-medium);\n}\n/* \u5C55\u5F00\u7BAD\u5934\uFF1A\u5BBD 12px\uFF0C\u5DE6 12px \u53F3 4px\uFF08Apifox .tree-bK2pJT .ui-tree-switcher \u539F\u6587\uFF1A\n   width:12px; margin-left:12px; margin-right:4px\uFF09 */\n.pp-tree-switcher {\n  flex: none;\n  width: var(--sp-3);\n  margin-left: var(--sp-3);\n  margin-right: var(--sp-1);\n  text-align: center;\n  color: var(--fg-tertiary);\n}\n.pp-tree-icon {\n  flex: none;\n  width: var(--icon);\n  height: var(--icon);\n  color: var(--fg-tertiary);\n}\n.pp-tree-row-count {\n  margin-left: auto;\n  font-size: var(--fs-12);\n  color: var(--fg-tertiary);\n}\n.pp-tree-group {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-1);\n  height: var(--tree-row-h);\n  margin: 0 var(--sp-4);\n  padding: 0 var(--sp-1);\n  font-size: var(--fs-12);\n  font-weight: var(--fw-medium);\n  color: var(--fg-tertiary);\n  text-transform: none;\n}\n\n/* \u2014\u2014 \u53F3 TOC \u2014\u2014 */\n.pp-toc {\n  padding: var(--sp-3);\n}\n.pp-toc-item {\n  display: block;\n  height: var(--ctl-h-sm);\n  line-height: var(--ctl-h-sm);\n  padding: 0 var(--sp-2);\n  font-size: var(--fs-13);\n  color: var(--fg-secondary);\n  text-decoration: none;\n  border-left: 2px solid transparent;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.pp-toc-item:hover {\n  color: var(--fg);\n}\n.pp-toc-item[data-active="true"] {\n  color: var(--accent);\n  border-left-color: var(--accent);\n}\n\n/* \u2014\u2014 \u6587\u6863\u6B63\u6587\u5206\u533A \u2014\u2014 */\n.pp-doc-section {\n  padding-top: var(--sp-4);\n  margin-top: var(--sp-4);\n  border-top: 1px solid var(--border);\n}\n.pp-doc-section:first-child {\n  padding-top: 0;\n  margin-top: 0;\n  border-top: none;\n}\n.pp-doc-h1 {\n  font-size: var(--fs-20);\n  line-height: var(--lh-24);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-strong);\n  margin: 0 0 var(--sp-2) 0;\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n}\n.pp-doc-h2 {\n  font-size: var(--fs-16);\n  line-height: var(--lh-24);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-strong);\n  margin: 0 0 var(--sp-2) 0;\n}\n.pp-doc-h3 {\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-secondary);\n  margin: 0 0 var(--sp-1) 0;\n}\n\n/* \u2014\u2014 \u5DE5\u5177\u6761 \u2014\u2014 */\n.pp-toolbar {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  flex-wrap: wrap;\n  margin-bottom: var(--sp-3);\n}\n.pp-toolbar-inline {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  flex-wrap: wrap;\n}\n.pp-toolbar-spacer {\n  flex: 1;\n}\n\n/* \u2014\u2014 \u53CC\u680F / \u5B57\u6BB5\u884C \u2014\u2014 */\n.pp-cols-2 {\n  display: grid;\n  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);\n  gap: var(--sp-4);\n  align-items: start;\n}\n/* \u7A84\u5BB9\u5668\uFF1A\u4FA7\u8FB9\u680F\u4E3B\u533A\u5B9E\u6D4B 455~840px\uFF0C\u4E24\u5217\u5404\u53EA\u5269 230~420px\uFF0C\n   import \u7684 textarea \u4E0E settings \u7684\u4EE3\u7406\u8F93\u5165\u6846\u4F1A\u88AB\u622A\u65AD\u3002\n   900px = \u4E24\u5217\u5404 440px \u4EE5\u4E0A\u624D\u591F\u653E\u8FD9\u4E24\u7C7B\u63A7\u4EF6\uFF0C\u4F4E\u4E8E\u6B64\u6539\u4E0A\u4E0B\u5806\u53E0\u3002 */\n@container ppmain (max-width: 900px) {\n  .pp-cols-2 {\n    grid-template-columns: minmax(0, 1fr);\n  }\n}\n.pp-field {\n  display: grid;\n  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.6fr) auto auto;\n  gap: var(--sp-2);\n  align-items: center;\n  min-height: var(--ctl-h);\n}\n.pp-field-head {\n  font-size: var(--fs-12);\n  color: var(--fg-tertiary);\n  border-bottom: 1px solid var(--border);\n}\n.pp-form-row {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-3);\n  min-height: var(--ctl-h);\n  margin-bottom: var(--sp-3);\n}\n.pp-form-label {\n  width: 104px;\n  flex: none;\n  font-size: var(--fs-14);\n  color: var(--fg-secondary);\n}\n\n/* \u2014\u2014 \u4EE3\u7801 / \u9884\u89C8\u5757 \u2014\u2014 */\n.pp-pre {\n  margin: 0;\n  padding: var(--sp-3);\n  font-family: var(--font-mono);\n  font-size: var(--fs-13);\n  line-height: var(--lh-20);\n  color: var(--fg);\n  background: var(--bg-subtle);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-ctl);\n  overflow: auto;\n}\n.pp-pre-scroll {\n  max-height: calc(var(--row-h) * 12);\n}\n.pp-json-editor {\n  width: 100%;\n  min-height: calc(var(--row-h) * 6);\n  padding: var(--sp-3);\n  font-family: var(--font-mono);\n  font-size: var(--fs-13);\n  line-height: var(--lh-20);\n  color: var(--fg);\n  background: var(--bg-surface);\n  border: 1px solid var(--border-strong);\n  border-radius: var(--radius-ctl);\n  resize: vertical;\n}\n.pp-json-editor:focus {\n  outline: none;\n  border-color: var(--accent);\n  box-shadow: 0 0 0 2px var(--accent-tint);\n}\n.pp-textarea {\n  width: 100%;\n  min-height: calc(var(--row-h) * 6);\n  padding: var(--sp-3);\n  font-family: var(--font-mono);\n  font-size: var(--fs-13);\n  line-height: var(--lh-20);\n  color: var(--fg);\n  background: var(--bg-surface);\n  border: 1px solid var(--border-strong);\n  border-radius: var(--radius-ctl);\n  resize: vertical;\n}\n.pp-textarea:focus {\n  outline: none;\n  border-color: var(--accent);\n  box-shadow: 0 0 0 2px var(--accent-tint);\n}\n\n/* \u2014\u2014 \u63D0\u793A\u6761 \u2014\u2014 */\n.pp-note {\n  display: flex;\n  align-items: flex-start;\n  gap: var(--sp-2);\n  padding: var(--sp-2) var(--sp-3);\n  font-size: var(--fs-13);\n  line-height: var(--lh-20);\n  color: var(--fg);\n  background: var(--bg-subtle);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-ctl);\n}\n.pp-note-bad {\n  color: var(--error);\n  border-color: var(--error);\n  background: var(--bg-surface);\n}\n.pp-note-warn {\n  color: var(--warning);\n  border-color: var(--warning);\n  background: var(--bg-surface);\n}\n.pp-note-ok {\n  color: var(--success);\n  border-color: var(--success);\n  background: var(--bg-surface);\n}\n.pp-error-text {\n  color: var(--error);\n  font-size: var(--fs-13);\n  line-height: var(--lh-20);\n  margin: var(--sp-1) 0;\n}\n\n/* \u2014\u2014 \u5217\u8868 / \u7ED3\u679C\u884C \u2014\u2014 */\n.pp-list {\n  display: flex;\n  flex-direction: column;\n  gap: 1px;\n}\n.pp-list-row {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  min-height: var(--row-h);\n  padding: 0 var(--sp-2);\n  font-size: var(--fs-14);\n  color: var(--fg);\n  text-decoration: none;\n  border-radius: var(--radius-ctl);\n  cursor: pointer;\n}\n.pp-list-row:hover {\n  background: var(--bg-hover);\n}\n.pp-list-row[data-active="true"] {\n  background: var(--bg-selected);\n  color: var(--accent);\n}\n.pp-result-row {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  min-height: var(--ctl-h);\n  padding: 0 var(--sp-2);\n  font-size: var(--fs-13);\n  border-bottom: 1px solid var(--border);\n}\n\n/* \u2014\u2014 \u72B6\u6001\u8272\u6587\u672C \u2014\u2014 */\n.pp-ok { color: var(--success); }\n.pp-warn { color: var(--warning); }\n.pp-bad { color: var(--error); }\n.pp-accent { color: var(--accent); }\n\n/* \u2014\u2014 \u5143\u4FE1\u606F / \u7701\u7565 \u2014\u2014 */\n.pp-meta {\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-tertiary);\n}\n.pp-mono {\n  font-family: var(--font-mono);\n  font-size: var(--fs-13);\n}\n.pp-ellipsis {\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  min-width: 0;\n}\n.pp-scroll {\n  overflow: auto;\n  min-height: calc(var(--row-h) * 0);\n}\n/* \u8868\u683C\u5BB9\u5668\uFF1A\u7A84\u680F\u91CC\u6A2A\u5411\u6EDA\u52A8\uFF0C\u4FDD\u6301\u5217\u5BBD\u53EF\u8BFB\u3002\n   \u4E0D\u8981\u518D\u5199 .pp-table-wrap .pp-table{min-width:100%}\uFF1A\u8868\u683C\u6700\u5C0F\u5BBD\u5EA6\u7531 ParamTable\n   \u6309\u5217\u5BBD\u5408\u8BA1\u5185\u8054\u7ED9\u51FA\uFF0C\u8FD9\u6761\u9009\u62E9\u5668\u4F1A\u628A\u5B83\u8986\u76D6\u6210 100%\uFF0C\u5217\u5C31\u53C8\u80FD\u88AB\u538B\u584C\u3002 */\n.pp-table-wrap {\n  overflow-x: auto;\n  overflow-y: hidden;\n  /* flex/grid \u5B50\u9879\u9ED8\u8BA4 min-width:auto\uFF0C\u4F1A\u88AB\u8868\u683C\u5185\u8054 min-width \u9876\u5F00\u5BB9\u5668\uFF0C\n     \u5728 .pp-pane / .pp-debug-tabbody \u91CC\u8868\u73B0\u4E3A\u6574\u9875\u6A2A\u5411\u6EA2\u51FA\u3002\u8FD9\u91CC\u663E\u5F0F\u538B\u5230 0\u3002 */\n  min-width: 0;\n  max-width: 100%;\n}\n.pp-aside-sticky {\n  position: sticky;\n  top: var(--sp-4);\n}\n.pp-md-list {\n  margin: 0 0 var(--sp-2) 0;\n  padding-left: var(--sp-5);\n}\n\n/* \u2014\u2014 \u7EDF\u8BA1\u5757 \u2014\u2014 */\n.pp-stats {\n  display: grid;\n  /* \u4FA7\u8FB9\u680F\u53EF\u7528\u5BBD\u7EA6 500px\uFF1A96px \u8D77\u8DF3\u53EF\u7A33\u5B9A\u6392 4 \u5217\uFF08Apifox \u7EDF\u8BA1\u6761\u662F\u4E00\u884C\u56DB\u5757\uFF09 */\n  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));\n  gap: var(--sp-2);\n}\n/* \u7A84\u5BB9\u5668\uFF1A4 \u5757\u5404\u53EA\u5269 ~110px\uFF0C\u300C2026-11-19 09:41\u300D\u88AB\u622A\u6210\u300C2026-11-1\u2026\u300D\u3002\n   \u4E24\u5217\u8BA9\u6BCF\u5757 240px\uFF0C\u65F6\u95F4\u4E0E\u6570\u5B57\u90FD\u5B8C\u6574\u3002 */\n@container ppmain (max-width: 640px) {\n  .pp-stats {\n    grid-template-columns: repeat(2, minmax(0, 1fr));\n  }\n}\n.pp-stat {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-1);\n  padding: var(--sp-2) var(--sp-3);\n  min-width: 0;\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n}\n.pp-stat-value {\n  /* \u7EDF\u8BA1\u6570\u5B57\u5728\u7A84\u680F\u91CC\u4E0D\u80FD\u7528 24px\uFF08\u4F1A\u6362\u884C\u628A\u56DB\u5757\u6491\u6210\u4E24\u884C\uFF09\uFF0C18px \u4E0E Apifox \u9762\u677F\u5185\u6570\u503C\u540C\u6863 */\n  font-size: var(--fs-16);\n  line-height: var(--lh-24);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-strong);\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.pp-stat-label {\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-secondary);\n}\n\n/* \u2014\u2014 \u603B\u89C8\uFF1AApifox .container-LUodZ0 / .card-R2lvj9 / .container-FmdDnj \u540C\u6784 \u2014\u2014 */\n/* Apifox \u539F\u6587\uFF1A.container-LUodZ0{max-width:1200px;margin:0 auto;padding-top:20px} */\n.pp-ov-summary {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-2);\n}\n/* Apifox .projectSummary__num\uFF1Amin-height 34 / font-size 24 / line-height 34 */\n.pp-ov-summary-num {\n  font-size: var(--fs-24);\n  line-height: var(--lh-24);\n  font-weight: 700;\n  color: var(--fg-strong);\n}\n/* Apifox .projectSummary__des\uFF1A12px / 17px \u884C\u9AD8 / \u6B21\u7EA7\u6587\u5B57 */\n.pp-ov-summary-desc {\n  margin: 0;\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-secondary);\n}\n/* Apifox .container-FmdDnj\uFF08max-width 640 / padding 20px 0\uFF09\u4E0E .counts-Q2yB8W */\n.pp-ov-modules {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-5);\n  padding: var(--sp-5) var(--sp-6);\n}\n.pp-ov-counts {\n  display: flex;\n  flex-wrap: wrap;\n  align-items: center;\n  gap: var(--sp-4);\n}\n.pp-ov-count {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-1);\n  min-width: 0;\n}\n/* Apifox .count-Hzqee8\uFF1A19px / 600 \u7684\u6570\u5B57 */\n.pp-ov-count-num {\n  font-size: var(--fs-18);\n  line-height: var(--lh-24);\n  font-weight: 700;\n  color: var(--fg-strong);\n}\n/* Apifox .label-kLwPUS\uFF1A12px \u4E09\u7EA7\u6587\u5B57 */\n.pp-ov-count-label {\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-tertiary);\n}\n/* Apifox .line-ol7fgn\uFF1A1px \u7AD6\u5206\u9694\uFF08\u9AD8 12px\uFF0C\u5C45\u4E2D\uFF1B\u9AD8\u5EA6\u6309 sp-3 \u6D3E\u751F\uFF09 */\n.pp-ov-divider {\n  width: 1px;\n  height: calc(var(--sp-3));\n  background: var(--border);\n}\n/* Apifox .functions-VkPW1t\uFF1Aflex / gap 20 / margin-top 20 */\n.pp-ov-functions {\n  display: flex;\n  flex-wrap: wrap;\n  gap: var(--sp-5);\n  align-items: flex-start;\n}\n/* Apifox .left-Gj8Uxk\uFF1Aflex:1 / min-width 356 */\n.pp-ov-left {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-4);\n  flex: 1 1 240px;\n  min-width: 0;\n}\n/* Apifox .right-GH0jb9\uFF1Amin-width 240 / max-width 320 */\n.pp-ov-right {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-1);\n  flex: 0 1 240px;\n  min-width: 0;\n}\n/* Apifox .rightAction-CUSGuy\uFF1Apadding 8 / radius 8 / hover \u6362\u5E95 */\n.pp-ov-action {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  padding: var(--sp-2);\n  border-radius: var(--radius-card);\n  font-size: var(--fs-14);\n  line-height: var(--lh-22);\n  color: var(--fg);\n  text-decoration: none;\n}\n.pp-ov-action:hover {\n  background: var(--bg-hover);\n}\n/* \u5F53\u524D\u9879\u76EE\u884C\uFF1A\u6807\u7B7E + \u53EA\u8BFB\u503C + \u7A7A\u6001\u63D0\u793A */\n.pp-ov-current {\n  display: flex;\n  flex-wrap: wrap;\n  align-items: center;\n  gap: var(--sp-2);\n}\n.pp-ov-current-value {\n  width: 200px;\n  flex: 0 1 auto;\n}\n.pp-ov-form {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-3);\n}\n/* Apifox \u529F\u80FD\u5361\uFF08.card-WoMhzt\uFF1Aradius 10 / \u53F3\u4E0B\u89D2\u6C34\u5370\u56FE\u6807\uFF09 */\n.pp-ov-cards {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));\n  gap: var(--sp-4);\n}\n.pp-ov-card {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-2);\n  align-items: flex-start;\n}\n.pp-ov-card-title {\n  font-size: var(--fs-14);\n  line-height: var(--lh-22);\n  font-weight: 600;\n  color: var(--fg-strong);\n}\n.pp-ov-card-info {\n  margin: 0;\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-secondary);\n  flex: 1;\n}\n\n/* \u2014\u2014 \u603B\u89C8\uFF1A\u9879\u76EE\u5361\u7247\u7F51\u683C \u2014\u2014 */\n.pp-overview-grid {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));\n  gap: var(--sp-4);\n}\n\n/* \u2014\u2014 \u8C03\u8BD5\uFF1A\u6574\u9875 padding 10px\uFF08Apifox .apiCase padding:10px\uFF09\u2014\u2014 */\n/* \u8C03\u8BD5\u9875\uFF1AApifox .apiCase \u539F\u6587\uFF08width/height 100%\u3001padding 10px\u3001overflow auto\uFF09\u3002\n   \u5355\u680F\u7ED3\u6784\u2014\u2014\u63A5\u53E3\u6811\u7531\u5DE6\u4FA7\u5168\u5C40\u5BFC\u822A\u627F\u62C5\uFF0C\u9875\u9762\u5185\u4E0D\u518D\u81EA\u5E26\u3002 */\n.pp-debug-page {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-3);\n  padding: var(--page-pad);\n  padding-right: calc(var(--page-pad) - var(--sp-1) + var(--layout-pad));\n  min-height: 0;\n}\n/* \u5143\u4FE1\u606F\u884C\uFF1A\u73AF\u5883\u9009\u62E9 + \u5B9E\u9645\u5730\u5740 + \u53D8\u91CF + \u5386\u53F2\u5165\u53E3\uFF0C\u538B\u6210\u4E00\u884C */\n/* \u901A\u7528\u4E24\u680F\uFF08\u5DE6\u5217\u8868 + \u53F3\u8BE6\u60C5\uFF09\uFF1Aenv / schema / test / mock \u56DB\u9875\u5171\u7528\u3002\n   debug \u9875\u4E0D\u7528\u5B83\u2014\u2014\u8C03\u8BD5\u53F0\u662F Apifox \u5355\u680F\u7ED3\u6784\u3002 */\n.pp-debug-layout {\n  display: grid;\n  grid-template-columns: clamp(var(--panel-w), 32%, var(--panel-w-max)) minmax(0, 1fr);\n  gap: var(--sp-3);\n  align-items: start;\n}\n@container ppmain (max-width: 980px) {\n  .pp-debug-layout {\n    grid-template-columns: minmax(0, 1fr);\n  }\n}\n/* \u5168\u5C40\u641C\u7D22\u9875\uFF1A\u4E00\u6761\u641C\u7D22\u6761 + \u5206\u7EC4\u7ED3\u679C\u3002\n   \u539F\u6765\u300C\u641C\u7D22\u300D\u6309\u94AE\u5728\u9875\u5934\u3001\u8F93\u5165\u6846\u5728\u4E0B\u65B9\u7684\u5361\u7247\u91CC\uFF0C\u4E00\u6B21\u641C\u7D22\u8981\u8DE8\u4E24\u4E2A\u533A\u57DF\uFF1B\n   \u4E09\u7EC4\u7ED3\u679C\u53C8\u90FD\u585E\u8FDB\u4E00\u5F20\u5361\u7247\uFF0C\u7A7A\u7EC4\u4E5F\u5360\u4F4D\uFF0CURL \u88AB margin-left:auto \u7529\u5230\u8FDC\u7AEF\u3002 */\n.pp-search-bar {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  flex-wrap: wrap;\n  padding: var(--sp-3);\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n}\n.pp-search-project {\n  flex: none;\n  width: 120px;\n}\n.pp-search-input {\n  flex: 1;\n  min-width: 160px;\n}\n.pp-search-btn {\n  flex: none;\n  min-width: 72px;\n}\n.pp-search-source {\n  margin: var(--sp-2) 0 var(--sp-3);\n}\n.pp-search-hint {\n  display: flex;\n  min-height: calc(var(--row-h) * 6);\n}\n.pp-search-results {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-3);\n}\n.pp-search-group {\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  overflow: hidden;\n}\n/* \u5206\u7EC4\u5934\uFF1A\u53EF\u6298\u53E0\uFF0C\u6574\u884C\u53EF\u70B9 */\n.pp-search-group-head {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  width: 100%;\n  height: var(--ctl-h);\n  padding: 0 var(--sp-3);\n  font-family: var(--font-sans);\n  font-size: var(--fs-13);\n  color: var(--fg-secondary);\n  text-align: left;\n  background: var(--bg-subtle);\n  border: none;\n  border-bottom: 1px solid var(--border);\n  cursor: pointer;\n}\n.pp-search-group-head:hover {\n  color: var(--fg);\n}\n.pp-search-caret {\n  flex: none;\n  width: 12px;\n  font-size: var(--fs-12);\n  color: var(--fg-tertiary);\n}\n.pp-search-group-label {\n  font-weight: var(--fw-medium);\n  color: var(--fg-strong);\n}\n.pp-search-count {\n  flex: none;\n  min-width: 18px;\n  padding: 0 var(--sp-1);\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-tertiary);\n  text-align: center;\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-pill);\n}\n.pp-search-list {\n  padding: var(--sp-1) var(--sp-2) var(--sp-2);\n}\n.pp-search-row {\n  gap: var(--sp-2);\n}\n/* \u975E\u63A5\u53E3\u6761\u76EE\uFF08\u6A21\u578B / \u76EE\u5F55\uFF09\u7528\u4E00\u4E2A\u5C0F\u5706\u70B9\u5360\u4F4D\uFF0C\u4FDD\u6301\u4E09\u884C\u7F29\u8FDB\u5BF9\u9F50 */\n/* \u975E\u63A5\u53E3\u6761\u76EE\uFF08\u6A21\u578B / \u76EE\u5F55\uFF09\uFF1A\u7528\u4E00\u4E2A\u4E0E method \u5FBD\u6807\u540C\u5BBD\u7684\u5C0F\u5706\u70B9\u5360\u4F4D\uFF0C\n   \u4FDD\u8BC1\u4E09\u7EC4\u7684\u540D\u79F0\u5217\u5DE6\u8FB9\u7F18\u5BF9\u9F50\u3002method \u5FBD\u6807 min-width 44px\u3002 */\n.pp-search-dot {\n  flex: none;\n  width: calc(var(--scrollbar));\n  height: calc(var(--scrollbar));\n  margin: 0 19px;\n  background: var(--fg-tertiary);\n  border-radius: var(--radius-pill);\n}\n.pp-search-name {\n  flex: 0 1 auto;\n  font-size: var(--fs-13);\n}\n.pp-search-sub {\n  /* \u9760\u53F3\u4F46\u4E0D\u5403\u6EE1\uFF1A\u540D\u79F0\u4E0E URL \u4E4B\u95F4\u7559 16px \u8D77\uFF0C\u957F\u540D\u79F0\u65F6 URL \u8BA9\u4F4D */\n  flex: 0 1 auto;\n  margin-left: var(--sp-4);\n  text-align: right;\n}\n/* \u9875\u5934\u7EDF\u8BA1\uFF1A\u4E0D\u53C2\u4E0E\u6536\u7F29\uFF0C\u7A84\u680F\u91CC\u4E5F\u5B8C\u6574\u663E\u793A */\n.pp-search-summary {\n  flex: none;\n  white-space: nowrap;\n}\n.pp-search-mark {\n  padding: 0 1px;\n  color: var(--fg-strong);\n  font-weight: var(--fw-semibold);\n  background: var(--accent-tint);\n  border-radius: 2px;\n}\n/* \u5BFC\u5165\u5BFC\u51FA\u9875\uFF08Apifox\u300C\u5BFC\u5165\u5BFC\u51FA\u6570\u636E\u300D\u540C\u6784\uFF09\uFF1A\u9875\u7B7E\u5206\u533A + \u5DE6\u683C\u5F0F\u5217\u8868 + \u53F3\u5185\u5BB9\u3002\n   \u539F\u6765\u300C\u5BFC\u5165 / \u5BFC\u51FA\u300D\u4E24\u5217\u5E76\u6392\uFF0C\u5404\u53EA\u5269 240px\uFF1Atextarea \u4E0E\u6309\u94AE\u7EC4\u90FD\u6362\u884C\uFF0C\n   \u4EE3\u7801\u751F\u6210\u518D\u5355\u72EC\u5360\u4E00\u6574\u5F20\u5361\uFF0C\u4E09\u5757\u9AD8\u5EA6\u53C2\u5DEE\u3002 */\n.pp-io-layout {\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  overflow: hidden;\n}\n.pp-io-layout > .pp-tabs {\n  border-bottom: 1px solid var(--border);\n}\n.pp-io-body {\n  display: grid;\n  grid-template-columns: 168px minmax(0, 1fr);\n  min-height: 0;\n}\n@container ppmain (max-width: 720px) {\n  .pp-io-body {\n    grid-template-columns: minmax(0, 1fr);\n  }\n  /* \u5806\u53E0\u540E\u683C\u5F0F\u5217\u8868\u6539\u6210\u6A2A\u5411\u53EF\u6EDA\u7684\u4E00\u884C */\n  .pp-io-layout .pp-io-side {\n    flex-direction: row;\n    flex-wrap: nowrap;\n    overflow-x: auto;\n    border-right: none;\n    border-bottom: 1px solid var(--border);\n    padding: var(--sp-2);\n  }\n  .pp-io-layout .pp-io-side-title {\n    display: none;\n  }\n  .pp-io-layout .pp-io-item {\n    flex: none;\n    white-space: nowrap;\n  }\n  /* \u5806\u53E0\u540E\u4E3B\u533A\u72EC\u5360\u6574\u5BBD\uFF0C\u4F46 grid \u5B50\u9879\u9ED8\u8BA4 min-width:auto \u4F1A\u88AB\u5185\u5BB9\u9876\u5F00\uFF0C\n     \u8868\u73B0\u4E3A\u300C\u6E05\u7A7A\u300D\u6309\u94AE\u88AB\u5207\u6389\u4E00\u534A\u3002\u8FD9\u91CC\u663E\u5F0F\u538B\u5230 0\u3002 */\n  .pp-io-layout .pp-io-main {\n    min-width: 0;\n    padding: var(--sp-3);\n    padding-right: calc(var(--sp-3) + var(--sp-1));\n  }\n}\n.pp-io-side {\n  display: flex;\n  flex-direction: column;\n  gap: 1px;\n  padding: var(--sp-2);\n  border-right: 1px solid var(--border);\n  background: var(--bg-app);\n}\n.pp-io-side-title {\n  padding: var(--sp-1) var(--sp-2) var(--sp-2);\n  font-size: var(--fs-12);\n  color: var(--fg-tertiary);\n}\n.pp-io-item {\n  display: flex;\n  align-items: center;\n  height: var(--ctl-h);\n  padding: 0 var(--sp-2);\n  font-family: var(--font-sans);\n  font-size: var(--fs-13);\n  color: var(--fg-secondary);\n  text-align: left;\n  background: transparent;\n  border: none;\n  border-radius: var(--radius-ctl);\n  cursor: pointer;\n}\n.pp-io-item:hover {\n  color: var(--fg);\n  background: var(--bg-hover);\n}\n.pp-io-item[data-active="true"] {\n  color: var(--accent);\n  background: var(--accent-tint);\n  font-weight: var(--fw-medium);\n}\n.pp-io-main {\n  min-width: 0;\n  /* \u53F3\u4FA7\u6BD4\u5DE6\u4FA7\u591A\u7559 4px\uFF1A\u5361\u7247\u53F3\u8FB9\u6846 + \u6EDA\u52A8\u6761\u5728\u7A84\u680F\u91CC\u4F1A\u8D34\u4F4F textarea/\u6309\u94AE */\n  padding: var(--sp-4) var(--sp-4) var(--sp-4) var(--sp-4);\n  padding-right: calc(var(--sp-4) + var(--sp-1));\n}\n.pp-io-head {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  flex-wrap: wrap;\n  margin-bottom: var(--sp-2);\n}\n.pp-io-title {\n  font-size: var(--fs-14);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-strong);\n}\n/* head \u662F flex + flex-wrap\uFF1A\u5B50\u9879\u9ED8\u8BA4\u53EF\u6536\u7F29\uFF0C\u7A84\u680F\u91CC\u300C\u6E05\u7A7A\u300D\u4F1A\u88AB\u538B\u5230 42px \u628A\u5B57\u88C1\u6389\u3002\n   \u6807\u9898\u5141\u8BB8\u7701\u7565\uFF0C\u6309\u94AE\u4E00\u5F8B\u4E0D\u6536\u7F29\u3002 */\n.pp-io-head > .pp-io-title {\n  min-width: 0;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.pp-io-head > .pp-btn {\n  flex: none;\n  /* \u4E24\u5B57\u6309\u94AE\uFF08\u6E05\u7A7A\uFF09\u5728 42px \u65F6\u8D34\u8FB9\uFF0C\u7ED9\u4E00\u70B9\u4F59\u91CF */\n  min-width: 56px;\n}\n.pp-io-head > .pp-btn:last-child {\n  margin-left: auto;\n}\n.pp-io-input {\n  margin-top: var(--sp-2);\n}\n.pp-io-stats {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  flex-wrap: wrap;\n  margin-top: var(--sp-2);\n}\n.pp-io-pre {\n  margin-top: var(--sp-3);\n}\n.pp-io-sample {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  margin-top: var(--sp-2);\n  min-width: 0;\n}\n/* \u73AF\u5883\u9875\uFF08Apifox\u300C\u73AF\u5883\u7BA1\u7406\u300D\u540C\u6784\uFF09\uFF1A\u5DE6\u73AF\u5883\u5217\u8868 + \u53F3\u7F16\u8F91\u533A\u3002\n   \u5DE6\u5217\u5BBD\u4E0E\u6587\u6863\u9875\u76EE\u5F55\u6811\u5171\u7528 --panel-w\uFF0C\u53F3\u533A\u9876\u4E0A\u662F\u9875\u7B7E\uFF08\u73AF\u5883\u53D8\u91CF / \u5168\u5C40\u53D8\u91CF / \u4F18\u5148\u7EA7\uFF09\u3002\n   \u539F\u6765\u7684\u4E00\u884C\u4E09\u5361\u5728 500px \u4E3B\u533A\u91CC\u6BCF\u5361\u53EA\u5269 250px\uFF0C\u53D8\u91CF\u8868\u8981\u6A2A\u5411\u6EDA\u52A8\u3001\n   \u4F18\u5148\u7EA7\u5361\u8BF4\u660E\u9010\u5B57\u6298\u884C\uFF0C\u64CD\u4F5C\u8DEF\u5F84\u4E5F\u4E0D\u5BF9\u2014\u2014\u5207\u6362\u73AF\u5883\u5728\u5DE6\u3001\u7F16\u8F91\u5728\u53F3\u624D\u5BF9\u5F97\u4E0A Apifox\u3002 */\n.pp-env-layout {\n  display: grid;\n  grid-template-columns: var(--panel-w) minmax(0, 1fr);\n  gap: var(--sp-4);\n  align-items: start;\n}\n@container ppmain (max-width: 820px) {\n  .pp-env-layout {\n    grid-template-columns: minmax(0, 1fr);\n    gap: var(--sp-3);\n  }\n  /* \u5806\u53E0\u540E\u5DE6\u5217\u8868\u72EC\u5360\u4E00\u884C\uFF1A\u73AF\u5883\u6761\u76EE\u6539\u6210\u6A2A\u5411\u53EF\u6EDA\u7684\u80F6\u56CA\uFF0C\u4E0D\u518D\u5360\u6389\u6574\u5C4F\u9AD8\u5EA6\u3002\n     .pp-panel \u81EA\u5E26 width:var(--panel-w) \u4E0E overflow:auto\uFF0C\u8FD9\u91CC\u5FC5\u987B\u4E00\u8D77\u8986\u76D6\uFF0C\n     \u5426\u5219\u5DE6\u5217\u4ECD\u662F 240px \u5B9A\u5BBD\u3001\u53F3\u4FA7\u7559\u4E00\u5927\u7247\u7A7A\u767D\u3002 */\n  .pp-env-layout .pp-env-side {\n    width: auto;\n    padding: 0;\n    overflow: visible;\n  }\n  .pp-env-layout .pp-env-tree,\n  .pp-env-layout .pp-tree {\n    display: flex;\n    flex-wrap: nowrap;\n    gap: var(--sp-2);\n    overflow-x: auto;\n    padding: var(--sp-1) var(--sp-3);\n  }\n  .pp-env-layout .pp-tree-row {\n    flex: none;\n    max-width: 200px;\n    margin: 0;\n    padding: 0 var(--sp-3);\n    height: var(--ctl-h);\n    border: 1px solid var(--border);\n    border-radius: var(--radius-pill);\n  }\n  .pp-env-layout .pp-tree-row[data-active="true"] {\n    border-color: var(--accent);\n  }\n}\n.pp-env-side {\n  display: flex;\n  flex-direction: column;\n  min-width: 0;\n  padding: var(--sp-2) 0;\n}\n.pp-env-side-head {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  padding: 0 var(--sp-4) var(--sp-2);\n  border-bottom: 1px solid var(--border);\n  margin-bottom: var(--sp-1);\n}\n.pp-env-side-head .pp-card-title {\n  margin: 0;\n  font-size: var(--fs-13);\n}\n.pp-env-side-head > .pp-btn:last-child {\n  margin-left: auto;\n}\n.pp-btn-accent {\n  color: var(--accent);\n}\n.pp-env-main {\n  min-width: 0;\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  overflow: hidden;\n}\n.pp-env-main > .pp-tabs {\n  border-bottom: 1px solid var(--border);\n}\n.pp-env-pane {\n  padding: var(--sp-4);\n}\n.pp-env-fields {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));\n  gap: var(--sp-3);\n  margin-bottom: var(--sp-4);\n}\n.pp-env-pane > .pp-card-title {\n  margin: 0 0 var(--sp-2) 0;\n}\n/* \u53D8\u91CF\u8868\u7A7A\u884C\uFF1A\u5DE6\u5BF9\u9F50\u4E00\u884C\u63D0\u793A\uFF0C\u4E0D\u8981\u5360\u6EE1\u884C\u9AD8\u7684\u5C45\u4E2D\u7559\u767D */\n.pp-env-vars-empty {\n  height: auto;\n  padding: var(--sp-2) var(--sp-1);\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-tertiary);\n  white-space: normal;\n}\n.pp-env-field {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-1);\n  margin-bottom: var(--sp-3);\n}\n.pp-env-field .pp-form-label {\n  width: auto;\n}\n.pp-env-field-row {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n}\n.pp-env-field-row .pp-input {\n  flex: 1;\n  min-width: 0;\n}\n.pp-env-check {\n  display: inline-flex;\n  align-items: center;\n  gap: var(--sp-1);\n  flex: none;\n  font-size: var(--fs-12);\n  color: var(--fg-secondary);\n  white-space: nowrap;\n}\n/* \u53D8\u91CF\u4F18\u5148\u7EA7\uFF1A\u7EB5\u5411\u56DB\u7EA7\uFF0C\u6BCF\u7EA7\u4E00\u884C\u300C\u5E8F\u53F7 + \u4F5C\u7528\u57DF\u300D\uFF0C\u8BF4\u660E\u7F29\u8FDB\u5728\u4E0B\u4E00\u884C\u3002\n   199px \u7684\u5361\u91CC\u300C1\uFF08\u6700\u9AD8\uFF09\u300D\u8FD9\u79CD\u957F\u5FBD\u6807\u4F1A\u628A\u4F5C\u7528\u57DF\u6324\u6210\u9010\u5B57\u6362\u884C\uFF0C\u6539\u6210\u5706\u5F62\u5E8F\u53F7\u3002 */\n.pp-priority-list {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-1);\n}\n.pp-priority-item {\n  display: grid;\n  grid-template-columns: 20px minmax(0, 1fr);\n  gap: var(--sp-2);\n  padding: var(--sp-2) 0;\n  border-bottom: 1px solid var(--border);\n}\n.pp-priority-item:last-child {\n  border-bottom: none;\n}\n.pp-priority-level {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  width: calc(var(--icon-lg));\n  height: calc(var(--icon-lg));\n  font-size: var(--fs-12);\n  line-height: 1;\n  font-weight: var(--fw-semibold);\n  color: var(--fg-secondary);\n  background: var(--bg-subtle);\n  border-radius: var(--radius-pill);\n}\n.pp-priority-item:first-child .pp-priority-level {\n  color: var(--fg-on-accent);\n  background: var(--accent);\n}\n.pp-priority-body {\n  display: flex;\n  flex-direction: column;\n  gap: 2px;\n  min-width: 0;\n}\n.pp-priority-scope {\n  font-size: var(--fs-13);\n  line-height: var(--lh-18);\n  font-weight: var(--fw-medium);\n  color: var(--fg-strong);\n}\n.pp-priority-note {\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-secondary);\n}\n/* Mock \u9875\uFF1A\u5DE6\u63A5\u53E3\u5217\u8868\uFF08240px\uFF0C\u4E0E\u6587\u6863\u9875\u76EE\u5F55\u6811\u540C\u5BBD\uFF09+ \u53F3\u914D\u7F6E\u7EB5\u5411\u4E24\u5361\u3002\n   \u4E4B\u524D\u662F\u4E24\u5217\u7F51\u683C\u585E\u4E09\u4E2A\u5B50\u9879\uFF0C\u7B2C\u4E09\u5757\u88AB\u6324\u5230\u7B2C\u4E8C\u884C\u5DE6\u4FA7\u3001\u4E0E\u53F3\u4FA7\u5F62\u6210\u9AD8\u5EA6\u5DEE\u3002 */\n.pp-mock-layout {\n  display: grid;\n  grid-template-columns: var(--panel-w) minmax(0, 1fr);\n  gap: var(--sp-4);\n  align-items: start;\n}\n.pp-mock-side {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-4);\n  min-width: 0;\n}\n@container ppmain (max-width: 900px) {\n  .pp-mock-layout {\n    grid-template-columns: minmax(0, 1fr);\n  }\n  .pp-mock-layout .pp-panel {\n    width: auto;\n    max-height: calc(var(--tree-row-h) * 10);\n  }\n}\n.pp-debug-meta {\n  display: flex;\n  align-items: center;\n  flex-wrap: wrap;\n  gap: var(--sp-2);\n  margin-top: var(--sp-2);\n  font-size: var(--fs-12);\n}\n.pp-debug-meta .pp-select {\n  flex: none;\n  width: auto;\n  min-width: 96px;\n}\n.pp-debug-meta .pp-mono {\n  flex: 1;\n  min-width: 0;\n}\n/* \u9875\u7B7E\u4F53\uFF1A\u4E0E\u9875\u7B7E\u6761\u4E4B\u95F4\u7559 8px\uFF0C\u5185\u5BB9\u533A\u81EA\u5DF1\u6EDA\u52A8 */\n.pp-debug-tabbody {\n  margin-top: var(--sp-2);\n  min-width: 0;\n}\n/* \u2014\u2014 \u8C03\u8BD5\uFF1A\u5BBD\u5BB9\u5668\u4E09\u680F / \u7A84\u5BB9\u5668\u5355\u5217 \u2014\u2014 */\n/* \u4E09\u680F\uFF08\u6811 / \u8BF7\u6C42\u7F16\u8F91 / \u54CD\u5E94\uFF09\u5728 400~700px \u7684\u4E3B\u533A\u91CC\u6BCF\u680F\u53EA\u5269 100 \u591A\u50CF\u7D20\uFF0C\n   \u53C2\u6570\u8868\u88AB\u6324\u6210\u4E00\u6761\uFF0C\u8FD9\u624D\u662F\u300C\u5E03\u5C40\u9519\u4E71\u300D\u7684\u6839\u56E0\u3002\u7A84\u5BB9\u5668\u4E0B\u6539\u4E3A\u5355\u5217\u7EB5\u5411\u5806\u53E0\u3002\n   \u9996\u5217\u4E0E\u6587\u6863\u9875\u5171\u7528 --panel-w\uFF0C\u4E24\u9875\u7684\u63A5\u53E3\u6811\u5BBD\u5EA6\u4FDD\u6301\u4E00\u81F4\u3002 */\n\n.pp-pane {\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  padding: var(--card-pad);\n  min-width: 0;\n}\n/* \u2014\u2014 \u8C03\u8BD5\u53F0 URL \u884C\uFF08\u5BF9\u9F50 Apifox .apiCase .main-input-bar\uFF09\u2014\u2014\n   \u6574\u884C\u9AD8 40px\uFF1Bmethod \u5DE6\u5185\u8FB9\u8DDD 12px \u53F3 8px\uFF1BbaseUrl / path \u662F\u4E24\u4E2A\u80F6\u56CA\n   \uFF08\u5706\u89D2 6px\u3001margin 5px\u3001\u5185\u8FB9\u8DDD 0 10px\u3001\u884C\u9AD8 28px\uFF09\uFF1B\u53D1\u9001\u6309\u94AE\u7EC4 \u4E3B + 25px \u4E0B\u62C9\u3002 */\n.pp-url-row {\n  display: flex;\n  align-items: center;\n  flex-wrap: wrap;\n  gap: var(--sp-2);\n  min-height: var(--ctl-h-lg);\n}\n.pp-url-row .pp-select {\n  width: 104px;\n  flex: none;\n  padding-left: var(--sp-3);\n}\n.pp-url-row .pp-input {\n  flex: 1;\n  height: var(--ctl-h-sm);\n}\n/* \u7A84\u5BB9\u5668\uFF1AURL \u884C\u6324\u5728\u4E00\u884C\u65F6\u8DEF\u5F84\u8F93\u5165\u6846\u53EA\u5269\u51E0\u5341\u50CF\u7D20\uFF08"\u672A\u914D\u7F6E baseUrl" \u80F6\u56CA\u672C\u8EAB\u5C31\u8981 90px\uFF09\u3002\n   \u8BA9\u8DEF\u5F84\u8F93\u5165\u6846\u72EC\u5360\u7B2C\u4E8C\u884C\uFF0C\u5BBD\u5EA6\u62C9\u6EE1\uFF0C\u53D1\u9001\u7EC4\u4ECD\u7559\u5728\u7B2C\u4E00\u884C\u672B\u5C3E\u3002 */\n@container ppmain (max-width: 640px) {\n  .pp-url-row .pp-input {\n    order: 9;\n    flex-basis: 100%;\n  }\n  .pp-url-row .pp-url-pill {\n    max-width: 32%;\n  }\n}\n.pp-url-method {\n  flex: none;\n  padding: 0 var(--sp-2) 0 var(--sp-3);\n  font-size: var(--fs-14);\n  font-weight: var(--fw-medium);\n  color: var(--fg-strong);\n  line-height: var(--ctl-h-lg);\n}\n/* baseUrl / path \u80F6\u56CA\uFF1AApifox \u628A\u4E24\u8005\u62C6\u6210\u72EC\u7ACB\u7684\u5706\u89D2\u5757\uFF0C\u89C6\u89C9\u4E0A\u533A\u5206\u300C\u73AF\u5883\u57DF\u300D\u4E0E\u300C\u8DEF\u5F84\u300D */\n.pp-url-pill {\n  display: inline-flex;\n  align-items: center;\n  flex: none;\n  max-width: 40%;\n  height: var(--ctl-h-sm);\n  margin: 0 var(--sp-1);\n  padding: 0 var(--sp-2);\n  font-family: var(--font-mono);\n  font-size: var(--fs-12);\n  line-height: var(--ctl-h-sm);\n  color: var(--fg-secondary);\n  background: var(--bg-subtle);\n  border-radius: var(--radius-ctl);\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.pp-url-pill-grow {\n  flex: 1;\n  max-width: none;\n}\n/* \u53D1\u9001\u6309\u94AE\u7EC4\uFF1A\u4E3B\u6309\u94AE\u5403\u6EE1\u5269\u4F59\u5BBD\u5EA6\uFF0C\u53F3\u7AEF 25px \u4E0B\u62C9\u7BAD\u5934\uFF08Apifox .send-btn .ui-btn-group\uFF09 */\n.pp-send-group {\n  display: inline-flex;\n  flex: 0 1 auto;\n  min-width: 0;\n  gap: 0;\n}\n/* Apifox .action-send \u5BBD 95px\uFF1A\u4E3B\u6309\u94AE\u5403\u6EE1\u3001\u53F3\u7AEF 25px \u4E0B\u62C9\u4F4D */\n.pp-url-row .pp-send-group {\n  flex: none;\n  width: 95px;\n}\n.pp-send-group .pp-btn:first-child {\n  border-top-right-radius: 0;\n  border-bottom-right-radius: 0;\n}\n.pp-send-group .pp-btn:last-child {\n  width: calc(var(--hit) - 3px);\n  padding: 0;\n  border-top-left-radius: 0;\n  border-bottom-left-radius: 0;\n}\n/* \u5206\u7EC4\u6807\u9898\uFF1A\u5DE6\u8FB9 3px \u4E3B\u8272\u7AD6\u7EBF + \u5DE6\u5185\u8FB9\u8DDD 10px + 16px \u5B57\n   \uFF08Apifox .apiDebug .group-title \u539F\u6587\uFF1Aborder-left:3px; margin-left:2px; padding-left:10px; font-size:16px\uFF09 */\n.pp-group-title {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  margin: var(--sp-2) 0 var(--sp-1) var(--sp-1);\n  /* 10px \u4E0D\u5728 4/8/12 \u523B\u5EA6\u4E0A\uFF0C\u4F46\u8FD9\u662F Apifox \u539F\u6587\u503C\uFF0C\u5199 calc \u4FDD\u6301\u53EF\u8FFD\u6EAF */\n  padding-left: calc(var(--sp-2) + var(--sp-1) / 2);\n  font-size: var(--fs-16);\n  line-height: var(--lh-24);\n  font-weight: var(--fw-medium);\n  color: var(--fg-strong);\n  border-left: 3px solid var(--accent);\n}\n\n/* \u2014\u2014 \u6D41\u7A0B\u56FE\u5BB9\u5668 \u2014\u2014 */\n/* \u6D41\u7A0B\u56FE\u9875\uFF08Apifox \u6D4B\u8BD5\u573A\u666F\u540C\u6784\uFF09\uFF1A\u5DE6\u6B65\u9AA4\u5217\u8868 + \u53F3\u753B\u5E03 + \u4E0B\u65B9\u5C5E\u6027\u9762\u677F\u3002\n   \u753B\u5E03\u5E38\u9A7B\uFF0C\u6539\u4EFB\u4E00\u6B65\u5373\u65F6\u91CD\u7ED8\uFF1B\u4E0D\u518D\u7528\u300C\u6574\u5BBD\u753B\u5E03 + \u6574\u5BBD\u8868\u683C\u300D\u4E0A\u4E0B\u5806\u53E0\u2014\u2014\n   \u8868\u683C\u5728 500px \u4E3B\u533A\u91CC\u8981\u6A2A\u5411\u6EDA 640px\uFF0C\u6539\u4E00\u6B65\u5F97\u6765\u56DE\u6EDA\u4E24\u6B21\u3002 */\n.pp-flow-layout {\n  display: grid;\n  grid-template-columns: var(--panel-w) minmax(0, 1fr);\n  gap: var(--sp-4);\n  align-items: start;\n}\n@container ppmain (max-width: 820px) {\n  .pp-flow-layout {\n    grid-template-columns: minmax(0, 1fr);\n    gap: var(--sp-3);\n  }\n  /* \u5806\u53E0\u540E\u6B65\u9AA4\u5217\u8868\u9AD8\u5EA6\u538B\u5230 8 \u884C\uFF0C\u907F\u514D\u628A\u753B\u5E03\u6324\u5230\u9996\u5C4F\u4E4B\u5916 */\n  .pp-flow-layout .pp-flow-steps {\n    max-height: calc(var(--row-h) * 8);\n  }\n  .pp-flow-layout .pp-flow-side {\n    width: auto;\n    overflow: visible;\n  }\n}\n.pp-flow-side {\n  display: flex;\n  flex-direction: column;\n  min-width: 0;\n  padding: var(--sp-2) 0;\n}\n.pp-flow-side-head {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  padding: 0 var(--sp-4) var(--sp-2);\n  border-bottom: 1px solid var(--border);\n  margin-bottom: var(--sp-1);\n}\n.pp-flow-side-head .pp-card-title {\n  margin: 0;\n  font-size: var(--fs-13);\n}\n.pp-flow-side-head > .pp-btn:last-child {\n  margin-left: auto;\n}\n.pp-flow-steps {\n  display: flex;\n  flex-direction: column;\n  gap: 1px;\n  max-height: calc(var(--row-h) * 16);\n  overflow: auto;\n}\n.pp-flow-step {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  padding: var(--sp-1) var(--sp-3);\n  margin: 0 var(--sp-2);\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-secondary);\n  border-radius: var(--radius-ctl);\n  cursor: pointer;\n}\n.pp-flow-step:hover {\n  color: var(--fg);\n}\n.pp-flow-step[data-active="true"] {\n  color: var(--fg);\n  background: var(--bg-hover);\n  font-weight: var(--fw-medium);\n}\n.pp-flow-step-no {\n  flex: none;\n  width: 18px;\n  font-family: var(--font-mono);\n  font-size: var(--fs-12);\n  color: var(--fg-tertiary);\n  text-align: right;\n}\n.pp-flow-step[data-active="true"] .pp-flow-step-no {\n  color: var(--accent);\n}\n.pp-flow-step-body {\n  display: flex;\n  flex-direction: column;\n  min-width: 0;\n  flex: 1;\n}\n.pp-flow-step-name {\n  color: inherit;\n}\n.pp-flow-step-msg {\n  font-family: var(--font-mono);\n  font-size: var(--fs-12);\n  color: var(--fg-tertiary);\n}\n.pp-flow-step-act {\n  flex: none;\n  font-size: var(--fs-12);\n  color: var(--fg-tertiary);\n}\n.pp-flow-main {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-4);\n  min-width: 0;\n}\n.pp-flow-canvas {\n  min-width: 0;\n  overflow-x: auto;\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  padding: var(--sp-4);\n}\n.pp-flow-canvas svg {\n  min-width: 100%;\n  display: block;\n}\n@container ppmain (max-width: 700px) {\n  .pp-flow-canvas svg {\n    min-width: 620px;\n  }\n}\n.pp-flow-props {\n  padding: var(--sp-4);\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n}\n.pp-flow-prop-grid {\n  display: grid;\n  grid-template-columns: 72px minmax(0, 1fr);\n  gap: var(--sp-2) var(--sp-3);\n  align-items: center;\n}\n.pp-flow-prop-grid .pp-form-label {\n  width: auto;\n  font-size: var(--fs-13);\n}\n.pp-flow-prop-row {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  min-width: 0;\n}\n.pp-flow-prop-row .pp-input {\n  flex: 1;\n  min-width: 0;\n}\n.pp-flow-name {\n  width: 180px;\n}\n.pp-flow-source {\n  margin-bottom: var(--sp-2);\n}\n.pp-seq-wrap {\n  overflow-x: auto;\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  background: var(--bg-surface);\n  padding: var(--sp-4);\n}\n.pp-seq-wrap svg {\n  min-width: 100%;\n  display: block;\n}\n/* \u7A84\u5BB9\u5668\uFF1A\u56DB\u4E2A\u6CF3\u9053\u6324\u5728 500px \u91CC\u6587\u5B57\u53E0\u6210\u4E00\u56E2\uFF0C\u7ED9 svg \u4E00\u4E2A\u53EF\u8BFB\u4E0B\u9650\uFF0C\u8D85\u51FA\u7531 .pp-seq-wrap \u6EDA\u52A8 */\n@container ppmain (max-width: 700px) {\n  .pp-seq-wrap svg {\n    min-width: 620px;\n  }\n}\n.pp-split-hint {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  padding: var(--sp-2) var(--sp-3);\n  font-size: var(--fs-13);\n  line-height: var(--lh-20);\n  color: var(--warning);\n  border: 1px solid var(--warning);\n  border-radius: var(--radius-ctl);\n  background: var(--bg-surface);\n}\n\n/* \u2014\u2014 \u7A7A\u6001 \u2014\u2014 */\n/* \u7A7A\u6001\uFF1A\u7D27\u51D1\u5C45\u4E2D\u5361\u3002\u6536\u7A84\u5230 --empty-w\uFF08360px\uFF09\u2014\u2014\u4E4B\u524D\u94FA\u6EE1 460px \u5BBD\u53EA\u653E\u4E00\u884C\u5B57\uFF0C\n   \u89C6\u89C9\u4E0A\u50CF\u4E00\u5757\u6CA1\u505A\u5B8C\u7684\u5360\u4F4D\u3002\u56FE\u6807\u7528\u4E09\u7EA7\u8272\uFF0C\u4E3B\u6587\u6848\u7528\u4E8C\u7EA7\u8272\uFF0C\u5C42\u7EA7\u9760\u989C\u8272\u4E0E\u5B57\u53F7\u533A\u5206\u3002 */\n.pp-empty {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  gap: var(--sp-2);\n  width: 100%;\n  max-width: var(--empty-w);\n  /* margin:auto \u5728 flex \u5BB9\u5668\uFF08.pp-page \u662F flex column\uFF09\u91CC\u540C\u65F6\u6C34\u5E73\u4E0E\u5782\u76F4\u5C45\u4E2D\uFF1B\n     \u4E4B\u524D\u5199\u6B7B var(--sp-6) auto \u53EA\u6C34\u5E73\u5C45\u4E2D\uFF0C\u7A7A\u6001\u4F1A\u8D34\u5728\u9876\u90E8\uFF0C\u4E0B\u65B9\u7559\u4E00\u5927\u7247\u7A7A\u767D\u3002 */\n  margin: auto;\n  padding: var(--sp-6) var(--sp-4);\n  text-align: center;\n  font-size: var(--fs-14);\n  line-height: var(--lh-20);\n  color: var(--fg-tertiary);\n  border: 1px dashed var(--border-strong);\n  border-radius: var(--radius-card);\n  background: var(--bg-surface);\n}\n.pp-empty-icon {\n  color: var(--fg-tertiary);\n}\n.pp-empty-text {\n  color: var(--fg-secondary);\n  font-weight: var(--fw-medium);\n}\n.pp-empty-action {\n  margin-top: var(--sp-1);\n}\n/* \u9762\u677F\u5185\u7684\u7A7A\u6001\uFF08\u5DE6\u6811\uFF09\uFF1A\u4E0D\u8981\u865A\u7EBF\u6846\u4E0E\u56FE\u6807\uFF0C\u53EA\u7559\u4E00\u884C\u8BF4\u660E */\n.pp-panel .pp-empty {\n  max-width: none;\n  margin: var(--sp-3) 0;\n  padding: var(--sp-3) var(--sp-2);\n  border: none;\n  background: transparent;\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n}\n.pp-panel .pp-empty-icon,\n.pp-panel .pp-empty-action {\n  display: none;\n}\n\n\n/* ============================================================\n/* ============================================================\n   \u5DE5\u4F5C\u53F0\u9AA8\u67B6 v3\uFF1A\u9876\u680F 48px + \u5DE6\u4FA7 240px \u6587\u5B57\u5BFC\u822A + 44px \u9875\u7B7E\u6761\n   \u6570\u503C\u5168\u90E8\u5BF9\u9F50 Apifox 2.8.55 \u5B9E\u6D4B\uFF08docs/apifox-visual-parity-spec.md\uFF09\uFF1A\n     \u9876\u680F --ui-layout-header-height: 48px\uFF0C\u5185\u8FB9\u8DDD 0 50px\n     \u5DE6\u4FA7 .sider-bxNtfB: width 240px / padding 20px / \u83DC\u5355\u9879\u9AD8 32px / \u5206\u7EC4\u9AD8 24px\n     \u9875\u7B7E\u6761 --app-main-tabs-height: 44px\n   \u539F 64px \u56FE\u6807\u8F68 + \u6D6E\u5C42\u4E8C\u7EA7\u83DC\u5355\u5DF2\u5E9F\u5F03\uFF1A\u56FE\u6807\u4E0B\u7684\u5C0F\u5B57\u4ECD\u4E0D\u8DB3\u4EE5\u8BA9\u4EBA\u4E00\u773C\u8BA4\u51FA\u529F\u80FD\uFF0C\n   \u4E14\u4E8C\u7EA7\u85CF\u5728\u6D6E\u5C42\u91CC\u591A\u4E00\u6B21\u70B9\u51FB\uFF1BApifox \u7528 240px \u5E38\u9A7B\u6587\u5B57\u83DC\u5355\uFF0C\u8FD9\u91CC\u7167\u505A\u3002\n   ============================================================ */\n\n/* \u2014\u2014 \u5DE5\u4F5C\u53F0\uFF1A\u9876\u680F + sider/\u4E3B\u533A \u4E24\u884C\u4E24\u5217 \u2014\u2014 */\n.pp-workbench-v2 {\n  display: grid;\n  grid-template-rows: var(--topbar-h) minmax(0, 1fr);\n  height: 100%;\n  min-height: 0;\n}\n.pp-shell {\n  display: grid;\n  grid-template-columns: var(--sider-w) minmax(0, 1fr);\n  min-height: 0;\n  position: relative;\n}\n\n/* \u2014\u2014 \u5DE6\u4FA7\u5BFC\u822A\uFF08Apifox .sider-bxNtfB \u540C\u89C4\u683C\uFF09\u2014\u2014 */\n.pp-sider {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-1);\n  padding: var(--sider-pad);\n  background: var(--bg-surface);\n  border-right: 1px solid var(--border);\n  min-height: 0;\n  overflow: auto;\n}\n/* \u5206\u7EC4\u6807\u9898\uFF1A12px / \u4E09\u7EA7\u8272 / \u9AD8 24px\uFF0C\u7EC4\u95F4\u4E0A\u95F4\u8DDD 12px\uFF08Apifox menu-item-group\uFF09 */\n.pp-sider-group {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  height: var(--sider-group-h);\n  margin-top: var(--sp-3);\n  padding: 0 var(--sp-2);\n  font-size: var(--fs-12);\n  font-weight: var(--fw-medium);\n  color: var(--fg-tertiary);\n  white-space: nowrap;\n}\n.pp-sider-group:first-child {\n  margin-top: 0;\n}\n/* \u83DC\u5355\u9879\uFF1A\u9AD8 32px\u3001\u5706\u89D2 6px\u300114px \u5B57\uFF0C\u5DE6\u5185\u8FB9\u8DDD 8px\uFF08Apifox menu-item\uFF09 */\n.pp-sider-item {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  height: var(--sider-item-h);\n  padding: 0 var(--sp-2);\n  font-size: var(--fs-14);\n  line-height: var(--lh-20);\n  color: var(--fg-secondary);\n  text-decoration: none;\n  border-radius: var(--radius-ctl);\n  cursor: pointer;\n  white-space: nowrap;\n  overflow: hidden;\n}\n.pp-sider-item:hover {\n  color: var(--fg);\n  background: var(--bg-hover);\n}\n.pp-sider-item:focus-visible {\n  outline: 2px solid var(--accent);\n  outline-offset: -2px;\n}\n/* \u9009\u4E2D\uFF1A\u4E3B\u8272\u6587\u5B57 + \u6DE1\u4E3B\u8272\u5E95\uFF08Apifox \u83DC\u5355\u9009\u4E2D\u6001\uFF09 */\n.pp-sider-item[data-active="true"] {\n  color: var(--accent);\n  background: var(--accent-tint);\n  font-weight: var(--fw-medium);\n}\n.pp-sider-icon {\n  flex: none;\n  width: var(--icon);\n  height: var(--icon);\n  color: inherit;\n}\n.pp-sider-label {\n  min-width: 0;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.pp-sider-spacer {\n  flex: 1;\n}\n\n/* \u2014\u2014 \u5F39\u5C42\u83DC\u5355\uFF08\u4E09\u7EA7\uFF0C\u5BF9\u9F50 Apifox .ui-dropdown-menu / .ui-menu-item\uFF09\u2014\u2014\n   \u4E00\u7EA7\u9762\u677F\u6302\u5728\u89E6\u53D1\u6309\u94AE\u4E0B\u65B9\uFF1B\u4E8C\u7EA7\u3001\u4E09\u7EA7\u5411\u53F3/\u5DE6\u6D6E\u51FA\u5E76\u5782\u76F4\u5BF9\u9F50\u5230\u89E6\u53D1\u9879\u3002\n   Apifox \u539F\u6587\uFF1A\u9879\u9AD8 32px\u3001\u5185\u8FB9\u8DDD 0 8px\u3001\u5B50\u83DC\u5355\u7BAD\u5934\u5BBD 10px \u9760\u53F3 16px\u3001\n   \u5206\u7EC4\u6807\u9898 12px/500 \u5185\u8FB9\u8DDD 0 16px\u3001\u9762\u677F\u5706\u89D2 8px + \u4E24\u6BB5\u5F0F\u6295\u5F71\u3002 */\n.pp-menu-anchor {\n  position: relative;\n  display: inline-flex;\n  flex: none;\n}\n/* \u9762\u677F\u5185\u7684\u9879\u951A\u70B9\u5FC5\u987B\u6491\u6EE1\u5BBD\u5EA6\uFF0C\u5426\u5219\u5B50\u9762\u677F\u7684 right:100% \u4F1A\u8D34\u5230\u6587\u5B57\u800C\u4E0D\u662F\u9762\u677F\u8FB9\u7F18 */\n.pp-menu .pp-menu-anchor {\n  display: block;\n  width: 100%;\n}\n.pp-menu {\n  /* \u7528 fixed \u800C\u4E0D\u662F absolute\uFF1A\u5BBF\u4E3B\u4FA7\u8FB9\u680F\u9762\u677F\u662F 720px \u4E14\u5E26 overflow:hidden/clip\uFF0C\n     \u4E09\u7EA7\u7EA7\u8054\uFF08200\xD73\uFF09\u4ECE\u6309\u94AE\u5F80\u5DE6\u5C55\u5F00\u4F1A\u8D8A\u51FA\u5BB9\u5668\u5DE6\u8FB9\u754C\u88AB\u88C1\u6389\u3002\n     fixed \u4E0D\u53D7\u7956\u5148 overflow \u88C1\u526A\uFF0C\u5750\u6807\u7531 JS \u7528 getBoundingClientRect \u7ED9\u51FA\u3002 */\n  position: fixed;\n  z-index: var(--z-menu);\n  min-width: var(--menu-w);\n  padding: var(--menu-pad);\n  overflow: visible;\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  box-shadow: var(--shadow-menu);\n}\n/* \u5185\u5C42\u6EDA\u52A8\u5BB9\u5668\uFF1A\u53EA\u6709\u5B83\u9650\u9AD8\u5E76\u6EDA\u52A8\uFF0C\u4FDD\u8BC1\u7236\u9762\u677F\u4ECD\u53EF overflow: visible */\n.pp-menu-scroll {\n  max-height: calc(var(--menu-item-h) * 12);\n  overflow: auto;\n}\n/* \u4E8C\u7EA7 / \u4E09\u7EA7\u9762\u677F\uFF1A\u76F8\u5BF9\u7236\u9879\u6D6E\u51FA\u3002\u56E0\u4E3A\u89E6\u53D1\u6309\u94AE\u5728\u4E3B\u533A\u53F3\u7F18\uFF0C\n   \u5B50\u9762\u677F\u7EDF\u4E00\u5411\u5DE6\u5F00\uFF08Apifox \u9760\u8FB9\u65F6\u540C\u6837\u7FFB\u8F6C\u65B9\u5411\uFF09\u3002 */\n/* \u5B50\u9762\u677F\u5C42\u7EA7\uFF1A\u9010\u5C42 +1\uFF0C\u907F\u514D\u6D45\u5C42\u76D6\u4F4F\u5DF2\u5C55\u5F00\u7684\u6DF1\u5C42\u5185\u5BB9 */\n.pp-menu[data-depth="2"] { z-index: calc(var(--z-menu) + 1); }\n.pp-menu[data-depth="3"] { z-index: calc(var(--z-menu) + 2); }\n.pp-menu .pp-menu .pp-menu {\n  z-index: calc(var(--z-menu) + 2);\n}\n/* \u5B50\u9762\u677F\u5185\u4E0D\u518D\u9700\u8981\u81EA\u5DF1\u7684\u5185\u5C42\u6EDA\u52A8\u9650\u9AD8 */\n.pp-menu .pp-menu-scroll {\n  max-height: calc(var(--menu-item-h) * 12);\n}\n.pp-menu-item {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  width: 100%;\n  height: var(--menu-item-h);\n  padding: 0 var(--sp-2);\n  font-family: var(--font-sans);\n  font-size: var(--fs-14);\n  line-height: var(--lh-20);\n  color: var(--fg);\n  text-align: left;\n  text-decoration: none;\n  background: transparent;\n  border: none;\n  border-radius: var(--radius-ctl);\n  cursor: pointer;\n  white-space: nowrap;\n  overflow: hidden;\n}\n.pp-menu-item:hover,\n.pp-menu-item[data-open="true"] {\n  background: var(--bg-hover);\n}\n.pp-menu-item:focus-visible {\n  outline: 2px solid var(--accent);\n  outline-offset: -2px;\n}\n.pp-menu-item[data-active="true"] {\n  color: var(--accent);\n  font-weight: var(--fw-medium);\n}\n.pp-menu-item[disabled] {\n  color: var(--fg-tertiary);\n  cursor: not-allowed;\n}\n.pp-menu-label {\n  min-width: 0;\n  flex: 1;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n/* \u5B50\u83DC\u5355\u7BAD\u5934\uFF1A10px \u5BBD\uFF0C\u4E24\u6761 1.5px \u659C\u7EBF\uFF08Apifox .ui-menu-submenu-arrow\uFF09 */\n.pp-menu-arrow {\n  flex: none;\n  width: var(--sp-3);\n  height: var(--icon-sm);\n  color: var(--fg-tertiary);\n  font-size: var(--fs-12);\n  line-height: var(--icon-sm);\n  text-align: center;\n}\n.pp-menu-hint {\n  flex: none;\n  margin-left: auto;\n  font-family: var(--font-mono);\n  font-size: var(--fs-12);\n  color: var(--fg-tertiary);\n}\n.pp-menu-group {\n  height: var(--ctl-h-sm);\n  padding: 0 var(--sp-4);\n  font-size: var(--fs-12);\n  line-height: var(--lh-20);\n  font-weight: var(--fw-medium);\n  color: var(--fg-tertiary);\n  white-space: nowrap;\n}\n.pp-menu-sep {\n  height: 1px;\n  margin: var(--sp-1) calc(var(--sp-2) * -1);\n  background: var(--border);\n}\n\n/* \u2014\u2014 \u9875\u7B7E\u6761\uFF08Apifox .layoutTabBar\uFF0C44px \u5361\u7247\u5F0F\uFF09\u2014\u2014 */\n.pp-tabbar {\n  display: flex;\n  align-items: flex-end;\n  height: var(--tabbar-h);\n  padding: 0 var(--sp-2);\n  background: var(--bg-surface);\n  border-bottom: 1px solid var(--border);\n  overflow-x: auto;\n  overflow-y: hidden;\n  scrollbar-width: none;\n}\n.pp-tabbar::-webkit-scrollbar {\n  height: calc(var(--scrollbar) * 0);\n}\n.pp-tabbar-item {\n  display: inline-flex;\n  align-items: center;\n  gap: var(--sp-1);\n  height: var(--tabbar-h);\n  padding: 0 var(--sp-4);\n  font-size: var(--fs-14);\n  line-height: var(--lh-20);\n  color: var(--fg-secondary);\n  background: transparent;\n  border: none;\n  border-left: 1px solid var(--border);\n  cursor: pointer;\n  white-space: nowrap;\n  flex: none;\n}\n.pp-tabbar-item:first-child {\n  border-left: none;\n}\n.pp-tabbar-item:hover {\n  color: var(--fg);\n}\n/* \u6FC0\u6D3B\uFF1A\u767D\u5E95 + \u5DE6\u53F3 1px \u8FB9\u6846 + \u6DF1\u8272\u6587\u5B57\uFF08Apifox tabs-tab-active\uFF09 */\n.pp-tabbar-item[data-active="true"] {\n  color: var(--fg-strong);\n  background: var(--bg-surface);\n  border-right: 1px solid var(--border);\n  border-top: 1px solid transparent;\n  font-weight: var(--fw-medium);\n}\n.pp-tabbar-close {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  width: var(--icon-sm);\n  height: var(--icon-sm);\n  margin-left: var(--sp-1);\n  color: var(--fg-tertiary);\n  background: transparent;\n  border: none;\n  border-radius: var(--radius-sm);\n  cursor: pointer;\n}\n.pp-tabbar-close:hover {\n  color: var(--fg);\n  background: var(--bg-hover);\n}\n\n/* \u2014\u2014 \u4E3B\u533A\uFF08v2\uFF1A\u5360\u6EE1\u5269\u4F59\u5BBD\u5EA6\uFF09\u2014\u2014 */\n/* \u4E3B\u533A\u662F\u5BB9\u5668\u67E5\u8BE2\u7684\u951A\u70B9\uFF1A\u4FA7\u8FB9\u680F\u91CC\u7684\u5BBD\u5EA6\u53EA\u6709 400~700px\uFF0C\u9875\u9762\u5185\u90E8\u5E03\u5C40\u5FC5\u987B\u6309\n   \u300C\u5BB9\u5668\u5BBD\u5EA6\u300D\u800C\u4E0D\u662F\u300C\u89C6\u53E3\u5BBD\u5EA6\u300D\u81EA\u9002\u5E94\u2014\u2014\u7528 @media \u5224\u65AD\u89C6\u53E3\u6C38\u8FDC\u547D\u4E2D\u4E0D\u4E86\u7A84\u6001\u3002 */\n.pp-main-v2 {\n  min-width: 0;\n  min-height: 0;\n  overflow: auto;\n  background: var(--bg-app);\n  container-type: inline-size;\n  container-name: ppmain;\n  /* \u5E2E\u52A9\u6D6E\u5C42\u7684\u5B9A\u4F4D\u53C2\u7167\uFF08.pp-help-card \u7528 absolute \u8D34\u53F3\u4E0A\u89D2\uFF09 */\n  position: relative;\n}\n\n/* \u2014\u2014 \u9875\u5934 \u2014\u2014 */\n/* \u9875\u5934\uFF1A\u5BF9\u9F50 Apifox .overview-header-container\uFF08\u4E0B\u8FB9\u6846 1px / padding 16px 20px 16px 14px / \u6700\u5927\u5BBD 1512px\uFF09 */\n.pp-page-head {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-3);\n  max-width: var(--content-max-w);\n  padding: var(--sp-4) var(--sp-5) var(--sp-4) var(--sp-3);\n  background: var(--bg-surface);\n  border-bottom: 1px solid var(--border);\n}\n/* \u6982\u89C8\u9875\u5934\uFF1A\u6807\u9898 18px / 700\uFF08Apifox .overview-header__title\uFF09 */\n/* \u9875\u5934\uFF1AApifox .overview-header-container \u539F\u6587\n   \uFF08border-bottom:1px split; max-width:1512px; padding:16px 20px 16px 14px\uFF09\u3002\n   \u7A84\u5BB9\u5668\uFF08\u4FA7\u8FB9\u680F\u91CC\u53EA\u6709 455px\uFF09\u65F6\u52A8\u4F5C\u533A\u5FC5\u987B\u6362\u884C\uFF0C\u5426\u5219\u4F1A\u628A\u9875\u9762\u9876\u51FA 111~693px \u6A2A\u5411\u6EA2\u51FA\u3002 */\n.pp-overview-head {\n  display: flex;\n  align-items: center;\n  flex-wrap: wrap;\n  gap: var(--sp-2) var(--sp-3);\n  width: 100%;\n  max-width: var(--content-max-w);\n  padding: var(--sp-4) var(--sp-5) var(--sp-4) var(--sp-3);\n  background: var(--bg-surface);\n  border-bottom: 1px solid var(--border);\n}\n.pp-overview-title {\n  margin-right: auto;\n  font-size: var(--fs-18);\n  line-height: var(--lh-24);\n  font-weight: 700;\n  color: var(--fg-strong);\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n/* \u52A8\u4F5C\u533A\uFF1AApifox .overview-header-actions\uFF08inline-flex / \u9AD8 32px\uFF09\u3002\n   \u52A0 flex-wrap \u4E0E min-width:0\uFF1A\u52A8\u4F5C\u533A\u91CC\u585E 4 \u4E2A\u63A7\u4EF6\u65F6\uFF08\u603B\u89C8\u9875\uFF09\u5728 455px \u5BB9\u5668\u91CC\u5FC5\u7136\u6EA2\u51FA\uFF0C\n   \u5141\u8BB8\u6362\u884C\u662F\u552F\u4E00\u4E0D\u6539\u8BED\u4E49\u7684\u89E3\u6CD5\uFF1B\u5B50\u63A7\u4EF6\u7528 flex:0 1 auto \u5141\u8BB8\u6536\u7F29\u3002 */\n.pp-overview-actions {\n  display: inline-flex;\n  align-items: center;\n  justify-content: flex-end;\n  flex-wrap: wrap;\n  gap: var(--sp-2);\n  min-width: 0;\n  margin-left: auto;\n  min-height: var(--ctl-h);\n}\n.pp-overview-actions > .pp-input,\n.pp-overview-actions > .pp-select {\n  flex: 0 1 auto;\n  min-width: 96px;\n}\n/* \u6587\u6863\u9875\u5934\uFF1A\u4E0E\u6982\u89C8\u540C\u89C4\u683C */\n.pp-doc-head {\n  display: flex;\n  align-items: center;\n  flex-wrap: wrap;\n  gap: var(--sp-2) var(--sp-3);\n  width: 100%;\n  max-width: var(--content-max-w);\n  padding: var(--sp-4) var(--sp-5) var(--sp-4) var(--sp-3);\n  background: var(--bg-surface);\n  border-bottom: 1px solid var(--border);\n}\n.pp-doc-title {\n  margin-right: auto;\n  font-size: var(--fs-18);\n  line-height: var(--lh-24);\n  font-weight: 700;\n  color: var(--fg-strong);\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n/* \u6A2A\u5411\u8868\u5355\u6805\u683C\uFF1AApifox .gridForm.ui-form-horizontal\uFF08fit-content(360px) 1fr / gap 16px\uFF09 */\n.pp-form-grid {\n  display: grid;\n  grid-template-columns: fit-content(360px) minmax(0, 1fr);\n  gap: var(--sp-4);\n  align-items: center;\n}\n.pp-page-head-main {\n  min-width: 0;\n  flex: 1;\n}\n.pp-page-head .pp-page-title {\n  margin: 0 0 var(--sp-1) 0;\n}\n.pp-page-desc {\n  font-size: var(--fs-13);\n  line-height: var(--lh-20);\n  color: var(--fg-secondary);\n  margin: 0;\n}\n.pp-page-actions {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  flex: none;\n}\n\n/* \u2014\u2014 \u9762\u677F\u5316\u5B9E\u4F53\u6811\uFF08\u66FF\u4EE3\u901A\u680F .pp-col-left\uFF09\u2014\u2014 */\n.pp-panel {\n  width: var(--panel-w);\n  flex: none;\n  min-height: 0;\n  overflow: auto;\n  padding: var(--sp-2);\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n}\n.pp-split {\n  display: grid;\n  /* \u9762\u677F\u5BBD\u5EA6\u968F\u5BB9\u5668\u81EA\u9002\u5E94\uFF1A\u4E0B\u9650 --panel-w\u3001\u4E0A\u9650 --panel-w-max\u3001\u4E2D\u95F4\u53D6 32%\uFF0C\n     \u5BBD\u7A97\u53E3\u91CC\u76EE\u5F55\u6811\u81EA\u52A8\u53D8\u5BBD\uFF0C\u957F\u63A5\u53E3\u540D\u4E0D\u518D\u88AB\u7701\u7565\u53F7\u622A\u65AD\u3002 */\n  grid-template-columns: clamp(var(--panel-w), 32%, var(--panel-w-max)) minmax(0, 1fr);\n  gap: var(--sp-4);\n  align-items: start;\n  padding: var(--sp-4) var(--sp-5);\n  min-height: 0;\n}\n/* \u5E76\u6392\u65F6\u9762\u677F\u5BBD\u5EA6\u7531 grid \u8F68\u9053\u51B3\u5B9A\uFF0C\u81EA\u8EAB\u4E0D\u518D\u5B9A\u5BBD\uFF08\u5426\u5219\u6BD4\u8F68\u9053\u7A84\u4F1A\u7559\u767D\uFF09 */\n.pp-split > .pp-panel {\n  width: auto;\n}\n/* \u7A84\u5BB9\u5668\uFF1A\u76EE\u5F55\u6811\u4E0E\u6B63\u6587\u5E76\u6392\u4F1A\u628A\u6B63\u6587\u538B\u5230 200px \u7EA7\uFF0C\u6539\u4E3A\u4E0A\u4E0B\u5806\u53E0\u3002\n   \u9608\u503C 800px = \u9762\u677F 280 + \u95F4\u8DDD 16 + \u6B63\u6587\u7EA6 500\uFF086 \u5217\u53C2\u6570\u8868\u5728\u6B64\u5BBD\u5EA6\u4E0B\u624D\u4E0D\u81F3\u4E8E\u53EA\u5269\u8868\u5934\uFF09\u3002 */\n@container ppmain (max-width: 800px) {\n  .pp-split {\n    grid-template-columns: minmax(0, 1fr);\n  }\n  .pp-split .pp-panel {\n    width: auto;\n    /* \u5806\u53E0\u65F6\u76EE\u5F55\u6811\u5360\u6EE1\u6574\u5BBD\uFF1B\u9AD8\u5EA6\u7ED9\u5230 14 \u884C\uFF08\u7EA6 500px\uFF09\u2014\u2014\u5217\u8868\u533A\u592A\u77EE\u65F6\u7FFB\u76EE\u5F55\u5F88\u8D39\u52B2 */\n    max-height: calc(var(--row-h) * 14);\n  }\n}\n/* \u6587\u6863\u9875\u4E3B\u5217\uFF1A\u951A\u70B9\u6761 sticky \u5728\u9876\u90E8\uFF0C\u6B63\u6587\u5728\u4E0B\u65B9\u72EC\u7ACB\u6EDA\u52A8 */\n.pp-doc-main {\n  min-width: 0;\n  min-height: 0;\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  overflow: auto;\n}\n/* \u7A7A\u6001\u65F6\u4E3B\u5217\u72EC\u5360\u4E00\u884C\uFF08\u65E0\u5DE6\u6811\uFF09\uFF0C\u9700\u8981\u81EA\u5DF1\u6491\u6EE1\u9AD8\u5EA6\u5E76\u7559\u51FA\u4E0A\u8FB9\u8DDD */\n.pp-page-flush > .pp-doc-main {\n  display: flex;\n  flex-direction: column;\n  height: 100%;\n  margin: var(--sp-4) var(--sp-5);\n}\n.pp-doc-main .pp-page {\n  padding: var(--sp-5);\n}\n/* \u951A\u70B9\u6761\u5438\u9876\u65F6\u7ED9\u8DF3\u8F6C\u76EE\u6807\u7559\u51FA\u9AD8\u5EA6\uFF0C\u907F\u514D\u6807\u9898\u88AB\u6761\u6321\u4F4F */\n.pp-doc-main [id^="sec-"] {\n  scroll-margin-top: calc(var(--ctl-h-lg) + var(--sp-3));\n}\n.pp-split-wide {\n  grid-template-columns: var(--panel-w) minmax(0, 1.4fr) minmax(0, 1fr);\n}\n\n/* \u2014\u2014 \u9876\u680F v2\uFF1A\u9762\u5305\u5C51 + \u56FE\u6807\u52A8\u4F5C \u2014\u2014 */\n.pp-crumb {\n  display: inline-flex;\n  align-items: center;\n  gap: var(--sp-1);\n  font-size: var(--fs-12);\n  color: var(--fg-tertiary);\n  white-space: nowrap;\n}\n.pp-crumb-sep {\n  color: var(--border-strong);\n}\n.pp-icon-btn {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  width: var(--hit);\n  height: var(--hit);\n  padding: 0;\n  color: var(--fg-secondary);\n  background: transparent;\n  border: 1px solid transparent;\n  border-radius: var(--radius-ctl);\n  cursor: pointer;\n}\n.pp-icon-btn:hover {\n  color: var(--fg);\n  background: var(--bg-hover);\n}\n.pp-icon-btn:focus-visible {\n  outline: 2px solid var(--accent);\n  outline-offset: -2px;\n}\n.pp-icon-btn[data-active="true"] {\n  color: var(--accent);\n  border-color: var(--accent);\n}\n.pp-help {\n  padding: var(--sp-2);\n  font-size: var(--fs-13);\n  line-height: var(--lh-20);\n  color: var(--fg-secondary);\n}\n/* \u5E2E\u52A9\u5361\u7247\uFF1A\u539F\u6D6E\u5C42\u6539\u6210\u4E3B\u533A\u9876\u90E8\u5185\u5D4C\u5361\uFF08\u4E0D\u518D\u906E\u6321\u5185\u5BB9\uFF09 */\n/* \u5E2E\u52A9\u5361\u7247\uFF1A\u6D6E\u5728\u4E3B\u533A\u53F3\u4E0A\u89D2\uFF0C\u4E0D\u5360\u6587\u6863\u6D41\u3002\n   \u4E4B\u524D\u662F\u6587\u6863\u6D41\u5185\u5D4C\u5361\uFF0C\u63D2\u5728\u9875\u7B7E\u6761\u4E0E\u9875\u5934\u4E4B\u95F4\u4F1A\u628A\u9875\u9762\u6807\u9898\u5F80\u4E0B\u63A8\u4E00\u683C\uFF0C\n   \u89C6\u89C9\u4E0A\u50CF\u591A\u4E86\u4E00\u4E2A\u9875\u7B7E\u3002\u6D6E\u5C42\u5B9A\u4F4D\u540E\u4E0E\u9875\u9762\u5185\u5BB9\u4E92\u4E0D\u5F71\u54CD\u3002 */\n.pp-help-card {\n  position: absolute;\n  top: calc(var(--tabbar-h) + var(--sp-2));\n  right: var(--sp-4);\n  z-index: var(--z-menu);\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-1);\n  width: var(--popover-w);\n  max-width: calc(100% - var(--sp-6));\n  padding: var(--sp-3);\n  background: var(--bg-surface);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  box-shadow: var(--shadow-menu);\n}\n.pp-help-card-head {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: var(--sp-2);\n}\n.pp-help-card-title {\n  font-size: var(--fs-12);\n  font-weight: var(--fw-medium);\n  color: var(--fg-tertiary);\n}\n\n\n\n/* \u2014\u2014 \u9875\u5185\u951A\u70B9\u6761\uFF08\u539F\u53F3\u680F\u300C\u672C\u9875\u76EE\u5F55\u300D\u7684\u66FF\u4EE3\uFF09\uFF1A\u4E3B\u533A\u9876\u90E8 sticky \u6A2A\u5411 chips \u2014\u2014\n   \u7A84\u5BB9\u5668\u91CC\u53F3\u4FA7\u5E38\u9A7B TOC \u4F1A\u5403\u6389 240px\uFF0C\u628A\u4E3B\u533A\u6324\u5230\u4E0D\u53EF\u8BFB\uFF1B\u6539\u6210\u6A2A\u5411\u6761\u540E\n   \u53EA\u5360\u4E00\u884C\u7EB5\u5411\u9AD8\u5EA6\uFF0C\u4E3B\u533A\u5BBD\u5EA6\u4E0D\u53D7\u5F71\u54CD\uFF0C\u6EDA\u52A8\u65F6\u4ECD\u80FD\u8DF3\u8F6C\u3002 */\n.pp-anchor-bar {\n  position: sticky;\n  top: 0;\n  z-index: 2;\n  display: flex;\n  align-items: center;\n  gap: var(--sp-1);\n  height: var(--ctl-h-lg);\n  padding: 0 var(--sp-4);\n  overflow-x: auto;\n  background: var(--bg-surface);\n  border-bottom: 1px solid var(--border);\n  scrollbar-width: none;\n}\n.pp-anchor-bar::-webkit-scrollbar {\n  height: calc(var(--scrollbar) * 0);\n}\n.pp-anchor-chip {\n  display: inline-flex;\n  align-items: center;\n  flex: none;\n  height: var(--ctl-h-sm);\n  padding: 0 var(--sp-2);\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-secondary);\n  text-decoration: none;\n  border: 1px solid transparent;\n  border-radius: var(--radius-pill);\n  cursor: pointer;\n  white-space: nowrap;\n}\n.pp-anchor-chip:hover {\n  color: var(--fg);\n  background: var(--bg-hover);\n}\n.pp-anchor-chip[data-active="true"] {\n  color: var(--accent);\n  background: var(--accent-tint);\n  border-color: var(--accent);\n}\n\n/* \u2014\u2014 \u5206\u7EC4\u6807\u9898\u884C\uFF1A\u6807\u9898\u9760\u5DE6\u3001\u52A8\u4F5C\u9760\u53F3 \u2014\u2014 */\n/* \u8C03\u8BD5\u53F0\u53C2\u6570\u533A\uFF08\u5982 Headers \u7EC4\uFF09\u7528\u5B83\u5728\u5206\u7EC4\u6807\u9898\u53F3\u4FA7\u6302\u300C\u5E38\u7528\u8BF7\u6C42\u5934\u300D\u6309\u94AE\uFF1B\n   .pp-group-title \u81EA\u5E26 3px \u4E3B\u8272\u7AD6\u7EBF\uFF0C\u8FD9\u91CC\u53EA\u8D1F\u8D23\u884C\u5185\u5DE6\u53F3\u5206\u680F\u3002 */\n.pp-group-head {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: var(--sp-2);\n  min-width: 0;\n}\n.pp-group-head > .pp-group-title {\n  min-width: 0;\n  margin-right: auto;\n}\n\n/* \u2014\u2014 \u884C\u5185\u6587\u5B57\u6309\u94AE\uFF1A\u65E0\u8FB9\u6846\u3001\u4E3B\u8272\u6587\u5B57\uFF0Chover \u53EA\u6362\u4E3B\u8272\u60AC\u505C\u8272 \u2014\u2014 */\n/* \u8868\u683C\u4E0E\u5206\u7EC4\u6807\u9898\u91CC\u7684\u8F7B\u91CF\u52A8\u4F5C\uFF08\u300C\u5E38\u7528\u8BF7\u6C42\u5934\u300D\u300C\u6E05\u7A7A\u300D\u7B49\uFF09\uFF0C\n   \u9AD8\u5EA6\u8D70 --ctl-h-sm \u4E0E .pp-btn-sm \u5BF9\u9F50\uFF0C\u907F\u514D\u4E0E\u8868\u683C\u884C\u9AD8\u6253\u67B6\u3002 */\n.pp-btn-link {\n  display: inline-flex;\n  align-items: center;\n  flex: none;\n  height: var(--ctl-h-sm);\n  padding: 0 var(--sp-1);\n  font-family: var(--font-sans);\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--accent);\n  background: transparent;\n  border: 1px solid transparent;\n  border-radius: var(--radius-sm);\n  cursor: pointer;\n  white-space: nowrap;\n}\n.pp-btn-link:hover {\n  color: var(--accent-hover);\n}\n.pp-btn-link:disabled {\n  color: var(--fg-tertiary);\n  cursor: not-allowed;\n}\n\n/* \u2014\u2014 \u8C03\u8BD5\u53F0\u4E0A\u4E0B\u5206\u680F\uFF1A\u8BF7\u6C42\u533A\u5728\u4E0A\u3001\u54CD\u5E94\u533A\u5728\u4E0B \u2014\u2014 */\n/* \u5355\u680F\u7ED3\u6784\uFF08Apifox .apiCase \u6574\u9875\u7EB5\u5411\u6392\u5E03\uFF09\uFF1A\u4E24\u533A\u90FD\u53EF\u6536\u7F29\uFF0C\n   \u6EDA\u52A8\u4EA4\u7ED9\u5404\u81EA\u5185\u90E8\u5BB9\u5668\uFF0C\u5916\u5C42\u4E0D\u518D\u6491\u9AD8\u3002 */\n.pp-debug-split {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-3);\n  min-height: 0;\n}\n/* \u8BF7\u6C42\u533A\uFF1A\u53EA\u8D1F\u8D23\u6536\u7A84\uFF0C\u4E0D\u62A2\u9AD8\u5EA6 */\n.pp-debug-request {\n  min-width: 0;\n  min-height: 0;\n}\n/* \u54CD\u5E94\u533A\uFF1A\u5360\u6EE1\u5269\u4F59\u9AD8\u5EA6\uFF0C\u5185\u5BB9\u8D85\u9AD8\u65F6\u81EA\u5DF1\u6EDA\u52A8 */\n.pp-debug-response {\n  display: flex;\n  flex-direction: column;\n  flex: 1 1 auto;\n  min-width: 0;\n  min-height: 0;\n  overflow: auto;\n}\n\n/* \u2014\u2014 BodyEditor \u9876\u90E8\u7C7B\u578B\u884C\uFF1A\u7C7B\u578B\u9009\u62E9\u5728\u5DE6\u3001\u52A8\u4F5C\u6309\u94AE\u5728\u53F3\uFF0C\u4E0E\u7F16\u8F91\u5668\u7528\u5206\u9694\u7EBF\u9694\u5F00 \u2014\u2014 */\n.pp-body-head {\n  display: flex;\n  align-items: center;\n  flex-wrap: wrap;\n  gap: var(--sp-2);\n  padding-bottom: var(--sp-2);\n  border-bottom: 1px solid var(--border);\n}\n\n/* \u2014\u2014 ScriptPanel \u6BCF\u6BB5\u5BB9\u5668\uFF08\u524D\u7F6E / \u540E\u7F6E\uFF09\uFF1A\u5185\u8FB9\u8DDD + \u6BB5\u95F4\u5E95\u90E8\u95F4\u8DDD \u2014\u2014 */\n.pp-script-block {\n  padding: var(--sp-2) 0;\n  margin-bottom: var(--sp-3);\n  min-width: 0;\n}\n.pp-script-block:last-child {\n  margin-bottom: 0;\n}\n\n/* \u2014\u2014 \u54CD\u5E94\u72B6\u6001\u6761\uFF1A\u72B6\u6001\u80F6\u56CA\u5728\u5DE6\u3001\u8017\u65F6\u4E0E\u5927\u5C0F\u5C45\u4E2D\u3001\u590D\u5236\u6309\u94AE\u9760\u53F3 \u2014\u2014 */\n.pp-resp-bar {\n  display: flex;\n  align-items: center;\n  flex-wrap: wrap;\n  gap: var(--sp-2);\n  min-width: 0;\n}\n.pp-resp-bar > .pp-pill {\n  flex: none;\n}\n/* \u6700\u540E\u4E00\u4E2A\u5B50\u5143\u7D20\uFF08\u590D\u5236\u6309\u94AE\uFF09\u7528\u81EA\u52A8\u5916\u8FB9\u8DDD\u63A8\u5230\u884C\u5C3E\uFF0C\u7A84\u5BB9\u5668\u6362\u884C\u540E\u4ECD\u8D34\u53F3 */\n.pp-resp-bar > :last-child {\n  margin-left: auto;\n}\n\n/* \u2014\u2014 \u54CD\u5E94\u9875\u7B7E\u6761\uFF1A\u89C2\u611F\u540C .pp-tabs\uFF0C\u4F46\u4E0A\u65B9\u6709\u72B6\u6001\u6761\uFF0C\u9700\u8981\u4E00\u6761\u4E0A\u8FB9\u6846\u628A\u4E24\u8005\u5206\u5F00 \u2014\u2014 */\n.pp-resp-tabs {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-1);\n  flex-wrap: wrap;\n  min-height: var(--ctl-h-lg);\n  padding: 0 var(--sp-3);\n  background: var(--bg-surface);\n  border-top: 1px solid var(--border);\n  border-bottom: 1px solid var(--border);\n}\n\n/* \u2014\u2014 \u9875\u7B7E\u8BA1\u6570\uFF1A\u5C0F\u53F7\u3001\u6B21\u8981\u8272\u3001\u4E0D\u6362\u884C \u2014\u2014 */\n.pp-resp-count {\n  flex: none;\n  font-size: var(--fs-12);\n  color: var(--fg-tertiary);\n  white-space: nowrap;\n}\n\n/* \u2014\u2014 \u54CD\u5E94 Body \u7684 JSON \u6811\uFF1A\u7B49\u5BBD\u5B57\u4F53\u3001\u6309\u5C42\u7F29\u8FDB\u3001\u8D85\u9AD8\u81EA\u5DF1\u6EDA\u52A8\uFF0814 \u884C\uFF09\u2014\u2014 */\n.pp-json-tree {\n  margin: 0;\n  padding: var(--sp-2);\n  font-family: var(--font-mono);\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg);\n  background: var(--bg-subtle);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-sm);\n  max-height: calc(var(--row-h) * 14);\n  overflow: auto;\n  white-space: pre;\n  tab-size: 2;\n}\n\n/* \u2014\u2014 teammate \u6536\u5C3E\u8865\u5145\uFF08pages-api / pages-data \u7684\u8BED\u4E49\u7F3A\u53E3\uFF0C\u5747\u4E3A\u5E03\u5C40\u7C7B\uFF09\u2014\u2014 */\n/* 240px \u4FA7\u680F\u5185\u7684\u65B0\u5EFA\u8868\u5355\u5BB9\u5668\uFF1A\u5361\u7247 padding \u5728\u7A84\u680F\u91CC\u504F\u6324\uFF0C\u5355\u72EC\u7ED9\u7D27\u51D1\u7248 */\n.pp-panel-form {\n  margin: var(--sp-2);\n  padding: var(--sp-2);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-ctl);\n  background: var(--bg-subtle);\n}\n/* Mock \u89C4\u5219\u8868\u5217\u5BBD\uFF08\u542F\u7528 / \u5B57\u6BB5 / \u7C7B\u578B / \u89C4\u5219 / \u793A\u4F8B\u503C / \u64CD\u4F5C\uFF09 */\n.pp-table-rules {\n  table-layout: fixed;\n}\n.pp-table-rules th:nth-child(1) { width: 44px; }\n.pp-table-rules th:nth-child(2) { width: 180px; }\n.pp-table-rules th:nth-child(3) { width: 96px; }\n.pp-table-rules th:nth-child(4) { width: 110px; }\n.pp-table-rules th:nth-child(5) { width: 96px; }\n/* doc \u72B6\u6001\u7801\u8868\u5217\u5BBD\uFF08\u72B6\u6001\u7801 / \u540D\u79F0 / \u8BF4\u660E\uFF09 */\n.pp-table-status {\n  table-layout: fixed;\n}\n.pp-table-status th:nth-child(1) { width: 120px; }\n.pp-table-status th:nth-child(2) { width: 180px; }\n/* debug URL \u884C\u4E0B\u65B9\u7684\u5B8C\u6574\u5730\u5740\u884C */\n.pp-debug-url-full {\n  margin: 0 0 var(--sp-2);\n  color: var(--fg-tertiary);\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n/* \u8BBE\u7F6E\u9875\u5206\u7EC4\u5361\uFF08\u5BF9\u9F50 Apifox .formItem 16px \u884C\u8DDD\uFF09 */\n.pp-settings-group {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-4);\n  padding: var(--sp-4);\n}\n.pp-settings-group-title {\n  font-size: var(--fs-14);\n  line-height: var(--lh-22);\n  font-weight: var(--fw-semibold);\n  color: var(--fg-strong);\n}\n.pp-settings-group-desc {\n  margin: 0;\n  font-size: var(--fs-14);\n  line-height: var(--lh-22);\n  color: var(--fg-secondary);\n}\n/* \u73AF\u5883\u53D8\u91CF\u7C7B\u578B\u5217\uFF08\u53EA\u8BFB\u5C55\u793A\uFF09 */\n.pp-env-type {\n  font-family: var(--font-mono);\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-tertiary);\n}\n/* Schema \u6811\u6A21\u5F0F\u5B50\u5B57\u6BB5\u7F29\u8FDB\uFF1A\u7528\u5D4C\u5957\u5143\u7D20\u5404\u52A0\u4E00\u7EA7\uFF08\u4E0D\u5F15\u5165\u672A\u5B9A\u4E49\u7684\u81EA\u5B9A\u4E49\u5C5E\u6027\uFF09 */\n.pp-schema-indent {\n  padding-left: var(--sp-3);\n}\n\n/* \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n   pages-spec.md \xA715.1 \u6536\u5C3E\u7C7B\uFF08\u6309\u9875\u5F52\u5C5E\uFF1B\u989C\u8272\u5B57\u53F7\u4E00\u5F8B\u8D70 token\uFF0C\n   height \u4E00\u5F8B calc(token) \u6216 token\uFF0Cheights.test \u9010\u884C\u626B\u63CF\uFF09\n   \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 */\n\n/* \u2014\u2014 \u9AA8\u67B6\uFF1A\u9875\u7B7E\u6761\u6FC0\u6D3B\u6001\u4E0E\u672A\u6FC0\u6D3B\u7AD6\u7EBF\uFF08Apifox .layoutTabBar\uFF09\u2014\u2014 */\n.pp-tabbar-item {\n  position: relative;\n}\n.pp-tabbar-item[data-active="true"]::before {\n  content: "";\n  position: absolute;\n  left: 0;\n  right: 0;\n  top: 0;\n  height: calc(var(--sp-1) / 2);\n  background: var(--accent);\n}\n.pp-tabbar-item + .pp-tabbar-item::after {\n  content: "";\n  position: absolute;\n  left: 0;\n  top: 50%;\n  width: 1px;\n  height: calc(var(--lh-24));\n  background: var(--border-strong);\n  transform: translateY(-50%);\n}\n.pp-tabbar-pin {\n  flex: none;\n  width: var(--sp-3);\n  height: calc(var(--sp-3));\n  margin-left: var(--sp-1);\n  color: var(--fg-tertiary);\n}\n\n/* \u2014\u2014 doc\uFF1A\u53EF\u89C1\u6027\u69FD / \u6807\u7B7E\u80F6\u56CA / \u7F16\u8F91\u5668\u5916\u58F3 \u2014\u2014 */\n.pp-doc-visibility {\n  flex: none;\n  width: 120px;\n}\n.pp-doc-tag-pop {\n  display: flex;\n  flex-wrap: wrap;\n  gap: var(--sp-2);\n  padding: var(--sp-2);\n}\n.pp-doc-tag-chip {\n  display: inline-flex;\n  align-items: center;\n  height: var(--pill-h);\n  padding: 0 var(--sp-2);\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  border: 1px solid var(--border-strong);\n  border-radius: var(--radius-pill);\n}\n.pp-editor-shell {\n  display: flex;\n  flex-direction: column;\n  height: 100%;\n  min-height: 0;\n  border: 1px solid var(--border);\n  border-radius: var(--radius-lg);\n  overflow: hidden;\n}\n.pp-editor-toolbar {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-1);\n  height: var(--ctl-h-lg);\n  padding: 0 var(--sp-2);\n  border-bottom: 1px solid var(--border);\n}\n.pp-editor-status {\n  display: flex;\n  justify-content: flex-end;\n  align-items: center;\n  height: var(--ctl-h-sm);\n  padding: 0 var(--sp-2);\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-tertiary);\n  border-top: 1px solid var(--border);\n}\n\n/* \u2014\u2014 debug\uFF1AURL \u80F6\u56CA\u884C\uFF08Apifox .url-col \u65B0\u7248 32px \u7070\u5E95 + focus \u6362\u4E3B\u8272\uFF09\u2014\u2014 */\n.pp-url-bar {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-1);\n  height: var(--ctl-h);\n  padding: var(--sp-1);\n  background: var(--bg-subtle);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n}\n.pp-url-bar[data-focused="true"] {\n  border-color: var(--accent);\n  background: var(--bg-surface);\n}\n.pp-url-bar-method {\n  flex: none;\n  padding: 1px var(--sp-2);\n  border-radius: var(--radius-sm);\n  background: var(--bg-hover);\n}\n.pp-send-split {\n  display: flex;\n  align-items: center;\n}\n.pp-send-split > :first-child {\n  width: calc(100% - 25px);\n}\n.pp-send-split > :last-child {\n  width: 25px;\n  border-left: 1px solid var(--border);\n}\n.pp-response-bar {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  min-height: var(--ctl-h);\n  padding: 0 var(--sp-2);\n  border-bottom: 1px solid var(--border);\n}\n.pp-json-viewer-btn {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  width: var(--ctl-h-sm);\n  height: var(--ctl-h-sm);\n  border-radius: var(--radius-sm);\n  color: var(--fg-secondary);\n}\n.pp-dashline {\n  box-sizing: border-box;\n  width: 100%;\n  height: 1px;\n  margin: var(--sp-2) 0;\n  border-top: 1px dashed var(--border);\n}\n\n/* \u2014\u2014 mock\uFF1A\u793A\u4F8B\u5165\u53E3 / \u7A7A\u6001 / \u884C\u5185\u52A8\u4F5C \u2014\u2014 */\n.pp-mock-code {\n  display: inline-flex;\n  align-items: center;\n  height: var(--ctl-h-sm);\n  color: var(--accent);\n  background: transparent;\n  border: none;\n  cursor: pointer;\n}\n.pp-mock-empty {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  padding: var(--ctl-h-lg) 0;\n}\n.pp-mock-row-action {\n  display: none;\n}\n.pp-table tbody tr:hover .pp-mock-row-action {\n  display: inline-flex;\n}\n\n/* \u2014\u2014 schema\uFF1A\u8868\u5355\u533A\u5757 / \u7070\u5E95\u6587\u6863\u5757 / \u8BA1\u6570\u80F6\u56CA \u2014\u2014 */\n.pp-form-block {\n  margin-bottom: var(--sp-5);\n}\n.pp-form-block-title {\n  margin-bottom: var(--sp-5);\n  font-size: var(--fs-16);\n  line-height: var(--lh-22);\n  font-weight: var(--fw-medium);\n  color: var(--fg-strong);\n}\n.pp-form-block-subtitle {\n  margin-bottom: var(--sp-1);\n  font-size: var(--fs-14);\n  line-height: var(--lh-22);\n  color: var(--fg);\n}\n.pp-form-block-desc {\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-secondary);\n}\n.pp-field-filled {\n  min-height: calc(var(--row-h) + var(--sp-3));\n  padding: var(--sp-2) var(--sp-3);\n  background: var(--bg-subtle);\n  border-color: transparent;\n}\n.pp-doc-block {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-4);\n  padding: var(--sp-4);\n  background: var(--bg-subtle);\n  border-radius: var(--radius-card);\n}\n.pp-chip {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  min-width: var(--sp-4);\n  min-height: calc(var(--sp-4));\n  padding: 0 var(--sp-1);\n  margin-left: var(--sp-1);\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  border-radius: var(--radius-pill);\n  background: var(--bg-hover);\n}\n.pp-popover-edit {\n  position: absolute;\n  top: var(--sp-1);\n  right: var(--sp-1);\n  width: var(--sp-5);\n  height: calc(var(--sp-5));\n  border-radius: var(--radius-sm);\n}\n\n/* \u2014\u2014 env\uFF1A\u73AF\u5883\u6761\u76EE / \u8272\u5757 / \u524D\u7F6E URL \u884C \u2014\u2014 */\n.pp-env-menu-item {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-1);\n  height: var(--ctl-h);\n  padding: var(--sp-1) var(--sp-2) var(--sp-1) var(--sp-1);\n  border-radius: var(--radius-ctl);\n  cursor: pointer;\n}\n.pp-env-menu-item[data-active="true"] {\n  color: var(--accent);\n  background: var(--bg-selected);\n}\n.pp-env-menu-action {\n  display: none;\n  align-items: center;\n  justify-content: center;\n  width: var(--hit);\n  height: var(--hit);\n  border-radius: var(--radius-sm);\n}\n.pp-env-menu-item:hover .pp-env-menu-action {\n  display: inline-flex;\n}\n.pp-color-swatches {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, var(--ctl-h));\n  gap: var(--sp-3);\n}\n.pp-color-swatch {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: var(--ctl-h);\n  height: var(--ctl-h);\n  border-radius: var(--radius-pill);\n}\n.pp-server-row {\n  display: flex;\n  align-items: center;\n  font-size: var(--fs-14);\n  line-height: var(--lh-22);\n}\n.pp-server-sep {\n  padding: 0;\n  text-align: center;\n  pointer-events: none;\n}\n.pp-env-tag {\n  margin-right: var(--sp-1);\n  cursor: pointer;\n}\n\n/* \u2014\u2014 history\uFF1A\u4E0A\u4E0B\u5206\u680F / \u9AD8\u4EAE\u5757 \u2014\u2014 */\n.pp-split-pane {\n  display: flex;\n  flex-direction: column;\n  min-height: 0;\n  border-top: 1px solid var(--border);\n}\n.pp-split-mask {\n  flex: none;\n  height: calc(var(--sp-2));\n  background: var(--bg-subtle);\n  cursor: row-resize;\n}\n.pp-split-btn {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  width: var(--ctl-h-sm);\n  height: var(--ctl-h-sm);\n  border-radius: var(--radius-sm);\n  color: var(--fg-tertiary);\n}\n.pp-history-actions {\n  display: inline-flex;\n  align-items: center;\n  gap: var(--sp-1);\n}\n.pp-highlight-block {\n  padding: var(--sp-2) var(--sp-3);\n  border-radius: var(--radius-ctl);\n  background: var(--bg-subtle);\n}\n\n/* \u2014\u2014 test / \u62A5\u544A\uFF1A\u5DE5\u5177\u6761 / \u5355\u5143\u683C / \u7A7A\u6001\u73AF / \u72B6\u6001\u80F6\u56CA \u2014\u2014 */\n.pp-table-toolbar {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  height: var(--toolbar-h);\n  padding: 0 var(--sp-2);\n  border-bottom: 1px solid var(--border);\n}\n.pp-table-search {\n  flex: none;\n  width: 216px;\n}\n.pp-table-filter {\n  flex: none;\n  width: 148px;\n}\n.pp-cell-title {\n  font-size: var(--fs-14);\n  line-height: var(--lh-22);\n  color: var(--fg);\n}\n.pp-cell-desc {\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-tertiary);\n}\n.pp-vdivider {\n  flex: none;\n  width: 1px;\n  height: calc(var(--sp-3));\n  background: var(--border);\n}\n.pp-empty-ring {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: var(--ctl-h-lg);\n  height: var(--ctl-h-lg);\n  border: 2px solid var(--border);\n  border-radius: var(--radius-pill);\n}\n.pp-status-running {\n  color: var(--info);\n  border-color: var(--info);\n}\n.pp-status-success {\n  color: var(--success);\n  border-color: var(--success);\n}\n.pp-status-fail {\n  color: var(--error);\n  border-color: var(--error);\n}\n.pp-status-pause {\n  color: var(--fg-tertiary);\n  border-color: var(--border-strong);\n}\n.pp-modal-shell {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-3);\n}\n.pp-modal-head {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  height: var(--ctl-h-lg);\n}\n.pp-modal-strip {\n  display: flex;\n  gap: var(--sp-2);\n  padding: var(--sp-2);\n  border-radius: var(--radius-ctl);\n  background: var(--bg-subtle);\n}\n.pp-flow-block {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-2);\n  padding: var(--sp-3);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n}\n\n/* \u2014\u2014 import\uFF1A\u6A21\u5F0F\u5361 / \u9884\u89C8\u6811 / \u7ED3\u679C\u5757 \u2014\u2014 */\n.pp-mode-card {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-1);\n  padding: var(--sp-3);\n  border: 1px solid var(--border-strong);\n  border-radius: var(--radius-lg);\n  cursor: pointer;\n}\n.pp-mode-label {\n  font-size: var(--fs-14);\n  line-height: var(--lh-22);\n  font-weight: var(--fw-semibold);\n  color: var(--fg);\n}\n.pp-mode-divider {\n  height: 1px;\n  background: var(--border);\n}\n.pp-preview-tree {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-1);\n  max-height: calc(var(--row-h) * 14);\n  overflow: auto;\n}\n.pp-preview-search {\n  flex: none;\n  width: 216px;\n}\n.pp-import-result {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-2);\n  padding: var(--sp-3);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n  background: var(--bg-subtle);\n}\n.pp-format-row {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  height: var(--ctl-h);\n  padding: 0 var(--sp-2);\n  border-radius: var(--radius-ctl);\n  cursor: pointer;\n}\n\n/* \u2014\u2014 flow\uFF1A\u9875\u7B7E\u6761 / CLI \u5757 / \u63D0\u793A\u5217\u8868 / \u62D6\u62FD\u628A\u624B \u2014\u2014 */\n.pp-flow-tabbar {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-1);\n  height: var(--tabbar-lg);\n  border-bottom: 1px solid var(--border);\n}\n.pp-flow-tab {\n  display: inline-flex;\n  align-items: center;\n  min-width: 76px;\n  height: var(--ctl-h);\n  padding: 0 var(--sp-3);\n  border-radius: var(--radius-ctl);\n  font-size: var(--fs-14);\n  line-height: var(--lh-22);\n  color: var(--fg-secondary);\n  cursor: pointer;\n}\n.pp-cli-block {\n  position: relative;\n  padding: var(--sp-2) var(--sp-3);\n  padding-right: calc(var(--sp-3) + var(--ctl-h-sm));\n  border-radius: var(--radius-ctl);\n  background: var(--bg-subtle);\n}\n.pp-cli-copy {\n  position: absolute;\n  top: var(--sp-1);\n  right: var(--sp-1);\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  width: var(--ctl-h-sm);\n  height: var(--ctl-h-sm);\n  border-radius: var(--radius-sm);\n  color: var(--fg-tertiary);\n}\n.pp-tips-list {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-1);\n  padding-left: var(--sp-4);\n}\n.pp-drag-handle {\n  flex: none;\n  width: var(--sp-3);\n  height: calc(var(--sp-4));\n  cursor: grab;\n  color: var(--fg-tertiary);\n}\n.pp-form-panel {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-3);\n  padding: var(--sp-3);\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n}\n\n/* \u2014\u2014 search\uFF1A\u5386\u53F2 / \u7CBE\u786E\u5339\u914D \u2014\u2014 */\n.pp-search-history {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-1);\n}\n.pp-search-history-sep {\n  height: 1px;\n  background: var(--border);\n}\n.pp-search-exact {\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--accent);\n}\n\n/* \u2014\u2014 settings\uFF1A\u5DE6\u4FA7\u83DC\u5355 / \u5217\u8868\u884C / \u5371\u9669\u884C / \u786E\u8BA4\u8F93\u5165 \u2014\u2014 */\n.pp-settings-layout {\n  display: grid;\n  grid-template-columns: 200px minmax(0, 1fr);\n  gap: var(--sp-4);\n  min-height: 0;\n}\n.pp-settings-menu {\n  display: flex;\n  flex-direction: column;\n  gap: var(--sp-1);\n}\n.pp-settings-menu-item {\n  display: flex;\n  align-items: center;\n  height: var(--ctl-h);\n  padding: 0 var(--sp-2);\n  border-radius: var(--radius-ctl);\n  font-size: var(--fs-14);\n  line-height: var(--lh-22);\n  color: var(--fg-secondary);\n  cursor: pointer;\n}\n.pp-settings-menu-item[data-active="true"] {\n  color: var(--accent);\n  background: var(--bg-selected);\n}\n.pp-settings-menu-sub {\n  padding-left: var(--sp-5);\n  font-size: var(--fs-13);\n  line-height: var(--lh-20);\n  color: var(--fg-tertiary);\n}\n.pp-settings-list {\n  display: flex;\n  flex-direction: column;\n  max-height: calc(var(--row-h) * 11);\n  overflow: auto;\n  border: 1px solid var(--border);\n  border-radius: var(--radius-card);\n}\n.pp-settings-list-item {\n  display: flex;\n  align-items: center;\n  gap: var(--sp-2);\n  min-height: var(--row-h);\n  padding: var(--sp-1) var(--sp-3);\n}\n.pp-settings-name {\n  font-size: var(--fs-14);\n  line-height: var(--lh-22);\n  color: var(--fg);\n}\n.pp-settings-sub {\n  font-size: var(--fs-12);\n  line-height: var(--lh-18);\n  color: var(--fg-tertiary);\n}\n.pp-row-action {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  width: var(--hit);\n  height: var(--hit);\n  border-radius: var(--radius-sm);\n  color: var(--fg-secondary);\n}\n.pp-alert {\n  display: flex;\n  gap: var(--sp-2);\n  padding: var(--sp-2) var(--sp-3);\n  border-radius: var(--radius-ctl);\n  background: var(--bg-subtle);\n  font-size: var(--fs-13);\n  line-height: var(--lh-20);\n  color: var(--fg-secondary);\n}\n.pp-danger-row {\n  color: var(--error);\n}\n.pp-confirm-input {\n  width: 200px;\n}\n\n\n';
 
 // src/client/pages/overview.jsx
 var import_react5 = __toESM(require("react"), 1);
@@ -1361,18 +1361,21 @@ function EmptyState({ text = "\u6682\u65E0\u6570\u636E", hint = "", icon = "box"
 // src/client/pages/overview.jsx
 (window.__postapiQueue = window.__postapiQueue || []).push(["overview", OverviewPage]);
 var MOCK_PROJECTS = [
-  { id: "proj_demo01", name: "\u8BA2\u5355\u4E2D\u5FC3", updatedAt: "2026-11-17T10:20:00.000Z" },
-  { id: "proj_demo02", name: "\u7528\u6237\u670D\u52A1", updatedAt: "2026-11-16T18:40:00.000Z" }
+  { id: "proj_sample01", name: "\u793A\u4F8B\u9879\u76EE A", updatedAt: "2026-11-17T10:20:00.000Z" },
+  { id: "proj_sample02", name: "\u793A\u4F8B\u9879\u76EE B", updatedAt: "2026-11-16T18:40:00.000Z" }
 ];
 var MOCK_PROJECT = {
-  id: "proj_demo01",
-  name: "\u8BA2\u5355\u4E2D\u5FC3",
+  id: "proj_sample01",
+  name: "\u793A\u4F8B\u9879\u76EE A",
   environments: [{ id: "env_dev", name: "\u5F00\u53D1\u73AF\u5883" }, { id: "env_prod", name: "\u751F\u4EA7\u73AF\u5883" }],
   endpoints: [
     { id: "ep_1001", name: "\u67E5\u8BE2\u8BA2\u5355\u5217\u8868", method: "GET", url: "/api/v1/orders", updatedAt: "2026-11-17T10:20:00.000Z" },
     { id: "ep_1002", name: "\u521B\u5EFA\u8BA2\u5355", method: "POST", url: "/api/v1/orders", updatedAt: "2026-11-17T09:05:00.000Z" },
     { id: "ep_1003", name: "\u53D6\u6D88\u8BA2\u5355", method: "DELETE", url: "/api/v1/orders/{orderId}", updatedAt: "2026-11-16T21:30:00.000Z" }
-  ]
+  ],
+  schemas: [],
+  testCases: [],
+  testScenarios: []
 };
 var RECENT_LIMIT = 5;
 function fmtTime(iso) {
@@ -1408,6 +1411,23 @@ function overviewStats(projects, project) {
     latestUpdated: latest
   };
 }
+function moduleCounts(project) {
+  const endpoints = Array.isArray(project && project.endpoints) ? project.endpoints : [];
+  const schemas = Array.isArray(project && project.schemas) ? project.schemas : [];
+  return {
+    endpointCount: endpoints.length,
+    docsCount: endpoints.length,
+    schemaCount: schemas.length
+  };
+}
+function caseCounts(project) {
+  const cases = Array.isArray(project && project.testCases) ? project.testCases : [];
+  const scenarios = Array.isArray(project && project.testScenarios) ? project.testScenarios : [];
+  return {
+    caseCount: cases.length,
+    scenarioCount: scenarios.length
+  };
+}
 function errText(err) {
   return err && err.message ? err.message : String(err);
 }
@@ -1417,24 +1437,41 @@ var SHORTCUTS = [
   { hash: "#/env", label: "\u73AF\u5883\u4E0E\u53D8\u91CF" },
   { hash: "#/test", label: "\u81EA\u52A8\u5316\u6D4B\u8BD5" }
 ];
+var ACTIONS = [
+  { key: "shareDoc", label: "\u5206\u4EAB\u6587\u6863", hash: "#/doc" },
+  { key: "docSite", label: "\u53D1\u5E03\u6587\u6863\u7AD9", hash: "#/doc" },
+  { key: "generateCode", label: "\u751F\u6210\u4EE3\u7801", hash: "#/import" },
+  { key: "import", label: "\u5BFC\u5165\u6570\u636E", hash: "#/import" },
+  { key: "export", label: "\u5BFC\u51FA\u6570\u636E", hash: "#/import" },
+  { key: "more", label: "\u66F4\u591A\u8BBE\u7F6E", hash: "#/settings" }
+];
+var FEATURE_CARDS = [
+  { key: "share", title: "\u5206\u4EAB\u5217\u8868", info: "\u5C06\u63A5\u53E3\u6587\u6863\u4EE5 URL \u5F62\u5F0F\u5206\u4EAB\u51FA\u53BB\uFF0C\u65B9\u4FBF\u5916\u90E8\u56E2\u961F\u5728\u7EBF\u67E5\u770B", action: "\u65B0\u5EFA\u5206\u4EAB", hash: "#/doc" },
+  { key: "autoImport", title: "\u81EA\u52A8\u5BFC\u5165", info: "\u81EA\u52A8\u5C06 OpenAPI\uFF08Swagger\uFF09\u6216 apiDoc \u683C\u5F0F\u7684\u5728\u7EBF URL \u63A5\u53E3\u6570\u636E\u5B9A\u65F6\u5BFC\u5165", action: "\u7ACB\u5373\u5BFC\u5165", hash: "#/import" },
+  { key: "codegen", title: "\u4EE3\u7801\u751F\u6210", info: "\u6839\u636E\u63A5\u53E3 / \u6A21\u578B\u5B9A\u4E49\uFF0C\u81EA\u52A8\u751F\u6210\u5404\u8BED\u8A00\u4E0E\u6846\u67B6\u7684\u4E1A\u52A1\u4EE3\u7801", action: "\u7ACB\u5373\u751F\u6210", hash: "#/import" }
+];
 function OverviewPage(props) {
   const rootRef = (0, import_react5.useRef)(null);
   const api = props && props.api || (typeof window !== "undefined" ? window.__postapiApi : void 0);
   const storage = api && api.storage;
-  const [projects, setProjects] = (0, import_react5.useState)(MOCK_PROJECTS);
-  const [project, setProject] = (0, import_react5.useState)(MOCK_PROJECT);
-  const [currentId, setCurrentId] = (0, import_react5.useState)(MOCK_PROJECT.id);
+  const [projects, setProjects] = (0, import_react5.useState)([]);
+  const [project, setProject] = (0, import_react5.useState)(null);
+  const [currentId, setCurrentId] = (0, import_react5.useState)("");
   const [isMock, setIsMock] = (0, import_react5.useState)(true);
   const [error, setError] = (0, import_react5.useState)("");
   const [notice, setNotice] = (0, import_react5.useState)("");
   const [newName, setNewName] = (0, import_react5.useState)("");
-  const [renameName, setRenameName] = (0, import_react5.useState)(MOCK_PROJECT.name);
+  const [renameName, setRenameName] = (0, import_react5.useState)("");
   const [pendingDelete, setPendingDelete] = (0, import_react5.useState)("");
   const [formOpen, setFormOpen] = (0, import_react5.useState)(false);
-  (0, import_react5.useEffect)(() => applyTheme(rootRef.current), []);
+  (0, import_react5.useEffect)(() => {
+    applyTheme(rootRef.current);
+  }, []);
   const refresh = async () => {
     if (!storage || typeof storage.listProjects !== "function") {
       setIsMock(true);
+      setProjects(MOCK_PROJECTS);
+      setProject(MOCK_PROJECT);
       return;
     }
     try {
@@ -1442,13 +1479,10 @@ function OverviewPage(props) {
       if (Array.isArray(list)) {
         setProjects(list);
         setIsMock(false);
-        if (list.length > 0 && typeof storage.getProject === "function") {
-          const loaded = await storage.getProject(list[0].id);
-          if (loaded) {
-            setProject(loaded);
-            setCurrentId(loaded.id || list[0].id);
-            setRenameName(loaded.name || "");
-          }
+        if (list.length === 0) {
+          setProject(null);
+          setCurrentId("");
+          setRenameName("");
         }
       }
     } catch (err) {
@@ -1541,6 +1575,11 @@ function OverviewPage(props) {
     try {
       await storage.deleteProject(projectId);
       setNotice("\u5DF2\u5220\u9664\uFF1A" + projectId);
+      if (projectId === currentId) {
+        setProject(null);
+        setCurrentId("");
+        setRenameName("");
+      }
       await refresh();
     } catch (err) {
       setError("\u5220\u9664\u9879\u76EE\u5931\u8D25\uFF1A" + errText(err));
@@ -1549,7 +1588,22 @@ function OverviewPage(props) {
   const recent = recentEndpoints(project);
   const cards = projectCards(projects);
   const stats = overviewStats(projects, project);
-  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page", "data-page": "overview", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-overview-title" }, "\u9879\u76EE\u603B\u89C8"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-actions" }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: () => setFormOpen((v) => !v) }, formOpen ? "\u53D6\u6D88" : "\u65B0\u5EFA\u9879\u76EE"))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-content" }, /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, isMock ? "\u793A\u4F8B\u6570\u636E \u2014 api.storage \u672A\u6CE8\u5165\u6216\u4E0D\u53EF\u7528\uFF0C\u4EE5\u4E0B\u4E3A\u6587\u4EF6\u5185 mock" : "\u6570\u636E\u6765\u6E90\uFF1Aapi.storage\uFF08listProjects / getProject\uFF09"), error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-error-text" }, error) : null, notice ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, notice) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-stats" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-stat" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-stat-value" }, stats.projectCount), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-stat-label" }, "\u9879\u76EE\u6570")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-stat" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-stat-value" }, stats.endpointCount), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-stat-label" }, "\u63A5\u53E3\u6570")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-stat" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-stat-value" }, stats.envCount), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-stat-label" }, "\u73AF\u5883\u6570")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-stat" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-stat-value" }, fmtTime(stats.latestUpdated)), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-stat-label" }, "\u6700\u8FD1\u66F4\u65B0"))), formOpen ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u65B0\u5EFA / \u91CD\u547D\u540D\u9879\u76EE"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-grid" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u65B0\u5EFA\u9879\u76EE"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline" }, /* @__PURE__ */ (0, import_react.createElement)(
+  const modules = moduleCounts(project);
+  const cases = caseCounts(project);
+  const hasCurrent = Boolean(currentId);
+  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page", "data-page": "overview", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-overview-title" }, "\u9879\u76EE\u603B\u89C8"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-actions" }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: () => setFormOpen((v) => !v) }, formOpen ? "\u53D6\u6D88" : "\u65B0\u5EFA\u9879\u76EE"))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-content" }, /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, isMock ? "\u793A\u4F8B\u6570\u636E \u2014 api.storage \u672A\u6CE8\u5165\u6216\u4E0D\u53EF\u7528\uFF0C\u4EE5\u4E0B\u4E3A\u6587\u4EF6\u5185 mock" : "\u6570\u636E\u6765\u6E90\uFF1Aapi.storage\uFF08listProjects / getProject\uFF09"), error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-error-text" }, error) : null, notice ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, notice) : null, /* @__PURE__ */ (0, import_react.createElement)("section", { className: "pp-card pp-ov-summary" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u7EDF\u8BA1"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-ov-summary-num" }, stats.endpointCount), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-ov-summary-desc" }, "\u63A5\u53E3\u603B\u6570 \xB7 \u9879\u76EE ", stats.projectCount, " \u4E2A \xB7 \u73AF\u5883 ", stats.envCount, " \u4E2A"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-stats" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-stat" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-stat-value" }, stats.projectCount), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-stat-label" }, "\u9879\u76EE\u6570")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-stat" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-stat-value" }, stats.endpointCount), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-stat-label" }, "\u63A5\u53E3\u6570")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-stat" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-stat-value" }, stats.envCount), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-stat-label" }, "\u73AF\u5883\u6570")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-stat" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-stat-value" }, fmtTime(stats.latestUpdated)), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-stat-label" }, "\u6700\u8FD1\u66F4\u65B0")))), /* @__PURE__ */ (0, import_react.createElement)("section", { className: "pp-card pp-ov-modules" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-ov-counts" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-ov-count" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ov-count-num" }, modules.endpointCount), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ov-count-label" }, "\u63A5\u53E3\u6570")), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ov-divider" }), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-ov-count" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ov-count-num" }, modules.docsCount), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ov-count-label" }, "\u6587\u6863\u6570")), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ov-divider" }), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-ov-count" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ov-count-num" }, modules.schemaCount), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ov-count-label" }, "\u6570\u636E\u6A21\u578B\u6570")), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ov-divider" }), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-ov-count" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ov-count-num" }, cases.caseCount), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ov-count-label" }, "\u5355\u63A5\u53E3\u7528\u4F8B\u6570")), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ov-divider" }), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-ov-count" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ov-count-num" }, cases.scenarioCount), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ov-count-label" }, "\u573A\u666F\u7528\u4F8B\u6570"))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-ov-functions" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-ov-left" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-ov-current" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u5F53\u524D\u9879\u76EE"), /* @__PURE__ */ (0, import_react.createElement)(
+    "select",
+    {
+      className: "pp-select pp-ov-current-value",
+      value: currentId,
+      onChange: (e) => {
+        const v = e.target.value;
+        if (v) openProject(v);
+      }
+    },
+    /* @__PURE__ */ (0, import_react.createElement)("option", { value: "" }, projects.length ? "\u8BF7\u9009\u62E9\u9879\u76EE" : "\u6682\u65E0\u9879\u76EE"),
+    projects.map((p) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: p.id, value: p.id }, p.name || p.id))
+  ), hasCurrent ? null : /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, "\u5C1A\u672A\u9009\u62E9\u9879\u76EE\uFF1A\u5728\u4E0B\u62C9\u91CC\u9009\u4E00\u4E2A\uFF0C\u6216\u5148\u65B0\u5EFA\u9879\u76EE")), formOpen ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card pp-ov-form" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u65B0\u5EFA / \u91CD\u547D\u540D\u9879\u76EE"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-grid" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u65B0\u5EFA\u9879\u76EE"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline" }, /* @__PURE__ */ (0, import_react.createElement)(
     "input",
     {
       className: "pp-input",
@@ -1571,9 +1625,9 @@ function OverviewPage(props) {
         setNotice("");
       }
     }
-  ), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: renameProject }, "\u91CD\u547D\u540D")))) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, "\u5F53\u524D\u9879\u76EE"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { width: "180px" }, readOnly: true, value: currentId || "-" })), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-grid" }, cards.map((p) => /* @__PURE__ */ (0, import_react.createElement)("div", { key: p.id, className: "pp-card pp-card-hover", "data-active": currentId === p.id ? "true" : "false" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title pp-ellipsis" }, p.name), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-meta" }, p.endpointCount === void 0 ? "\u63A5\u53E3\u6570\u672A\u77E5" : p.endpointCount + " \u4E2A\u63A5\u53E3", " \xB7 \u66F4\u65B0\u4E8E ", fmtTime(p.updatedAt)), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: () => openProject(p.id) }, "\u6253\u5F00"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-danger", onClick: () => deleteProject(p.id) }, pendingDelete === p.id ? "\u786E\u8BA4\u5220\u9664" : "\u5220\u9664")))), cards.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u6682\u65E0\u9879\u76EE", hint: "\u5148\u5728\u4E0A\u65B9\u65B0\u5EFA\u4E00\u4E2A\u9879\u76EE" }) : null), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card", style: { marginTop: "var(--sp-5)" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u6700\u8FD1\u63A5\u53E3"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table" }, /* @__PURE__ */ (0, import_react.createElement)("thead", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "90px" } }, "\u65B9\u6CD5"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "\u540D\u79F0"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "URL"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "150px" } }, "\u66F4\u65B0\u65F6\u95F4"))), /* @__PURE__ */ (0, import_react.createElement)("tbody", null, recent.map((e) => /* @__PURE__ */ (0, import_react.createElement)("tr", { key: e.id, onClick: () => {
+  ), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", disabled: !hasCurrent, onClick: renameProject }, "\u91CD\u547D\u540D")))) : null), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-ov-right" }, ACTIONS.map((a) => /* @__PURE__ */ (0, import_react.createElement)("a", { key: a.key, className: "pp-ov-action", href: a.hash }, a.label))))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-ov-cards" }, FEATURE_CARDS.map((c) => /* @__PURE__ */ (0, import_react.createElement)("div", { key: c.key, className: "pp-card pp-ov-card" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-ov-card-title" }, c.title), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-ov-card-info" }, c.info), /* @__PURE__ */ (0, import_react.createElement)("a", { className: "pp-btn pp-btn-sm", href: c.hash }, c.action)))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-grid" }, cards.map((p) => /* @__PURE__ */ (0, import_react.createElement)("div", { key: p.id, className: "pp-card pp-card-hover", "data-active": currentId === p.id ? "true" : "false" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title pp-ellipsis" }, p.name), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-meta" }, p.endpointCount === void 0 ? "\u63A5\u53E3\u6570\u672A\u77E5" : p.endpointCount + " \u4E2A\u63A5\u53E3", " \xB7 \u66F4\u65B0\u4E8E ", fmtTime(p.updatedAt)), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: () => openProject(p.id) }, "\u6253\u5F00"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-danger", onClick: () => deleteProject(p.id) }, pendingDelete === p.id ? "\u786E\u8BA4\u5220\u9664" : "\u5220\u9664")))), cards.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u6682\u65E0\u9879\u76EE", hint: "\u5148\u5728\u4E0A\u65B9\u65B0\u5EFA\u4E00\u4E2A\u9879\u76EE" }) : null), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card", style: { marginTop: "var(--sp-5)" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u6700\u8FD1\u63A5\u53E3"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table" }, /* @__PURE__ */ (0, import_react.createElement)("thead", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "90px" } }, "\u65B9\u6CD5"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "\u540D\u79F0"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "URL"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "150px" } }, "\u66F4\u65B0\u65F6\u95F4"))), /* @__PURE__ */ (0, import_react.createElement)("tbody", null, recent.map((e) => /* @__PURE__ */ (0, import_react.createElement)("tr", { key: e.id, onClick: () => {
     window.location.hash = "#/doc/" + encodeURIComponent(e.id);
-  } }, /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": e.method }, e.method)), /* @__PURE__ */ (0, import_react.createElement)("td", null, e.name || "-"), /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-table-mono pp-muted" }, e.url || "-"), /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-muted" }, fmtTime(e.updatedAt)))), recent.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { colSpan: 4, className: "pp-muted" }, "\u5F53\u524D\u9879\u76EE\u6682\u65E0\u63A5\u53E3")) : null)))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar", style: { marginTop: "var(--sp-5)" } }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-card-title", style: { margin: 0 } }, "\u5FEB\u6377\u5165\u53E3"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-toolbar-spacer" }), SHORTCUTS.map((s) => /* @__PURE__ */ (0, import_react.createElement)("a", { key: s.hash, className: "pp-btn", href: s.hash }, s.label)))));
+  } }, /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": e.method }, e.method)), /* @__PURE__ */ (0, import_react.createElement)("td", null, e.name || "-"), /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-table-mono pp-muted" }, e.url || "-"), /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-muted" }, fmtTime(e.updatedAt)))), recent.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { colSpan: 4, className: "pp-muted" }, hasCurrent ? "\u5F53\u524D\u9879\u76EE\u6682\u65E0\u63A5\u53E3" : "\u5C1A\u672A\u9009\u62E9\u9879\u76EE")) : null)))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar", style: { marginTop: "var(--sp-5)" } }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-card-title", style: { margin: 0 } }, "\u5FEB\u6377\u5165\u53E3"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-toolbar-spacer" }), SHORTCUTS.map((s) => /* @__PURE__ */ (0, import_react.createElement)("a", { key: s.hash, className: "pp-btn", href: s.hash }, s.label)))));
 }
 
 // src/client/pages/doc.jsx
@@ -1826,6 +1880,7 @@ var MOCK_PROJECT2 = {
   environments: [
     { id: "env_01", name: "\u5F00\u53D1\u73AF\u5883", baseUrl: "https://api.example.test", isDefault: true, variables: [] }
   ],
+  testCases: [],
   endpoints: [
     {
       id: "ep_1001",
@@ -1872,6 +1927,7 @@ var MOCK_PROJECT2 = {
           isDefault: false
         }
       ],
+      mock: { enabled: true, delayMs: 120, rules: [] },
       tags: ["\u8BA2\u5355"],
       status: "developing"
     },
@@ -1905,6 +1961,7 @@ var MOCK_PROJECT2 = {
           isDefault: true
         }
       ],
+      mock: { enabled: false, delayMs: 0, rules: [] },
       tags: ["\u8BA2\u5355"],
       status: "developing"
     },
@@ -1928,45 +1985,13 @@ var MOCK_PROJECT2 = {
       responses: [
         { id: "res_1003a", name: "\u5DF2\u53D6\u6D88", code: 204, contentType: "application/json", body: "", schema: null, headers: [], enabled: true, isDefault: true }
       ],
+      mock: { enabled: false, delayMs: 0, rules: [] },
       tags: ["\u8BA2\u5355"],
-      status: "developing"
-    },
-    {
-      id: "ep_2001",
-      name: "\u53D1\u8D77\u652F\u4ED8",
-      folderId: "fld_02",
-      order: 0,
-      protocol: "http",
-      method: "POST",
-      url: "/api/v1/payments",
-      description: "\u5BF9\u6307\u5B9A\u8BA2\u5355\u53D1\u8D77\u652F\u4ED8\u3002",
-      params: [],
-      pathParams: [],
-      headers: [
-        { key: "Content-Type", value: "application/json", enabled: true, description: "", required: true, type: "string" }
-      ],
-      cookies: [{ key: "session", value: "{{sessionId}}", enabled: false, description: "\u4F1A\u8BDD\u7968\u636E", required: false, type: "string" }],
-      body: { type: "json", content: '{\n  "orderId": "ORD-001",\n  "channel": "alipay"\n}', schema: null, examples: [] },
-      auth: { type: "apikey", token: "", username: "", password: "", key: "X-Api-Key", value: "{{apiKey}}", addTo: "header" },
-      responses: [
-        {
-          id: "res_2001a",
-          name: "\u6210\u529F",
-          code: 200,
-          contentType: "application/json",
-          body: '{\n  "code": 0,\n  "data": { "paymentId": "PAY-001", "qrUrl": "https://example.test/qr" }\n}',
-          schema: null,
-          headers: [],
-          enabled: true,
-          isDefault: true
-        }
-      ],
-      tags: ["\u652F\u4ED8"],
       status: "developing"
     }
   ]
 };
-var TOC = [
+var ANCHORS = [
   { id: "sec-info", label: "\u57FA\u672C\u4FE1\u606F" },
   { id: "sec-path", label: "Path \u53C2\u6570" },
   { id: "sec-params", label: "Query \u53C2\u6570" },
@@ -1974,10 +1999,20 @@ var TOC = [
   { id: "sec-cookies", label: "Cookies" },
   { id: "sec-body", label: "\u8BF7\u6C42\u4F53" },
   { id: "sec-auth", label: "\u8BA4\u8BC1" },
-  { id: "sec-response", label: "\u54CD\u5E94" },
+  { id: "sec-response", label: "\u54CD\u5E94\u793A\u4F8B" },
+  { id: "sec-status", label: "\u72B6\u6001\u7801" },
   { id: "sec-code", label: "\u4EE3\u7801\u751F\u6210" }
 ];
+var VIEWS = [
+  { id: "doc", label: "\u6587\u6863" },
+  { id: "run", label: "\u8FD0\u884C" },
+  { id: "case", label: "\u7528\u4F8B" },
+  { id: "mock", label: "Mock" },
+  { id: "settings", label: "\u8BBE\u7F6E" }
+];
+var METHODS = ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"];
 var BODY_TYPES = ["none", "json", "form", "urlencoded", "raw", "binary", "xml", "graphql"];
+var STATUS_OPTIONS = ["developing", "testing", "done", "deprecated"];
 var AUTH_LABEL = {
   none: "\u65E0\u8BA4\u8BC1",
   bearer: "Bearer Token\uFF08Authorization: Bearer <token>\uFF09",
@@ -1990,10 +2025,53 @@ var STATUS_LABEL = { developing: "\u5F00\u53D1\u4E2D", testing: "\u6D4B\u8BD5\u4
 function resolveApi() {
   return typeof window !== "undefined" ? window.__postapiApi : null;
 }
+function errText2(err) {
+  return err && err.message ? err.message : String(err);
+}
 function readEndpointIdFromHash() {
   if (typeof window === "undefined") return "";
   const m = /^#\/doc\/([^/?#]+)/.exec(window.location.hash || "");
   return m ? decodeURIComponent(m[1]) : "";
+}
+var DEBUG_TARGET_KEY = "postapi.debug.target";
+function gotoDebug(projectId, endpointId) {
+  try {
+    if (typeof localStorage !== "undefined") {
+      localStorage.setItem(DEBUG_TARGET_KEY, JSON.stringify({ projectId: projectId || "", endpointId: endpointId || "" }));
+    }
+  } catch {
+  }
+  if (typeof window !== "undefined") window.location.hash = "#/debug";
+}
+function blankEndpoint(folderId) {
+  return {
+    id: "",
+    name: "",
+    folderId: folderId || null,
+    order: 0,
+    protocol: "http",
+    method: "GET",
+    url: "",
+    params: [],
+    pathParams: [],
+    headers: [],
+    cookies: [],
+    body: { type: "none", content: "", schema: null, examples: [] },
+    auth: { type: "none", token: "", username: "", password: "", key: "", value: "", addTo: "header" },
+    responses: [],
+    mock: { enabled: false, delayMs: 0, rules: [] },
+    description: "",
+    tags: [],
+    status: "developing"
+  };
+}
+function upsertEndpoint(list, saved) {
+  const arr = Array.isArray(list) ? list.slice() : [];
+  if (!saved || !saved.id) return arr;
+  const at = arr.findIndex((e) => e && e.id === saved.id);
+  if (at >= 0) arr[at] = { ...arr[at], ...saved };
+  else arr.push(saved);
+  return arr;
 }
 function renderInline(text, keyPrefix) {
   const nodes = [];
@@ -2101,29 +2179,40 @@ function DocPage({ route, api }) {
   const rootRef = (0, import_react8.useRef)(null);
   (0, import_react8.useEffect)(() => applyTheme(rootRef.current), []);
   const apiRef = resolveApi() || api;
-  const [project, setProject] = (0, import_react8.useState)(MOCK_PROJECT2);
-  const [isMock, setIsMock] = (0, import_react8.useState)(true);
+  const [projects, setProjects] = (0, import_react8.useState)([]);
+  const [projectId, setProjectId] = (0, import_react8.useState)("");
+  const [project, setProject] = (0, import_react8.useState)(null);
+  const [isMock, setIsMock] = (0, import_react8.useState)(false);
   const [error, setError] = (0, import_react8.useState)("");
+  const [notice, setNotice] = (0, import_react8.useState)("");
   const [selectedId, setSelectedId] = (0, import_react8.useState)(() => route && route.arg || readEndpointIdFromHash());
   const [collapsed, setCollapsed] = (0, import_react8.useState)({});
+  const [view, setView] = (0, import_react8.useState)("doc");
   const [activeSec, setActiveSec] = (0, import_react8.useState)("sec-info");
   const [responseId, setResponseId] = (0, import_react8.useState)("");
   const [copied, setCopied] = (0, import_react8.useState)("");
+  const [formOpen, setFormOpen] = (0, import_react8.useState)(false);
+  const [form, setForm] = (0, import_react8.useState)({ name: "", method: "GET", url: "", folderId: "" });
+  const [editDraft, setEditDraft] = (0, import_react8.useState)(null);
+  const [pendingDelete, setPendingDelete] = (0, import_react8.useState)("");
+  const [saving, setSaving] = (0, import_react8.useState)(false);
   (0, import_react8.useEffect)(() => {
     const storage = apiRef && apiRef.storage;
-    if (!storage || typeof storage.listProjects !== "function" || typeof storage.getProject !== "function") return void 0;
+    if (!storage || typeof storage.listProjects !== "function") {
+      setProject(MOCK_PROJECT2);
+      setIsMock(true);
+      return void 0;
+    }
     let cancelled = false;
     Promise.resolve().then(() => storage.listProjects()).then((list) => {
-      const first = Array.isArray(list) && list.length ? list[0] : null;
-      return first ? storage.getProject(first.id) : null;
-    }).then((data) => {
-      if (cancelled || !data) return;
-      setProject(data);
+      if (cancelled) return;
+      setProjects(Array.isArray(list) ? list : []);
       setIsMock(false);
-      setError("");
     }).catch((err) => {
       if (cancelled) return;
-      setError("\u8BFB\u53D6\u9879\u76EE\u5931\u8D25\uFF1A" + (err && err.message ? err.message : String(err)));
+      setProject(MOCK_PROJECT2);
+      setIsMock(true);
+      setError("\u8BFB\u53D6\u9879\u76EE\u5217\u8868\u5931\u8D25\uFF1A" + errText2(err));
     });
     return () => {
       cancelled = true;
@@ -2138,6 +2227,18 @@ function DocPage({ route, api }) {
   const endpoints = (0, import_react8.useMemo)(() => Array.isArray(project && project.endpoints) ? project.endpoints : [], [project]);
   const folders = (0, import_react8.useMemo)(() => Array.isArray(project && project.folders) ? project.folders : [], [project]);
   const ep = endpoints.find((e) => e.id === selectedId) || endpoints[0] || null;
+  const epId = ep ? ep.id : "";
+  (0, import_react8.useEffect)(() => {
+    setEditDraft(ep ? {
+      name: ep.name || "",
+      method: ep.method || "GET",
+      url: ep.url || "",
+      folderId: ep.folderId || "",
+      status: ep.status || "developing",
+      description: ep.description || ""
+    } : null);
+    setPendingDelete("");
+  }, [epId]);
   const responses = (0, import_react8.useMemo)(() => {
     const list = Array.isArray(ep && ep.responses) ? ep.responses.filter((r) => r && r.enabled !== false) : [];
     return list;
@@ -2152,11 +2253,40 @@ function DocPage({ route, api }) {
     const def = envs.find((e) => e.isDefault) || envs[0];
     return def && def.baseUrl ? def.baseUrl : "";
   }, [project]);
+  const caseRows = (0, import_react8.useMemo)(() => {
+    const all = Array.isArray(project && project.testCases) ? project.testCases : [];
+    return all.filter((c) => c && c.endpointId === epId);
+  }, [project, epId]);
+  const canSave = Boolean(apiRef && apiRef.storage && typeof apiRef.storage.saveEndpoint === "function");
+  const canDelete = Boolean(apiRef && apiRef.storage && typeof apiRef.storage.deleteEndpoint === "function");
   const canSaveResponse = Boolean(apiRef && apiRef.storage && typeof apiRef.storage.saveResponse === "function");
+  const statusLabel = ep ? STATUS_LABEL[ep.status] || ep.status || "" : "";
+  const openProject = (id) => {
+    setProjectId(id);
+    setError("");
+    setNotice("");
+    setPendingDelete("");
+    setView("doc");
+    const storage = apiRef && apiRef.storage;
+    if (!id) {
+      setProject(null);
+      return;
+    }
+    if (!storage || typeof storage.getProject !== "function") return;
+    Promise.resolve().then(() => storage.getProject(id)).then((data) => {
+      if (!data) return;
+      setProject(data);
+      setIsMock(false);
+      const list = Array.isArray(data.endpoints) ? data.endpoints : [];
+      const want = selectedId && list.some((e) => e.id === selectedId) ? selectedId : list[0] ? list[0].id : "";
+      setSelectedId(want);
+    }).catch((err) => setError("\u8BFB\u53D6\u9879\u76EE\u5931\u8D25\uFF1A" + errText2(err)));
+  };
   const pick = (endpointId) => {
     setSelectedId(endpointId);
     setResponseId("");
-    if (typeof window !== "undefined") window.location.hash = "#/doc/" + endpointId;
+    setPendingDelete("");
+    if (typeof window !== "undefined") window.location.hash = "#/doc/" + encodeURIComponent(endpointId);
   };
   const jump = (secId) => {
     setActiveSec(secId);
@@ -2176,6 +2306,85 @@ function DocPage({ route, api }) {
     }
     fail();
   };
+  const persist = (nextEp, okText) => {
+    const storage = apiRef && apiRef.storage;
+    if (!project) {
+      setError("\u4FDD\u5B58\u5931\u8D25\uFF1A\u8BF7\u5148\u5728\u5DE6\u4FA7\u9009\u62E9\u9879\u76EE");
+      return;
+    }
+    if (!storage || typeof storage.saveEndpoint !== "function") {
+      if (isMock) {
+        setProject((prev) => prev ? { ...prev, endpoints: upsertEndpoint(prev.endpoints, nextEp) } : prev);
+        setSelectedId(nextEp.id || selectedId);
+        setNotice(okText + "\uFF08\u793A\u4F8B\u6570\u636E\uFF1A\u672C\u5730\u672A\u843D\u76D8\uFF09");
+        setError("");
+      } else {
+        setError("\u4FDD\u5B58\u5931\u8D25\uFF1Astorage.saveEndpoint \u4E0D\u53EF\u7528");
+      }
+      return;
+    }
+    setSaving(true);
+    Promise.resolve().then(() => storage.saveEndpoint(project.id, nextEp)).then((saved) => {
+      const final = saved && saved.id ? saved : nextEp;
+      setProject((prev) => prev ? { ...prev, endpoints: upsertEndpoint(prev.endpoints, final) } : prev);
+      setSelectedId(final.id || selectedId);
+      setNotice(okText);
+      setError("");
+    }).catch((err) => setError("\u4FDD\u5B58\u5931\u8D25\uFF1A" + errText2(err))).finally(() => setSaving(false));
+  };
+  const createEndpoint = () => {
+    const url = String(form.url || "").trim();
+    if (!url) {
+      setError("\u65B0\u5EFA\u5931\u8D25\uFF1A\u8DEF\u5F84\u4E0D\u80FD\u4E3A\u7A7A");
+      return;
+    }
+    const next = {
+      ...blankEndpoint(form.folderId || null),
+      name: String(form.name || "").trim() || form.method + " " + url,
+      method: form.method,
+      url
+    };
+    persist(next, "\u5DF2\u65B0\u5EFA\u63A5\u53E3\uFF1A" + next.name);
+    setFormOpen(false);
+    setForm({ name: "", method: "GET", url: "", folderId: "" });
+  };
+  const saveSettings = () => {
+    if (!ep || !editDraft) return;
+    persist({
+      ...ep,
+      name: String(editDraft.name || "").trim() || ep.name,
+      method: editDraft.method,
+      url: String(editDraft.url || "").trim(),
+      folderId: editDraft.folderId || null,
+      status: editDraft.status,
+      description: editDraft.description
+    }, "\u5DF2\u4FDD\u5B58\u63A5\u53E3\u8BBE\u7F6E");
+  };
+  const requestDelete = () => {
+    if (!ep) return;
+    if (pendingDelete !== ep.id) {
+      setPendingDelete(ep.id);
+      setNotice("\u518D\u70B9\u4E00\u6B21\u300C\u786E\u8BA4\u5220\u9664\u300D\u5220\u9664\u63A5\u53E3\uFF1A" + ep.name);
+      return;
+    }
+    const storage = apiRef && apiRef.storage;
+    const after = () => {
+      setProject((prev) => prev ? { ...prev, endpoints: (prev.endpoints || []).filter((e) => e.id !== ep.id) } : prev);
+      setSelectedId("");
+      setPendingDelete("");
+      setNotice("\u5DF2\u5220\u9664\u63A5\u53E3\uFF1A" + ep.name);
+      setError("");
+    };
+    if (!storage || typeof storage.deleteEndpoint !== "function") {
+      if (isMock) {
+        after();
+        return;
+      }
+      setError("\u5220\u9664\u5931\u8D25\uFF1Astorage.deleteEndpoint \u4E0D\u53EF\u7528");
+      return;
+    }
+    Promise.resolve().then(() => storage.deleteEndpoint(project.id, ep.id)).then(after).catch((err) => setError("\u5220\u9664\u5931\u8D25\uFF1A" + errText2(err)));
+  };
   const patchResponse = (patch) => {
     if (!ep || !activeResponse) return;
     const next = { ...activeResponse, ...patch };
@@ -2187,20 +2396,91 @@ function DocPage({ route, api }) {
   };
   const saveResponse = () => {
     const storage = apiRef && apiRef.storage;
-    if (!storage || typeof storage.saveResponse !== "function" || !ep || !activeResponse) return;
-    Promise.resolve().then(() => storage.saveResponse(project.id, ep.id, activeResponse)).then(() => setError("")).catch((err) => setError("\u4FDD\u5B58\u54CD\u5E94\u5931\u8D25\uFF1A" + (err && err.message ? err.message : String(err))));
+    if (!storage || typeof storage.saveResponse !== "function" || !project || !ep || !activeResponse) {
+      setError("\u4FDD\u5B58\u5931\u8D25\uFF1Astorage.saveResponse \u4E0D\u53EF\u7528");
+      return;
+    }
+    Promise.resolve().then(() => storage.saveResponse(project.id, ep.id, activeResponse)).then(() => {
+      setNotice("\u5DF2\u4FDD\u5B58\u54CD\u5E94\uFF1A" + (activeResponse.name || activeResponse.code));
+      setError("");
+    }).catch((err) => setError("\u4FDD\u5B58\u54CD\u5E94\u5931\u8D25\uFF1A" + errText2(err)));
   };
-  const tree = /* @__PURE__ */ (0, import_react.createElement)(
+  const formBlock = /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card", style: { margin: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u65B0\u5EFA\u63A5\u53E3"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-grid" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u540D\u79F0"), /* @__PURE__ */ (0, import_react.createElement)(
+    "input",
+    {
+      className: "pp-input pp-input-sm",
+      placeholder: "\u67E5\u8BE2\u8BA2\u5355\u5217\u8868",
+      value: form.name,
+      onChange: (e) => setForm({ ...form, name: e.target.value })
+    }
+  ), /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u65B9\u6CD5"), /* @__PURE__ */ (0, import_react.createElement)(
+    "select",
+    {
+      className: "pp-select pp-input-sm",
+      value: form.method,
+      onChange: (e) => setForm({ ...form, method: e.target.value })
+    },
+    METHODS.map((m) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: m, value: m }, m))
+  ), /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u8DEF\u5F84"), /* @__PURE__ */ (0, import_react.createElement)(
+    "input",
+    {
+      className: "pp-input pp-input-sm pp-input-mono",
+      placeholder: "/api/v1/orders",
+      value: form.url,
+      onChange: (e) => setForm({ ...form, url: e.target.value })
+    }
+  ), /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u76EE\u5F55"), /* @__PURE__ */ (0, import_react.createElement)(
+    "select",
+    {
+      className: "pp-select pp-input-sm",
+      value: form.folderId,
+      onChange: (e) => setForm({ ...form, folderId: e.target.value })
+    },
+    /* @__PURE__ */ (0, import_react.createElement)("option", { value: "" }, "\uFF08\u4E0D\u5F52\u7C7B\uFF09"),
+    folders.map((f) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: f.id, value: f.id }, f.name || f.id))
+  )), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginTop: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary pp-btn-sm", onClick: createEndpoint, disabled: saving || !String(form.url || "").trim() }, "\u4FDD\u5B58\u63A5\u53E3"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, "\u4FDD\u5B58\u540E\u51FA\u73B0\u5728\u5DE6\u4FA7\u76EE\u5F55\u6811")));
+  const sidePanel = /* @__PURE__ */ (0, import_react.createElement)("nav", { className: "pp-panel", "aria-label": "\u63A5\u53E3\u76EE\u5F55" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { padding: "var(--sp-2) var(--sp-2) 0" } }, /* @__PURE__ */ (0, import_react.createElement)(
+    "select",
+    {
+      className: "pp-select pp-input-sm",
+      value: projectId,
+      onChange: (e) => openProject(e.target.value),
+      "aria-label": "\u5F53\u524D\u9879\u76EE"
+    },
+    /* @__PURE__ */ (0, import_react.createElement)("option", { value: "" }, projects.length ? "\u8BF7\u9009\u62E9\u9879\u76EE" : "\u6682\u65E0\u9879\u76EE"),
+    projects.map((p) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: p.id, value: p.id }, p.name || p.id))
+  ), /* @__PURE__ */ (0, import_react.createElement)(
+    "button",
+    {
+      className: "pp-btn pp-btn-sm pp-btn-primary",
+      onClick: () => {
+        setFormOpen(!formOpen);
+        setNotice("");
+      },
+      disabled: !project,
+      title: project ? "" : "\u5148\u9009\u62E9\u9879\u76EE"
+    },
+    formOpen ? "\u53D6\u6D88" : "\u65B0\u5EFA\u63A5\u53E3"
+  )), formOpen ? formBlock : null, project ? /* @__PURE__ */ (0, import_react.createElement)(
     FolderTree,
     {
       project,
-      activeEndpointId: ep ? ep.id : "",
+      activeEndpointId: epId,
       collapsed,
       onPick: pick,
       onToggle: (folderId) => setCollapsed((prev) => ({ ...prev, [folderId]: !prev[folderId] }))
     }
-  );
-  const anchorBar = /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-anchor-bar", role: "navigation", "aria-label": "\u672C\u9875\u76EE\u5F55" }, TOC.map((t) => /* @__PURE__ */ (0, import_react.createElement)(
+  ) : /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-meta", style: { padding: "var(--sp-2)" } }, isMock ? "\u793A\u4F8B\u6570\u636E\uFF1A\u672A\u6CE8\u5165 api\uFF0C\u4F7F\u7528\u6587\u4EF6\u5185\u9879\u76EE" : "\u9009\u62E9\u9879\u76EE\u540E\u663E\u793A\u63A5\u53E3\u76EE\u5F55"));
+  const docHead = /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-doc-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-doc-title" }, ep ? ep.name : "\u63A5\u53E3\u6587\u6863"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-actions" }, copied ? /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-note " + (copied === "\u5DF2\u590D\u5236" ? "pp-note-ok" : "pp-note-bad") }, copied) : null, statusLabel ? /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-pill pp-pill-accent" }, statusLabel) : null, ep ? /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm", onClick: copyCurl }, "\u590D\u5236\u4E3A cURL") : null, ep ? /* @__PURE__ */ (0, import_react.createElement)(
+    "button",
+    {
+      className: "pp-btn pp-btn-sm",
+      onClick: () => gotoDebug(projectId, ep ? ep.id : "")
+    },
+    "\u53D1\u9001"
+  ) : null, ep ? /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm pp-btn-danger", onClick: requestDelete }, pendingDelete === ep.id ? "\u786E\u8BA4\u5220\u9664" : "\u5220\u9664\u63A5\u53E3") : null));
+  const viewTabs = /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tabs" }, VIEWS.map((v) => /* @__PURE__ */ (0, import_react.createElement)("button", { key: v.id, className: "pp-tab", "data-active": view === v.id, onClick: () => setView(v.id) }, v.label)));
+  const anchorBar = /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-anchor-bar", role: "navigation", "aria-label": "\u672C\u9875\u76EE\u5F55" }, ANCHORS.map((t) => /* @__PURE__ */ (0, import_react.createElement)(
     "a",
     {
       key: t.id,
@@ -2210,24 +2490,11 @@ function DocPage({ route, api }) {
         e.preventDefault();
         jump(t.id);
       },
-      href: "#/doc/" + encodeURIComponent(ep ? ep.id : "")
+      href: "#/doc/" + encodeURIComponent(epId)
     },
     t.label
   )));
-  if (!ep) {
-    return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page-flush", "data-page": "doc", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-doc-main" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-doc-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-doc-title" }, "\u63A5\u53E3\u6587\u6863")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-page" }, isMock ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-note pp-note-warn" }, "\u793A\u4F8B\u6570\u636E \u2014 window.__postapiApi \u672A\u6CE8\u5165\u6216\u8BFB\u53D6\u5931\u8D25\uFF0C\u4EE5\u4E0B\u4E3A\u6587\u4EF6\u5185 mock") : null, /* @__PURE__ */ (0, import_react.createElement)(
-      EmptyState,
-      {
-        icon: "file",
-        text: "\u8FD8\u6CA1\u6709\u63A5\u53E3\u6587\u6863",
-        hint: "\u5728\u603B\u89C8\u9875\u65B0\u5EFA\u9879\u76EE\u540E\uFF0C\u7528\u9876\u680F\u300C\u65B0\u5EFA\u300D\u521B\u5EFA\u7B2C\u4E00\u4E2A\u63A5\u53E3",
-        action: { label: "\u53BB\u603B\u89C8\u9875", href: "#/overview" }
-      }
-    ))));
-  }
-  const statusLabel = STATUS_LABEL[ep.status] || ep.status || "";
-  const docHead = /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-doc-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-doc-title" }, ep.name), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-actions" }, copied ? /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-note " + (copied === "\u5DF2\u590D\u5236" ? "pp-note-ok" : "pp-note-bad") }, copied) : null, statusLabel ? /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-pill pp-pill-accent" }, statusLabel) : null, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm", onClick: copyCurl }, "\u590D\u5236\u4E3A cURL")));
-  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page-flush", "data-page": "doc", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-split" }, /* @__PURE__ */ (0, import_react.createElement)("nav", { className: "pp-panel", "aria-label": "\u63A5\u53E3\u76EE\u5F55" }, tree), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-doc-main" }, docHead, anchorBar, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-page" }, isMock ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-note pp-note-warn" }, "\u793A\u4F8B\u6570\u636E \u2014 window.__postapiApi \u672A\u6CE8\u5165\u6216\u8BFB\u53D6\u5931\u8D25\uFF0C\u4EE5\u4E0B\u4E3A\u6587\u4EF6\u5185 mock") : null, error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-note pp-note-bad" }, error) : null, /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-info" }, /* @__PURE__ */ (0, import_react.createElement)("h1", { className: "pp-doc-h1" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": ep.method }, ep.method), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ellipsis" }, ep.name)), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-mono pp-muted", style: { margin: "0 0 var(--sp-2) 0" } }, ep.method, " ", ep.url), ep.protocol && ep.protocol !== "http" ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-meta" }, "\u534F\u8BAE ", ep.protocol, "\uFF1A\u89C4\u5212\u4E2D\uFF08\u4EC5\u4FDD\u7559\u7C7B\u578B\u4F4D\uFF0C\u53D1\u9001\u56DE\u843D HTTP\uFF09") : null, /* @__PURE__ */ (0, import_react.createElement)("div", { style: { marginTop: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)(Markdown, { text: ep.description }))), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-path", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-doc-h2" }, "Path \u53C2\u6570"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: ep.pathParams, readOnly: true, emptyText: "\u65E0 Path \u53C2\u6570", emptyHint: "\u8DEF\u5F84\u91CC\u6CA1\u6709 {var} \u5360\u4F4D\u7B26" }))), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-params", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-doc-h2" }, "Query \u53C2\u6570"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: ep.params, readOnly: true, emptyText: "\u65E0 Query \u53C2\u6570" }))), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-headers", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-doc-h2" }, "\u8BF7\u6C42\u5934"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: ep.headers, readOnly: true, emptyText: "\u65E0\u8BF7\u6C42\u5934" }))), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-cookies", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-doc-h2" }, "Cookies"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: ep.cookies, readOnly: true, emptyText: "\u65E0 Cookies" }))), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-body", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-doc-h2" }, "\u8BF7\u6C42\u4F53\uFF08", ep.body && ep.body.type ? ep.body.type : "none", "\uFF09"), ep.body && ep.body.content ? /* @__PURE__ */ (0, import_react.createElement)(JsonEditor, { value: ep.body.content, readOnly: true, rows: 8 }) : /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u65E0\u8BF7\u6C42\u4F53" }), ep.body && ep.body.type && BODY_TYPES.indexOf(ep.body.type) < 0 ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-meta" }, "\u672A\u77E5 body \u7C7B\u578B\uFF1A", ep.body.type) : null), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-auth", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-doc-h2" }, "\u8BA4\u8BC1"), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, AUTH_LABEL[ep.auth && ep.auth.type || "none"] || ep.auth && ep.auth.type), ep.auth && ep.auth.type === "apikey" ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-mono" }, (ep.auth.key || "key") + " \u2192 " + (ep.auth.addTo === "query" ? "query" : "header")) : null), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-response", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-doc-h2" }, "\u54CD\u5E94"), responses.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u5C1A\u672A\u5B9A\u4E49\u54CD\u5E94", hint: "\u5728\u8C03\u8BD5\u9875\u53D1\u9001\u540E\u4FDD\u5B58\u4E3A\u63A5\u53E3\uFF0C\u6216\u65B0\u589E\u54CD\u5E94" }) : /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tabs" }, responses.map((r) => /* @__PURE__ */ (0, import_react.createElement)(
+  const docView = !ep ? null : /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-page" }, /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-info" }, /* @__PURE__ */ (0, import_react.createElement)("h1", { className: "pp-doc-h1" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": ep.method }, ep.method), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ellipsis" }, ep.name)), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-mono pp-muted", style: { margin: "0 0 var(--sp-2) 0" } }, ep.method, " ", ep.url), ep.protocol && ep.protocol !== "http" ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-meta" }, "\u534F\u8BAE ", ep.protocol, "\uFF1A\u89C4\u5212\u4E2D\uFF08\u4EC5\u4FDD\u7559\u7C7B\u578B\u4F4D\uFF0C\u53D1\u9001\u56DE\u843D HTTP\uFF09") : null, /* @__PURE__ */ (0, import_react.createElement)("div", { style: { marginTop: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)(Markdown, { text: ep.description }))), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-path", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-doc-h2" }, "Path \u53C2\u6570"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: ep.pathParams, readOnly: true, emptyText: "\u65E0 Path \u53C2\u6570", emptyHint: "\u8DEF\u5F84\u91CC\u6CA1\u6709 {var} \u5360\u4F4D\u7B26" }))), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-params", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-doc-h2" }, "Query \u53C2\u6570"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: ep.params, readOnly: true, emptyText: "\u65E0 Query \u53C2\u6570" }))), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-headers", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-doc-h2" }, "\u8BF7\u6C42\u5934"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: ep.headers, readOnly: true, emptyText: "\u65E0\u8BF7\u6C42\u5934" }))), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-cookies", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-doc-h2" }, "Cookies"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: ep.cookies, readOnly: true, emptyText: "\u65E0 Cookies" }))), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-body", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-doc-h2" }, "\u8BF7\u6C42\u4F53\uFF08", ep.body && ep.body.type ? ep.body.type : "none", "\uFF09"), ep.body && ep.body.content ? /* @__PURE__ */ (0, import_react.createElement)(JsonEditor, { value: ep.body.content, readOnly: true, rows: 8 }) : /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u65E0\u8BF7\u6C42\u4F53" }), ep.body && ep.body.type && BODY_TYPES.indexOf(ep.body.type) < 0 ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-meta" }, "\u672A\u77E5 body \u7C7B\u578B\uFF1A", ep.body.type) : null), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-auth", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-doc-h2" }, "\u8BA4\u8BC1"), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, AUTH_LABEL[ep.auth && ep.auth.type || "none"] || ep.auth && ep.auth.type), ep.auth && ep.auth.type === "apikey" ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-mono" }, (ep.auth.key || "key") + " \u2192 " + (ep.auth.addTo === "query" ? "query" : "header")) : null), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-response", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-doc-h2" }, "\u54CD\u5E94\u5B9A\u4E49 / \u54CD\u5E94\u793A\u4F8B"), responses.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u5C1A\u672A\u5B9A\u4E49\u54CD\u5E94", hint: "\u5728\u8C03\u8BD5\u9875\u53D1\u9001\u540E\u4FDD\u5B58\u54CD\u5E94\u793A\u4F8B\uFF0C\u6216\u65B0\u589E\u54CD\u5E94" }) : /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tabs" }, responses.map((r) => /* @__PURE__ */ (0, import_react.createElement)(
     "button",
     {
       key: r.id,
@@ -2238,7 +2505,7 @@ function DocPage({ route, api }) {
     r.code,
     " ",
     r.name || ""
-  ))), activeResponse ? /* @__PURE__ */ (0, import_react.createElement)("div", { style: { marginTop: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginBottom: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)(StatusPill, { status: activeResponse.code, text: activeResponse.name || "" }), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, activeResponse.contentType || "application/json"), activeResponse.isDefault ? /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-pill pp-pill-accent" }, "\u9ED8\u8BA4") : null, canSaveResponse ? /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm", onClick: saveResponse }, "\u4FDD\u5B58\u54CD\u5E94") : /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, "\u53EA\u8BFB\uFF1Astorage.saveResponse \u4E0D\u53EF\u7528")), /* @__PURE__ */ (0, import_react.createElement)(
+  ))), activeResponse ? /* @__PURE__ */ (0, import_react.createElement)("div", { style: { marginTop: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginBottom: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)(StatusPill, { status: activeResponse.code, text: activeResponse.name || String(activeResponse.code) }), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, activeResponse.contentType || "application/json"), activeResponse.isDefault ? /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-pill pp-pill-accent" }, "\u9ED8\u8BA4") : null, canSaveResponse ? /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm", onClick: saveResponse }, "\u4FDD\u5B58\u54CD\u5E94") : /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, "\u53EA\u8BFB\uFF1Astorage.saveResponse \u4E0D\u53EF\u7528")), /* @__PURE__ */ (0, import_react.createElement)(
     JsonEditor,
     {
       value: activeResponse.body,
@@ -2246,7 +2513,79 @@ function DocPage({ route, api }) {
       readOnly: !canSaveResponse,
       onChange: (next) => patchResponse({ body: next })
     }
-  ), Array.isArray(activeResponse.headers) && activeResponse.headers.length > 0 ? /* @__PURE__ */ (0, import_react.createElement)("div", { style: { marginTop: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)("h3", { className: "pp-doc-h2" }, "\u54CD\u5E94\u5934"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: activeResponse.headers, readOnly: true, columns: ["key", "value"], emptyText: "\u65E0\u54CD\u5E94\u5934" }))) : null) : null)), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-code", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-doc-h2" }, "\u4EE3\u7801\u751F\u6210\uFF08cURL\uFF09"), /* @__PURE__ */ (0, import_react.createElement)("pre", { className: "pp-pre pp-pre-scroll" }, buildCurl(ep, baseUrl)))))));
+  ), Array.isArray(activeResponse.headers) && activeResponse.headers.length > 0 ? /* @__PURE__ */ (0, import_react.createElement)("div", { style: { marginTop: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)("h3", { className: "pp-doc-h2" }, "\u54CD\u5E94\u5934"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: activeResponse.headers, readOnly: true, columns: ["key", "value"], emptyText: "\u65E0\u54CD\u5E94\u5934" }))) : null) : null)), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-status", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-doc-h2" }, "\u72B6\u6001\u7801"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table" }, /* @__PURE__ */ (0, import_react.createElement)("thead", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "120px" } }, "\u72B6\u6001\u7801"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "180px" } }, "\u540D\u79F0"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "\u5185\u5BB9\u7C7B\u578B"))), /* @__PURE__ */ (0, import_react.createElement)("tbody", null, responses.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { colSpan: 3, className: "pp-muted" }, "\u5C1A\u672A\u5B9A\u4E49\u54CD\u5E94")) : null, responses.map((r) => /* @__PURE__ */ (0, import_react.createElement)("tr", { key: r.id }, /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)(StatusPill, { status: r.code, text: String(r.code) })), /* @__PURE__ */ (0, import_react.createElement)("td", null, r.name || "-"), /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-muted" }, r.contentType || "application/json"))))))), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-code", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-doc-h2" }, "\u4EE3\u7801\u751F\u6210\uFF08cURL\uFF09"), /* @__PURE__ */ (0, import_react.createElement)("pre", { className: "pp-pre pp-pre-scroll" }, buildCurl(ep, baseUrl))));
+  const runView = !ep ? null : /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-page" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-title" }, "\u5FEB\u6377\u53D1\u9001"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-url-row" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": ep.method }, ep.method), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-url-pill", title: baseUrl || "\u672A\u914D\u7F6E baseUrl" }, baseUrl || "\u672A\u914D\u7F6E baseUrl"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-mono pp-ellipsis", style: { flex: 1 } }, ep.url), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-send-group" }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: () => gotoDebug(projectId, ep.id) }, "\u5728\u8C03\u8BD5\u9875\u53D1\u9001"))), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-meta" }, "\u5B8C\u6574 URL\uFF1A", joinUrl(baseUrl, ep.url) || "\uFF08\u672A\u914D\u7F6E\u73AF\u5883 baseUrl\uFF09"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-title" }, "\u8BF7\u6C42\u6982\u8981"), /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table" }, /* @__PURE__ */ (0, import_react.createElement)("tbody", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, "\u65B9\u6CD5"), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": ep.method }, ep.method))), /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, "Query \u53C2\u6570"), /* @__PURE__ */ (0, import_react.createElement)("td", null, (ep.params || []).filter((p) => p && p.enabled !== false && p.key).length, " \u4E2A")), /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, "Path \u53C2\u6570"), /* @__PURE__ */ (0, import_react.createElement)("td", null, (ep.pathParams || []).filter((p) => p && p.enabled !== false && p.key).length, " \u4E2A")), /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, "\u8BF7\u6C42\u5934"), /* @__PURE__ */ (0, import_react.createElement)("td", null, (ep.headers || []).filter((h) => h && h.enabled !== false && h.key).length, " \u4E2A")), /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, "\u8BF7\u6C42\u4F53"), /* @__PURE__ */ (0, import_react.createElement)("td", null, ep.body && ep.body.type || "none")))));
+  const caseView = !ep ? null : /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-page" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-title" }, "\u5355\u63A5\u53E3\u7528\u4F8B"), caseRows.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)(
+    EmptyState,
+    {
+      text: "\u8BE5\u63A5\u53E3\u6682\u65E0\u7528\u4F8B",
+      hint: "\u5728\u300C\u6D4B\u8BD5\u300D\u9875\u4E3A\u8FD9\u4E2A\u63A5\u53E3\u65B0\u5EFA\u7528\u4F8B\uFF08\u65AD\u8A00 + \u63D0\u53D6\u53D8\u91CF\uFF09",
+      action: { label: "\u53BB\u6D4B\u8BD5\u9875", href: "#/test" }
+    }
+  ) : /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table" }, /* @__PURE__ */ (0, import_react.createElement)("thead", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("th", null, "\u540D\u79F0"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "120px" } }, "\u65AD\u8A00\u6570"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "120px" } }, "\u6700\u8FD1\u7ED3\u679C"))), /* @__PURE__ */ (0, import_react.createElement)("tbody", null, caseRows.map((c) => /* @__PURE__ */ (0, import_react.createElement)("tr", { key: c.id }, /* @__PURE__ */ (0, import_react.createElement)("td", null, c.name || c.id), /* @__PURE__ */ (0, import_react.createElement)("td", null, Array.isArray(c.assertions) ? c.assertions.length : 0), /* @__PURE__ */ (0, import_react.createElement)("td", null, c.lastResult && c.lastResult.passed ? "\u901A\u8FC7" : "\u672A\u8FD0\u884C")))))));
+  const mockCfg = ep && ep.mock || { enabled: false, delayMs: 0, rules: [] };
+  const mockView = !ep ? null : /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-page" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-title" }, "Mock \u914D\u7F6E"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-grid" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-form-label" }, "\u542F\u7528"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, mockCfg.enabled ? "\u5DF2\u542F\u7528" : "\u672A\u542F\u7528"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-form-label" }, "\u5EF6\u8FDF"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, Number(mockCfg.delayMs) || 0, " ms"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-form-label" }, "\u89C4\u5219\u6570"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, Array.isArray(mockCfg.rules) ? mockCfg.rules.length : 0, " \u6761")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("a", { className: "pp-btn pp-btn-sm", href: "#/mock" }, "\u5728 Mock \u9875\u7F16\u8F91\u89C4\u5219")));
+  const settingsView = editDraft ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-page" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-title" }, "\u63A5\u53E3\u8BBE\u7F6E"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-grid" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u540D\u79F0"), /* @__PURE__ */ (0, import_react.createElement)(
+    "input",
+    {
+      className: "pp-input",
+      placeholder: "\u63A5\u53E3\u540D\u79F0",
+      value: editDraft.name,
+      onChange: (e) => setEditDraft({ ...editDraft, name: e.target.value })
+    }
+  ), /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u65B9\u6CD5"), /* @__PURE__ */ (0, import_react.createElement)(
+    "select",
+    {
+      className: "pp-select",
+      value: editDraft.method,
+      onChange: (e) => setEditDraft({ ...editDraft, method: e.target.value })
+    },
+    METHODS.map((m) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: m, value: m }, m))
+  ), /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u8DEF\u5F84"), /* @__PURE__ */ (0, import_react.createElement)(
+    "input",
+    {
+      className: "pp-input pp-input-mono",
+      placeholder: "/api/v1/orders",
+      value: editDraft.url,
+      onChange: (e) => setEditDraft({ ...editDraft, url: e.target.value })
+    }
+  ), /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u76EE\u5F55"), /* @__PURE__ */ (0, import_react.createElement)(
+    "select",
+    {
+      className: "pp-select",
+      value: editDraft.folderId,
+      onChange: (e) => setEditDraft({ ...editDraft, folderId: e.target.value })
+    },
+    /* @__PURE__ */ (0, import_react.createElement)("option", { value: "" }, "\uFF08\u4E0D\u5F52\u7C7B\uFF09"),
+    folders.map((f) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: f.id, value: f.id }, f.name || f.id))
+  ), /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u72B6\u6001"), /* @__PURE__ */ (0, import_react.createElement)(
+    "select",
+    {
+      className: "pp-select",
+      value: editDraft.status,
+      onChange: (e) => setEditDraft({ ...editDraft, status: e.target.value })
+    },
+    STATUS_OPTIONS.map((s) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: s, value: s }, STATUS_LABEL[s] || s))
+  ), /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u63CF\u8FF0"), /* @__PURE__ */ (0, import_react.createElement)(
+    "textarea",
+    {
+      className: "pp-textarea pp-input-mono",
+      rows: 5,
+      placeholder: "\u652F\u6301 Markdown",
+      value: editDraft.description,
+      onChange: (e) => setEditDraft({ ...editDraft, description: e.target.value })
+    }
+  )), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: saveSettings, disabled: saving }, "\u4FDD\u5B58\u8BBE\u7F6E"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-danger", onClick: requestDelete }, pendingDelete === epId ? "\u786E\u8BA4\u5220\u9664" : "\u5220\u9664\u63A5\u53E3"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, canSave ? "\u4FDD\u5B58\u8D70 storage.saveEndpoint" : "\u53EA\u8BFB\uFF1Astorage.saveEndpoint \u4E0D\u53EF\u7528"))) : null;
+  const bodyView = !ep ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-page" }, /* @__PURE__ */ (0, import_react.createElement)(
+    EmptyState,
+    {
+      icon: "file",
+      text: project ? "\u8FD8\u6CA1\u6709\u63A5\u53E3\u6587\u6863" : "\u5C1A\u672A\u9009\u62E9\u9879\u76EE",
+      hint: project ? "\u70B9\u5DE6\u4FA7\u300C\u65B0\u5EFA\u63A5\u53E3\u300D\u521B\u5EFA\u7B2C\u4E00\u4E2A\u63A5\u53E3" : "\u5728\u5DE6\u4FA7\u9879\u76EE\u4E0B\u62C9\u91CC\u9009\u62E9\u4E00\u4E2A\u9879\u76EE\uFF0C\u6216\u53BB\u603B\u89C8\u9875\u65B0\u5EFA\u9879\u76EE",
+      action: project ? void 0 : { label: "\u53BB\u603B\u89C8\u9875", href: "#/overview" }
+    }
+  )) : view === "run" ? runView : view === "case" ? caseView : view === "mock" ? mockView : view === "settings" ? settingsView : docView;
+  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page-flush", "data-page": "doc", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-split" }, sidePanel, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-doc-main" }, docHead, ep ? viewTabs : null, ep && view === "doc" ? anchorBar : null, isMock ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-note pp-note-warn", style: { margin: "var(--sp-2) var(--sp-3)" } }, "\u793A\u4F8B\u6570\u636E \u2014 window.__postapiApi \u672A\u6CE8\u5165\u6216\u8BFB\u53D6\u5931\u8D25\uFF0C\u4EE5\u4E0B\u4E3A\u6587\u4EF6\u5185 mock") : null, error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-note pp-note-bad", style: { margin: "var(--sp-2) var(--sp-3)" } }, error) : null, notice ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-note", style: { margin: "var(--sp-2) var(--sp-3)" } }, notice) : null, bodyView)));
 }
 
 // src/client/pages/debug.jsx
@@ -2549,7 +2888,7 @@ function logsText(logs) {
   if (Array.isArray(logs)) return logs.map(textOf).filter((s) => s !== "").join("\n");
   return logs == null ? "" : textOf(logs);
 }
-function errText2(err) {
+function errText3(err) {
   if (err == null) return "";
   if (typeof err === "object" && err.message) return String(err.message);
   return String(err);
@@ -2572,12 +2911,12 @@ function ResponsePanel({ resp, sending = false, onCancel }) {
     try {
       const result = clip.writeText(bodyText(resp ? resp.body : ""));
       if (result && typeof result.then === "function") {
-        result.then(() => setCopyError("")).catch((err) => setCopyError("\u590D\u5236\u5931\u8D25\uFF1A" + errText2(err)));
+        result.then(() => setCopyError("")).catch((err) => setCopyError("\u590D\u5236\u5931\u8D25\uFF1A" + errText3(err)));
       } else {
         setCopyError("");
       }
     } catch (err) {
-      setCopyError("\u590D\u5236\u5931\u8D25\uFF1A" + errText2(err));
+      setCopyError("\u590D\u5236\u5931\u8D25\uFF1A" + errText3(err));
     }
   };
   const sendingBar = sending ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-resp-bar" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-pill pp-pill-accent" }, "\u53D1\u9001\u4E2D\u2026"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm", onClick: () => {
@@ -2592,7 +2931,7 @@ function ResponsePanel({ resp, sending = false, onCancel }) {
   const logText = logsText(resp.logs);
   const req = resp.request && typeof resp.request === "object" ? resp.request : null;
   const counts = { headers: headerRows.length, tests: testItems.length };
-  const errorMsg = resp.error ? errText2(resp.error) : "";
+  const errorMsg = resp.error ? errText3(resp.error) : "";
   const statusBar = /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-resp-bar" }, /* @__PURE__ */ (0, import_react.createElement)(StatusPill, { status: resp.status, text: resp.statusText || "" }), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, resp.timeMs == null ? "-" : resp.timeMs, " ms"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, resp.bodySize == null ? "-" : resp.bodySize, " B"), resp.truncated ? /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-pill pp-pill-warn" }, "\u5DF2\u622A\u65AD") : null, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm", onClick: copyBody }, "\u590D\u5236"));
   let tabBody = null;
   if (tab === "body") {
@@ -2604,7 +2943,7 @@ function ResponsePanel({ resp, sending = false, onCancel }) {
   } else if (tab === "request") {
     tabBody = req ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": String(req.method || "GET").toUpperCase() }, String(req.method || "GET").toUpperCase()), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-mono pp-ellipsis", title: req.url || "" }, req.url || "-")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap", style: { marginTop: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: headersToRows(req.headers), readOnly: true, columns: ["key", "value"], emptyText: "\u65E0\u8BF7\u6C42\u5934" })), bodyText(req.body) ? /* @__PURE__ */ (0, import_react.createElement)("pre", { className: "pp-pre pp-pre-scroll", style: { marginTop: "var(--sp-2)" } }, bodyText(req.body)) : null) : /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u65E0\u8BF7\u6C42\u5FEB\u7167" });
   } else if (tab === "tests") {
-    tabBody = testItems.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u65E0\u65AD\u8A00" }) : /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-list" }, testItems.map((item, i) => /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-result-row", key: i }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: item && item.passed ? "pp-pill pp-pill-ok" : "pp-pill pp-pill-bad" }, item && item.passed ? "\u901A\u8FC7" : "\u5931\u8D25"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ellipsis" }, item && item.name ? String(item.name) : "-"), item && item.error ? /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, errText2(item.error)) : null)));
+    tabBody = testItems.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u65E0\u65AD\u8A00" }) : /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-list" }, testItems.map((item, i) => /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-result-row", key: i }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: item && item.passed ? "pp-pill pp-pill-ok" : "pp-pill pp-pill-bad" }, item && item.passed ? "\u901A\u8FC7" : "\u5931\u8D25"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ellipsis" }, item && item.name ? String(item.name) : "-"), item && item.error ? /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, errText3(item.error)) : null)));
   } else {
     tabBody = logText ? /* @__PURE__ */ (0, import_react.createElement)("pre", { className: "pp-pre pp-pre-scroll" }, logText) : /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u65E0\u65E5\u5FD7" });
   }
@@ -2613,8 +2952,9 @@ function ResponsePanel({ resp, sending = false, onCancel }) {
 
 // src/client/pages/debug.jsx
 (window.__postapiQueue = window.__postapiQueue || []).push(["debug", DebugPage]);
-var METHODS = ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"];
+var METHODS2 = ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"];
 var AUTH_TYPES = ["none", "bearer", "basic", "apikey"];
+var AUTH_LABEL2 = { none: "\u65E0\u8BA4\u8BC1", bearer: "Bearer", basic: "Basic", apikey: "API Key" };
 var MOCK_PROJECT3 = {
   id: "proj_demo01",
   name: "\u8BA2\u5355\u4E2D\u5FC3\uFF08\u793A\u4F8B\u6570\u636E\uFF09",
@@ -2679,63 +3019,77 @@ var MOCK_PROJECT3 = {
         enabled: true,
         isDefault: true
       }]
-    },
-    {
-      id: "ep_3001",
-      name: "\u66F4\u65B0\u652F\u4ED8\u72B6\u6001",
-      folderId: null,
-      method: "PATCH",
-      url: "/api/v1/payments/{paymentId}",
-      params: [],
-      pathParams: [{ key: "paymentId", value: "PAY-001", enabled: true, type: "string", description: "", required: true }],
-      headers: [],
-      cookies: [],
-      body: { type: "json", content: '{\n  "status": "PAID"\n}' },
-      auth: { type: "none", token: "", username: "", password: "", key: "", value: "", addTo: "header" },
-      responses: [{ id: "res_c", name: "\u6210\u529F", code: 200, contentType: "application/json", body: "{}", headers: [], enabled: true, isDefault: true }]
     }
   ]
 };
 var TABS = [
   { id: "params", label: "Params" },
-  { id: "headers", label: "Headers" },
   { id: "body", label: "Body" },
+  { id: "headers", label: "Headers" },
+  { id: "cookies", label: "Cookies" },
   { id: "auth", label: "Auth" },
-  { id: "script", label: "\u811A\u672C" },
+  { id: "pre", label: "\u524D\u7F6E\u64CD\u4F5C" },
+  { id: "post", label: "\u540E\u7F6E\u64CD\u4F5C" },
   { id: "settings", label: "\u8BBE\u7F6E" }
 ];
 var REPLAY_KEY = "postapi.debug.replay";
-var AUTH_LABEL2 = { none: "\u65E0\u8BA4\u8BC1", bearer: "Bearer", basic: "Basic", apikey: "API Key" };
+var TARGET_KEY = "postapi.debug.target";
 function resolveApi2() {
   return typeof window !== "undefined" ? window.__postapiApi : null;
 }
-function emptyDraft(ep) {
+function errText4(err) {
+  return err && err.message ? err.message : String(err);
+}
+function blankDraft() {
   return {
-    id: ep && ep.id ? ep.id : "",
-    name: ep && ep.name ? ep.name : "",
-    folderId: ep && ep.folderId ? ep.folderId : null,
-    method: ep && ep.method || "GET",
-    url: ep && ep.url || "",
-    params: (ep && Array.isArray(ep.params) ? ep.params : []).map((r) => ({ ...r })),
-    pathParams: (ep && Array.isArray(ep.pathParams) ? ep.pathParams : []).map((r) => ({ ...r })),
-    headers: (ep && Array.isArray(ep.headers) ? ep.headers : []).map((r) => ({ ...r })),
-    cookies: (ep && Array.isArray(ep.cookies) ? ep.cookies : []).map((r) => ({ ...r })),
-    body: { type: ep && ep.body && ep.body.type || "none", content: ep && ep.body && ep.body.content || "" },
+    id: "",
+    name: "",
+    folderId: null,
+    method: "GET",
+    url: "",
+    params: [],
+    pathParams: [],
+    headers: [],
+    cookies: [],
+    body: { type: "none", content: "" },
+    auth: { type: "none", token: "", username: "", password: "", key: "", value: "", addTo: "header" },
+    responses: [],
+    preScript: "",
+    postScript: "",
+    assertions: [],
+    waitMs: 0
+  };
+}
+function emptyDraft(ep) {
+  const base = blankDraft();
+  if (!ep) return base;
+  const rows = (v) => Array.isArray(v) ? v.map((r) => ({ ...r })) : [];
+  return {
+    ...base,
+    id: ep.id || "",
+    name: ep.name || "",
+    folderId: ep.folderId || null,
+    method: ep.method || "GET",
+    url: ep.url || "",
+    params: rows(ep.params),
+    pathParams: rows(ep.pathParams),
+    headers: rows(ep.headers),
+    cookies: rows(ep.cookies),
+    body: { type: ep.body && ep.body.type || "none", content: ep.body && ep.body.content || "" },
     auth: {
-      type: ep && ep.auth && ep.auth.type || "none",
-      token: ep && ep.auth && ep.auth.token || "",
-      username: ep && ep.auth && ep.auth.username || "",
-      password: ep && ep.auth && ep.auth.password || "",
-      key: ep && ep.auth && ep.auth.key || "",
-      value: ep && ep.auth && ep.auth.value || "",
-      addTo: ep && ep.auth && ep.auth.addTo || "header"
+      type: ep.auth && ep.auth.type || "none",
+      token: ep.auth && ep.auth.token || "",
+      username: ep.auth && ep.auth.username || "",
+      password: ep.auth && ep.auth.password || "",
+      key: ep.auth && ep.auth.key || "",
+      value: ep.auth && ep.auth.value || "",
+      addTo: ep.auth && ep.auth.addTo || "header"
     },
-    responses: (ep && Array.isArray(ep.responses) ? ep.responses : []).map((r) => ({ ...r })),
-    // 前后置脚本 / 断言 / 发送前等待（Apifox 的「前置操作 / 后置操作」与「等待时间」）
-    preScript: ep && ep.preScript || "",
-    postScript: ep && ep.postScript || "",
-    assertions: (ep && Array.isArray(ep.assertions) ? ep.assertions : []).map((a) => ({ ...a })),
-    waitMs: Number.isFinite(ep && ep.waitMs) ? ep.waitMs : 0
+    responses: rows(ep.responses),
+    preScript: ep.preScript || "",
+    postScript: ep.postScript || "",
+    assertions: Array.isArray(ep.assertions) ? ep.assertions.map((a) => ({ ...a })) : [],
+    waitMs: Number.isFinite(ep.waitMs) ? ep.waitMs : 0
   };
 }
 function readReplay() {
@@ -2744,6 +3098,18 @@ function readReplay() {
     if (!raw) return null;
     const parsed = JSON.parse(raw);
     return parsed && typeof parsed === "object" ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+function readDebugTarget() {
+  try {
+    const raw = typeof localStorage !== "undefined" ? localStorage.getItem(TARGET_KEY) : null;
+    if (!raw) return null;
+    localStorage.removeItem(TARGET_KEY);
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== "object") return null;
+    return { projectId: String(parsed.projectId || ""), endpointId: String(parsed.endpointId || "") };
   } catch {
     return null;
   }
@@ -2808,50 +3174,82 @@ function appendCommonHeaders(rows, limit = 3) {
   }
   return list;
 }
+function responseExample(resp, name) {
+  const headers = resp && resp.headers && typeof resp.headers === "object" ? Object.keys(resp.headers).map((k) => ({ key: k, value: String(resp.headers[k]) })) : [];
+  return {
+    id: "",
+    name: name || "\u8C03\u8BD5\u4FDD\u5B58",
+    code: Number(resp && resp.status) || 200,
+    contentType: resp && resp.headers && (resp.headers["content-type"] || resp.headers["Content-Type"]) || "application/json",
+    body: resp && resp.body || "",
+    schema: null,
+    headers,
+    enabled: true,
+    isDefault: false
+  };
+}
 function DebugPage({ route, api }) {
   const rootRef = (0, import_react10.useRef)(null);
   const abortRef = (0, import_react10.useRef)({ cancelled: false });
   (0, import_react10.useEffect)(() => applyTheme(rootRef.current), []);
   const apiRef = resolveApi2() || api;
-  const [project, setProject] = (0, import_react10.useState)(MOCK_PROJECT3);
-  const [isMock, setIsMock] = (0, import_react10.useState)(true);
+  const [projects, setProjects] = (0, import_react10.useState)([]);
+  const [projectId, setProjectId] = (0, import_react10.useState)("");
+  const [project, setProject] = (0, import_react10.useState)(null);
+  const [isMock, setIsMock] = (0, import_react10.useState)(false);
   const [error, setError] = (0, import_react10.useState)("");
-  const [envId, setEnvId] = (0, import_react10.useState)(() => {
-    const envs2 = MOCK_PROJECT3.environments;
-    const def = envs2.find((e) => e.isDefault) || envs2[0];
-    return def ? def.id : "";
-  });
-  const [draft, setDraft] = (0, import_react10.useState)(() => emptyDraft(MOCK_PROJECT3.endpoints[0]));
+  const [notice, setNotice] = (0, import_react10.useState)("");
+  const [envId, setEnvId] = (0, import_react10.useState)("");
+  const [endpointId, setEndpointId] = (0, import_react10.useState)(() => route && route.arg || "");
+  const [target, setTarget] = (0, import_react10.useState)(() => readDebugTarget());
+  const [draft, setDraft] = (0, import_react10.useState)(blankDraft);
   const [tab, setTab] = (0, import_react10.useState)("params");
   const [resp, setResp] = (0, import_react10.useState)(null);
   const [sending, setSending] = (0, import_react10.useState)(false);
   const [timeoutMs, setTimeoutMs] = (0, import_react10.useState)(3e4);
-  const [savedHint, setSavedHint] = (0, import_react10.useState)("");
   (0, import_react10.useEffect)(() => {
     const storage = apiRef && apiRef.storage;
-    if (!storage || typeof storage.listProjects !== "function" || typeof storage.getProject !== "function") return void 0;
-    let cancelled = false;
-    Promise.resolve().then(() => storage.listProjects()).then((list) => {
-      const first = Array.isArray(list) && list.length ? list[0] : null;
-      return first ? storage.getProject(first.id) : null;
-    }).then((data) => {
-      if (cancelled || !data) return;
-      setProject(data);
-      setIsMock(false);
-      setError("");
-      const envs2 = Array.isArray(data.environments) ? data.environments : [];
+    if (!storage || typeof storage.listProjects !== "function") {
+      setProject(MOCK_PROJECT3);
+      setIsMock(true);
+      const envs2 = MOCK_PROJECT3.environments;
       const def = envs2.find((e) => e.isDefault) || envs2[0];
       setEnvId(def ? def.id : "");
-      const list = Array.isArray(data.endpoints) ? data.endpoints : [];
-      setDraft(emptyDraft(list[0] || null));
+      return void 0;
+    }
+    let cancelled = false;
+    Promise.resolve().then(() => storage.listProjects()).then((list) => {
+      if (cancelled) return;
+      setProjects(Array.isArray(list) ? list : []);
+      setIsMock(false);
+      if (target && target.projectId && Array.isArray(list) && list.some((p) => p && p.id === target.projectId)) {
+        return Promise.resolve().then(() => storage.getProject(target.projectId)).then((data) => {
+          if (cancelled || !data) return;
+          setProjectId(target.projectId);
+          setProject(data);
+          const envs2 = Array.isArray(data.environments) ? data.environments : [];
+          const def = envs2.find((e) => e.isDefault) || envs2[0];
+          setEnvId(def ? def.id : "");
+          const list2 = Array.isArray(data.endpoints) ? data.endpoints : [];
+          const hit = target.endpointId ? list2.find((e) => e && e.id === target.endpointId) : null;
+          if (hit) {
+            setEndpointId(hit.id);
+            setDraft(emptyDraft(hit));
+          }
+          setTarget(null);
+        });
+      }
+      return void 0;
     }).catch((err) => {
       if (cancelled) return;
-      setError("\u8BFB\u53D6\u9879\u76EE\u5931\u8D25\uFF1A" + (err && err.message ? err.message : String(err)));
+      setProject(MOCK_PROJECT3);
+      setIsMock(true);
+      setError("\u8BFB\u53D6\u9879\u76EE\u5217\u8868\u5931\u8D25\uFF1A" + errText4(err));
     });
     return () => {
       cancelled = true;
     };
-  }, [apiRef]);
+  }, [apiRef, target]);
   (0, import_react10.useEffect)(() => {
     const snap = readReplay();
     if (!snap) return;
@@ -2867,6 +3265,7 @@ function DebugPage({ route, api }) {
     } catch {
     }
   }, []);
+  const endpoints = (0, import_react10.useMemo)(() => Array.isArray(project && project.endpoints) ? project.endpoints : [], [project]);
   const envs = (0, import_react10.useMemo)(() => Array.isArray(project && project.environments) ? project.environments : [], [project]);
   const { table, env } = (0, import_react10.useMemo)(() => varTable(project, envId), [project, envId]);
   const varRefs = (0, import_react10.useMemo)(() => collectVarRefs(draft), [draft]);
@@ -2875,21 +3274,51 @@ function DebugPage({ route, api }) {
   const patch = (field, value) => setDraft((prev) => ({ ...prev, [field]: value }));
   const patchAuth = (field, value) => setDraft((prev) => ({ ...prev, auth: { ...prev.auth, [field]: value } }));
   const addCommonHeaders = () => setDraft((prev) => ({ ...prev, headers: appendCommonHeaders(prev.headers, 3) }));
+  const openProject = (id) => {
+    setProjectId(id);
+    setError("");
+    setNotice("");
+    setResp(null);
+    if (!id) {
+      setProject(null);
+      setEndpointId("");
+      setDraft(blankDraft());
+      setEnvId("");
+      return;
+    }
+    const storage = apiRef && apiRef.storage;
+    if (!storage || typeof storage.getProject !== "function") return;
+    Promise.resolve().then(() => storage.getProject(id)).then((data) => {
+      if (!data) return;
+      setProject(data);
+      setIsMock(false);
+      const list = Array.isArray(data.environments) ? data.environments : [];
+      const def = list.find((e) => e.isDefault) || list[0];
+      setEnvId(def ? def.id : "");
+    }).catch((err) => setError("\u8BFB\u53D6\u9879\u76EE\u5931\u8D25\uFF1A" + errText4(err)));
+  };
+  const openEndpoint = (id) => {
+    setEndpointId(id);
+    setResp(null);
+    setNotice("");
+    const hit = endpoints.find((e) => e && e.id === id);
+    setDraft(hit ? emptyDraft(hit) : blankDraft());
+  };
   const send = () => {
     const requestApi = apiRef && apiRef.request;
     const cancelled = { cancelled: false };
     abortRef.current = cancelled;
     setSending(true);
     setResp(null);
+    setNotice("");
     const payload = {
       method: draft.method,
       url: finalUrl,
-      params: draft.params.filter((p) => p && p.enabled !== false && p.key),
-      headers: draft.headers.filter((h) => h && h.enabled !== false && h.key),
+      params: (draft.params || []).filter((p) => p && p.enabled !== false && p.key),
+      headers: (draft.headers || []).filter((h) => h && h.enabled !== false && h.key),
       body: draft.body,
       auth: draft.auth,
       timeoutMs: timeoutMs > 0 ? timeoutMs : 3e4,
-      // 前后置脚本与断言：host request.send 已支持这三个字段（bridge 直通 request.js）
       preScript: draft.preScript || void 0,
       postScript: draft.postScript || void 0,
       assertions: Array.isArray(draft.assertions) && draft.assertions.length ? draft.assertions : void 0,
@@ -2900,6 +3329,11 @@ function DebugPage({ route, api }) {
       },
       projectId: project && project.id ? project.id : ""
     };
+    if (!String(draft.url || "").trim()) {
+      setError("\u53D1\u9001\u5931\u8D25\uFF1A\u5148\u586B\u5199\u8BF7\u6C42\u8DEF\u5F84\u6216\u5B8C\u6574 URL");
+      setSending(false);
+      return;
+    }
     if (!requestApi || typeof requestApi.send !== "function") {
       setResp({
         status: /DELETE|PATCH/.test(draft.method) ? 204 : 200,
@@ -2908,6 +3342,7 @@ function DebugPage({ route, api }) {
         body: '{\n  "code": 0,\n  "data": { "mock": true }\n}',
         bodySize: 128,
         timeMs: 42,
+        request: { method: draft.method, url: finalUrl, headers: {}, body: "" },
         tests: [{ name: "status \u4E3A 2xx", passed: true }],
         logs: []
       });
@@ -2928,7 +3363,7 @@ function DebugPage({ route, api }) {
         body: "",
         bodySize: 0,
         timeMs: 0,
-        error: { message: err && err.message ? err.message : String(err) }
+        error: { message: errText4(err) }
       });
     }).finally(() => {
       if (!cancelled.cancelled) setSending(false);
@@ -2939,24 +3374,151 @@ function DebugPage({ route, api }) {
     setSending(false);
     setError("\u5DF2\u53D6\u6D88\u672C\u6B21\u53D1\u9001\uFF08\u54CD\u5E94\u4E0D\u518D\u56DE\u586B\uFF09");
   };
-  const saveAsEndpoint = () => {
+  const saveExample = () => {
     const storage = apiRef && apiRef.storage;
-    if (!storage || typeof storage.saveEndpoint !== "function" || !project || !project.id) {
-      setSavedHint("\u4FDD\u5B58\u5931\u8D25\uFF1Astorage.saveEndpoint \u4E0D\u53EF\u7528");
+    if (!project || !draft.id) {
+      setNotice("\u4FDD\u5B58\u5931\u8D25\uFF1A\u5148\u9009\u62E9\u6216\u4FDD\u5B58\u4E00\u4E2A\u63A5\u53E3");
+      return;
+    }
+    if (!storage || typeof storage.saveResponse !== "function") {
+      setNotice("\u4FDD\u5B58\u5931\u8D25\uFF1Astorage.saveResponse \u4E0D\u53EF\u7528");
+      return;
+    }
+    const example = responseExample(resp, "\u8C03\u8BD5 " + (/* @__PURE__ */ new Date()).toLocaleTimeString());
+    Promise.resolve().then(() => storage.saveResponse(project.id, draft.id, example)).then(() => {
+      setNotice("\u5DF2\u4FDD\u5B58\u54CD\u5E94\u793A\u4F8B\uFF1A" + example.code);
+      setError("");
+    }).catch((err) => setNotice("\u4FDD\u5B58\u5931\u8D25\uFF1A" + errText4(err)));
+  };
+  const saveEndpoint = () => {
+    const storage = apiRef && apiRef.storage;
+    if (!project || !project.id) {
+      setNotice("\u4FDD\u5B58\u5931\u8D25\uFF1A\u5148\u9009\u62E9\u9879\u76EE");
+      return;
+    }
+    if (!storage || typeof storage.saveEndpoint !== "function") {
+      setNotice("\u4FDD\u5B58\u5931\u8D25\uFF1Astorage.saveEndpoint \u4E0D\u53EF\u7528");
       return;
     }
     const endpoint = {
       ...draft,
       name: draft.name || draft.method + " " + draft.url,
-      responses: draft.responses.length ? draft.responses : []
+      body: { type: draft.body.type, content: draft.body.content, schema: null, examples: [] },
+      mock: (endpoints.find((e) => e && e.id === draft.id) || {}).mock || { enabled: false, delayMs: 0, rules: [] }
     };
     Promise.resolve().then(() => storage.saveEndpoint(project.id, endpoint)).then((saved) => {
-      setSavedHint("\u5DF2\u4FDD\u5B58\uFF1A" + (saved && saved.name || endpoint.name));
-      setDraft((prev) => ({ ...prev, id: saved && saved.id || prev.id }));
-    }).catch((err) => setSavedHint("\u4FDD\u5B58\u5931\u8D25\uFF1A" + (err && err.message ? err.message : String(err))));
+      const final = saved && saved.id ? saved : endpoint;
+      setProject((prev) => prev ? {
+        ...prev,
+        endpoints: prev.endpoints && prev.endpoints.some((e) => e && e.id === final.id) ? prev.endpoints.map((e) => e && e.id === final.id ? final : e) : (prev.endpoints || []).concat([final])
+      } : prev);
+      setEndpointId(final.id || "");
+      setDraft((prev) => ({ ...prev, id: final.id || prev.id }));
+      setNotice("\u5DF2\u4FDD\u5B58\uFF1A" + (final.name || ""));
+      setError("");
+    }).catch((err) => setNotice("\u4FDD\u5B58\u5931\u8D25\uFF1A" + errText4(err)));
   };
-  const responsePanel = /* @__PURE__ */ (0, import_react.createElement)("section", { className: "pp-pane pp-debug-response" }, /* @__PURE__ */ (0, import_react.createElement)(ResponsePanel, { resp, sending, onCancel: cancel }));
-  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page-flush", "data-page": "debug", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-debug-page pp-debug-split" }, /* @__PURE__ */ (0, import_react.createElement)("section", { className: "pp-pane pp-debug-request" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-url-row" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": draft.method }, draft.method), /* @__PURE__ */ (0, import_react.createElement)(
+  const canSaveExample = Boolean(
+    resp && resp.status && draft.id && apiRef && apiRef.storage && typeof apiRef.storage.saveResponse === "function"
+  );
+  const tabBody = /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-debug-tabbody" }, tab === "params" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-title" }, "Path \u53C2\u6570"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: draft.pathParams, onChange: (rows) => patch("pathParams", rows), emptyText: "\u65E0 Path \u53C2\u6570" })), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-title" }, "Query \u53C2\u6570"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: draft.params, onChange: (rows) => patch("params", rows), emptyText: "\u65E0 Query \u53C2\u6570" }))) : null, tab === "body" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-title" }, "\u8BF7\u6C42\u4F53"), /* @__PURE__ */ (0, import_react.createElement)(BodyEditor, { value: draft.body, onChange: (next) => patch("body", next) })) : null, tab === "headers" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-group-title" }, "\u8BF7\u6C42\u5934"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-link", onClick: addCommonHeaders, title: "\u8FFD\u52A0 3 \u6761\u5E38\u7528\u8BF7\u6C42\u5934" }, "+ \u5E38\u7528\u8BF7\u6C42\u5934")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(
+    ParamTable,
+    {
+      rows: draft.headers,
+      onChange: (rows) => patch("headers", rows),
+      suggest: filterHeaders,
+      emptyText: "\u65E0\u8BF7\u6C42\u5934"
+    }
+  ))) : null, tab === "cookies" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-title" }, "Cookies"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: draft.cookies, onChange: (rows) => patch("cookies", rows), emptyText: "\u65E0 Cookies" }))) : null, tab === "auth" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-title" }, "\u8BA4\u8BC1"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u7C7B\u578B"), /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: draft.auth.type, onChange: (e) => patchAuth("type", e.target.value) }, AUTH_TYPES.map((t) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: t, value: t }, AUTH_LABEL2[t] || t)))), draft.auth.type === "bearer" ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "Token"), /* @__PURE__ */ (0, import_react.createElement)(
+    "input",
+    {
+      className: "pp-input pp-input-mono",
+      style: { flex: 1 },
+      value: draft.auth.token,
+      onChange: (e) => patchAuth("token", e.target.value)
+    }
+  )) : null, draft.auth.type === "basic" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u7528\u6237\u540D"), /* @__PURE__ */ (0, import_react.createElement)(
+    "input",
+    {
+      className: "pp-input pp-input-mono",
+      style: { flex: 1 },
+      value: draft.auth.username,
+      onChange: (e) => patchAuth("username", e.target.value)
+    }
+  )), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u5BC6\u7801"), /* @__PURE__ */ (0, import_react.createElement)(
+    "input",
+    {
+      className: "pp-input pp-input-mono",
+      style: { flex: 1 },
+      value: draft.auth.password,
+      onChange: (e) => patchAuth("password", e.target.value)
+    }
+  ))) : null, draft.auth.type === "apikey" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "Key"), /* @__PURE__ */ (0, import_react.createElement)(
+    "input",
+    {
+      className: "pp-input pp-input-mono",
+      style: { flex: 1 },
+      value: draft.auth.key,
+      onChange: (e) => patchAuth("key", e.target.value)
+    }
+  )), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "Value"), /* @__PURE__ */ (0, import_react.createElement)(
+    "input",
+    {
+      className: "pp-input pp-input-mono",
+      style: { flex: 1 },
+      value: draft.auth.value,
+      onChange: (e) => patchAuth("value", e.target.value)
+    }
+  )), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u4F4D\u7F6E"), /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: draft.auth.addTo, onChange: (e) => patchAuth("addTo", e.target.value) }, /* @__PURE__ */ (0, import_react.createElement)("option", { value: "header" }, "header"), /* @__PURE__ */ (0, import_react.createElement)("option", { value: "query" }, "query")))) : null, draft.auth.type === "none" ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-meta" }, "\u65E0\u8BA4\u8BC1") : null) : null, tab === "pre" ? /* @__PURE__ */ (0, import_react.createElement)(
+    ScriptPanel,
+    {
+      value: { preScript: draft.preScript, postScript: "", assertions: [], waitMs: draft.waitMs },
+      onChange: (next) => setDraft((prev) => ({ ...prev, preScript: next.preScript, waitMs: next.waitMs }))
+    }
+  ) : null, tab === "post" ? /* @__PURE__ */ (0, import_react.createElement)(
+    ScriptPanel,
+    {
+      value: { preScript: "", postScript: draft.postScript, assertions: draft.assertions, waitMs: 0 },
+      onChange: (next) => setDraft((prev) => ({ ...prev, postScript: next.postScript, assertions: next.assertions }))
+    }
+  ) : null, tab === "settings" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-title" }, "\u53D1\u9001\u8BBE\u7F6E"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u8D85\u65F6 (ms)"), /* @__PURE__ */ (0, import_react.createElement)(
+    "input",
+    {
+      className: "pp-input pp-input-sm",
+      style: { flex: 1, maxWidth: 160 },
+      value: String(timeoutMs),
+      onChange: (e) => setTimeoutMs(Number(e.target.value.replace(/[^0-9]/g, "")) || 0)
+    }
+  )), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u7B49\u5F85 (ms)"), /* @__PURE__ */ (0, import_react.createElement)(
+    "input",
+    {
+      className: "pp-input pp-input-sm",
+      style: { flex: 1, maxWidth: 160 },
+      value: String(draft.waitMs || 0),
+      onChange: (e) => patch("waitMs", Number(e.target.value.replace(/[^0-9]/g, "")) || 0)
+    }
+  )), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-title" }, "\u8BF7\u6C42\u6982\u89C8"), /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table" }, /* @__PURE__ */ (0, import_react.createElement)("tbody", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, "\u65B9\u6CD5"), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": draft.method }, draft.method))), /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, "\u5B8C\u6574 URL"), /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-mono pp-ellipsis" }, finalUrl || "\uFF08\u672A\u586B\u5199\uFF09")), /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, "\u73AF\u5883"), /* @__PURE__ */ (0, import_react.createElement)("td", null, env ? env.name : "\uFF08\u65E0\u73AF\u5883\uFF09")), /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, "\u53D8\u91CF"), /* @__PURE__ */ (0, import_react.createElement)("td", null, varRefs.length ? varRefs.join("\u3001") + (missingVars.length ? "\uFF08\u672A\u5B9A\u4E49\uFF1A" + missingVars.join("\u3001") + "\uFF09" : "\uFF08\u5747\u5DF2\u5B9A\u4E49\uFF09") : "\u65E0")), /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, "\u5DF2\u542F\u7528\u53C2\u6570"), /* @__PURE__ */ (0, import_react.createElement)("td", null, (draft.params || []).filter((p) => p && p.enabled !== false && p.key).length, " \u4E2A Query /", " ", (draft.pathParams || []).filter((p) => p && p.enabled !== false && p.key).length, " \u4E2A Path")), /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, "\u5DF2\u542F\u7528\u8BF7\u6C42\u5934"), /* @__PURE__ */ (0, import_react.createElement)("td", null, (draft.headers || []).filter((h) => h && h.enabled !== false && h.key).length, " \u4E2A"))))) : null);
+  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page-flush", "data-page": "debug", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-debug-page pp-debug-split" }, /* @__PURE__ */ (0, import_react.createElement)("section", { className: "pp-pane pp-debug-request" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-debug-meta" }, /* @__PURE__ */ (0, import_react.createElement)(
+    "select",
+    {
+      className: "pp-select pp-input-sm",
+      value: projectId,
+      onChange: (e) => openProject(e.target.value),
+      "aria-label": "\u5F53\u524D\u9879\u76EE"
+    },
+    /* @__PURE__ */ (0, import_react.createElement)("option", { value: "" }, projects.length ? "\u8BF7\u9009\u62E9\u9879\u76EE" : "\u6682\u65E0\u9879\u76EE"),
+    projects.map((p) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: p.id, value: p.id }, p.name || p.id))
+  ), /* @__PURE__ */ (0, import_react.createElement)(
+    "select",
+    {
+      className: "pp-select pp-input-sm",
+      value: endpointId,
+      onChange: (e) => openEndpoint(e.target.value),
+      "aria-label": "\u5F53\u524D\u63A5\u53E3"
+    },
+    /* @__PURE__ */ (0, import_react.createElement)("option", { value: "" }, "\u5FEB\u6377\u8BF7\u6C42\uFF08\u4E0D\u9009\u63A5\u53E3\uFF09"),
+    endpoints.map((e) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: e.id, value: e.id }, (e.method || "GET") + " " + (e.name || e.url || e.id)))
+  ), /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select pp-input-sm", value: envId, onChange: (e) => setEnvId(e.target.value), "aria-label": "\u73AF\u5883" }, envs.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("option", { value: "" }, "\uFF08\u65E0\u73AF\u5883\uFF09") : null, envs.map((e) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: e.id, value: e.id }, e.name))), /* @__PURE__ */ (0, import_react.createElement)("a", { className: "pp-meta", href: "#/history" }, "\u8BF7\u6C42\u5386\u53F2")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-url-row" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": draft.method }, draft.method), /* @__PURE__ */ (0, import_react.createElement)(
     "select",
     {
       className: "pp-select pp-url-method",
@@ -2964,7 +3526,7 @@ function DebugPage({ route, api }) {
       onChange: (e) => patch("method", e.target.value),
       "aria-label": "\u8BF7\u6C42\u65B9\u6CD5"
     },
-    METHODS.map((m) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: m, value: m }, m))
+    METHODS2.map((m) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: m, value: m }, m))
   ), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-url-pill", title: env && env.baseUrl ? env.baseUrl : "\u672A\u914D\u7F6E baseUrl" }, env && env.baseUrl ? env.baseUrl : "\u672A\u914D\u7F6E baseUrl"), /* @__PURE__ */ (0, import_react.createElement)(
     "input",
     {
@@ -2983,47 +3545,7 @@ function DebugPage({ route, api }) {
       title: String(draft.url || "").trim() ? "" : "\u5148\u586B\u5199\u8BF7\u6C42\u8DEF\u5F84"
     },
     sending ? "\u53D1\u9001\u4E2D\u2026" : "\u53D1\u9001"
-  ), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: cancel, disabled: !sending, title: "\u53D6\u6D88\u672C\u6B21\u53D1\u9001" }, "\u2715"))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-debug-meta" }, /* @__PURE__ */ (0, import_react.createElement)(
-    "select",
-    {
-      className: "pp-select pp-input-sm",
-      value: envId,
-      onChange: (e) => setEnvId(e.target.value),
-      "aria-label": "\u73AF\u5883"
-    },
-    envs.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("option", { value: "" }, "\uFF08\u65E0\u73AF\u5883\uFF09") : null,
-    envs.map((e) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: e.id, value: e.id }, e.name))
-  ), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-mono pp-meta pp-ellipsis", title: finalUrl || "" }, finalUrl || "\uFF08\u672A\u586B\u5199 URL\uFF09"), varRefs.length > 0 ? /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, "\u53D8\u91CF ", varRefs.join("\u3001"), missingVars.length > 0 ? "\uFF08\u672A\u5B9A\u4E49\uFF1A" + missingVars.join("\u3001") + "\uFF09" : "\uFF08\u5747\u5DF2\u5B9A\u4E49\uFF09") : null, /* @__PURE__ */ (0, import_react.createElement)("a", { className: "pp-meta", href: "#/history" }, "\u8BF7\u6C42\u5386\u53F2")), !isMock && !String(draft.url || "").trim() ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-note" }, "\u5F53\u524D\u9879\u76EE\u8FD8\u6CA1\u6709\u63A5\u53E3\uFF0C\u5148\u5230 ", /* @__PURE__ */ (0, import_react.createElement)("a", { href: "#/doc" }, "\u63A5\u53E3\u6587\u6863"), " \u6216 ", /* @__PURE__ */ (0, import_react.createElement)("a", { href: "#/overview" }, "\u603B\u89C8"), " \u65B0\u5EFA\u4E00\u4E2A\uFF0C\u4E5F\u53EF\u4EE5\u76F4\u63A5\u5728\u4E0A\u65B9\u586B\u5199\u5B8C\u6574 URL \u8C03\u8BD5\u3002") : null, isMock ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-note pp-note-warn" }, "\u793A\u4F8B\u6570\u636E \u2014 window.__postapiApi \u672A\u6CE8\u5165\u6216\u8BFB\u53D6\u5931\u8D25\uFF0C\u53D1\u9001\u5C06\u8FD4\u56DE mock \u54CD\u5E94") : null, error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-note pp-note-bad" }, error) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tabs" }, TABS.map((t) => /* @__PURE__ */ (0, import_react.createElement)("button", { key: t.id, className: "pp-tab", "data-active": tab === t.id, onClick: () => setTab(t.id) }, t.label))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-debug-tabbody" }, tab === "params" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-title" }, "Path \u53C2\u6570"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: draft.pathParams, onChange: (rows) => patch("pathParams", rows), emptyText: "\u65E0 Path \u53C2\u6570" })), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-title" }, "Query \u53C2\u6570"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: draft.params, onChange: (rows) => patch("params", rows), emptyText: "\u65E0 Query \u53C2\u6570" }))) : null, tab === "headers" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-group-title" }, "\u8BF7\u6C42\u5934"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-link", onClick: addCommonHeaders, title: "\u8FFD\u52A0 3 \u6761\u5E38\u7528\u8BF7\u6C42\u5934" }, "+ \u5E38\u7528\u8BF7\u6C42\u5934")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(
-    ParamTable,
-    {
-      rows: draft.headers,
-      onChange: (rows) => patch("headers", rows),
-      suggest: filterHeaders,
-      emptyText: "\u65E0\u8BF7\u6C42\u5934"
-    }
-  )), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-title" }, "Cookies"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: draft.cookies, onChange: (rows) => patch("cookies", rows), emptyText: "\u65E0 Cookies" }))) : null, tab === "body" ? /* @__PURE__ */ (0, import_react.createElement)(BodyEditor, { value: draft.body, onChange: (next) => patch("body", next) }) : null, tab === "script" ? /* @__PURE__ */ (0, import_react.createElement)(
-    ScriptPanel,
-    {
-      value: { preScript: draft.preScript, postScript: draft.postScript, assertions: draft.assertions, waitMs: draft.waitMs },
-      onChange: (next) => setDraft((prev) => ({ ...prev, ...next }))
-    }
-  ) : null, tab === "settings" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-title" }, "\u53D1\u9001\u8BBE\u7F6E"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u8D85\u65F6 (ms)"), /* @__PURE__ */ (0, import_react.createElement)(
-    "input",
-    {
-      className: "pp-input pp-input-sm",
-      style: { flex: 1, maxWidth: 160 },
-      value: String(timeoutMs),
-      onChange: (e) => setTimeoutMs(Number(e.target.value.replace(/[^0-9]/g, "")) || 0)
-    }
-  )), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u7B49\u5F85 (ms)"), /* @__PURE__ */ (0, import_react.createElement)(
-    "input",
-    {
-      className: "pp-input pp-input-sm",
-      style: { flex: 1, maxWidth: 160 },
-      value: String(draft.waitMs || 0),
-      onChange: (e) => patch("waitMs", Number(e.target.value.replace(/[^0-9]/g, "")) || 0)
-    }
-  )), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-title" }, "\u8BF7\u6C42\u6982\u89C8"), /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table" }, /* @__PURE__ */ (0, import_react.createElement)("tbody", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, "\u65B9\u6CD5"), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": draft.method }, draft.method))), /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, "\u5B8C\u6574 URL"), /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-mono pp-ellipsis" }, finalUrl || "\uFF08\u672A\u586B\u5199\uFF09")), /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, "\u73AF\u5883"), /* @__PURE__ */ (0, import_react.createElement)("td", null, env ? env.name : "\uFF08\u65E0\u73AF\u5883\uFF09")), /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, "\u53D8\u91CF"), /* @__PURE__ */ (0, import_react.createElement)("td", null, varRefs.length ? varRefs.join("\u3001") + (missingVars.length ? "\uFF08\u672A\u5B9A\u4E49\uFF1A" + missingVars.join("\u3001") + "\uFF09" : "\uFF08\u5747\u5DF2\u5B9A\u4E49\uFF09") : "\u65E0")), /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, "\u5DF2\u542F\u7528\u53C2\u6570"), /* @__PURE__ */ (0, import_react.createElement)("td", null, draft.params.filter((p) => p && p.enabled !== false && p.key).length, " \u4E2A Query / ", draft.pathParams.filter((p) => p && p.enabled !== false && p.key).length, " \u4E2A Path")), /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, "\u5DF2\u542F\u7528\u8BF7\u6C42\u5934"), /* @__PURE__ */ (0, import_react.createElement)("td", null, draft.headers.filter((h) => h && h.enabled !== false && h.key).length, " \u4E2A"))))) : null, tab === "auth" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u7C7B\u578B"), /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: draft.auth.type, onChange: (e) => patchAuth("type", e.target.value) }, AUTH_TYPES.map((t) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: t, value: t }, AUTH_LABEL2[t] || t)))), draft.auth.type === "bearer" ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "Token"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { flex: 1 }, value: draft.auth.token, onChange: (e) => patchAuth("token", e.target.value) })) : null, draft.auth.type === "basic" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u7528\u6237\u540D"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { flex: 1 }, value: draft.auth.username, onChange: (e) => patchAuth("username", e.target.value) })), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u5BC6\u7801"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { flex: 1 }, value: draft.auth.password, onChange: (e) => patchAuth("password", e.target.value) }))) : null, draft.auth.type === "apikey" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "Key"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { flex: 1 }, value: draft.auth.key, onChange: (e) => patchAuth("key", e.target.value) })), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "Value"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { flex: 1 }, value: draft.auth.value, onChange: (e) => patchAuth("value", e.target.value) })), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u4F4D\u7F6E"), /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: draft.auth.addTo, onChange: (e) => patchAuth("addTo", e.target.value) }, /* @__PURE__ */ (0, import_react.createElement)("option", { value: "header" }, "header"), /* @__PURE__ */ (0, import_react.createElement)("option", { value: "query" }, "query")))) : null, draft.auth.type === "none" ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-meta" }, "\u65E0\u8BA4\u8BC1") : null) : null), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)(
+  ), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: cancel, disabled: !sending, title: "\u53D6\u6D88\u672C\u6B21\u53D1\u9001" }, "\u2715"))), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-meta pp-ellipsis", title: finalUrl || "" }, finalUrl || "\uFF08\u672A\u586B\u5199 URL\uFF09"), isMock ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-note pp-note-warn" }, "\u793A\u4F8B\u6570\u636E \u2014 window.__postapiApi \u672A\u6CE8\u5165\u6216\u8BFB\u53D6\u5931\u8D25\uFF0C\u53D1\u9001\u5C06\u8FD4\u56DE mock \u54CD\u5E94") : null, !project && !isMock ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-note" }, "\u672A\u9009\u62E9\u9879\u76EE\uFF1A\u53EF\u76F4\u63A5\u5728\u4E0A\u65B9\u586B\u5199\u5B8C\u6574 URL \u8C03\u8BD5\uFF08\u5FEB\u6377\u8BF7\u6C42\uFF09\uFF0C\u6216\u53BB ", /* @__PURE__ */ (0, import_react.createElement)("a", { href: "#/doc" }, "\u63A5\u53E3\u6587\u6863"), " \u9009\u4E00\u4E2A\u63A5\u53E3\u3002") : null, error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-note pp-note-bad" }, error) : null, notice ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-note" }, notice) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tabs" }, TABS.map((t) => /* @__PURE__ */ (0, import_react.createElement)("button", { key: t.id, className: "pp-tab", "data-active": tab === t.id, onClick: () => setTab(t.id) }, t.label))), tabBody, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)(
     "input",
     {
       className: "pp-input",
@@ -3032,7 +3554,7 @@ function DebugPage({ route, api }) {
       value: draft.name,
       onChange: (e) => patch("name", e.target.value)
     }
-  ), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: saveAsEndpoint }, "\u4FDD\u5B58\u4E3A\u63A5\u53E3"), savedHint ? /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-note " + (savedHint.indexOf("\u5DF2\u4FDD\u5B58") === 0 ? "pp-note-ok" : "pp-note-bad") }, savedHint) : null)), responsePanel));
+  ), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: saveEndpoint }, "\u4FDD\u5B58\u4E3A\u63A5\u53E3"), canSaveExample ? /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: saveExample }, "\u4FDD\u5B58\u54CD\u5E94\u793A\u4F8B") : null)), /* @__PURE__ */ (0, import_react.createElement)("section", { className: "pp-pane pp-debug-response" }, resp && resp.status && !draft.id ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-meta" }, "\u5F53\u524D\u662F\u5FEB\u6377\u8BF7\u6C42\uFF1A\u9009\u62E9\u6216\u4FDD\u5B58\u4E00\u4E2A\u63A5\u53E3\u540E\u624D\u80FD\u4FDD\u5B58\u54CD\u5E94\u793A\u4F8B") : null, /* @__PURE__ */ (0, import_react.createElement)(ResponsePanel, { resp, sending, onCancel: cancel }))));
 }
 
 // src/client/pages/mock.jsx
@@ -3040,9 +3562,11 @@ var import_react11 = require("react");
 (window.__postapiQueue = window.__postapiQueue || []).push(["mock", MockPage]);
 var RULES = ["fixed", "regex", "increment", "random", "template"];
 var RULE_LABEL = { fixed: "\u56FA\u5B9A\u503C", regex: "\u6B63\u5219\u751F\u6210", increment: "\u81EA\u589E", random: "\u968F\u673A", template: "\u6A21\u677F" };
+var FIELD_TYPES = ["string", "integer", "number", "boolean", "array", "object"];
 var MOCK_PROJECT4 = {
   id: "proj_demo01",
   name: "\u8BA2\u5355\u4E2D\u5FC3\uFF08\u793A\u4F8B\u6570\u636E\uFF09",
+  settings: { mockPort: 4010 },
   endpoints: [
     {
       id: "ep_1001",
@@ -3053,9 +3577,9 @@ var MOCK_PROJECT4 = {
         enabled: true,
         delayMs: 120,
         rules: [
-          { id: "mk_01", endpointId: "ep_1001", field: "data.total", rule: "fixed", value: "42", enabled: true },
-          { id: "mk_02", endpointId: "ep_1001", field: "data.items[0].orderId", rule: "template", value: "ORD-{{$randomInt}}", enabled: true },
-          { id: "mk_03", endpointId: "ep_1001", field: "data.items[0].status", rule: "fixed", value: "PAID", enabled: false }
+          { id: "mk_01", endpointId: "ep_1001", field: "data.total", type: "integer", rule: "fixed", value: "42", enabled: true },
+          { id: "mk_02", endpointId: "ep_1001", field: "data.items[0].orderId", type: "string", rule: "template", value: "ORD-{{$randomInt}}", enabled: true },
+          { id: "mk_03", endpointId: "ep_1001", field: "data.items[0].status", type: "string", rule: "fixed", value: "PAID", enabled: false }
         ]
       },
       responses: [{ id: "res_a", name: "\u6210\u529F", code: 200, contentType: "application/json", body: "{}", headers: [], enabled: true, isDefault: true }]
@@ -3068,14 +3592,16 @@ var MOCK_PROJECT4 = {
       mock: { enabled: false, delayMs: 0, rules: [] },
       responses: [{ id: "res_b", name: "\u521B\u5EFA\u6210\u529F", code: 201, contentType: "application/json", body: "{}", headers: [], enabled: true, isDefault: true }]
     }
-  ],
-  mocks: []
+  ]
 };
 function resolveApi3() {
   return typeof window !== "undefined" ? window.__postapiApi : null;
 }
+function errText5(err) {
+  return err && err.message ? err.message : String(err);
+}
 function blankRule(endpointId) {
-  return { id: "", endpointId: endpointId || "", field: "", rule: "fixed", value: "", enabled: true };
+  return { id: "", endpointId: endpointId || "", field: "", type: "string", rule: "fixed", value: "", enabled: true };
 }
 function hitUrls(projectId, endpoint, port) {
   const base = "http://127.0.0.1:" + (port || 4010);
@@ -3085,50 +3611,57 @@ function hitUrls(projectId, endpoint, port) {
     base + "/mock/" + projectId + (endpoint.url || "")
   ];
 }
+function enabledRuleCount(rules) {
+  return (Array.isArray(rules) ? rules : []).filter((r) => r && r.enabled !== false).length;
+}
 function MockPage({ route, api }) {
   const rootRef = (0, import_react11.useRef)(null);
   (0, import_react11.useEffect)(() => applyTheme(rootRef.current), []);
   const apiRef = resolveApi3() || api;
-  const [project, setProject] = (0, import_react11.useState)(MOCK_PROJECT4);
-  const [isMock, setIsMock] = (0, import_react11.useState)(true);
+  const [projects, setProjects] = (0, import_react11.useState)([]);
+  const [projectId, setProjectId] = (0, import_react11.useState)("");
+  const [project, setProject] = (0, import_react11.useState)(null);
+  const [isMock, setIsMock] = (0, import_react11.useState)(false);
   const [error, setError] = (0, import_react11.useState)("");
   const [notice, setNotice] = (0, import_react11.useState)("");
-  const [currentId, setCurrentId] = (0, import_react11.useState)(MOCK_PROJECT4.endpoints[0].id);
-  const [delayMs, setDelayMs] = (0, import_react11.useState)(MOCK_PROJECT4.endpoints[0].mock.delayMs);
-  const [rules, setRules] = (0, import_react11.useState)(MOCK_PROJECT4.endpoints[0].mock.rules);
-  const [mockEnabled, setMockEnabled] = (0, import_react11.useState)(MOCK_PROJECT4.endpoints[0].mock.enabled);
+  const [currentId, setCurrentId] = (0, import_react11.useState)("");
+  const [delayMs, setDelayMs] = (0, import_react11.useState)(0);
+  const [rules, setRules] = (0, import_react11.useState)([]);
+  const [mockEnabled, setMockEnabled] = (0, import_react11.useState)(false);
+  const [port, setPort] = (0, import_react11.useState)("4010");
   const [service, setService] = (0, import_react11.useState)({ running: false, port: 4010 });
   const [busy, setBusy] = (0, import_react11.useState)(false);
-  const endpoints = (0, import_react11.useMemo)(() => Array.isArray(project && project.endpoints) ? project.endpoints : [], [project]);
-  const current = (0, import_react11.useMemo)(() => endpoints.find((e) => e.id === currentId) || endpoints[0] || null, [endpoints, currentId]);
-  const port = project && project.settings && project.settings.mockPort || 4010;
+  const [pendingRemove, setPendingRemove] = (0, import_react11.useState)(-1);
   (0, import_react11.useEffect)(() => {
     const storage = apiRef && apiRef.storage;
+    const mockApi = apiRef && apiRef.mock;
     let cancelled = false;
-    if (storage && typeof storage.listProjects === "function" && typeof storage.getProject === "function") {
+    if (!storage || typeof storage.listProjects !== "function") {
+      setProject(MOCK_PROJECT4);
+      setIsMock(true);
+      const first = MOCK_PROJECT4.endpoints[0];
+      setCurrentId(first.id);
+      setRules(first.mock.rules);
+      setDelayMs(first.mock.delayMs);
+      setMockEnabled(first.mock.enabled);
+      setPort(String(MOCK_PROJECT4.settings.mockPort));
+    } else {
       Promise.resolve().then(() => storage.listProjects()).then((list) => {
-        const first = Array.isArray(list) && list.length ? list[0] : null;
-        return first ? storage.getProject(first.id) : null;
-      }).then((data) => {
-        if (cancelled || !data) return;
-        setProject(data);
+        if (cancelled) return;
+        setProjects(Array.isArray(list) ? list : []);
         setIsMock(false);
-        const list = Array.isArray(data.endpoints) ? data.endpoints : [];
-        const first = list[0] || null;
-        setCurrentId(first ? first.id : "");
-        setRules(first && first.mock && Array.isArray(first.mock.rules) ? first.mock.rules : []);
-        setDelayMs(first && first.mock ? first.mock.delayMs || 0 : 0);
-        setMockEnabled(Boolean(first && first.mock && first.mock.enabled));
       }).catch((err) => {
         if (cancelled) return;
-        setError("\u8BFB\u53D6\u9879\u76EE\u5931\u8D25\uFF1A" + (err && err.message ? err.message : String(err)));
+        setProject(MOCK_PROJECT4);
+        setIsMock(true);
+        setError("\u8BFB\u53D6\u9879\u76EE\u5217\u8868\u5931\u8D25\uFF1A" + errText5(err));
       });
     }
-    const mockApi = apiRef && apiRef.mock;
     if (mockApi && typeof mockApi.status === "function") {
       Promise.resolve().then(() => mockApi.status()).then((st) => {
         if (cancelled || !st) return;
-        setService({ running: Boolean(st.running), port: st.port || port });
+        setService({ running: Boolean(st.running), port: st.port || 4010 });
+        if (st.port) setPort(String(st.port));
       }).catch(() => {
       });
     }
@@ -3136,44 +3669,93 @@ function MockPage({ route, api }) {
       cancelled = true;
     };
   }, [apiRef]);
+  const endpoints = (0, import_react11.useMemo)(() => Array.isArray(project && project.endpoints) ? project.endpoints : [], [project]);
+  const current = (0, import_react11.useMemo)(() => endpoints.find((e) => e && e.id === currentId) || null, [endpoints, currentId]);
+  const urls = (0, import_react11.useMemo)(
+    () => hitUrls(project && project.id, current, service.port || Number(port) || 4010),
+    [project, current, service.port, port]
+  );
+  const openProject = (id) => {
+    setProjectId(id);
+    setError("");
+    setNotice("");
+    setPendingRemove(-1);
+    if (!id) {
+      setProject(null);
+      setCurrentId("");
+      setRules([]);
+      setDelayMs(0);
+      setMockEnabled(false);
+      return;
+    }
+    const storage = apiRef && apiRef.storage;
+    if (!storage || typeof storage.getProject !== "function") return;
+    Promise.resolve().then(() => storage.getProject(id)).then((data) => {
+      if (!data) return;
+      setProject(data);
+      setIsMock(false);
+      const list = Array.isArray(data.endpoints) ? data.endpoints : [];
+      const first = list[0] || null;
+      setCurrentId(first ? first.id : "");
+      setRules(first && first.mock && Array.isArray(first.mock.rules) ? first.mock.rules : []);
+      setDelayMs(first && first.mock ? first.mock.delayMs || 0 : 0);
+      setMockEnabled(Boolean(first && first.mock && first.mock.enabled));
+      const savedPort = data.settings && data.settings.mockPort;
+      if (savedPort) setPort(String(savedPort));
+    }).catch((err) => setError("\u8BFB\u53D6\u9879\u76EE\u5931\u8D25\uFF1A" + errText5(err)));
+  };
   const selectEndpoint = (ep) => {
+    if (!ep) return;
     setCurrentId(ep.id);
     setRules(ep.mock && Array.isArray(ep.mock.rules) ? ep.mock.rules.map((r) => ({ ...r })) : []);
     setDelayMs(ep.mock ? ep.mock.delayMs || 0 : 0);
     setMockEnabled(Boolean(ep.mock && ep.mock.enabled));
     setNotice("");
+    setPendingRemove(-1);
   };
   const persist = () => {
-    const storage = apiRef && apiRef.storage;
-    if (!storage || typeof storage.saveEndpoint !== "function" || !project || !project.id || !current) {
-      setNotice("\u4FDD\u5B58\u5931\u8D25\uFF1Astorage.saveEndpoint \u4E0D\u53EF\u7528");
+    if (!project || !current) {
+      setNotice("\u4FDD\u5B58\u5931\u8D25\uFF1A\u5148\u9009\u62E9\u9879\u76EE\u4E0E\u63A5\u53E3");
       return;
     }
-    const endpoint = {
-      ...current,
-      mock: { enabled: mockEnabled, delayMs: Number(delayMs) || 0, rules }
-    };
+    const endpoint = { ...current, mock: { enabled: mockEnabled, delayMs: Number(delayMs) || 0, rules } };
+    const storage = apiRef && apiRef.storage;
+    if (!storage || typeof storage.saveEndpoint !== "function") {
+      if (isMock) {
+        setProject((prev) => prev ? {
+          ...prev,
+          endpoints: (prev.endpoints || []).map((e) => e.id === endpoint.id ? { ...e, mock: endpoint.mock } : e)
+        } : prev);
+        setNotice("\u5DF2\u4FDD\u5B58 Mock \u914D\u7F6E\uFF08\u793A\u4F8B\u6570\u636E\uFF1A\u672C\u5730\u672A\u843D\u76D8\uFF09");
+        setError("");
+      } else {
+        setNotice("\u4FDD\u5B58\u5931\u8D25\uFF1Astorage.saveEndpoint \u4E0D\u53EF\u7528");
+      }
+      return;
+    }
     setBusy(true);
-    Promise.resolve().then(() => storage.saveEndpoint(project.id, endpoint)).then(() => {
-      setProject((prev) => ({
+    Promise.resolve().then(() => storage.saveEndpoint(project.id, endpoint)).then((saved) => {
+      const mock = saved && saved.mock ? saved.mock : endpoint.mock;
+      setProject((prev) => prev ? {
         ...prev,
-        endpoints: (prev.endpoints || []).map((e) => e.id === endpoint.id ? { ...e, mock: endpoint.mock } : e)
-      }));
+        endpoints: (prev.endpoints || []).map((e) => e.id === endpoint.id ? { ...e, mock } : e)
+      } : prev);
       setNotice("\u5DF2\u4FDD\u5B58 Mock \u914D\u7F6E");
       setError("");
-    }).catch((err) => setNotice("\u4FDD\u5B58\u5931\u8D25\uFF1A" + (err && err.message ? err.message : String(err)))).finally(() => setBusy(false));
+    }).catch((err) => setNotice("\u4FDD\u5B58\u5931\u8D25\uFF1A" + errText5(err))).finally(() => setBusy(false));
   };
   const startService = () => {
     const mockApi = apiRef && apiRef.mock;
+    const wantPort = Number(port) || 4010;
     if (!mockApi || typeof mockApi.start !== "function") {
       setNotice("\u542F\u52A8\u5931\u8D25\uFF1Aapi.mock.start \u4E0D\u53EF\u7528");
       return;
     }
     setBusy(true);
-    Promise.resolve().then(() => mockApi.start({ projectId: project && project.id, port })).then((st) => {
-      setService({ running: true, port: st && st.port || port });
-      setNotice("Mock \u670D\u52A1\u5DF2\u542F\u52A8");
-    }).catch((err) => setNotice("\u542F\u52A8\u5931\u8D25\uFF1A" + (err && err.message ? err.message : String(err)))).finally(() => setBusy(false));
+    Promise.resolve().then(() => mockApi.start({ projectId: project && project.id, port: wantPort })).then((st) => {
+      setService({ running: true, port: st && st.port || wantPort });
+      setNotice("Mock \u670D\u52A1\u5DF2\u542F\u52A8\uFF0C\u7AEF\u53E3 " + (st && st.port || wantPort));
+    }).catch((err) => setNotice("\u542F\u52A8\u5931\u8D25\uFF1A" + errText5(err))).finally(() => setBusy(false));
   };
   const stopService = () => {
     const mockApi = apiRef && apiRef.mock;
@@ -3183,41 +3765,113 @@ function MockPage({ route, api }) {
     }
     setBusy(true);
     Promise.resolve().then(() => mockApi.stop()).then(() => {
-      setService({ running: false, port });
+      setService({ running: false, port: Number(port) || 4010 });
       setNotice("Mock \u670D\u52A1\u5DF2\u505C\u6B62");
-    }).catch((err) => setNotice("\u505C\u6B62\u5931\u8D25\uFF1A" + (err && err.message ? err.message : String(err)))).finally(() => setBusy(false));
+    }).catch((err) => setNotice("\u505C\u6B62\u5931\u8D25\uFF1A" + errText5(err))).finally(() => setBusy(false));
   };
   const patchRule = (index, field, value) => {
     const next = rules.slice();
     next[index] = { ...next[index], [field]: value };
     setRules(next);
   };
-  const urls = (0, import_react11.useMemo)(() => hitUrls(project && project.id, current, service.port || port), [project, current, service.port, port]);
-  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page", "data-page": "mock", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-overview-title" }, "Mock"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-actions" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-pill" }, service.running ? "\u8FD0\u884C\u4E2D" : "\u5DF2\u505C\u6B62"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: startService, disabled: busy || service.running }, "\u542F\u52A8"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: stopService, disabled: busy || !service.running }, "\u505C\u6B62"))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-content" }, /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, isMock ? "\u793A\u4F8B\u6570\u636E \u2014 window.__postapiApi \u672A\u6CE8\u5165\u6216\u8BFB\u53D6\u5931\u8D25\uFF0C\u4EE5\u4E0B\u4E3A\u6587\u4EF6\u5185 mock" : "\u6570\u636E\u6765\u6E90\uFF1Apostapi.storage + postapi.mock"), error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, error) : null, notice ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, notice) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-mock-layout" }, /* @__PURE__ */ (0, import_react.createElement)("nav", { className: "pp-panel", "aria-label": "\u63A5\u53E3\u5217\u8868" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tree" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tree-group" }, "\u63A5\u53E3"), endpoints.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u6682\u65E0\u63A5\u53E3", hint: "\u5728\u603B\u89C8\u9875\u65B0\u5EFA\u9879\u76EE\u540E\u521B\u5EFA\u63A5\u53E3" }) : null, endpoints.map((ep) => /* @__PURE__ */ (0, import_react.createElement)("div", { key: ep.id, className: "pp-tree-row", "data-active": ep.id === currentId, onClick: () => selectEndpoint(ep) }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": ep.method }, ep.method), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ellipsis" }, ep.name))))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-mock-side" }, /* @__PURE__ */ (0, import_react.createElement)("section", { className: "pp-card" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, current ? current.name : "\u672A\u9009\u62E9\u63A5\u53E3"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-grid", style: { marginBottom: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u542F\u7528 Mock"), /* @__PURE__ */ (0, import_react.createElement)("input", { type: "checkbox", checked: mockEnabled, onChange: (e) => setMockEnabled(e.target.checked) }), /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u5EF6\u8FDF (ms)"), /* @__PURE__ */ (0, import_react.createElement)(
+  const removeRule = (index) => {
+    if (pendingRemove !== index) {
+      setPendingRemove(index);
+      return;
+    }
+    setRules(rules.filter((_, i) => i !== index));
+    setPendingRemove(-1);
+  };
+  const ruleRows = rules.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { colSpan: 6, className: "pp-muted" }, "\u5C1A\u65E0\u89C4\u5219\uFF1B\u672A\u547D\u4E2D\u89C4\u5219\u65F6\u56DE\u843D\u9ED8\u8BA4\u54CD\u5E94\uFF08isDefault\uFF09")) : null;
+  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page", "data-page": "mock", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-overview-title" }, "Mock"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-actions" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-pill " + (service.running ? "pp-pill-ok" : "pp-pill-warn") }, service.running ? "\u8FD0\u884C\u4E2D" : "\u5DF2\u505C\u6B62"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, "\u751F\u6548\u89C4\u5219 ", enabledRuleCount(rules), " \u6761"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary pp-btn-sm", onClick: startService, disabled: busy || service.running }, "\u542F\u52A8"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm", onClick: stopService, disabled: busy || !service.running }, "\u505C\u6B62"))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-content" }, /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, isMock ? "\u793A\u4F8B\u6570\u636E \u2014 window.__postapiApi \u672A\u6CE8\u5165\u6216\u8BFB\u53D6\u5931\u8D25\uFF0C\u4EE5\u4E0B\u4E3A\u6587\u4EF6\u5185 mock" : "\u6570\u636E\u6765\u6E90\uFF1Aapi.storage\uFF08listProjects / getProject / saveEndpoint\uFF09+ api.mock\uFF08start / stop / status\uFF09"), error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-error-text" }, error) : null, notice ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-note" }, notice) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-mock-layout" }, /* @__PURE__ */ (0, import_react.createElement)("nav", { className: "pp-panel", "aria-label": "\u63A5\u53E3\u5217\u8868" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { padding: "var(--sp-2) var(--sp-2) 0" } }, /* @__PURE__ */ (0, import_react.createElement)(
+    "select",
+    {
+      className: "pp-select pp-input-sm",
+      value: projectId,
+      onChange: (e) => openProject(e.target.value),
+      "aria-label": "\u5F53\u524D\u9879\u76EE"
+    },
+    /* @__PURE__ */ (0, import_react.createElement)("option", { value: "" }, projects.length ? "\u8BF7\u9009\u62E9\u9879\u76EE" : "\u6682\u65E0\u9879\u76EE"),
+    projects.map((p) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: p.id, value: p.id }, p.name || p.id))
+  )), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tree" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tree-group" }, "\u63A5\u53E3"), endpoints.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u6682\u65E0\u63A5\u53E3", hint: "\u5728\u63A5\u53E3\u6587\u6863\u9875\u65B0\u5EFA\u63A5\u53E3\u540E\uFF0C\u53EF\u5728\u8FD9\u91CC\u914D\u7F6E Mock \u89C4\u5219" }) : null, endpoints.map((ep) => /* @__PURE__ */ (0, import_react.createElement)(
+    "div",
+    {
+      key: ep.id,
+      className: "pp-tree-row",
+      "data-active": ep.id === currentId,
+      onClick: () => selectEndpoint(ep)
+    },
+    /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": ep.method }, ep.method),
+    /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ellipsis" }, ep.name || ep.url || ep.id)
+  )))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-mock-side" }, /* @__PURE__ */ (0, import_react.createElement)("section", { className: "pp-card" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u672C\u5730 Mock \u670D\u52A1"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-grid" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u7AEF\u53E3"), /* @__PURE__ */ (0, import_react.createElement)(
     "input",
     {
-      className: "pp-input pp-input-mono",
+      className: "pp-input pp-input-sm pp-input-mono",
+      value: port,
+      onChange: (e) => setPort(e.target.value.replace(/[^0-9]/g, "")),
+      placeholder: "4010"
+    }
+  ), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-form-label" }, "\u72B6\u6001"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, service.running ? "\u8FD0\u884C\u4E2D \xB7 \u7AEF\u53E3 " + (service.port || port) : "\u5DF2\u505C\u6B62")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-title" }, "\u547D\u4E2D\u5730\u5740"), urls.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-meta" }, "\u9009\u62E9\u9879\u76EE\u4E0E\u63A5\u53E3\u540E\u663E\u793A\u547D\u4E2D\u5730\u5740") : urls.map((u) => /* @__PURE__ */ (0, import_react.createElement)("pre", { key: u, className: "pp-pre", style: { marginBottom: "var(--sp-1)" } }, u)), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-meta", style: { marginTop: "var(--sp-2)" } }, "\u89C4\u5219\u4F18\u5148\u7EA7\uFF1A\u5B57\u6BB5\u89C4\u5219 \u2192 \u9ED8\u8BA4\u54CD\u5E94\uFF08isDefault\uFF09\u2192 200 ", "{}")), /* @__PURE__ */ (0, import_react.createElement)("section", { className: "pp-card" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, current ? current.name || current.url : "\u672A\u9009\u62E9\u63A5\u53E3"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-grid" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u542F\u7528 Mock"), /* @__PURE__ */ (0, import_react.createElement)("input", { type: "checkbox", checked: mockEnabled, onChange: (e) => setMockEnabled(e.target.checked) }), /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u5EF6\u8FDF (ms)"), /* @__PURE__ */ (0, import_react.createElement)(
+    "input",
+    {
+      className: "pp-input pp-input-sm pp-input-mono",
       value: String(delayMs),
       onChange: (e) => setDelayMs(e.target.value.replace(/[^0-9]/g, ""))
     }
-  )), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title", style: { marginTop: "var(--sp-3)" } }, "\u5B57\u6BB5\u89C4\u5219"), rules.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-meta" }, "\u5C1A\u65E0\u89C4\u5219\uFF1B\u672A\u547D\u4E2D\u89C4\u5219\u65F6\u56DE\u843D\u9ED8\u8BA4\u54CD\u5E94") : null, rules.length > 0 ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table" }, /* @__PURE__ */ (0, import_react.createElement)("thead", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "56px" } }, "\u542F\u7528"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "180px" } }, "\u5B57\u6BB5"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "110px" } }, "\u89C4\u5219"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "\u503C"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "64px" } }, "\u64CD\u4F5C"))), /* @__PURE__ */ (0, import_react.createElement)("tbody", null, rules.map((rule, index) => /* @__PURE__ */ (0, import_react.createElement)("tr", { key: index }, /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("input", { type: "checkbox", checked: rule.enabled !== false, onChange: (e) => patchRule(index, "enabled", e.target.checked) })), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)(
+  )), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-title" }, "Mock \u89C4\u5219"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table" }, /* @__PURE__ */ (0, import_react.createElement)("thead", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "44px" } }, "\u542F\u7528"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "180px" } }, "\u5B57\u6BB5"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "96px" } }, "\u7C7B\u578B"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "110px" } }, "\u89C4\u5219"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "\u793A\u4F8B\u503C"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "96px" } }, "\u64CD\u4F5C"))), /* @__PURE__ */ (0, import_react.createElement)("tbody", null, ruleRows, rules.map((rule, index) => /* @__PURE__ */ (0, import_react.createElement)("tr", { key: index }, /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)(
     "input",
     {
-      className: "pp-input pp-input-mono",
-      style: { width: "100%" },
+      type: "checkbox",
+      checked: rule.enabled !== false,
+      onChange: (e) => patchRule(index, "enabled", e.target.checked)
+    }
+  )), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)(
+    "input",
+    {
+      className: "pp-cell-input pp-input-sm pp-input-mono",
       value: rule.field || "",
       placeholder: "data.items[0].id",
       onChange: (e) => patchRule(index, "field", e.target.value)
     }
-  )), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: rule.rule || "fixed", onChange: (e) => patchRule(index, "rule", e.target.value) }, RULES.map((r) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: r, value: r }, RULE_LABEL[r] || r)))), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)(
+  )), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)(
+    "select",
+    {
+      className: "pp-cell-input pp-input-sm",
+      value: rule.type || "string",
+      onChange: (e) => patchRule(index, "type", e.target.value)
+    },
+    FIELD_TYPES.map((t) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: t, value: t }, t))
+  )), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)(
+    "select",
+    {
+      className: "pp-cell-input pp-input-sm",
+      value: rule.rule || "fixed",
+      onChange: (e) => patchRule(index, "rule", e.target.value)
+    },
+    RULES.map((r) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: r, value: r }, RULE_LABEL[r] || r))
+  )), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)(
     "input",
     {
-      className: "pp-input pp-input-mono",
-      style: { width: "100%" },
+      className: "pp-cell-input pp-input-sm pp-input-mono",
       value: rule.value || "",
       onChange: (e) => patchRule(index, "value", e.target.value)
     }
-  )), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: () => setRules(rules.filter((_, i) => i !== index)) }, "\u5220\u9664"))))))) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { style: { display: "flex", gap: "var(--sp-2)", marginTop: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: () => setRules(rules.concat([blankRule(current && current.id)])) }, "+ \u6DFB\u52A0\u89C4\u5219"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: persist, disabled: busy }, "\u4FDD\u5B58\u914D\u7F6E"))), /* @__PURE__ */ (0, import_react.createElement)("section", { className: "pp-card" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u672C\u5730 Mock \u670D\u52A1"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-grid" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u7AEF\u53E3"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-mono" }, service.port || port), /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u72B6\u6001"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, service.running ? "\u8FD0\u884C\u4E2D" : "\u5DF2\u505C\u6B62")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title", style: { marginTop: "var(--sp-3)" } }, "\u547D\u4E2D\u5730\u5740"), urls.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-meta" }, "\u9009\u62E9\u63A5\u53E3\u540E\u663E\u793A\u547D\u4E2D\u5730\u5740") : urls.map((u) => /* @__PURE__ */ (0, import_react.createElement)("pre", { key: u, className: "pp-pre", style: { marginBottom: "var(--sp-1)" } }, u)), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-meta", style: { marginTop: "var(--sp-2)" } }, "\u89C4\u5219\u4F18\u5148\u7EA7\uFF1A\u5B57\u6BB5\u89C4\u5219 \u2192 \u9ED8\u8BA4\u54CD\u5E94\uFF08isDefault\uFF09\u2192 200 ", "{}"))))));
+  )), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)(
+    "button",
+    {
+      className: "pp-btn pp-btn-sm pp-btn-ghost pp-btn-danger",
+      onClick: () => removeRule(index)
+    },
+    pendingRemove === index ? "\u786E\u8BA4\u5220\u9664" : "\u5220\u9664"
+  ))))))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginTop: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)(
+    "button",
+    {
+      className: "pp-btn pp-btn-sm pp-table-add",
+      onClick: () => setRules(rules.concat([blankRule(current && current.id)])),
+      disabled: !current
+    },
+    "+ \u6DFB\u52A0\u89C4\u5219"
+  ), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary pp-btn-sm", onClick: persist, disabled: busy || !current }, "\u4FDD\u5B58\u914D\u7F6E"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, "\u89C4\u5219\u5199\u5165 endpoint.mock.rules\uFF08storage.saveEndpoint\uFF09")))))));
 }
 
 // src/client/pages/schema.jsx
@@ -3225,7 +3879,7 @@ var import_react12 = __toESM(require("react"), 1);
 (window.__postapiQueue = window.__postapiQueue || []).push(["schema", SchemaPage]);
 var MOCK_SCHEMAS = [
   {
-    id: "sch_order",
+    id: "sch_sample_order",
     name: "Order",
     description: "\u8BA2\u5355\u5BF9\u8C61",
     jsonSchema: {
@@ -3279,7 +3933,29 @@ function localExampleFromSchema(schema) {
   if (type === "null") return null;
   return "string";
 }
-function errText3(err) {
+function schemaFields(schema, depth = 0) {
+  const out = [];
+  if (!schema || typeof schema !== "object" || depth > 6) return out;
+  const props = schema.properties && typeof schema.properties === "object" ? schema.properties : null;
+  if (!props) return out;
+  const required = Array.isArray(schema.required) ? schema.required : [];
+  for (const key of Object.keys(props)) {
+    const field = props[key] && typeof props[key] === "object" ? props[key] : {};
+    const type = field.type || (field.properties ? "object" : field.items ? "array" : field.$ref ? "$ref" : "string");
+    out.push({
+      key,
+      depth,
+      type,
+      required: required.includes(key),
+      description: String(field.description || field.title || ""),
+      example: field.example === void 0 ? "" : String(field.example)
+    });
+    if (type === "object") out.push(...schemaFields(field, depth + 1));
+    else if (type === "array" && field.items) out.push(...schemaFields(field.items, depth + 1));
+  }
+  return out;
+}
+function errText6(err) {
   return err && err.message ? err.message : String(err);
 }
 function toText(value) {
@@ -3294,58 +3970,80 @@ function SchemaPage(props) {
   const api = props && props.api || (typeof window !== "undefined" ? window.__postapiApi : void 0);
   const storage = api && api.storage;
   const route = props && props.route || {};
-  const [projects, setProjects] = (0, import_react12.useState)([{ id: "proj_demo01", name: "\u8BA2\u5355\u4E2D\u5FC3" }]);
-  const [projectId, setProjectId] = (0, import_react12.useState)("proj_demo01");
-  const [schemas, setSchemas] = (0, import_react12.useState)(MOCK_SCHEMAS);
+  const [projects, setProjects] = (0, import_react12.useState)([]);
+  const [projectId, setProjectId] = (0, import_react12.useState)("");
+  const [schemas, setSchemas] = (0, import_react12.useState)([]);
+  const [folders, setFolders] = (0, import_react12.useState)([]);
   const [isMock, setIsMock] = (0, import_react12.useState)(true);
   const [error, setError] = (0, import_react12.useState)("");
   const [notice, setNotice] = (0, import_react12.useState)("");
   const [currentId, setCurrentId] = (0, import_react12.useState)("");
   const [name, setName] = (0, import_react12.useState)("");
   const [description, setDescription] = (0, import_react12.useState)("");
-  const [text, setText] = (0, import_react12.useState)(toText(MOCK_SCHEMAS[0].jsonSchema));
+  const [text, setText] = (0, import_react12.useState)(toText({ type: "object", properties: {} }));
+  const [mode, setMode] = (0, import_react12.useState)("source");
   const [checkResult, setCheckResult] = (0, import_react12.useState)(null);
   const [example, setExample] = (0, import_react12.useState)("");
-  (0, import_react12.useEffect)(() => applyTheme(rootRef.current), []);
+  const [pendingDelete, setPendingDelete] = (0, import_react12.useState)("");
+  (0, import_react12.useEffect)(() => {
+    applyTheme(rootRef.current);
+  }, []);
+  const applyMock = () => {
+    setIsMock(true);
+    setProjects([{ id: "schema_sample_project", name: "\u793A\u4F8B\u9879\u76EE" }]);
+    setSchemas(MOCK_SCHEMAS);
+    setFolders([]);
+    pick(MOCK_SCHEMAS[0]);
+  };
   const loadProject = async (id) => {
     if (!storage || typeof storage.getProject !== "function") {
-      setIsMock(true);
-      setSchemas(MOCK_SCHEMAS);
+      applyMock();
+      return;
+    }
+    if (!id) {
+      setSchemas([]);
+      setFolders([]);
       return;
     }
     try {
       const loaded = await storage.getProject(id);
-      if (loaded) {
-        const list = Array.isArray(loaded.schemas) ? loaded.schemas : [];
-        setSchemas(list);
-        setIsMock(false);
-        const wanted = route.arg && list.find((s) => s.id === route.arg);
-        if (wanted) pick(wanted);
+      if (!loaded) {
+        setSchemas([]);
+        setFolders([]);
+        return;
       }
+      const list = Array.isArray(loaded.schemas) ? loaded.schemas : [];
+      setSchemas(list);
+      setFolders(Array.isArray(loaded.folders) ? loaded.folders : []);
+      setIsMock(false);
+      const wanted = route.arg && list.find((s) => s.id === route.arg);
+      if (wanted) pick(wanted);
     } catch (err) {
-      setError("\u52A0\u8F7D\u9879\u76EE\u5931\u8D25\uFF1A" + errText3(err));
+      setError("\u52A0\u8F7D\u9879\u76EE\u5931\u8D25\uFF1A" + errText6(err));
     }
   };
   (0, import_react12.useEffect)(() => {
     const boot = async () => {
-      if (storage && typeof storage.listProjects === "function") {
-        try {
-          const list = await storage.listProjects();
-          if (Array.isArray(list) && list.length > 0) {
-            setProjects(list);
-            setProjectId(list[0].id);
-            await loadProject(list[0].id);
-            return;
-          }
-        } catch (err) {
-          setError("\u52A0\u8F7D\u9879\u76EE\u5217\u8868\u5931\u8D25\uFF1A" + errText3(err));
-        }
+      if (!storage || typeof storage.listProjects !== "function") {
+        applyMock();
+        return;
       }
-      setIsMock(true);
+      try {
+        const list = await storage.listProjects();
+        if (Array.isArray(list) && list.length > 0) {
+          setProjects(list);
+          setProjectId(list[0].id);
+          await loadProject(list[0].id);
+          return;
+        }
+        setIsMock(false);
+      } catch (err) {
+        setError("\u52A0\u8F7D\u9879\u76EE\u5217\u8868\u5931\u8D25\uFF1A" + errText6(err));
+      }
     };
     boot();
   }, []);
-  const pick = (s) => {
+  function pick(s) {
     setCurrentId(s.id || "");
     setName(s.name || "");
     setDescription(s.description || "");
@@ -3354,14 +4052,17 @@ function SchemaPage(props) {
     setExample("");
     setNotice("");
     setError("");
-  };
+    setPendingDelete("");
+  }
   const blank = () => {
     setCurrentId("");
-    setName("\u65B0\u6A21\u578B");
+    setName("\u65B0\u5EFA\u6A21\u578B");
     setDescription("");
     setText(toText({ type: "object", properties: {} }));
     setCheckResult(null);
     setExample("");
+    setNotice("");
+    setError("");
   };
   const validate = async () => {
     setError("");
@@ -3372,50 +4073,53 @@ function SchemaPage(props) {
         setCheckResult({ ok: res2 && res2.ok !== false, message: res2 && res2.message || (res2 && res2.ok === false ? "\u6821\u9A8C\u672A\u901A\u8FC7" : "\u6821\u9A8C\u901A\u8FC7") });
         return;
       } catch (err) {
-        setError("api.schema.validate \u8C03\u7528\u5931\u8D25\uFF1A" + errText3(err));
+        setError("api.schema.validate \u8C03\u7528\u5931\u8D25\uFF1A" + errText6(err));
+        return;
       }
     }
     const res = localValidateSchema(text);
     setCheckResult({
       ok: res.ok,
-      message: res.ok ? "\u6821\u9A8C\u901A\u8FC7\uFF08\u672C\u5730\u964D\u7EA7\u6821\u9A8C\uFF1Aapi.schema.validate \u672A\u63D0\u4F9B\uFF09" : res.error
+      message: res.ok ? "\u6821\u9A8C\u901A\u8FC7\uFF08\u672C\u5730\u964D\u7EA7\u6821\u9A8C\uFF1Aapi.schema.validate \u672A\u63D0\u4F9B\uFF09" : res.error + "\uFF08api.schema.validate \u672A\u63D0\u4F9B\uFF09"
     });
   };
   const makeExample = async () => {
     setError("");
     setExample("");
-    const parsed = safeParse(text);
+    const parsed2 = safeParse(text);
     if (api && api.schema && typeof api.schema.example === "function") {
       try {
-        const res = await api.schema.example({ schema: parsed });
+        const res = await api.schema.example({ schema: parsed2 });
         setExample(toText(res && res.example !== void 0 ? res.example : res));
         return;
       } catch (err) {
-        setError("api.schema.example \u8C03\u7528\u5931\u8D25\uFF1A" + errText3(err));
+        setError("api.schema.example \u8C03\u7528\u5931\u8D25\uFF1A" + errText6(err));
+        return;
       }
     }
-    setExample(toText(localExampleFromSchema(parsed)));
+    setExample(toText(localExampleFromSchema(parsed2)));
   };
   const save = async () => {
     if (!storage || typeof storage.saveSchema !== "function") {
-      setError("\u5F53\u524D\u6865\u672A\u63D0\u4F9B api.storage.saveSchema");
+      setError("\u5F53\u524D\u6865\u672A\u63D0\u4F9B api.storage.saveSchema\uFF08\u5951\u7EA6 \xA73\uFF09");
       return;
     }
-    const parsed = localValidateSchema(text);
-    if (!parsed.ok) {
-      setError("\u4FDD\u5B58\u524D\u6821\u9A8C\u5931\u8D25\uFF1A" + parsed.error);
+    const parsed2 = localValidateSchema(text);
+    if (!parsed2.ok) {
+      setError("\u4FDD\u5B58\u524D\u6821\u9A8C\u5931\u8D25\uFF1A" + parsed2.error);
       return;
     }
     setError("");
+    setNotice("");
     try {
-      const payload = { name: name || "\u672A\u547D\u540D\u6A21\u578B", description, jsonSchema: parsed.schema };
+      const payload = { name: name || "\u672A\u547D\u540D\u6A21\u578B", description, jsonSchema: parsed2.schema };
       if (currentId) payload.id = currentId;
       const saved = await storage.saveSchema(projectId, payload);
       setNotice("\u5DF2\u4FDD\u5B58\u6A21\u578B\uFF1A" + (saved && saved.name || payload.name));
       if (saved && saved.id) setCurrentId(saved.id);
       await loadProject(projectId);
     } catch (err) {
-      setError("\u4FDD\u5B58\u6A21\u578B\u5931\u8D25\uFF1A" + errText3(err));
+      setError("\u4FDD\u5B58\u6A21\u578B\u5931\u8D25\uFF1A" + errText6(err));
     }
   };
   const remove = async () => {
@@ -3423,32 +4127,77 @@ function SchemaPage(props) {
       setError("\u8BF7\u5148\u9009\u4E2D\u4E00\u4E2A\u6A21\u578B");
       return;
     }
+    if (pendingDelete !== currentId) {
+      setPendingDelete(currentId);
+      setNotice("\u518D\u6B21\u70B9\u51FB\u300C\u786E\u8BA4\u5220\u9664\u6A21\u578B\u300D\u5C06\u5220\u9664\u8BE5\u6A21\u578B");
+      return;
+    }
     if (!storage || typeof storage.deleteSchema !== "function") {
-      setError("\u5F53\u524D\u6865\u672A\u63D0\u4F9B api.storage.deleteSchema");
+      setError("\u5F53\u524D\u6865\u672A\u63D0\u4F9B api.storage.deleteSchema\uFF08\u5951\u7EA6 \xA73\uFF09");
       return;
     }
     setError("");
+    setPendingDelete("");
     try {
       await storage.deleteSchema(projectId, currentId);
       setNotice("\u5DF2\u5220\u9664\u6A21\u578B\uFF1A" + currentId);
       blank();
       await loadProject(projectId);
     } catch (err) {
-      setError("\u5220\u9664\u6A21\u578B\u5931\u8D25\uFF1A" + errText3(err));
+      setError("\u5220\u9664\u6A21\u578B\u5931\u8D25\uFF1A" + errText6(err));
     }
   };
+  const folderName = (folderId) => {
+    const hit = folders.find((f) => f.id === folderId);
+    return hit ? hit.name || hit.id : "";
+  };
+  const grouped = (() => {
+    const map = /* @__PURE__ */ new Map();
+    for (const s of schemas) {
+      const label = folderName(s.folderId) || "\u672A\u5F52\u7C7B";
+      if (!map.has(label)) map.set(label, []);
+      map.get(label).push(s);
+    }
+    return [...map.entries()];
+  })();
+  const parsed = safeParse(text);
+  const fields = schemaFields(parsed);
   return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page", "data-page": "schema", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-overview-title" }, "\u6570\u636E\u6A21\u578B"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-actions" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-meta" }, "\u9879\u76EE"), /* @__PURE__ */ (0, import_react.createElement)(
     "select",
     {
       className: "pp-select",
       value: projectId,
       onChange: (e) => {
-        setProjectId(e.target.value);
-        loadProject(e.target.value);
+        const v = e.target.value;
+        setProjectId(v);
+        loadProject(v);
       }
     },
+    /* @__PURE__ */ (0, import_react.createElement)("option", { value: "" }, projects.length ? "\u8BF7\u9009\u62E9\u9879\u76EE" : "\u6682\u65E0\u9879\u76EE"),
     projects.map((p) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: p.id, value: p.id }, p.name || p.id))
-  ))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-content" }, /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, isMock ? "\u793A\u4F8B\u6570\u636E \u2014 api.storage \u4E0D\u53EF\u7528\uFF0C\u4EE5\u4E0B\u4E3A\u6587\u4EF6\u5185 mock" : "\u6570\u636E\u6765\u6E90\uFF1Aapi.storage\uFF08saveSchema / deleteSchema\uFF09"), error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-error-text" }, error) : null, notice ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, notice) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-debug-layout" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u6A21\u578B"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tree" }, schemas.map((s) => /* @__PURE__ */ (0, import_react.createElement)("div", { key: s.id, className: "pp-tree-row", "data-active": s.id === currentId ? "true" : "false", onClick: () => pick(s) }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ellipsis" }, s.name || s.id)))), schemas.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u6682\u65E0\u6A21\u578B", hint: "\u70B9\u4E0B\u65B9\u300C\u65B0\u5EFA\u6A21\u578B\u300D\u521B\u5EFA\u6570\u636E\u6A21\u578B" }) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm", onClick: blank }, "\u65B0\u5EFA\u6A21\u578B"))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u7F16\u8F91"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-grid", style: { marginBottom: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u540D\u79F0"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input", value: name, onChange: (e) => setName(e.target.value) }), /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u8BF4\u660E"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input", value: description, onChange: (e) => setDescription(e.target.value) })), /* @__PURE__ */ (0, import_react.createElement)(
+  ))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-content" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, isMock ? "\u793A\u4F8B\u6570\u636E \u2014 api.storage \u4E0D\u53EF\u7528\uFF0C\u4EE5\u4E0B\u4E3A\u6587\u4EF6\u5185 mock" : "\u6570\u636E\u6765\u6E90\uFF1Aapi.storage\uFF08getProject / saveSchema / deleteSchema\uFF09+ api.schema\uFF08validate / example\uFF09"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-toolbar-spacer" }), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, schemas.length, " \u4E2A\u6A21\u578B \xB7 ", folders.length, " \u4E2A\u76EE\u5F55")), error ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-note pp-note-bad" }, error) : null, notice ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-note pp-note-ok" }, notice) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-debug-layout" }, /* @__PURE__ */ (0, import_react.createElement)("nav", { className: "pp-panel", "aria-label": "\u6570\u636E\u6A21\u578B\u6811" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-env-side-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-card-title" }, "\u6570\u636E\u6A21\u578B"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm pp-btn-ghost pp-btn-accent", onClick: blank }, "+ \u65B0\u5EFA\u6A21\u578B")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tree" }, grouped.map(([label, list]) => /* @__PURE__ */ (0, import_react.createElement)("div", { key: label }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tree-group" }, label), list.map((s) => /* @__PURE__ */ (0, import_react.createElement)(
+    "div",
+    {
+      key: s.id,
+      className: "pp-tree-row",
+      "data-active": s.id === currentId ? "true" : "false",
+      onClick: () => pick(s)
+    },
+    /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ellipsis" }, s.name || s.id)
+  ))))), schemas.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u6682\u65E0\u6570\u636E\u6A21\u578B", hint: "\u70B9\u4E0A\u65B9\u300C+ \u65B0\u5EFA\u6A21\u578B\u300D\u521B\u5EFA\u7B2C\u4E00\u4E2A\u6A21\u578B" }) : null), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-io-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-io-title" }, currentId ? "\u7F16\u8F91\u6A21\u578B" : "\u65B0\u5EFA\u6A21\u578B"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-seg" }, /* @__PURE__ */ (0, import_react.createElement)("button", { "data-active": mode === "tree" ? "true" : "false", onClick: () => setMode("tree") }, "\u6811\u6A21\u5F0F"), /* @__PURE__ */ (0, import_react.createElement)("button", { "data-active": mode === "source" ? "true" : "false", onClick: () => setMode("source") }, "\u6E90\u7801\u6A21\u5F0F"))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-grid", style: { marginBottom: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u540D\u79F0"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input", value: name, onChange: (e) => {
+    setName(e.target.value);
+    setNotice("");
+  } }), /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u8BF4\u660E"), /* @__PURE__ */ (0, import_react.createElement)(
+    "input",
+    {
+      className: "pp-input",
+      value: description,
+      onChange: (e) => {
+        setDescription(e.target.value);
+        setNotice("");
+      }
+    }
+  )), mode === "source" ? /* @__PURE__ */ (0, import_react.createElement)(
     "textarea",
     {
       className: "pp-json-editor",
@@ -3459,7 +4208,7 @@ function SchemaPage(props) {
         setCheckResult(null);
       }
     }
-  ), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: validate }, "\u6821\u9A8C"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: makeExample }, "\u751F\u6210\u793A\u4F8B"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: save }, "\u4FDD\u5B58"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-danger", onClick: remove }, "\u5220\u9664")), checkResult ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: checkResult.ok ? "pp-note pp-note-ok" : "pp-note pp-note-bad", style: { marginTop: "var(--sp-3)" } }, checkResult.ok ? "\u901A\u8FC7\uFF1A" : "\u5931\u8D25\uFF1A", checkResult.message) : null), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u793A\u4F8B\u6570\u636E"), /* @__PURE__ */ (0, import_react.createElement)("pre", { className: "pp-pre pp-pre-scroll" }, example || "\uFF08\u70B9\u300C\u751F\u6210\u793A\u4F8B\u300D\u6309\u5F53\u524D JSON Schema \u751F\u6210\uFF09")))));
+  ) : /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table pp-table-wide" }, /* @__PURE__ */ (0, import_react.createElement)("thead", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("th", null, "\u5B57\u6BB5\u540D"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "96px" } }, "\u7C7B\u578B"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "64px" } }, "\u5FC5\u586B"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "\u8BF4\u660E"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "140px" } }, "\u793A\u4F8B"))), /* @__PURE__ */ (0, import_react.createElement)("tbody", null, fields.map((f) => /* @__PURE__ */ (0, import_react.createElement)("tr", { key: f.depth + "-" + f.key }, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-table-mono" }, /* @__PURE__ */ (0, import_react.createElement)("span", { style: { paddingLeft: "calc(var(--sp-3) * " + f.depth + ")" } }, f.key)), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-pill" }, f.type)), /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, f.required ? "\u662F" : "-"), /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta pp-ellipsis" }, f.description || "-"), /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-table-mono pp-ellipsis" }, f.example || "-"))), fields.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { colSpan: 5, className: "pp-muted" }, "\u5F53\u524D Schema \u65E0\u53EF\u5C55\u5F00\u5B57\u6BB5\uFF1B\u5207\u300C\u6E90\u7801\u6A21\u5F0F\u300D\u76F4\u63A5\u7F16\u8F91 JSON")) : null))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: validate }, "\u6821\u9A8C"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: makeExample }, "\u751F\u6210\u793A\u4F8B"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: save }, "\u4FDD\u5B58"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-danger", onClick: remove }, pendingDelete && pendingDelete === currentId ? "\u786E\u8BA4\u5220\u9664\u6A21\u578B" : "\u5220\u9664")), checkResult ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: checkResult.ok ? "pp-note pp-note-ok" : "pp-note pp-note-bad", style: { marginTop: "var(--sp-3)" } }, checkResult.ok ? "\u901A\u8FC7\uFF1A" : "\u5931\u8D25\uFF1A", checkResult.message) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title", style: { marginTop: "var(--sp-4)" } }, "\u793A\u4F8B\u6570\u636E"), /* @__PURE__ */ (0, import_react.createElement)("pre", { className: "pp-pre pp-pre-scroll" }, example || "\uFF08\u70B9\u300C\u751F\u6210\u793A\u4F8B\u300D\u6309\u5F53\u524D JSON Schema \u751F\u6210\uFF09")))));
 }
 function safeParse(text) {
   try {
@@ -3472,9 +4221,10 @@ function safeParse(text) {
 // src/client/pages/env.jsx
 var import_react13 = __toESM(require("react"), 1);
 (window.__postapiQueue = window.__postapiQueue || []).push(["env", EnvPage]);
+var MOCK_PROJECTS2 = [{ id: "env_sample_project", name: "\u793A\u4F8B\u9879\u76EE" }];
 var MOCK_PROJECT5 = {
-  id: "proj_demo01",
-  name: "\u8BA2\u5355\u4E2D\u5FC3",
+  id: "env_sample_project",
+  name: "\u793A\u4F8B\u9879\u76EE",
   environments: [
     {
       id: "env_dev",
@@ -3490,7 +4240,14 @@ var MOCK_PROJECT5 = {
   ],
   globals: { variables: [{ key: "userAgent", value: "postapi/0.1.0", enabled: true, secret: false }] }
 };
-var VAR_COLUMNS = ["\u53D8\u91CF\u540D", "\u503C", "\u542F\u7528", "\u5BC6\u94A5", "\u64CD\u4F5C"];
+var VAR_COLUMNS = [
+  { key: "key", label: "\u53D8\u91CF\u540D", width: "32%" },
+  { key: "value", label: "\u503C", width: "auto" },
+  { key: "secret", label: "\u5BC6\u94A5", width: "44px" },
+  { key: "enabled", label: "\u542F\u7528", width: "44px" },
+  { key: "type", label: "\u7C7B\u578B", width: "72px" },
+  { key: "op", label: "\u64CD\u4F5C", width: "48px" }
+];
 var ENV_TABS = [
   { id: "env", label: "\u73AF\u5883\u53D8\u91CF" },
   { id: "globals", label: "\u5168\u5C40\u53D8\u91CF" },
@@ -3510,6 +4267,22 @@ function normalizeVars(list) {
     secret: v.secret === true
   }));
 }
+function inferVarType(value, secret) {
+  if (secret === true) return "secret";
+  const raw = String(value === void 0 || value === null ? "" : value).trim();
+  if (!raw) return "string";
+  if (raw === "true" || raw === "false") return "boolean";
+  if (/^-?\d+(\.\d+)?$/.test(raw)) return "number";
+  if (raw.startsWith("{") || raw.startsWith("[")) {
+    try {
+      JSON.parse(raw);
+      return "json";
+    } catch {
+      return "string";
+    }
+  }
+  return "string";
+}
 function priorityRows() {
   return PRIORITY_ROWS.slice();
 }
@@ -3522,7 +4295,7 @@ function envSummary(envs) {
     varCount: Array.isArray(e.variables) ? e.variables.length : 0
   }));
 }
-function errText4(err) {
+function errText7(err) {
   return err && err.message ? err.message : String(err);
 }
 function blankEnv() {
@@ -3532,126 +4305,170 @@ function EnvPage(props) {
   const rootRef = (0, import_react13.useRef)(null);
   const api = props && props.api || (typeof window !== "undefined" ? window.__postapiApi : void 0);
   const storage = api && api.storage;
-  const [projects, setProjects] = (0, import_react13.useState)([{ id: MOCK_PROJECT5.id, name: MOCK_PROJECT5.name }]);
-  const [projectId, setProjectId] = (0, import_react13.useState)(MOCK_PROJECT5.id);
-  const [project, setProject] = (0, import_react13.useState)(MOCK_PROJECT5);
+  const [projects, setProjects] = (0, import_react13.useState)([]);
+  const [projectId, setProjectId] = (0, import_react13.useState)("");
+  const [project, setProject] = (0, import_react13.useState)(null);
   const [isMock, setIsMock] = (0, import_react13.useState)(true);
   const [error, setError] = (0, import_react13.useState)("");
   const [notice, setNotice] = (0, import_react13.useState)("");
-  const [draft, setDraft] = (0, import_react13.useState)(MOCK_PROJECT5.environments[0]);
-  const [globals, setGlobals] = (0, import_react13.useState)(normalizeVars(MOCK_PROJECT5.globals.variables));
+  const [draft, setDraft] = (0, import_react13.useState)(null);
+  const [globals, setGlobals] = (0, import_react13.useState)([]);
   const [envTab, setEnvTab] = (0, import_react13.useState)("env");
-  (0, import_react13.useEffect)(() => applyTheme(rootRef.current), []);
+  const [pendingDelete, setPendingDelete] = (0, import_react13.useState)("");
+  (0, import_react13.useEffect)(() => {
+    applyTheme(rootRef.current);
+  }, []);
+  const applyMock = () => {
+    const first = MOCK_PROJECT5.environments[0];
+    setIsMock(true);
+    setProject(MOCK_PROJECT5);
+    setProjects(MOCK_PROJECTS2);
+    setDraft({ ...first, variables: normalizeVars(first.variables) });
+    setGlobals(normalizeVars(MOCK_PROJECT5.globals.variables));
+  };
   const loadProject = async (id) => {
     if (!storage || typeof storage.getProject !== "function") {
-      setIsMock(true);
-      setProject(MOCK_PROJECT5);
-      setDraft(MOCK_PROJECT5.environments[0]);
-      setGlobals(normalizeVars(MOCK_PROJECT5.globals.variables));
+      applyMock();
+      return;
+    }
+    if (!id) {
+      setProject(null);
+      setDraft(null);
+      setGlobals([]);
       return;
     }
     try {
       const loaded = await storage.getProject(id);
-      if (loaded) {
-        setProject(loaded);
-        const envs2 = Array.isArray(loaded.environments) ? loaded.environments : [];
-        setDraft(envs2.length > 0 ? envs2[0] : blankEnv());
-        setGlobals(normalizeVars(loaded.globals && loaded.globals.variables));
-        setIsMock(false);
+      if (!loaded) {
+        setProject(null);
+        setDraft(null);
+        setGlobals([]);
+        return;
       }
+      setProject(loaded);
+      const envs2 = Array.isArray(loaded.environments) ? loaded.environments : [];
+      setDraft(envs2.length > 0 ? { ...envs2[0], variables: normalizeVars(envs2[0].variables) } : blankEnv());
+      setGlobals(normalizeVars(loaded.globals && loaded.globals.variables));
+      setIsMock(false);
     } catch (err) {
-      setError("\u52A0\u8F7D\u9879\u76EE\u5931\u8D25\uFF1A" + errText4(err));
+      setError("\u52A0\u8F7D\u9879\u76EE\u5931\u8D25\uFF1A" + errText7(err));
     }
   };
   (0, import_react13.useEffect)(() => {
     const boot = async () => {
-      if (storage && typeof storage.listProjects === "function") {
-        try {
-          const list = await storage.listProjects();
-          if (Array.isArray(list) && list.length > 0) {
-            setProjects(list);
-            setProjectId(list[0].id);
-            await loadProject(list[0].id);
-            return;
-          }
-        } catch (err) {
-          setError("\u52A0\u8F7D\u9879\u76EE\u5217\u8868\u5931\u8D25\uFF1A" + errText4(err));
-        }
+      if (!storage || typeof storage.listProjects !== "function") {
+        applyMock();
+        return;
       }
-      setIsMock(true);
+      try {
+        const list = await storage.listProjects();
+        if (Array.isArray(list) && list.length > 0) {
+          setProjects(list);
+          setProjectId(list[0].id);
+          await loadProject(list[0].id);
+          return;
+        }
+        setIsMock(false);
+      } catch (err) {
+        setError("\u52A0\u8F7D\u9879\u76EE\u5217\u8868\u5931\u8D25\uFF1A" + errText7(err));
+      }
     };
     boot();
   }, []);
-  const envs = Array.isArray(project.environments) ? project.environments : [];
+  const envs = Array.isArray(project && project.environments) ? project.environments : [];
+  const draftVars = normalizeVars(draft && draft.variables);
   const pickEnv = (env) => {
     setDraft({ ...env, variables: normalizeVars(env.variables) });
     setNotice("");
     setError("");
+    setPendingDelete("");
   };
-  const patchDraft = (patch) => setDraft({ ...draft, ...patch });
+  const patchDraft = (patch) => {
+    setDraft({ ...draft, ...patch });
+    setNotice("");
+  };
   const setVarAt = (i, patch) => {
-    const next = normalizeVars(draft.variables);
+    const next = normalizeVars(draft && draft.variables);
     next[i] = { ...next[i], ...patch };
     setDraft({ ...draft, variables: next });
+    setNotice("");
   };
-  const addVar = () => setDraft({ ...draft, variables: normalizeVars(draft.variables).concat([{ key: "", value: "", enabled: true, secret: false }]) });
-  const removeVar = (i) => setDraft({ ...draft, variables: normalizeVars(draft.variables).filter((_, idx) => idx !== i) });
+  const addVar = () => setDraft({
+    ...draft,
+    variables: normalizeVars(draft && draft.variables).concat([{ key: "", value: "", enabled: true, secret: false }])
+  });
+  const removeVar = (i) => setDraft({
+    ...draft,
+    variables: normalizeVars(draft && draft.variables).filter((_, idx) => idx !== i)
+  });
   const setGlobalAt = (i, patch) => {
     const next = globals.slice();
     next[i] = { ...next[i], ...patch };
     setGlobals(next);
+    setNotice("");
   };
   const addGlobal = () => setGlobals(globals.concat([{ key: "", value: "", enabled: true, secret: false }]));
   const removeGlobal = (i) => setGlobals(globals.filter((_, idx) => idx !== i));
   const saveEnv = async () => {
     if (!storage || typeof storage.saveEnvironment !== "function") {
-      setError("\u5F53\u524D\u6865\u672A\u63D0\u4F9B api.storage.saveEnvironment");
+      setError("\u5F53\u524D\u6865\u672A\u63D0\u4F9B api.storage.saveEnvironment\uFF08\u5951\u7EA6 \xA73\uFF09");
       return;
     }
-    if (!String(draft.name || "").trim()) {
+    if (!String(draft && draft.name || "").trim()) {
       setError("\u73AF\u5883\u540D\u4E0D\u80FD\u4E3A\u7A7A");
       return;
     }
     setError("");
+    setNotice("");
     try {
       const payload = { ...draft, variables: normalizeVars(draft.variables) };
       const saved = await storage.saveEnvironment(projectId, payload);
       setNotice("\u5DF2\u4FDD\u5B58\u73AF\u5883\uFF1A" + (saved && saved.name || payload.name));
       await loadProject(projectId);
     } catch (err) {
-      setError("\u4FDD\u5B58\u73AF\u5883\u5931\u8D25\uFF1A" + errText4(err));
+      setError("\u4FDD\u5B58\u73AF\u5883\u5931\u8D25\uFF1A" + errText7(err));
     }
   };
   const removeEnv = async (envId) => {
+    if (!envId) {
+      setError("\u8BF7\u5148\u5728\u5DE6\u4FA7\u9009\u4E2D\u4E00\u4E2A\u73AF\u5883");
+      return;
+    }
+    if (pendingDelete !== envId) {
+      setPendingDelete(envId);
+      setNotice("\u518D\u6B21\u70B9\u51FB\u300C\u786E\u8BA4\u5220\u9664\u73AF\u5883\u300D\u5C06\u5220\u9664\u8BE5\u73AF\u5883");
+      return;
+    }
     if (!storage || typeof storage.deleteEnvironment !== "function") {
-      setError("\u5F53\u524D\u6865\u672A\u63D0\u4F9B api.storage.deleteEnvironment");
+      setError("\u5F53\u524D\u6865\u672A\u63D0\u4F9B api.storage.deleteEnvironment\uFF08\u5951\u7EA6 \xA73\uFF09");
       return;
     }
     setError("");
+    setPendingDelete("");
     try {
       await storage.deleteEnvironment(projectId, envId);
       setNotice("\u5DF2\u5220\u9664\u73AF\u5883\uFF1A" + envId);
       await loadProject(projectId);
     } catch (err) {
-      setError("\u5220\u9664\u73AF\u5883\u5931\u8D25\uFF1A" + errText4(err));
+      setError("\u5220\u9664\u73AF\u5883\u5931\u8D25\uFF1A" + errText7(err));
     }
   };
   const saveGlobals = async () => {
     if (!storage || typeof storage.saveGlobals !== "function") {
-      setError("\u5F53\u524D\u6865\u672A\u63D0\u4F9B api.storage.saveGlobals");
+      setError("\u5F53\u524D\u6865\u672A\u63D0\u4F9B api.storage.saveGlobals\uFF08\u5951\u7EA6 \xA73\uFF09");
       return;
     }
     setError("");
+    setNotice("");
     try {
       await storage.saveGlobals(projectId, { variables: globals });
       setNotice("\u5DF2\u4FDD\u5B58\u5168\u5C40\u53D8\u91CF");
       await loadProject(projectId);
     } catch (err) {
-      setError("\u4FDD\u5B58\u5168\u5C40\u53D8\u91CF\u5931\u8D25\uFF1A" + errText4(err));
+      setError("\u4FDD\u5B58\u5168\u5C40\u53D8\u91CF\u5931\u8D25\uFF1A" + errText7(err));
     }
   };
-  const draftVars = normalizeVars(draft.variables);
-  const varTable2 = (rows, onChange, onRemove) => /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table pp-table-vars" }, /* @__PURE__ */ (0, import_react.createElement)("thead", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, VAR_COLUMNS.map((c) => /* @__PURE__ */ (0, import_react.createElement)("th", { key: c }, c)))), /* @__PURE__ */ (0, import_react.createElement)("tbody", null, rows.map((v, i) => /* @__PURE__ */ (0, import_react.createElement)("tr", { key: i }, /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)(
+  const varTable2 = (rows, onChange, onRemove) => /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table pp-table-vars" }, /* @__PURE__ */ (0, import_react.createElement)("thead", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, VAR_COLUMNS.map((c) => /* @__PURE__ */ (0, import_react.createElement)("th", { key: c.key, style: { width: c.width } }, c.label)))), /* @__PURE__ */ (0, import_react.createElement)("tbody", null, rows.map((v, i) => /* @__PURE__ */ (0, import_react.createElement)("tr", { key: i }, /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)(
     "input",
     {
       className: "pp-input pp-input-sm pp-input-mono",
@@ -3668,19 +4485,21 @@ function EnvPage(props) {
       value: v.value,
       onChange: (e) => onChange(i, { value: e.target.value })
     }
-  )), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("input", { type: "checkbox", checked: v.enabled, onChange: (e) => onChange(i, { enabled: e.target.checked }) })), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("input", { type: "checkbox", checked: v.secret, onChange: (e) => onChange(i, { secret: e.target.checked }) })), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm pp-btn-ghost pp-btn-danger pp-icon-btn", onClick: () => onRemove(i), title: "\u5220\u9664\u8BE5\u53D8\u91CF", "aria-label": "\u5220\u9664\u8BE5\u53D8\u91CF" }, "\xD7")))), rows.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { colSpan: VAR_COLUMNS.length, className: "pp-env-vars-empty" }, "\u6682\u65E0\u53D8\u91CF\uFF0C\u70B9\u4E0B\u65B9\u300C+ \u53D8\u91CF\u300D\u6DFB\u52A0")) : null));
+  )), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("input", { type: "checkbox", checked: v.secret, onChange: (e) => onChange(i, { secret: e.target.checked }) })), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("input", { type: "checkbox", checked: v.enabled, onChange: (e) => onChange(i, { enabled: e.target.checked }) })), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, inferVarType(v.value, v.secret))), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm pp-btn-ghost pp-btn-danger pp-icon-btn", onClick: () => onRemove(i), title: "\u5220\u9664\u8BE5\u53D8\u91CF", "aria-label": "\u5220\u9664\u8BE5\u53D8\u91CF" }, "\xD7")))), rows.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { colSpan: VAR_COLUMNS.length, className: "pp-env-vars-empty" }, "\u6682\u65E0\u53D8\u91CF\uFF0C\u70B9\u4E0B\u65B9\u300C+ \u53D8\u91CF\u300D\u6DFB\u52A0")) : null));
   return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page", "data-page": "env", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-overview-title" }, "\u73AF\u5883\u4E0E\u53D8\u91CF"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-actions" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-meta" }, "\u9879\u76EE"), /* @__PURE__ */ (0, import_react.createElement)(
     "select",
     {
       className: "pp-select",
       value: projectId,
       onChange: (e) => {
-        setProjectId(e.target.value);
-        loadProject(e.target.value);
+        const v = e.target.value;
+        setProjectId(v);
+        loadProject(v);
       }
     },
+    /* @__PURE__ */ (0, import_react.createElement)("option", { value: "" }, projects.length ? "\u8BF7\u9009\u62E9\u9879\u76EE" : "\u6682\u65E0\u9879\u76EE"),
     projects.map((p) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: p.id, value: p.id }, p.name || p.id))
-  ))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-content" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, isMock ? "\u793A\u4F8B\u6570\u636E \u2014 api.storage \u4E0D\u53EF\u7528\uFF0C\u4EE5\u4E0B\u4E3A\u6587\u4EF6\u5185 mock" : "\u6570\u636E\u6765\u6E90\uFF1Aapi.storage\uFF08saveEnvironment / saveGlobals\uFF09")), error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-error-text" }, error) : null, notice ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, notice) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-env-layout" }, /* @__PURE__ */ (0, import_react.createElement)("nav", { className: "pp-panel pp-env-side", "aria-label": "\u73AF\u5883\u5217\u8868" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-env-side-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-card-title" }, "\u73AF\u5883"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm pp-btn-ghost pp-btn-accent", onClick: () => pickEnv(blankEnv()) }, "+ \u65B0\u5EFA")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tree" }, envSummary(envs).map((e) => /* @__PURE__ */ (0, import_react.createElement)(
+  ))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-content" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, isMock ? "\u793A\u4F8B\u6570\u636E \u2014 api.storage \u4E0D\u53EF\u7528\uFF0C\u4EE5\u4E0B\u4E3A\u6587\u4EF6\u5185 mock" : "\u6570\u636E\u6765\u6E90\uFF1Aapi.storage\uFF08getProject / saveEnvironment / saveGlobals / deleteEnvironment\uFF09"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-toolbar-spacer" }), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, envs.length, " \u4E2A\u73AF\u5883 \xB7 ", globals.length, " \u4E2A\u5168\u5C40\u53D8\u91CF")), error ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-note pp-note-bad" }, error) : null, notice ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-note pp-note-ok" }, notice) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-env-layout" }, /* @__PURE__ */ (0, import_react.createElement)("nav", { className: "pp-panel pp-env-side", "aria-label": "\u73AF\u5883\u5217\u8868" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-env-side-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-card-title" }, "\u73AF\u5883"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm pp-btn-ghost pp-btn-accent", onClick: () => pickEnv(blankEnv()) }, "+ \u65B0\u5EFA\u73AF\u5883")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tree" }, envSummary(envs).map((e) => /* @__PURE__ */ (0, import_react.createElement)(
     "div",
     {
       key: e.id,
@@ -3690,7 +4509,7 @@ function EnvPage(props) {
     },
     /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ellipsis" }, e.name, e.isDefault ? " \xB7 \u9ED8\u8BA4" : ""),
     /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-tree-row-count" }, e.varCount)
-  ))), envs.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u6682\u65E0\u73AF\u5883", hint: "\u70B9\u4E0A\u65B9\u300C+ \u65B0\u5EFA\u300D\u521B\u5EFA\u7B2C\u4E00\u4E2A\u73AF\u5883" }) : null), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-env-main" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tabs" }, ENV_TABS.map((t) => /* @__PURE__ */ (0, import_react.createElement)(
+  ))), envs.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u6682\u65E0\u73AF\u5883", hint: "\u70B9\u4E0A\u65B9\u300C+ \u65B0\u5EFA\u73AF\u5883\u300D\u521B\u5EFA\u7B2C\u4E00\u4E2A\u73AF\u5883" }) : null), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-env-main" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tabs" }, ENV_TABS.map((t) => /* @__PURE__ */ (0, import_react.createElement)(
     "button",
     {
       key: t.id,
@@ -3699,25 +4518,25 @@ function EnvPage(props) {
       onClick: () => setEnvTab(t.id)
     },
     t.label
-  ))), envTab === "env" ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-env-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-env-fields" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-env-field" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u540D\u79F0"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-env-field-row" }, /* @__PURE__ */ (0, import_react.createElement)(
+  ))), envTab === "env" ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-env-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-env-fields" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-env-field" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u73AF\u5883\u540D"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-env-field-row" }, /* @__PURE__ */ (0, import_react.createElement)(
     "input",
     {
       className: "pp-input",
-      value: draft.name || "",
+      value: draft && draft.name || "",
       onChange: (e) => patchDraft({ name: e.target.value })
     }
   ), /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-env-check" }, /* @__PURE__ */ (0, import_react.createElement)(
     "input",
     {
       type: "checkbox",
-      checked: draft.isDefault === true,
+      checked: Boolean(draft && draft.isDefault),
       onChange: (e) => patchDraft({ isDefault: e.target.checked })
     }
   ), /* @__PURE__ */ (0, import_react.createElement)("span", null, "\u8BBE\u4E3A\u9ED8\u8BA4")))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-env-field" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u524D\u7F6E URL"), /* @__PURE__ */ (0, import_react.createElement)(
     "input",
     {
       className: "pp-input pp-input-mono",
-      value: draft.baseUrl || "",
+      value: draft && draft.baseUrl || "",
       placeholder: "https://api.example.com\uFF08\u672B\u5C3E\u4E0D\u52A0\u659C\u6760\uFF09",
       onChange: (e) => patchDraft({ baseUrl: e.target.value })
     }
@@ -3726,10 +4545,10 @@ function EnvPage(props) {
     {
       className: "pp-btn pp-btn-sm pp-btn-danger",
       style: { marginLeft: "auto" },
-      onClick: () => removeEnv(draft.id || "")
+      onClick: () => removeEnv(draft && draft.id)
     },
-    "\u5220\u9664\u73AF\u5883"
-  )), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-meta", style: { marginTop: "var(--sp-2)" } }, "\u4EC5\u542F\u7528\u7684\u53D8\u91CF\u53C2\u4E0E ", "{{key}}", " \u66FF\u6362\uFF1B\u5BC6\u94A5\u53D8\u91CF\u4EE5\u5BC6\u7801\u663E\u793A")) : null, envTab === "globals" ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-env-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u5168\u5C40\u53D8\u91CF"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, varTable2(globals, setGlobalAt, removeGlobal)), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm", onClick: addGlobal }, "+ \u53D8\u91CF"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm pp-btn-primary", onClick: saveGlobals }, "\u4FDD\u5B58\u5168\u5C40")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-meta", style: { marginTop: "var(--sp-2)" } }, "\u8DE8\u73AF\u5883\u5171\u7528\uFF1B\u4E0E\u540C\u540D\u73AF\u5883\u53D8\u91CF\u5E76\u5B58\u65F6\u73AF\u5883\u4F18\u5148")) : null, envTab === "priority" ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-env-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u53D8\u91CF\u4F18\u5148\u7EA7"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-priority-list" }, priorityRows().map((r, i) => /* @__PURE__ */ (0, import_react.createElement)("div", { key: r.level, className: "pp-priority-item" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-priority-level" }, i + 1), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-priority-body" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-priority-scope" }, r.scope), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-priority-note" }, r.note))))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-meta", style: { marginTop: "var(--sp-3)" } }, "\u540C\u540D\u53D8\u91CF\u6309\u6B64\u987A\u5E8F\u53D6\u7B2C\u4E00\u4E2A\u547D\u4E2D\u7684\u503C\uFF1B\u8D8A\u9760\u4E0A\u4F18\u5148\u7EA7\u8D8A\u9AD8")) : null))));
+    pendingDelete && draft && pendingDelete === draft.id ? "\u786E\u8BA4\u5220\u9664\u73AF\u5883" : "\u5220\u9664\u73AF\u5883"
+  )), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-meta", style: { marginTop: "var(--sp-2)" } }, "\u4EC5\u542F\u7528\u7684\u53D8\u91CF\u53C2\u4E0E ", "{{key}}", " \u66FF\u6362\uFF1B\u5BC6\u94A5\u53D8\u91CF\u4EE5\u5BC6\u7801\u663E\u793A\u3002\u300C\u7C7B\u578B\u300D\u6309\u503C\u63A8\u65AD\u53EA\u8BFB\u5C55\u793A\uFF0C Apifox \u7684\u300C\u521D\u59CB\u503C / \u5F53\u524D\u503C\u300D\u5728\u672C\u63D2\u4EF6\u5951\u7EA6\u91CC\u5408\u5E76\u4E3A\u300C\u503C\u300D\u4E00\u5217\uFF08\u5355\u4E00\u5B58\u50A8\u503C\uFF09\u3002")) : null, envTab === "globals" ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-env-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u5168\u5C40\u53D8\u91CF"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, varTable2(globals, setGlobalAt, removeGlobal)), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm", onClick: addGlobal }, "+ \u53D8\u91CF"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm pp-btn-primary", onClick: saveGlobals }, "\u4FDD\u5B58\u5168\u5C40")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-meta", style: { marginTop: "var(--sp-2)" } }, "\u8DE8\u73AF\u5883\u5171\u7528\uFF1B\u4E0E\u540C\u540D\u73AF\u5883\u53D8\u91CF\u5E76\u5B58\u65F6\u73AF\u5883\u4F18\u5148")) : null, envTab === "priority" ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-env-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u53D8\u91CF\u4F18\u5148\u7EA7"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-priority-list" }, priorityRows().map((r, i) => /* @__PURE__ */ (0, import_react.createElement)("div", { key: r.level, className: "pp-priority-item" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-priority-level" }, i + 1), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-priority-body" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-priority-scope" }, r.scope), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-priority-note" }, r.note))))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-meta", style: { marginTop: "var(--sp-3)" } }, "\u540C\u540D\u53D8\u91CF\u6309\u6B64\u987A\u5E8F\u53D6\u7B2C\u4E00\u4E2A\u547D\u4E2D\u7684\u503C\uFF1B\u8D8A\u9760\u4E0A\u4F18\u5148\u7EA7\u8D8A\u9AD8")) : null))));
 }
 
 // src/client/pages/history.jsx
@@ -3738,7 +4557,7 @@ var import_react14 = __toESM(require("react"), 1);
 var REPLAY_KEY2 = "postapi.debug.replay";
 var MOCK_ENTRIES = [
   {
-    id: "his_1001",
+    id: "his_sample01",
     at: "2026-11-17T10:20:11.000Z",
     method: "GET",
     url: "http://127.0.0.1:8080/api/v1/orders?page=1",
@@ -3749,7 +4568,7 @@ var MOCK_ENTRIES = [
     response: { status: 200, headers: { "content-type": "application/json" }, body: '{\n  "code": 0\n}' }
   },
   {
-    id: "his_1002",
+    id: "his_sample02",
     at: "2026-11-17T09:05:03.000Z",
     method: "POST",
     url: "http://127.0.0.1:8080/api/v1/orders",
@@ -3791,26 +4610,42 @@ function replayPayload(entry) {
     body: typeof req.body === "string" ? req.body : ""
   };
 }
-function errText5(err) {
+function matchesMethod(entry, method) {
+  if (!method) return true;
+  return String(entry && entry.method || "").toUpperCase() === String(method).toUpperCase();
+}
+function errText8(err) {
   return err && err.message ? err.message : String(err);
 }
+var METHODS3 = ["", "GET", "POST", "PUT", "DELETE", "PATCH"];
 function HistoryPage(props) {
   const rootRef = (0, import_react14.useRef)(null);
   const api = props && props.api || (typeof window !== "undefined" ? window.__postapiApi : void 0);
   const storage = api && api.storage;
-  const [projects, setProjects] = (0, import_react14.useState)([{ id: "proj_demo01", name: "\u8BA2\u5355\u4E2D\u5FC3" }]);
-  const [projectId, setProjectId] = (0, import_react14.useState)("proj_demo01");
-  const [entries, setEntries] = (0, import_react14.useState)(MOCK_ENTRIES);
+  const [projects, setProjects] = (0, import_react14.useState)([]);
+  const [projectId, setProjectId] = (0, import_react14.useState)("");
+  const [entries, setEntries] = (0, import_react14.useState)([]);
   const [isMock, setIsMock] = (0, import_react14.useState)(true);
   const [error, setError] = (0, import_react14.useState)("");
   const [notice, setNotice] = (0, import_react14.useState)("");
   const [detailId, setDetailId] = (0, import_react14.useState)("");
   const [pendingClear, setPendingClear] = (0, import_react14.useState)(false);
-  (0, import_react14.useEffect)(() => applyTheme(rootRef.current), []);
+  const [method, setMethod] = (0, import_react14.useState)("");
+  (0, import_react14.useEffect)(() => {
+    applyTheme(rootRef.current);
+  }, []);
+  const applyMock = () => {
+    setIsMock(true);
+    setProjects([{ id: "history_sample_project", name: "\u793A\u4F8B\u9879\u76EE" }]);
+    setEntries(MOCK_ENTRIES);
+  };
   const load = async (id) => {
     if (!storage || typeof storage.getHistory !== "function") {
-      setIsMock(true);
-      setEntries(MOCK_ENTRIES);
+      applyMock();
+      return;
+    }
+    if (!id) {
+      setEntries([]);
       return;
     }
     try {
@@ -3820,25 +4655,27 @@ function HistoryPage(props) {
       setIsMock(false);
       setError("");
     } catch (err) {
-      setError("\u52A0\u8F7D\u5386\u53F2\u5931\u8D25\uFF1A" + errText5(err));
+      setError("\u52A0\u8F7D\u5386\u53F2\u5931\u8D25\uFF1A" + errText8(err));
     }
   };
   (0, import_react14.useEffect)(() => {
     const boot = async () => {
-      if (storage && typeof storage.listProjects === "function") {
-        try {
-          const list = await storage.listProjects();
-          if (Array.isArray(list) && list.length > 0) {
-            setProjects(list);
-            setProjectId(list[0].id);
-            await load(list[0].id);
-            return;
-          }
-        } catch (err) {
-          setError("\u52A0\u8F7D\u9879\u76EE\u5217\u8868\u5931\u8D25\uFF1A" + errText5(err));
-        }
+      if (!storage || typeof storage.listProjects !== "function") {
+        applyMock();
+        return;
       }
-      setIsMock(true);
+      try {
+        const list = await storage.listProjects();
+        if (Array.isArray(list) && list.length > 0) {
+          setProjects(list);
+          setProjectId(list[0].id);
+          await load(list[0].id);
+          return;
+        }
+        setIsMock(false);
+      } catch (err) {
+        setError("\u52A0\u8F7D\u9879\u76EE\u5217\u8868\u5931\u8D25\uFF1A" + errText8(err));
+      }
     };
     boot();
   }, []);
@@ -3847,7 +4684,7 @@ function HistoryPage(props) {
       localStorage.setItem(REPLAY_KEY2, JSON.stringify(replayPayload(entry)));
       setNotice("\u5DF2\u5199\u5165\u56DE\u653E\u5FEB\u7167\uFF08" + REPLAY_KEY2 + "\uFF09\uFF0C\u5207\u5230\u8C03\u8BD5\u9875\u540E\u6309\u6B64\u5FEB\u7167\u91CD\u53D1");
     } catch (err) {
-      setError("\u5199\u5165\u56DE\u653E\u5FEB\u7167\u5931\u8D25\uFF1A" + errText5(err));
+      setError("\u5199\u5165\u56DE\u653E\u5FEB\u7167\u5931\u8D25\uFF1A" + errText8(err));
       return;
     }
     window.location.hash = "#/debug";
@@ -3859,7 +4696,7 @@ function HistoryPage(props) {
       return;
     }
     if (!storage || typeof storage.clearHistory !== "function") {
-      setError("\u5F53\u524D\u6865\u672A\u63D0\u4F9B api.storage.clearHistory");
+      setError("\u5F53\u524D\u6865\u672A\u63D0\u4F9B api.storage.clearHistory\uFF08\u5951\u7EA6 \xA73\uFF09");
       return;
     }
     setPendingClear(false);
@@ -3867,11 +4704,13 @@ function HistoryPage(props) {
     try {
       const res = await storage.clearHistory(projectId);
       setNotice("\u5DF2\u6E05\u7A7A\u5386\u53F2\uFF1A" + (res && res.cleared || 0) + " \u6761");
+      setDetailId("");
       await load(projectId);
     } catch (err) {
-      setError("\u6E05\u7A7A\u5386\u53F2\u5931\u8D25\uFF1A" + errText5(err));
+      setError("\u6E05\u7A7A\u5386\u53F2\u5931\u8D25\uFF1A" + errText8(err));
     }
   };
+  const rows = entries.filter((e) => matchesMethod(e, method));
   const detail = entries.find((e) => e.id === detailId);
   return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page", "data-page": "history", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-overview-title" }, "\u8BF7\u6C42\u5386\u53F2"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-actions" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-meta" }, "\u9879\u76EE"), /* @__PURE__ */ (0, import_react.createElement)(
     "select",
@@ -3879,12 +4718,34 @@ function HistoryPage(props) {
       className: "pp-select",
       value: projectId,
       onChange: (e) => {
-        setProjectId(e.target.value);
-        load(e.target.value);
+        const v = e.target.value;
+        setProjectId(v);
+        load(v);
       }
     },
+    /* @__PURE__ */ (0, import_react.createElement)("option", { value: "" }, projects.length ? "\u8BF7\u9009\u62E9\u9879\u76EE" : "\u6682\u65E0\u9879\u76EE"),
     projects.map((p) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: p.id, value: p.id }, p.name || p.id))
-  ), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: () => load(projectId) }, "\u5237\u65B0"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-danger", onClick: clear }, pendingClear ? "\u786E\u8BA4\u6E05\u7A7A" : "\u6E05\u7A7A\u5386\u53F2"))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-content" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, isMock ? "\u793A\u4F8B\u6570\u636E \u2014 api.storage.getHistory \u4E0D\u53EF\u7528\uFF0C\u4EE5\u4E0B\u4E3A\u6587\u4EF6\u5185 mock" : "\u6570\u636E\u6765\u6E90\uFF1Aapi.storage\uFF08getHistory / clearHistory\uFF09")), error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-error-text" }, error) : null, notice ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, notice) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table" }, /* @__PURE__ */ (0, import_react.createElement)("thead", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "150px" } }, "\u65F6\u95F4"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "80px" } }, "\u65B9\u6CD5"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "URL"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "70px" } }, "\u72B6\u6001"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "80px" } }, "\u8017\u65F6"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "90px" } }, "\u5927\u5C0F"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "130px" } }, "\u64CD\u4F5C"))), /* @__PURE__ */ (0, import_react.createElement)("tbody", null, entries.map((e) => /* @__PURE__ */ (0, import_react.createElement)("tr", { key: e.id, "data-active": detailId === e.id ? "true" : "false" }, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, fmtDateTime(e.at)), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": e.method }, e.method)), /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-table-mono pp-ellipsis" }, e.url), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("span", { className: pillClass(statusTone(e.status)) }, e.status)), /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, e.timeMs, " ms"), /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, fmtSize(e.bodySize)), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm", onClick: () => setDetailId(detailId === e.id ? "" : e.id) }, "\u8BE6\u60C5"), " ", /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm", onClick: () => replay(e) }, "\u56DE\u653E")))), entries.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { colSpan: 7, className: "pp-muted" }, "\u6682\u65E0\u5386\u53F2\u8BB0\u5F55\uFF0C\u5728\u8C03\u8BD5\u9875\u53D1\u9001\u8BF7\u6C42\u540E\u81EA\u52A8\u8BB0\u5F55")) : null)))), detail ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u8BE6\u60C5 \xB7 ", detail.id), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, "\u72B6\u6001"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: pillClass(statusTone(detail.status)) }, detail.status), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, "\u8017\u65F6 ", detail.timeMs, " ms"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, "\u5927\u5C0F ", fmtSize(detail.bodySize))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-meta", style: { marginTop: "var(--sp-2)" } }, "\u8BF7\u6C42"), /* @__PURE__ */ (0, import_react.createElement)("pre", { className: "pp-pre pp-pre-scroll" }, JSON.stringify(detail.request || {}, null, 2)), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-meta", style: { marginTop: "var(--sp-2)" } }, "\u54CD\u5E94"), /* @__PURE__ */ (0, import_react.createElement)("pre", { className: "pp-pre pp-pre-scroll" }, JSON.stringify(detail.response || {}, null, 2))) : null));
+  ), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: () => load(projectId) }, "\u5237\u65B0"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-danger", onClick: clear }, pendingClear ? "\u786E\u8BA4\u6E05\u7A7A" : "\u6E05\u7A7A\u5386\u53F2"))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-content" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, isMock ? "\u793A\u4F8B\u6570\u636E \u2014 api.storage.getHistory \u4E0D\u53EF\u7528\uFF0C\u4EE5\u4E0B\u4E3A\u6587\u4EF6\u5185 mock" : "\u6570\u636E\u6765\u6E90\uFF1Aapi.storage\uFF08getHistory / clearHistory\uFF09"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-toolbar-spacer" }), /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-meta" }, "\u65B9\u6CD5"), /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select pp-input-sm", value: method, onChange: (e) => setMethod(e.target.value) }, METHODS3.map((m) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: m || "all", value: m }, m || "\u5168\u90E8"))), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, rows.length, " / ", entries.length, " \u6761")), error ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-note pp-note-bad" }, error) : null, notice ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-note pp-note-ok" }, notice) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table" }, /* @__PURE__ */ (0, import_react.createElement)("thead", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "150px" } }, "\u65F6\u95F4"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "80px" } }, "\u65B9\u6CD5"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "URL"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "70px" } }, "\u72B6\u6001"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "80px" } }, "\u8017\u65F6"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "90px" } }, "\u5927\u5C0F"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "110px" } }, "\u64CD\u4F5C"))), /* @__PURE__ */ (0, import_react.createElement)("tbody", null, rows.map((e) => /* @__PURE__ */ (0, import_react.createElement)(
+    "tr",
+    {
+      key: e.id,
+      "data-active": detailId === e.id ? "true" : "false",
+      onClick: () => setDetailId(detailId === e.id ? "" : e.id)
+    },
+    /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, fmtDateTime(e.at)),
+    /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": e.method }, e.method)),
+    /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-table-mono pp-ellipsis" }, e.url),
+    /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("span", { className: pillClass(statusTone(e.status)) }, e.status)),
+    /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, e.timeMs, " ms"),
+    /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, fmtSize(e.bodySize)),
+    /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm", onClick: (ev) => {
+      if (ev && ev.stopPropagation) ev.stopPropagation();
+      setDetailId(detailId === e.id ? "" : e.id);
+    } }, "\u8BE6\u60C5"), " ", /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm", onClick: (ev) => {
+      if (ev && ev.stopPropagation) ev.stopPropagation();
+      replay(e);
+    } }, "\u56DE\u653E"))
+  )), rows.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { colSpan: 7, className: "pp-muted" }, "\u6682\u65E0\u5386\u53F2\u8BB0\u5F55\uFF0C\u5728\u8C03\u8BD5\u9875\u53D1\u9001\u8BF7\u6C42\u540E\u81EA\u52A8\u8BB0\u5F55")) : null)))), detail ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u8BE6\u60C5 \xB7 ", detail.id), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, "\u72B6\u6001"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: pillClass(statusTone(detail.status)) }, detail.status), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, "\u8017\u65F6 ", detail.timeMs, " ms"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, "\u5927\u5C0F ", fmtSize(detail.bodySize)), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-toolbar-spacer" }), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm", onClick: () => replay(detail) }, "\u56DE\u586B\u5230\u8C03\u8BD5\u9875")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-meta", style: { marginTop: "var(--sp-2)" } }, "\u8BF7\u6C42"), /* @__PURE__ */ (0, import_react.createElement)("pre", { className: "pp-pre pp-pre-scroll" }, JSON.stringify(detail.request || {}, null, 2)), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-meta", style: { marginTop: "var(--sp-2)" } }, "\u54CD\u5E94"), /* @__PURE__ */ (0, import_react.createElement)("pre", { className: "pp-pre pp-pre-scroll" }, JSON.stringify(detail.response || {}, null, 2))) : /* @__PURE__ */ (0, import_react.createElement)("div", { style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u9009\u4E2D\u4E00\u884C\u67E5\u770B\u8BF7\u6C42\u4E0E\u54CD\u5E94\u8BE6\u60C5", hint: "\u70B9\u8868\u683C\u4EFB\u610F\u4E00\u884C\uFF0C\u6216\u5728\u300C\u64CD\u4F5C\u300D\u5217\u70B9\u300C\u8BE6\u60C5\u300D" }))));
 }
 
 // src/client/pages/test.jsx
@@ -3894,17 +4755,17 @@ var OPS = ["eq", "neq", "gt", "lt", "contains", "notContains", "exists", "notExi
 var SOURCES = ["status", "body", "header", "time"];
 var MOCK_CASES = [
   {
-    id: "tc_1001",
+    id: "tc_sample01",
     name: "\u8BA2\u5355\u5217\u8868\u8FD4\u56DE 200",
-    endpointId: "ep_1001",
+    endpointId: "ep_sample01",
     assertions: [{ source: "status", path: "", op: "eq", value: "200", message: "\u72B6\u6001\u7801\u5E94\u4E3A 200" }],
     extractors: [],
     lastResult: null
   },
   {
-    id: "tc_1002",
+    id: "tc_sample02",
     name: "\u521B\u5EFA\u8BA2\u5355\u8FD4\u56DE orderId",
-    endpointId: "ep_1002",
+    endpointId: "ep_sample02",
     assertions: [{ source: "body", path: "data.orderId", op: "exists", value: "", message: "body \u5E94\u542B orderId" }],
     extractors: [{ name: "orderId", path: "data.orderId" }],
     lastResult: null
@@ -3912,14 +4773,18 @@ var MOCK_CASES = [
 ];
 var MOCK_SCENARIOS = [
   {
-    id: "ts_1001",
+    id: "ts_sample01",
     name: "\u4E0B\u5355\u4E3B\u6D41\u7A0B",
     lastRun: null,
     steps: [
-      { id: "stp_01", name: "\u521B\u5EFA\u8BA2\u5355", endpointId: "ep_1002", override: {}, extract: [{ name: "orderId", path: "data.orderId" }] },
-      { id: "stp_02", name: "\u67E5\u8BE2\u8BA2\u5355", endpointId: "ep_1001", override: {}, extract: [] }
+      { id: "stp_sample01", name: "\u521B\u5EFA\u8BA2\u5355", endpointId: "ep_sample02", override: {}, extract: [{ name: "orderId", path: "data.orderId" }] },
+      { id: "stp_sample02", name: "\u67E5\u8BE2\u8BA2\u5355", endpointId: "ep_sample01", override: {}, extract: [] }
     ]
   }
+];
+var MOCK_ENDPOINTS = [
+  { id: "ep_sample01", name: "\u67E5\u8BE2\u8BA2\u5355\u5217\u8868", method: "GET", url: "/api/v1/orders" },
+  { id: "ep_sample02", name: "\u521B\u5EFA\u8BA2\u5355", method: "POST", url: "/api/v1/orders" }
 ];
 function summarizeResult(res) {
   const results = res && Array.isArray(res.results) ? res.results : [];
@@ -3945,6 +4810,9 @@ function normalizeAssertions(list) {
     message: String(a.message || "")
   }));
 }
+function normalizeExtractors(list) {
+  return (Array.isArray(list) ? list : []).filter((x) => x && typeof x === "object").map((x) => ({ name: String(x.name || ""), path: String(x.path || "") }));
+}
 function casesOf(project) {
   const p = project && typeof project === "object" ? project : {};
   const settings = p.settings && typeof p.settings === "object" ? p.settings : {};
@@ -3957,64 +4825,89 @@ function scenariosOf(project) {
   const src = Array.isArray(p.testScenarios) ? p.testScenarios : Array.isArray(settings.testScenarios) ? settings.testScenarios : [];
   return src.filter((s) => s && typeof s === "object");
 }
-function errText6(err) {
+function errText9(err) {
   return err && err.message ? err.message : String(err);
 }
 function TestPage(props) {
   const rootRef = (0, import_react15.useRef)(null);
   const api = props && props.api || (typeof window !== "undefined" ? window.__postapiApi : void 0);
   const storage = api && api.storage;
-  const [projects, setProjects] = (0, import_react15.useState)([{ id: "proj_demo01", name: "\u8BA2\u5355\u4E2D\u5FC3" }]);
-  const [projectId, setProjectId] = (0, import_react15.useState)("proj_demo01");
-  const [project, setProject] = (0, import_react15.useState)({ endpoints: [] });
-  const [cases, setCases] = (0, import_react15.useState)(MOCK_CASES);
-  const [scenarios, setScenarios] = (0, import_react15.useState)(MOCK_SCENARIOS);
+  const [projects, setProjects] = (0, import_react15.useState)([]);
+  const [projectId, setProjectId] = (0, import_react15.useState)("");
+  const [project, setProject] = (0, import_react15.useState)(null);
+  const [cases, setCases] = (0, import_react15.useState)([]);
+  const [scenarios, setScenarios] = (0, import_react15.useState)([]);
   const [isMock, setIsMock] = (0, import_react15.useState)(true);
   const [error, setError] = (0, import_react15.useState)("");
   const [notice, setNotice] = (0, import_react15.useState)("");
   const [tab, setTab] = (0, import_react15.useState)("cases");
-  const [activeCaseId, setActiveCaseId] = (0, import_react15.useState)(MOCK_CASES[0].id);
-  const [activeScenarioId, setActiveScenarioId] = (0, import_react15.useState)(MOCK_SCENARIOS[0].id);
+  const [activeCaseId, setActiveCaseId] = (0, import_react15.useState)("");
+  const [activeScenarioId, setActiveScenarioId] = (0, import_react15.useState)("");
   const [result, setResult] = (0, import_react15.useState)(null);
   const [running, setRunning] = (0, import_react15.useState)(false);
-  (0, import_react15.useEffect)(() => applyTheme(rootRef.current), []);
+  (0, import_react15.useEffect)(() => {
+    applyTheme(rootRef.current);
+  }, []);
+  const applyMock = () => {
+    setIsMock(true);
+    setProjects([{ id: "test_sample_project", name: "\u793A\u4F8B\u9879\u76EE" }]);
+    setProject({ endpoints: MOCK_ENDPOINTS });
+    setCases(MOCK_CASES);
+    setScenarios(MOCK_SCENARIOS);
+    setActiveCaseId(MOCK_CASES[0].id);
+    setActiveScenarioId(MOCK_SCENARIOS[0].id);
+  };
   const loadProject = async (id) => {
     if (!storage || typeof storage.getProject !== "function") {
-      setIsMock(true);
+      applyMock();
+      return;
+    }
+    if (!id) {
+      setCases([]);
+      setScenarios([]);
       return;
     }
     try {
       const loaded = await storage.getProject(id);
-      if (loaded) {
-        setProject(loaded);
-        setCases(casesOf(loaded));
-        setScenarios(scenariosOf(loaded));
-        setIsMock(false);
+      if (!loaded) {
+        setCases([]);
+        setScenarios([]);
+        return;
       }
+      setProject(loaded);
+      const cs = casesOf(loaded);
+      const ss = scenariosOf(loaded);
+      setCases(cs);
+      setScenarios(ss);
+      setActiveCaseId((prev) => cs.some((c) => c.id === prev) ? prev : cs[0] ? cs[0].id : "");
+      setActiveScenarioId((prev) => ss.some((s) => s.id === prev) ? prev : ss[0] ? ss[0].id : "");
+      setIsMock(false);
     } catch (err) {
-      setError("\u52A0\u8F7D\u9879\u76EE\u5931\u8D25\uFF1A" + errText6(err));
+      setError("\u52A0\u8F7D\u9879\u76EE\u5931\u8D25\uFF1A" + errText9(err));
     }
   };
   (0, import_react15.useEffect)(() => {
     const boot = async () => {
-      if (storage && typeof storage.listProjects === "function") {
-        try {
-          const list = await storage.listProjects();
-          if (Array.isArray(list) && list.length > 0) {
-            setProjects(list);
-            setProjectId(list[0].id);
-            await loadProject(list[0].id);
-            return;
-          }
-        } catch (err) {
-          setError("\u52A0\u8F7D\u9879\u76EE\u5217\u8868\u5931\u8D25\uFF1A" + errText6(err));
-        }
+      if (!storage || typeof storage.listProjects !== "function") {
+        applyMock();
+        return;
       }
-      setIsMock(true);
+      try {
+        const list = await storage.listProjects();
+        if (Array.isArray(list) && list.length > 0) {
+          setProjects(list);
+          setProjectId(list[0].id);
+          await loadProject(list[0].id);
+          return;
+        }
+        setIsMock(false);
+      } catch (err) {
+        setError("\u52A0\u8F7D\u9879\u76EE\u5217\u8868\u5931\u8D25\uFF1A" + errText9(err));
+      }
     };
     boot();
   }, []);
-  const endpoints = Array.isArray(project.endpoints) ? project.endpoints : [];
+  const endpoints = Array.isArray(project && project.endpoints) ? project.endpoints : [];
   const activeCase = cases.find((c) => c.id === activeCaseId) || null;
   const activeScenario = scenarios.find((s) => s.id === activeScenarioId) || null;
   const patchCase = (patch) => {
@@ -4032,6 +4925,33 @@ function TestPage(props) {
   const removeAssertion = (i) => patchCase({
     assertions: normalizeAssertions(activeCase && activeCase.assertions).filter((_, idx) => idx !== i)
   });
+  const patchExtractor = (i, patch) => {
+    const next = normalizeExtractors(activeCase && activeCase.extractors);
+    next[i] = { ...next[i], ...patch };
+    patchCase({ extractors: next });
+  };
+  const addExtractor = () => patchCase({
+    extractors: normalizeExtractors(activeCase && activeCase.extractors).concat([{ name: "", path: "" }])
+  });
+  const removeExtractor = (i) => patchCase({
+    extractors: normalizeExtractors(activeCase && activeCase.extractors).filter((_, idx) => idx !== i)
+  });
+  const newCase = () => {
+    const id = "tc_" + Date.now().toString(36);
+    const created = {
+      id,
+      name: "\u65B0\u7528\u4F8B",
+      endpointId: endpoints[0] && endpoints[0].id || "",
+      assertions: [],
+      extractors: [],
+      lastResult: null
+    };
+    setCases(cases.concat([created]));
+    setActiveCaseId(id);
+    setTab("cases");
+    setResult(null);
+    setNotice("\u5DF2\u65B0\u5EFA\u7528\u4F8B\uFF08\u70B9\u300C\u4FDD\u5B58\u7528\u4F8B\u4E0E\u573A\u666F\u300D\u843D\u76D8\uFF09");
+  };
   const patchScenario = (patch) => {
     setScenarios(scenarios.map((s) => s.id === activeScenarioId ? { ...s, ...patch } : s));
     setNotice("");
@@ -4060,27 +4980,39 @@ function TestPage(props) {
     const steps = (activeScenario && Array.isArray(activeScenario.steps) ? activeScenario.steps : []).filter((_, idx) => idx !== i);
     patchScenario({ steps });
   };
+  const newScenario = () => {
+    const id = "ts_" + Date.now().toString(36);
+    setScenarios(scenarios.concat([{ id, name: "\u65B0\u573A\u666F", steps: [], lastRun: null }]));
+    setActiveScenarioId(id);
+    setTab("scenarios");
+    setResult(null);
+    setNotice("\u5DF2\u65B0\u5EFA\u573A\u666F\uFF08\u70B9\u300C\u4FDD\u5B58\u7528\u4F8B\u4E0E\u573A\u666F\u300D\u843D\u76D8\uFF09");
+  };
   const persist = async () => {
     if (!storage || typeof storage.saveProjectSettings !== "function") {
       setError("\u5F53\u524D\u6865\u672A\u63D0\u4F9B\u6301\u4E45\u5316\u5165\u53E3\uFF08saveProjectSettings\uFF09\uFF0C\u7528\u4F8B\u4E0E\u573A\u666F\u4EC5\u505C\u7559\u5728\u9875\u9762\u5185");
       return false;
     }
     setError("");
+    setNotice("");
     try {
       await storage.saveProjectSettings(projectId, {
-        ...project.settings || {},
+        ...project && project.settings || {},
         testCases: cases,
         testScenarios: scenarios
       });
       setNotice("\u5DF2\u4FDD\u5B58\u7528\u4F8B\u4E0E\u573A\u666F\uFF08\u843D\u5728 project.settings.testCases / testScenarios\uFF09");
       return true;
     } catch (err) {
-      setError("\u4FDD\u5B58\u7528\u4F8B\u4E0E\u573A\u666F\u5931\u8D25\uFF1A" + errText6(err));
+      setError("\u4FDD\u5B58\u7528\u4F8B\u4E0E\u573A\u666F\u5931\u8D25\uFF1A" + errText9(err));
       return false;
     }
   };
   const runCase = async () => {
-    if (!activeCase) return;
+    if (!activeCase) {
+      setError("\u8BF7\u5148\u5728\u5DE6\u4FA7\u9009\u4E00\u4E2A\u7528\u4F8B");
+      return;
+    }
     if (!api || !api.test || typeof api.test.runCase !== "function") {
       setError("\u5F53\u524D\u6865\u672A\u63D0\u4F9B api.test.runCase\uFF08\u5951\u7EA6 \xA75 POST /test/runCase\uFF09");
       return;
@@ -4092,13 +5024,16 @@ function TestPage(props) {
       const res = await api.test.runCase(projectId, activeCase.id);
       setResult({ kind: "case", name: activeCase.name, ...summarizeResult(res) });
     } catch (err) {
-      setError("\u8FD0\u884C\u7528\u4F8B\u5931\u8D25\uFF1A" + errText6(err));
+      setError("\u8FD0\u884C\u7528\u4F8B\u5931\u8D25\uFF1A" + errText9(err));
     } finally {
       setRunning(false);
     }
   };
   const runScenario = async () => {
-    if (!activeScenario) return;
+    if (!activeScenario) {
+      setError("\u8BF7\u5148\u5728\u5DE6\u4FA7\u9009\u4E00\u4E2A\u573A\u666F");
+      return;
+    }
     if (!api || !api.test || typeof api.test.runScenario !== "function") {
       setError("\u5F53\u524D\u6865\u672A\u63D0\u4F9B api.test.runScenario\uFF08\u5951\u7EA6 \xA75 POST /test/runScenario\uFF09");
       return;
@@ -4110,45 +5045,80 @@ function TestPage(props) {
       const res = await api.test.runScenario(projectId, activeScenario.id);
       setResult({ kind: "scenario", name: activeScenario.name, ...summarizeResult(res) });
     } catch (err) {
-      setError("\u8FD0\u884C\u573A\u666F\u5931\u8D25\uFF1A" + errText6(err));
+      setError("\u8FD0\u884C\u573A\u666F\u5931\u8D25\uFF1A" + errText9(err));
     } finally {
       setRunning(false);
     }
   };
   const caseAssertions = normalizeAssertions(activeCase && activeCase.assertions);
-  const resultPanel = (emptyHint) => /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u8FD0\u884C\u7ED3\u679C"), result ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: result.passed ? "pp-pill pp-pill-ok" : "pp-pill pp-pill-bad" }, result.passed ? "\u901A\u8FC7" : "\u5931\u8D25"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, result.passedCount, "/", result.total), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, result.durationMs, " ms")), result.error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-error-text" }, result.error) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-list", style: { marginTop: "var(--sp-2)" } }, result.rows.map((r, i) => /* @__PURE__ */ (0, import_react.createElement)("div", { key: i, className: "pp-result-row" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ellipsis" }, r.name || r.id || "-"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: r.passed ? "pp-pill pp-pill-ok" : "pp-pill pp-pill-bad", style: { marginLeft: "auto" } }, r.passed ? "\u901A\u8FC7" : "\u5931\u8D25"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta pp-ellipsis" }, r.error || "-"))), result.rows.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-result-row pp-meta" }, "\u65E0\u65AD\u8A00\u7ED3\u679C") : null)) : /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: emptyHint }));
+  const caseExtractors = normalizeExtractors(activeCase && activeCase.extractors);
+  const boundEndpoint = endpoints.find((ep) => activeCase && ep.id === activeCase.endpointId) || null;
+  const preSteps = Array.isArray(boundEndpoint && boundEndpoint.preProcessors) ? boundEndpoint.preProcessors : [];
+  const resultPanel = (emptyHint) => /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u8FD0\u884C\u7ED3\u679C"), result ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: result.passed ? "pp-pill pp-pill-ok" : "pp-pill pp-pill-bad" }, result.passed ? "\u901A\u8FC7" : "\u5931\u8D25"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, result.passedCount, "/", result.total), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, result.durationMs, " ms"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, result.kind === "case" ? "\u5355\u63A5\u53E3\u7528\u4F8B" : "\u81EA\u52A8\u5316\u573A\u666F", " \xB7 ", result.name || "-")), result.error ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-note pp-note-bad", style: { marginTop: "var(--sp-2)" } }, result.error) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-list", style: { marginTop: "var(--sp-2)" } }, result.rows.map((r, i) => /* @__PURE__ */ (0, import_react.createElement)("div", { key: i, className: "pp-result-row" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ellipsis" }, r.name || r.id || "-"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: r.passed ? "pp-pill pp-pill-ok" : "pp-pill pp-pill-bad", style: { marginLeft: "auto" } }, r.passed ? "\u901A\u8FC7" : "\u5931\u8D25"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta pp-ellipsis" }, r.error || "-"))), result.rows.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-result-row pp-meta" }, "\u65E0\u65AD\u8A00\u7ED3\u679C") : null)) : /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: emptyHint }));
   return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page", "data-page": "test", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-overview-title" }, "\u81EA\u52A8\u5316\u6D4B\u8BD5"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-actions" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-meta" }, "\u9879\u76EE"), /* @__PURE__ */ (0, import_react.createElement)(
     "select",
     {
       className: "pp-select",
       value: projectId,
       onChange: (e) => {
-        setProjectId(e.target.value);
-        loadProject(e.target.value);
+        const v = e.target.value;
+        setProjectId(v);
+        loadProject(v);
       }
     },
+    /* @__PURE__ */ (0, import_react.createElement)("option", { value: "" }, projects.length ? "\u8BF7\u9009\u62E9\u9879\u76EE" : "\u6682\u65E0\u9879\u76EE"),
     projects.map((p) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: p.id, value: p.id }, p.name || p.id))
-  ), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: persist }, "\u4FDD\u5B58\u7528\u4F8B\u4E0E\u573A\u666F"))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-content" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, isMock ? "\u793A\u4F8B\u6570\u636E \u2014 api.storage \u4E0D\u53EF\u7528\uFF0C\u4EE5\u4E0B\u4E3A\u6587\u4EF6\u5185 mock" : "\u6570\u636E\u6765\u6E90\uFF1Aapi.storage.getProject\uFF08\u7528\u4F8B\u4E0E\u573A\u666F\u5B58 project.settings.testCases / testScenarios\uFF09\uFF1B\u8FD0\u884C\u8D70 api.test.runCase / runScenario")), error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-error-text" }, error) : null, notice ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, notice) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tabs" }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-tab", "data-active": tab === "cases" ? "true" : "false", onClick: () => setTab("cases") }, "\u6D4B\u8BD5\u7528\u4F8B"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-tab", "data-active": tab === "scenarios" ? "true" : "false", onClick: () => setTab("scenarios") }, "\u6D4B\u8BD5\u573A\u666F")), tab === "cases" ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-debug-layout", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u7528\u4F8B"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tree" }, cases.map((c) => /* @__PURE__ */ (0, import_react.createElement)(
+  ), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: persist }, "\u4FDD\u5B58\u7528\u4F8B\u4E0E\u573A\u666F"))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-content" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, isMock ? "\u793A\u4F8B\u6570\u636E \u2014 api.storage \u4E0D\u53EF\u7528\uFF0C\u4EE5\u4E0B\u4E3A\u6587\u4EF6\u5185 mock" : "\u6570\u636E\u6765\u6E90\uFF1Aapi.storage.getProject\uFF08\u7528\u4F8B\u4E0E\u573A\u666F\u5B58 project.settings.testCases / testScenarios\uFF09\uFF1B\u8FD0\u884C\u8D70 api.test.runCase / runScenario"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-toolbar-spacer" }), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, cases.length, " \u4E2A\u5355\u63A5\u53E3\u7528\u4F8B \xB7 ", scenarios.length, " \u4E2A\u81EA\u52A8\u5316\u573A\u666F")), error ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-note pp-note-bad" }, error) : null, notice ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-note pp-note-ok" }, notice) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tabs" }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-tab", "data-active": tab === "cases" ? "true" : "false", onClick: () => {
+    setTab("cases");
+    setResult(null);
+  } }, "\u6D4B\u8BD5\u7528\u4F8B"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-tab", "data-active": tab === "scenarios" ? "true" : "false", onClick: () => {
+    setTab("scenarios");
+    setResult(null);
+  } }, "\u6D4B\u8BD5\u573A\u666F")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-debug-layout", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("nav", { className: "pp-panel", "aria-label": "\u7528\u4F8B\u4E0E\u573A\u666F" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-env-side-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-card-title" }, "\u7528\u4F8B / \u573A\u666F"), /* @__PURE__ */ (0, import_react.createElement)(
+    "button",
+    {
+      className: "pp-btn pp-btn-sm pp-btn-ghost pp-btn-accent",
+      onClick: tab === "cases" ? newCase : newScenario
+    },
+    "+ \u65B0\u5EFA"
+  )), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tree" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tree-group" }, "\u5355\u63A5\u53E3\u7528\u4F8B"), cases.map((c) => /* @__PURE__ */ (0, import_react.createElement)(
     "div",
     {
       key: c.id,
       className: "pp-tree-row",
-      "data-active": c.id === activeCaseId ? "true" : "false",
+      "data-active": tab === "cases" && c.id === activeCaseId ? "true" : "false",
       onClick: () => {
+        setTab("cases");
         setActiveCaseId(c.id);
         setResult(null);
         setError("");
       }
     },
-    /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ellipsis" }, c.name || c.id)
-  ))), cases.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u6682\u65E0\u7528\u4F8B", hint: "\u5728\u8C03\u8BD5\u9875\u4FDD\u5B58\u63A5\u53E3\u540E\uFF0C\u70B9\u300C\u4FDD\u5B58\u7528\u4F8B\u4E0E\u573A\u666F\u300D\u65B0\u5EFA" }) : null), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u65AD\u8A00"), activeCase ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-grid", style: { marginBottom: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u540D\u79F0"), /* @__PURE__ */ (0, import_react.createElement)(
+    /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ellipsis" }, c.name || c.id),
+    /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-tree-row-count" }, normalizeAssertions(c.assertions).length)
+  )), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tree-group" }, "\u81EA\u52A8\u5316\u573A\u666F"), scenarios.map((s) => /* @__PURE__ */ (0, import_react.createElement)(
+    "div",
+    {
+      key: s.id,
+      className: "pp-tree-row",
+      "data-active": tab === "scenarios" && s.id === activeScenarioId ? "true" : "false",
+      onClick: () => {
+        setTab("scenarios");
+        setActiveScenarioId(s.id);
+        setResult(null);
+        setError("");
+      }
+    },
+    /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ellipsis" }, s.name || s.id),
+    /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-tree-row-count" }, (s.steps || []).length)
+  ))), cases.length === 0 && scenarios.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u6682\u65E0\u7528\u4F8B\u4E0E\u573A\u666F", hint: "\u70B9\u4E0A\u65B9\u300C+ \u65B0\u5EFA\u300D\u521B\u5EFA\u7B2C\u4E00\u4E2A\u7528\u4F8B" }) : null), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-io-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-io-title" }, tab === "cases" ? "\u5355\u63A5\u53E3\u7528\u4F8B" : "\u81EA\u52A8\u5316\u573A\u666F"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, tab === "cases" ? "\u4E00\u4E2A\u63A5\u53E3 + \u4E00\u7EC4\u65AD\u8A00" : "\u6709\u5E8F\u6B65\u9AA4 + \u9010\u6B65\u63D0\u53D6\u53D8\u91CF")), tab === "cases" ? activeCase ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-grid", style: { marginBottom: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u540D\u79F0"), /* @__PURE__ */ (0, import_react.createElement)(
     "input",
     {
       className: "pp-input",
       value: activeCase.name || "",
       onChange: (e) => patchCase({ name: e.target.value })
     }
-  ), /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u63A5\u53E3"), /* @__PURE__ */ (0, import_react.createElement)(
+  ), /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u7ED1\u5B9A\u63A5\u53E3"), /* @__PURE__ */ (0, import_react.createElement)(
     "select",
     {
       className: "pp-select",
@@ -4157,7 +5127,7 @@ function TestPage(props) {
     },
     /* @__PURE__ */ (0, import_react.createElement)("option", { value: "" }, "\uFF08\u672A\u7ED1\u5B9A\uFF09"),
     endpoints.map((ep) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: ep.id, value: ep.id }, ep.method, " ", ep.url))
-  )), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table pp-table-wide" }, /* @__PURE__ */ (0, import_react.createElement)("thead", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "90px" } }, "\u6765\u6E90"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "\u8DEF\u5F84"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "110px" } }, "\u64CD\u4F5C"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "\u671F\u671B\u503C"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "\u8BF4\u660E"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "70px" } }, "\u64CD\u4F5C"))), /* @__PURE__ */ (0, import_react.createElement)("tbody", null, caseAssertions.map((a, i) => /* @__PURE__ */ (0, import_react.createElement)("tr", { key: i }, /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select pp-input-sm", value: a.source, onChange: (e) => patchAssertion(i, { source: e.target.value }) }, SOURCES.map((s) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: s, value: s }, s)))), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)(
+  )), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u524D\u7F6E\u6B65\u9AA4"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-list", style: { marginBottom: "var(--sp-3)" } }, preSteps.map((p, i) => /* @__PURE__ */ (0, import_react.createElement)("div", { key: p.id || i, className: "pp-result-row" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, "\u6B65\u9AA4 ", i + 1), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ellipsis" }, p.type || "script"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-pill" }, p.enabled === false ? "\u5DF2\u7981\u7528" : "\u542F\u7528"))), preSteps.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-result-row pp-meta" }, "\u672A\u7ED1\u5B9A\u63A5\u53E3\u524D\u7F6E\u811A\u672C\uFF1A\u524D\u7F6E\u6B65\u9AA4\u53D6\u81EA\u7ED1\u5B9A\u63A5\u53E3\u7684 preProcessors\uFF0C\u5728\u8C03\u8BD5\u9875\u300C\u524D\u7F6E\u64CD\u4F5C\u300D\u91CC\u7F16\u8F91") : null), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u65AD\u8A00"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table pp-table-wide" }, /* @__PURE__ */ (0, import_react.createElement)("thead", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "90px" } }, "\u6765\u6E90"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "\u8DEF\u5F84"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "110px" } }, "\u64CD\u4F5C"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "\u671F\u671B\u503C"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "\u8BF4\u660E"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "70px" } }, "\u64CD\u4F5C"))), /* @__PURE__ */ (0, import_react.createElement)("tbody", null, caseAssertions.map((a, i) => /* @__PURE__ */ (0, import_react.createElement)("tr", { key: i }, /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select pp-input-sm", value: a.source, onChange: (e) => patchAssertion(i, { source: e.target.value }) }, SOURCES.map((s) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: s, value: s }, s)))), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)(
     "input",
     {
       className: "pp-input pp-input-sm pp-input-mono",
@@ -4181,28 +5151,30 @@ function TestPage(props) {
       value: a.message,
       onChange: (e) => patchAssertion(i, { message: e.target.value })
     }
-  )), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm pp-btn-danger", onClick: () => removeAssertion(i) }, "\u5220\u9664")))), caseAssertions.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { colSpan: 6, className: "pp-muted" }, "\u6682\u65E0\u65AD\u8A00")) : null))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: addAssertion }, "\u65B0\u589E\u65AD\u8A00"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: runCase, disabled: running }, "\u8FD0\u884C\u7528\u4F8B"))) : /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u9009\u62E9\u4E00\u4E2A\u7528\u4F8B", hint: "\u9009\u4E2D\u540E\u53EF\u7F16\u8F91\u65AD\u8A00\u5E76\u8FD0\u884C" })), resultPanel("\u5C1A\u672A\u8FD0\u884C")) : /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-debug-layout", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u573A\u666F"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tree" }, scenarios.map((s) => /* @__PURE__ */ (0, import_react.createElement)(
-    "div",
+  )), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm pp-btn-danger", onClick: () => removeAssertion(i) }, "\u5220\u9664")))), caseAssertions.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { colSpan: 6, className: "pp-muted" }, "\u6682\u65E0\u65AD\u8A00")) : null))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title", style: { marginTop: "var(--sp-4)" } }, "\u63D0\u53D6\u53D8\u91CF"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table" }, /* @__PURE__ */ (0, import_react.createElement)("thead", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "160px" } }, "\u53D8\u91CF\u540D"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "\u63D0\u53D6\u8DEF\u5F84"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "70px" } }, "\u64CD\u4F5C"))), /* @__PURE__ */ (0, import_react.createElement)("tbody", null, caseExtractors.map((x, i) => /* @__PURE__ */ (0, import_react.createElement)("tr", { key: i }, /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)(
+    "input",
     {
-      key: s.id,
-      className: "pp-tree-row",
-      "data-active": s.id === activeScenarioId ? "true" : "false",
-      onClick: () => {
-        setActiveScenarioId(s.id);
-        setResult(null);
-        setError("");
-      }
-    },
-    /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ellipsis" }, s.name || s.id),
-    /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-tree-row-count" }, (s.steps || []).length)
-  ))), scenarios.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u6682\u65E0\u573A\u666F", hint: "\u70B9\u300C\u4FDD\u5B58\u7528\u4F8B\u4E0E\u573A\u666F\u300D\u65B0\u5EFA\u573A\u666F" }) : null), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u6B65\u9AA4\u7F16\u6392"), activeScenario ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-grid", style: { marginBottom: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u573A\u666F\u540D"), /* @__PURE__ */ (0, import_react.createElement)(
+      className: "pp-input pp-input-sm pp-input-mono",
+      style: { width: "100%" },
+      value: x.name,
+      onChange: (e) => patchExtractor(i, { name: e.target.value })
+    }
+  )), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)(
+    "input",
+    {
+      className: "pp-input pp-input-sm pp-input-mono",
+      style: { width: "100%" },
+      value: x.path,
+      onChange: (e) => patchExtractor(i, { path: e.target.value })
+    }
+  )), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm pp-btn-danger", onClick: () => removeExtractor(i) }, "\u5220\u9664")))), caseExtractors.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { colSpan: 3, className: "pp-muted" }, "\u6682\u65E0\u63D0\u53D6\u53D8\u91CF")) : null))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: addAssertion }, "\u65B0\u589E\u65AD\u8A00"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: addExtractor }, "\u65B0\u589E\u63D0\u53D6\u53D8\u91CF"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: runCase, disabled: running }, "\u8FD0\u884C\u7528\u4F8B"))) : /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u9009\u62E9\u4E00\u4E2A\u7528\u4F8B", hint: "\u9009\u4E2D\u540E\u53EF\u7F16\u8F91\u65AD\u8A00\u5E76\u8FD0\u884C" }) : activeScenario ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-grid", style: { marginBottom: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u573A\u666F\u540D"), /* @__PURE__ */ (0, import_react.createElement)(
     "input",
     {
       className: "pp-input",
       value: activeScenario.name || "",
       onChange: (e) => patchScenario({ name: e.target.value })
     }
-  )), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table pp-table-wide" }, /* @__PURE__ */ (0, import_react.createElement)("thead", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "40px" } }, "#"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "\u6B65\u9AA4\u540D"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "\u63A5\u53E3"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "140px" } }, "\u64CD\u4F5C"))), /* @__PURE__ */ (0, import_react.createElement)("tbody", null, (activeScenario.steps || []).map((s, i) => /* @__PURE__ */ (0, import_react.createElement)("tr", { key: s.id || i }, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, i + 1), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)(
+  )), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u6B65\u9AA4\u7F16\u6392"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table pp-table-wide" }, /* @__PURE__ */ (0, import_react.createElement)("thead", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "40px" } }, "#"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "\u6B65\u9AA4\u540D"), /* @__PURE__ */ (0, import_react.createElement)("th", null, "\u63A5\u53E3"), /* @__PURE__ */ (0, import_react.createElement)("th", { style: { width: "140px" } }, "\u64CD\u4F5C"))), /* @__PURE__ */ (0, import_react.createElement)("tbody", null, (activeScenario.steps || []).map((s, i) => /* @__PURE__ */ (0, import_react.createElement)("tr", { key: s.id || i }, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, i + 1), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)(
     "input",
     {
       className: "pp-input pp-input-sm",
@@ -4220,7 +5192,7 @@ function TestPage(props) {
     },
     /* @__PURE__ */ (0, import_react.createElement)("option", { value: "" }, "\uFF08\u672A\u7ED1\u5B9A\uFF09"),
     endpoints.map((ep) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: ep.id, value: ep.id }, ep.method, " ", ep.url))
-  ), s.endpointId ? /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": (endpoints.find((ep) => ep.id === s.endpointId) || {}).method || "GET" }, (endpoints.find((ep) => ep.id === s.endpointId) || {}).method || "GET") : null), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm", onClick: () => moveStep(i, -1), title: "\u4E0A\u79FB" }, "\u2191"), " ", /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm", onClick: () => moveStep(i, 1), title: "\u4E0B\u79FB" }, "\u2193"), " ", /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm pp-btn-danger", onClick: () => removeStep(i), title: "\u5220\u9664" }, "\xD7")))), (activeScenario.steps || []).length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { colSpan: 4, className: "pp-muted" }, "\u6682\u65E0\u6B65\u9AA4")) : null))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: addStep }, "\u6DFB\u52A0\u6B65\u9AA4"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: runScenario, disabled: running }, "\u8FD0\u884C\u573A\u666F"))) : /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u9009\u62E9\u4E00\u4E2A\u573A\u666F", hint: "\u9009\u4E2D\u540E\u53EF\u7F16\u6392\u6B65\u9AA4\u5E76\u8FD0\u884C" })), resultPanel("\u5C1A\u672A\u8FD0\u884C"))));
+  ), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": (endpoints.find((ep) => ep.id === s.endpointId) || {}).method || "GET" }, (endpoints.find((ep) => ep.id === s.endpointId) || {}).method || "GET")), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm", onClick: () => moveStep(i, -1), title: "\u4E0A\u79FB" }, "\u2191"), " ", /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm", onClick: () => moveStep(i, 1), title: "\u4E0B\u79FB" }, "\u2193"), " ", /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm pp-btn-danger", onClick: () => removeStep(i), title: "\u5220\u9664" }, "\xD7")))), (activeScenario.steps || []).length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { colSpan: 4, className: "pp-muted" }, "\u6682\u65E0\u6B65\u9AA4")) : null))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: addStep }, "\u6DFB\u52A0\u6B65\u9AA4"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: runScenario, disabled: running }, "\u8FD0\u884C\u573A\u666F"))) : /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u9009\u62E9\u4E00\u4E2A\u573A\u666F", hint: "\u9009\u4E2D\u540E\u53EF\u7F16\u6392\u6B65\u9AA4\u5E76\u8FD0\u884C" }), /* @__PURE__ */ (0, import_react.createElement)("div", { style: { marginTop: "var(--sp-4)" } }, resultPanel("\u5C1A\u672A\u8FD0\u884C"))))));
 }
 
 // src/client/pages/import.jsx
@@ -4236,10 +5208,10 @@ var PH_POSTMAN = ["{", '  "info": { "name": "\u793A\u4F8B" },', '  "item": []', 
 var PH_HAR = ["{", '  "log": { "version": "1.2", "entries": [] }', "}"].join("\n");
 var PH_CURL = "curl -X GET 'https://api.example.com/pets' -H 'Accept: application/json'";
 var IMPORT_KINDS = [
-  { id: "openapi", label: "OpenAPI / Swagger", hint: "\u7C98\u8D34 OpenAPI 3 \u6216 Swagger 2 JSON/YAML \u6587\u672C", placeholder: PH_OPENAPI },
-  { id: "postman", label: "Postman", hint: "\u7C98\u8D34 Postman Collection v2.1 JSON \u6587\u672C", placeholder: PH_POSTMAN },
-  { id: "har", label: "HAR", hint: "\u7C98\u8D34\u6D4F\u89C8\u5668\u5BFC\u51FA\u7684 HAR JSON \u6587\u672C", placeholder: PH_HAR },
-  { id: "curl", label: "cURL", hint: "\u7C98\u8D34 cURL \u547D\u4EE4\uFF08\u53EF\u591A\u6761\uFF0C\u9010\u884C\uFF09", placeholder: PH_CURL }
+  { id: "openapi", label: "OpenAPI / Swagger", hint: "\u7C98\u8D34\u6216\u9009\u62E9 OpenAPI 3 / Swagger 2 JSON \u6587\u6863", placeholder: PH_OPENAPI, accept: ".json,.yaml,.yml" },
+  { id: "postman", label: "Postman", hint: "\u7C98\u8D34\u6216\u9009\u62E9 Postman Collection v2.1 JSON", placeholder: PH_POSTMAN, accept: ".json" },
+  { id: "har", label: "HAR", hint: "\u7C98\u8D34\u6216\u9009\u62E9\u6D4F\u89C8\u5668\u5BFC\u51FA\u7684 HAR JSON", placeholder: PH_HAR, accept: ".json,.har" },
+  { id: "curl", label: "cURL", hint: "\u7C98\u8D34 cURL \u547D\u4EE4\uFF08\u53EF\u591A\u6761\uFF0C\u9010\u884C\uFF09", placeholder: PH_CURL, accept: ".txt,.sh" }
 ];
 var EXPORT_KINDS = [
   { id: "openapi", label: "OpenAPI 3", hint: "\u6807\u51C6 OpenAPI 3.0 \u6587\u6863" },
@@ -4254,9 +5226,8 @@ var LANGS = [
   { id: "python", label: "Python requests" },
   { id: "go", label: "Go net/http" }
 ];
-var MOCK_CURL = "curl -X GET 'https://api.example.test/api/v1/orders?page=1' -H 'Accept: application/json'";
 var MOCK_ENDPOINT = {
-  id: "ep_1001",
+  id: "ep_sample01",
   name: "\u67E5\u8BE2\u8BA2\u5355\u5217\u8868",
   method: "GET",
   url: "https://api.example.test/api/v1/orders",
@@ -4283,41 +5254,48 @@ function importSummary(res) {
     schemas: count(data.schemas)
   };
 }
-function errText7(err) {
+function errText10(err) {
   return err && err.message ? err.message : String(err);
 }
 function ImportPage(props) {
   const rootRef = (0, import_react16.useRef)(null);
   const api = props && props.api || (typeof window !== "undefined" ? window.__postapiApi : void 0);
   const storage = api && api.storage;
-  const [projects, setProjects] = (0, import_react16.useState)([{ id: "proj_demo01", name: "\u8BA2\u5355\u4E2D\u5FC3" }]);
-  const [projectId, setProjectId] = (0, import_react16.useState)("proj_demo01");
+  const [projects, setProjects] = (0, import_react16.useState)([]);
+  const [projectId, setProjectId] = (0, import_react16.useState)("");
   const [isMock, setIsMock] = (0, import_react16.useState)(true);
   const [error, setError] = (0, import_react16.useState)("");
   const [notice, setNotice] = (0, import_react16.useState)("");
   const [ioTab, setIoTab] = (0, import_react16.useState)("import");
   const [importKind, setImportKind] = (0, import_react16.useState)("openapi");
-  const [importText, setImportText] = (0, import_react16.useState)(MOCK_CURL);
+  const [importText, setImportText] = (0, import_react16.useState)("");
   const [importOut, setImportOut] = (0, import_react16.useState)("");
   const [bundle, setBundle] = (0, import_react16.useState)(null);
+  const [fileName, setFileName] = (0, import_react16.useState)("");
   const [exportKind, setExportKind] = (0, import_react16.useState)("openapi");
   const [exportOut, setExportOut] = (0, import_react16.useState)("");
   const [lang, setLang] = (0, import_react16.useState)("curl");
   const [codeOut, setCodeOut] = (0, import_react16.useState)("");
   const [busy, setBusy] = (0, import_react16.useState)(false);
-  (0, import_react16.useEffect)(() => applyTheme(rootRef.current), []);
+  (0, import_react16.useEffect)(() => {
+    applyTheme(rootRef.current);
+  }, []);
   (0, import_react16.useEffect)(() => {
     const boot = async () => {
-      if (!storage || typeof storage.listProjects !== "function") return;
+      if (!storage || typeof storage.listProjects !== "function") {
+        setIsMock(true);
+        return;
+      }
       try {
         const list = await storage.listProjects();
         if (Array.isArray(list) && list.length > 0) {
           setProjects(list);
-          setProjectId(list[0].id);
+          setIsMock(false);
+        } else {
           setIsMock(false);
         }
       } catch (err) {
-        setError("\u52A0\u8F7D\u9879\u76EE\u5217\u8868\u5931\u8D25\uFF1A" + errText7(err));
+        setError("\u52A0\u8F7D\u9879\u76EE\u5217\u8868\u5931\u8D25\uFF1A" + errText10(err));
       }
     };
     boot();
@@ -4326,7 +5304,27 @@ function ImportPage(props) {
     setImportKind(id);
     setImportOut("");
     setBundle(null);
+    setFileName("");
     setError("");
+    setNotice("");
+  };
+  const pickFile = (file) => {
+    if (!file) return;
+    const reader = typeof FileReader === "function" ? new FileReader() : null;
+    if (!reader) {
+      setError("\u5F53\u524D\u73AF\u5883\u4E0D\u652F\u6301\u8BFB\u53D6\u672C\u5730\u6587\u4EF6\uFF0C\u8BF7\u76F4\u63A5\u7C98\u8D34\u6587\u672C");
+      return;
+    }
+    reader.onload = () => {
+      setImportText(String(reader.result || ""));
+      setFileName(file.name || "");
+      setImportOut("");
+      setBundle(null);
+      setError("");
+      setNotice("\u5DF2\u8F7D\u5165\u6587\u4EF6\uFF1A" + (file.name || "\u672A\u547D\u540D") + "\uFF0C\u70B9\u300C\u5F00\u59CB\u5BFC\u5165\u300D\u89E3\u6790");
+    };
+    reader.onerror = () => setError("\u8BFB\u53D6\u6587\u4EF6\u5931\u8D25\uFF1A" + errText10(reader.error));
+    reader.readAsText(file);
   };
   const runImport = async () => {
     const fn = api && api.import && api.import[importKind];
@@ -4344,7 +5342,7 @@ function ImportPage(props) {
       try {
         payload = JSON.parse(raw);
       } catch (err) {
-        setError("\u5BFC\u5165\u5185\u5BB9\u4E0D\u662F\u5408\u6CD5 JSON\uFF1A" + errText7(err));
+        setError("\u5BFC\u5165\u5185\u5BB9\u4E0D\u662F\u5408\u6CD5 JSON\uFF1A" + errText10(err));
         return;
       }
     }
@@ -4354,12 +5352,12 @@ function ImportPage(props) {
     setBundle(null);
     try {
       const res = await fn(payload);
-      const summary = importSummary(res);
+      const summary2 = importSummary(res);
       setImportOut(resultText(res));
       setBundle(res && res.data !== void 0 ? res.data : res);
-      setNotice("\u89E3\u6790\u5B8C\u6210\uFF1A\u63A5\u53E3 " + summary.endpoints + " \u6761 / \u76EE\u5F55 " + summary.folders + " \u4E2A / \u6A21\u578B " + summary.schemas + " \u4E2A\uFF0C\u70B9\u300C\u4FDD\u5B58\u5230\u9879\u76EE\u300D\u5199\u5165\u5F53\u524D\u9879\u76EE");
+      setNotice("\u89E3\u6790\u5B8C\u6210\uFF1A\u63A5\u53E3 " + summary2.endpoints + " \u6761 / \u76EE\u5F55 " + summary2.folders + " \u4E2A / \u6A21\u578B " + summary2.schemas + " \u4E2A\uFF0C\u70B9\u300C\u4FDD\u5B58\u5230\u9879\u76EE\u300D\u5199\u5165\u5F53\u524D\u9879\u76EE");
     } catch (err) {
-      setError("\u5BFC\u5165\u5931\u8D25\uFF1A" + errText7(err));
+      setError("\u5BFC\u5165\u5931\u8D25\uFF1A" + errText10(err));
     } finally {
       setBusy(false);
     }
@@ -4370,7 +5368,11 @@ function ImportPage(props) {
       return;
     }
     if (!storage || typeof storage.importBundle !== "function") {
-      setError("\u5F53\u524D\u6865\u672A\u63D0\u4F9B api.storage.importBundle\uFF08\u5951\u7EA6 \xA75 POST /storage/importBundle\uFF09");
+      setError("\u5F53\u524D\u6865\u672A\u63D0\u4F9B api.storage.importBundle\uFF08\u5951\u7EA6 \xA73\uFF09");
+      return;
+    }
+    if (!projectId) {
+      setError("\u8BF7\u5148\u5728\u9875\u5934\u9009\u62E9\u76EE\u6807\u9879\u76EE");
       return;
     }
     setBusy(true);
@@ -4381,7 +5383,7 @@ function ImportPage(props) {
       const num = (v) => typeof v === "number" ? v : 0;
       setNotice("\u5DF2\u4FDD\u5B58\u5230\u9879\u76EE\uFF1A\u76EE\u5F55 " + num(written.folders) + " \u4E2A / \u63A5\u53E3 " + num(written.endpoints) + " \u4E2A / \u6A21\u578B " + num(written.schemas) + " \u4E2A");
     } catch (err) {
-      setError("\u4FDD\u5B58\u5931\u8D25\uFF1A" + errText7(err));
+      setError("\u4FDD\u5B58\u5931\u8D25\uFF1A" + errText10(err));
     } finally {
       setBusy(false);
     }
@@ -4407,7 +5409,7 @@ function ImportPage(props) {
       setExportOut(resultText(res));
       setNotice("\u5BFC\u51FA\u5B8C\u6210\uFF1A" + id);
     } catch (err) {
-      setError("\u5BFC\u51FA\u5931\u8D25\uFF1A" + errText7(err));
+      setError("\u5BFC\u51FA\u5931\u8D25\uFF1A" + errText10(err));
     } finally {
       setBusy(false);
     }
@@ -4425,7 +5427,7 @@ function ImportPage(props) {
       setCodeOut(resultText(res));
       setNotice("\u4EE3\u7801\u751F\u6210\u5B8C\u6210\uFF1A" + lang);
     } catch (err) {
-      setError("\u4EE3\u7801\u751F\u6210\u5931\u8D25\uFF1A" + errText7(err));
+      setError("\u4EE3\u7801\u751F\u6210\u5931\u8D25\uFF1A" + errText10(err));
     } finally {
       setBusy(false);
     }
@@ -4443,13 +5445,14 @@ function ImportPage(props) {
         setError("\u5F53\u524D\u73AF\u5883\u65E0\u526A\u8D34\u677F\u6743\u9650\uFF0C\u8BF7\u624B\u52A8\u9009\u4E2D\u4E0B\u65B9\u6587\u672C\u590D\u5236");
       }
     } catch (err) {
-      setError("\u590D\u5236\u5931\u8D25\uFF1A" + errText7(err));
+      setError("\u590D\u5236\u5931\u8D25\uFF1A" + errText10(err));
     }
   };
   const currentImport = IMPORT_KINDS.find((k) => k.id === importKind) || IMPORT_KINDS[0];
   const currentExport = EXPORT_KINDS.find((k) => k.id === exportKind) || EXPORT_KINDS[0];
   const currentLang = LANGS.find((l) => l.id === lang) || LANGS[0];
-  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page", "data-page": "import", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-overview-title" }, "\u5BFC\u5165\u5BFC\u51FA\u4E0E\u4EE3\u7801\u751F\u6210"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-actions" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-meta" }, "\u9879\u76EE"), /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: projectId, onChange: (e) => setProjectId(e.target.value) }, projects.map((p) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: p.id, value: p.id }, p.name || p.id))))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-content" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, isMock ? "\u793A\u4F8B\u6570\u636E \u2014 api \u6865\u4E0D\u53EF\u7528\uFF0C\u64CD\u4F5C\u6309\u94AE\u4F1A\u63D0\u793A\u7F3A\u5931\u7684\u65B9\u6CD5" : "\u6570\u636E\u6765\u6E90\uFF1Aapi.import / api.export / api.codegen")), error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-error-text" }, error) : null, notice ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, notice) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-io-layout" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tabs" }, IO_TABS.map((t) => /* @__PURE__ */ (0, import_react.createElement)(
+  const summary = bundle ? importSummary(bundle) : null;
+  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page", "data-page": "import", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-overview-title" }, "\u5BFC\u5165\u5BFC\u51FA\u4E0E\u4EE3\u7801\u751F\u6210"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-actions" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-meta" }, "\u9879\u76EE"), /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: projectId, onChange: (e) => setProjectId(e.target.value) }, /* @__PURE__ */ (0, import_react.createElement)("option", { value: "" }, projects.length ? "\u8BF7\u9009\u62E9\u9879\u76EE" : "\u6682\u65E0\u9879\u76EE"), projects.map((p) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: p.id, value: p.id }, p.name || p.id))))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-content" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, isMock ? "\u793A\u4F8B\u6570\u636E \u2014 api \u6865\u4E0D\u53EF\u7528\uFF0C\u64CD\u4F5C\u6309\u94AE\u4F1A\u63D0\u793A\u7F3A\u5931\u7684\u65B9\u6CD5" : "\u6570\u636E\u6765\u6E90\uFF1Aapi.import / api.export / api.codegen / api.storage.importBundle"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-toolbar-spacer" }), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, projectId ? "\u76EE\u6807\u9879\u76EE\uFF1A" + projectId : "\u672A\u9009\u62E9\u76EE\u6807\u9879\u76EE")), error ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-note pp-note-bad" }, error) : null, notice ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-note pp-note-ok" }, notice) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-io-layout" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tabs" }, IO_TABS.map((t) => /* @__PURE__ */ (0, import_react.createElement)(
     "button",
     {
       key: t.id,
@@ -4485,7 +5488,28 @@ function ImportPage(props) {
       onClick: () => setLang(l.id)
     },
     l.label
-  ))) : null), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-io-main" }, ioTab === "import" ? /* @__PURE__ */ (0, import_react.createElement)(import_react.Fragment, null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-io-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-io-title" }, currentImport.label), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm", onClick: () => setImportText(""), disabled: busy || !importText }, "\u6E05\u7A7A")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-note" }, currentImport.hint), /* @__PURE__ */ (0, import_react.createElement)(
+  ))) : null), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-io-main" }, ioTab === "import" ? /* @__PURE__ */ (0, import_react.createElement)(import_react.Fragment, null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-io-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-io-title" }, currentImport.label), /* @__PURE__ */ (0, import_react.createElement)(
+    "button",
+    {
+      className: "pp-btn pp-btn-sm",
+      onClick: () => {
+        setImportText("");
+        setImportOut("");
+        setBundle(null);
+        setFileName("");
+      },
+      disabled: busy || !importText
+    },
+    "\u6E05\u7A7A"
+  )), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-note" }, currentImport.hint), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginTop: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-meta" }, "\u9009\u62E9\u6587\u4EF6"), /* @__PURE__ */ (0, import_react.createElement)(
+    "input",
+    {
+      className: "pp-input pp-input-sm",
+      type: "file",
+      accept: currentImport.accept,
+      onChange: (e) => pickFile(e.target.files && e.target.files[0])
+    }
+  ), fileName ? /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta pp-ellipsis" }, fileName) : null), /* @__PURE__ */ (0, import_react.createElement)(
     "textarea",
     {
       className: "pp-textarea pp-io-input",
@@ -4494,7 +5518,7 @@ function ImportPage(props) {
       placeholder: currentImport.placeholder,
       onChange: (e) => setImportText(e.target.value)
     }
-  ), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: runImport, disabled: busy }, "\u5F00\u59CB\u5BFC\u5165"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: saveImport, disabled: busy || !bundle }, "\u4FDD\u5B58\u5230\u9879\u76EE"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: () => copy2(importOut, "\u5BFC\u5165\u7ED3\u679C"), disabled: !importOut }, "\u590D\u5236\u7ED3\u679C")), bundle ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-io-stats" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-pill pp-pill-ok" }, "\u5DF2\u89E3\u6790"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, "\u63A5\u53E3 ", importSummary(bundle).endpoints, " \u6761"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, "\u76EE\u5F55 ", importSummary(bundle).folders, " \u4E2A"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, "\u6A21\u578B ", importSummary(bundle).schemas, " \u4E2A")) : null, importOut ? /* @__PURE__ */ (0, import_react.createElement)("pre", { className: "pp-pre pp-pre-scroll pp-io-pre" }, importOut) : null) : null, ioTab === "export" ? /* @__PURE__ */ (0, import_react.createElement)(import_react.Fragment, null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-io-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-io-title" }, currentExport.label), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, currentExport.hint)), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-note" }, "\u5BFC\u51FA\u8BFB\u53D6\u5F53\u524D\u9879\u76EE\u5BF9\u8C61\u540E\u4EA4\u7ED9 api.export\uFF0C\u7ED3\u679C\u53EF\u76F4\u63A5\u590D\u5236\u6216\u53E6\u5B58\u3002"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: () => runExport(exportKind), disabled: busy }, "\u5BFC\u51FA ", currentExport.label), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: () => copy2(exportOut, "\u5BFC\u51FA\u7ED3\u679C"), disabled: !exportOut }, "\u590D\u5236\u7ED3\u679C")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-meta", style: { marginTop: "var(--sp-2)" } }, "\u5F53\u524D\u9879\u76EE\uFF1A", projectId, " \xB7 \u683C\u5F0F\uFF1A", exportKind), exportOut ? /* @__PURE__ */ (0, import_react.createElement)("pre", { className: "pp-pre pp-pre-scroll pp-io-pre" }, exportOut) : null) : null, ioTab === "codegen" ? /* @__PURE__ */ (0, import_react.createElement)(import_react.Fragment, null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-io-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-io-title" }, currentLang.label)), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-io-sample" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, "\u793A\u4F8B\u63A5\u53E3"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": MOCK_ENDPOINT.method }, MOCK_ENDPOINT.method), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-mono pp-ellipsis" }, MOCK_ENDPOINT.url)), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: runCodegen, disabled: busy }, "\u751F\u6210\u4EE3\u7801"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: () => copy2(codeOut, "\u751F\u6210\u4EE3\u7801"), disabled: !codeOut }, "\u590D\u5236\u4EE3\u7801")), codeOut ? /* @__PURE__ */ (0, import_react.createElement)("pre", { className: "pp-pre pp-pre-scroll pp-io-pre" }, codeOut) : null) : null)))));
+  ), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: runImport, disabled: busy }, "\u5F00\u59CB\u5BFC\u5165"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: saveImport, disabled: busy || !bundle }, "\u4FDD\u5B58\u5230\u9879\u76EE"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: () => copy2(importOut, "\u5BFC\u5165\u7ED3\u679C"), disabled: !importOut }, "\u590D\u5236\u7ED3\u679C")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u89E3\u6790\u9884\u89C8"), summary ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-io-stats" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-pill pp-pill-ok" }, "\u5DF2\u89E3\u6790"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, "\u63A5\u53E3 ", summary.endpoints, " \u6761"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, "\u76EE\u5F55 ", summary.folders, " \u4E2A"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, "\u6A21\u578B ", summary.schemas, " \u4E2A")) : /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-meta" }, "\u5C1A\u672A\u89E3\u6790\uFF1A\u70B9\u300C\u5F00\u59CB\u5BFC\u5165\u300D\u540E\u5728\u6B64\u663E\u793A\u63A5\u53E3 / \u76EE\u5F55 / \u6A21\u578B\u8BA1\u6570\u4E0E\u539F\u59CB\u8FD4\u56DE"), importOut ? /* @__PURE__ */ (0, import_react.createElement)("pre", { className: "pp-pre pp-pre-scroll pp-io-pre" }, importOut) : null)) : null, ioTab === "export" ? /* @__PURE__ */ (0, import_react.createElement)(import_react.Fragment, null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-io-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-io-title" }, currentExport.label), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, currentExport.hint)), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-note" }, "\u5BFC\u51FA\u8BFB\u53D6\u5F53\u524D\u9879\u76EE\u5BF9\u8C61\u540E\u4EA4\u7ED9 api.export\uFF0C\u7ED3\u679C\u53EF\u76F4\u63A5\u590D\u5236\u6216\u53E6\u5B58\u3002"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: () => runExport(exportKind), disabled: busy }, "\u5BFC\u51FA ", currentExport.label), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: () => copy2(exportOut, "\u5BFC\u51FA\u7ED3\u679C"), disabled: !exportOut }, "\u590D\u5236\u7ED3\u679C")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-meta", style: { marginTop: "var(--sp-2)" } }, "\u5F53\u524D\u9879\u76EE\uFF1A", projectId || "\uFF08\u672A\u9009\u62E9\uFF09", " \xB7 \u683C\u5F0F\uFF1A", exportKind), exportOut ? /* @__PURE__ */ (0, import_react.createElement)("pre", { className: "pp-pre pp-pre-scroll pp-io-pre" }, exportOut) : null) : null, ioTab === "codegen" ? /* @__PURE__ */ (0, import_react.createElement)(import_react.Fragment, null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-io-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-io-title" }, currentLang.label)), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-io-sample" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, "\u793A\u4F8B\u63A5\u53E3"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": MOCK_ENDPOINT.method }, MOCK_ENDPOINT.method), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-mono pp-ellipsis" }, MOCK_ENDPOINT.url)), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: runCodegen, disabled: busy }, "\u751F\u6210\u4EE3\u7801"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: () => copy2(codeOut, "\u751F\u6210\u4EE3\u7801"), disabled: !codeOut }, "\u590D\u5236\u4EE3\u7801")), codeOut ? /* @__PURE__ */ (0, import_react.createElement)("pre", { className: "pp-pre pp-pre-scroll pp-io-pre" }, codeOut) : null) : null)))));
 }
 
 // src/client/pages/flow.jsx
@@ -4960,7 +5984,7 @@ function SequenceDiagram({ steps, idPrefix = "flow-seq", title = "\u65F6\u5E8F\u
 
 // src/client/pages/flow.jsx
 (window.__postapiQueue = window.__postapiQueue || []).push(["flow", FlowPage]);
-var ACTIONS = ["call", "return", "self", "note"];
+var ACTIONS2 = ["call", "return", "self", "note"];
 var ACTION_LABEL = { call: "\u8C03\u7528", return: "\u8FD4\u56DE", self: "\u81EA\u8C03\u7528", note: "\u5907\u6CE8" };
 function collectActors2(steps) {
   const out = [];
@@ -4987,7 +6011,7 @@ function normalizeSteps(steps) {
   return (Array.isArray(steps) ? steps : []).filter((s) => s && typeof s === "object").map((s) => {
     const out = {
       actor: String(s.actor || ""),
-      action: ACTIONS.includes(s.action) ? s.action : "call",
+      action: ACTIONS2.includes(s.action) ? s.action : "call",
       target: String(s.target || ""),
       message: String(s.message || ""),
       note: String(s.note || "")
@@ -5018,7 +6042,7 @@ function saveDraft(steps) {
   } catch {
   }
 }
-function errText8(err) {
+function errText11(err) {
   return err && err.message ? err.message : String(err);
 }
 function FlowPage(props) {
@@ -5026,10 +6050,10 @@ function FlowPage(props) {
   const svgRef = (0, import_react18.useRef)(null);
   const api = props && props.api || (typeof window !== "undefined" ? window.__postapiApi : void 0);
   const storage = api && api.storage;
-  const [projects, setProjects] = (0, import_react18.useState)([{ id: "proj_demo01", name: "\u8BA2\u5355\u4E2D\u5FC3" }]);
-  const [projectId, setProjectId] = (0, import_react18.useState)("proj_demo01");
-  const [flowName, setFlowName] = (0, import_react18.useState)("\u63A5\u53E3\u8C03\u8BD5\u65F6\u5E8F");
-  const [steps, setSteps] = (0, import_react18.useState)(() => loadDraft() || DEFAULT_STEPS);
+  const [projects, setProjects] = (0, import_react18.useState)([]);
+  const [projectId, setProjectId] = (0, import_react18.useState)("");
+  const [flowName, setFlowName] = (0, import_react18.useState)("");
+  const [steps, setSteps] = (0, import_react18.useState)([]);
   const [isMock, setIsMock] = (0, import_react18.useState)(true);
   const [error, setError] = (0, import_react18.useState)("");
   const [notice, setNotice] = (0, import_react18.useState)("");
@@ -5038,26 +6062,57 @@ function FlowPage(props) {
     applyTheme(rootRef.current);
     saveDraft(steps);
   }, [steps]);
+  const applyMock = () => {
+    setIsMock(true);
+    setProjects([{ id: "flow_sample_project", name: "\u793A\u4F8B\u9879\u76EE" }]);
+    setSteps(loadDraft() || DEFAULT_STEPS);
+    setFlowName("\u793A\u4F8B\u65F6\u5E8F");
+    setActiveIdx(0);
+  };
+  const loadProject = async (id) => {
+    if (!storage || typeof storage.getProject !== "function") {
+      applyMock();
+      return;
+    }
+    if (!id) {
+      setSteps([]);
+      return;
+    }
+    try {
+      const loaded = await storage.getProject(id);
+      const flow = loaded && loaded.flow;
+      if (flow && Array.isArray(flow.steps) && flow.steps.length > 0) {
+        setSteps(normalizeSteps(flow.steps));
+        setFlowName(flow.name || "");
+        setActiveIdx(0);
+        setIsMock(false);
+      } else {
+        setSteps([]);
+        setFlowName("");
+        setActiveIdx(0);
+        setIsMock(false);
+      }
+    } catch (err) {
+      setError("\u52A0\u8F7D\u9879\u76EE\u5931\u8D25\uFF1A" + errText11(err));
+    }
+  };
   (0, import_react18.useEffect)(() => {
     const boot = async () => {
-      if (!storage || typeof storage.listProjects !== "function") return;
+      if (!storage || typeof storage.listProjects !== "function") {
+        applyMock();
+        return;
+      }
       try {
         const list = await storage.listProjects();
         if (Array.isArray(list) && list.length > 0) {
           setProjects(list);
           setProjectId(list[0].id);
-          setIsMock(false);
-          if (typeof storage.getProject === "function") {
-            const loaded = await storage.getProject(list[0].id);
-            const flow = loaded && loaded.flow;
-            if (flow && Array.isArray(flow.steps) && flow.steps.length > 0) {
-              setSteps(normalizeSteps(flow.steps));
-              setFlowName(flow.name || "\u63A5\u53E3\u8C03\u8BD5\u65F6\u5E8F");
-            }
-          }
+          await loadProject(list[0].id);
+          return;
         }
+        setIsMock(false);
       } catch (err) {
-        setError("\u52A0\u8F7D\u9879\u76EE\u5931\u8D25\uFF1A" + errText8(err));
+        setError("\u52A0\u8F7D\u9879\u76EE\u5217\u8868\u5931\u8D25\uFF1A" + errText11(err));
       }
     };
     boot();
@@ -5082,28 +6137,16 @@ function FlowPage(props) {
     setNotice("");
   };
   const add = () => {
-    setSteps(steps.concat([{ actor: "\u9875\u9762", action: "call", target: "Storage", message: "", note: "" }]));
+    const actors2 = collectActors2(steps);
+    setSteps(steps.concat([{
+      actor: actors2[0] || "\u9875\u9762",
+      action: "call",
+      target: actors2[1] || "Storage",
+      message: "",
+      note: ""
+    }]));
+    setActiveIdx(steps.length);
     setNotice("");
-  };
-  const reloadProject = async (id) => {
-    if (!storage || typeof storage.getProject !== "function") {
-      setError("\u5F53\u524D\u6865\u672A\u63D0\u4F9B api.storage.getProject");
-      return;
-    }
-    setError("");
-    try {
-      const loaded = await storage.getProject(id);
-      const flow = loaded && loaded.flow;
-      if (flow && Array.isArray(flow.steps)) {
-        setSteps(normalizeSteps(flow.steps));
-        setFlowName(flow.name || "\u63A5\u53E3\u8C03\u8BD5\u65F6\u5E8F");
-        setNotice("\u5DF2\u8F7D\u5165\u9879\u76EE\u6D41\u7A0B\u56FE\uFF1A" + (flow.name || "\u672A\u547D\u540D"));
-      } else {
-        setNotice("\u8BE5\u9879\u76EE\u5C1A\u65E0\u6D41\u7A0B\u56FE\uFF0C\u53EF\u7F16\u8F91\u540E\u4FDD\u5B58");
-      }
-    } catch (err) {
-      setError("\u8F7D\u5165\u6D41\u7A0B\u56FE\u5931\u8D25\uFF1A" + errText8(err));
-    }
   };
   const persist = async () => {
     if (!storage || typeof storage.saveFlow !== "function") {
@@ -5111,12 +6154,13 @@ function FlowPage(props) {
       return;
     }
     setError("");
+    setNotice("");
     try {
       const payload = flowPayload(flowName, steps);
       await storage.saveFlow(projectId, payload);
       setNotice("\u5DF2\u4FDD\u5B58\u6D41\u7A0B\u56FE\uFF1A" + (payload.name || "\u672A\u547D\u540D") + "\uFF08" + payload.steps.length + " \u6B65\uFF09");
     } catch (err) {
-      setError("\u4FDD\u5B58\u6D41\u7A0B\u56FE\u5931\u8D25\uFF1A" + errText8(err));
+      setError("\u4FDD\u5B58\u6D41\u7A0B\u56FE\u5931\u8D25\uFF1A" + errText11(err));
     }
   };
   const copyJson = async () => {
@@ -5127,7 +6171,7 @@ function FlowPage(props) {
         setNotice("flow JSON \u5DF2\u590D\u5236");
         return;
       } catch (err) {
-        setError("\u590D\u5236\u5931\u8D25\uFF1A" + errText8(err));
+        setError("\u590D\u5236\u5931\u8D25\uFF1A" + errText11(err));
         return;
       }
     }
@@ -5142,23 +6186,25 @@ function FlowPage(props) {
       className: "pp-select pp-input-sm",
       value: projectId,
       onChange: (e) => {
-        setProjectId(e.target.value);
-        reloadProject(e.target.value);
+        const v = e.target.value;
+        setProjectId(v);
+        loadProject(v);
       }
     },
+    /* @__PURE__ */ (0, import_react.createElement)("option", { value: "" }, projects.length ? "\u8BF7\u9009\u62E9\u9879\u76EE" : "\u6682\u65E0\u9879\u76EE"),
     projects.map((p) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: p.id, value: p.id }, p.name || p.id))
   ), /* @__PURE__ */ (0, import_react.createElement)(
     "input",
     {
       className: "pp-input pp-input-sm pp-flow-name",
       value: flowName,
-      placeholder: "\u56FE\u540D",
+      placeholder: "\u573A\u666F\u540D\uFF08\u5982\uFF1A\u4E0B\u5355\u4E3B\u6D41\u7A0B\uFF09",
       onChange: (e) => {
         setFlowName(e.target.value);
         setNotice("");
       }
     }
-  ), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-toolbar-spacer" }), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm", onClick: exportSvg }, "\u5BFC\u51FA SVG"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm", onClick: copyJson }, "\u590D\u5236 JSON")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-meta pp-flow-source" }, isMock ? "\u793A\u4F8B\u6570\u636E \u2014 api.storage.saveFlow \u4E0D\u53EF\u7528\uFF0C\u7F16\u6392\u7ED3\u679C\u4EC5\u5B58\u672C\u5730\u8349\u7A3F\uFF08" + DRAFT_KEY + "\uFF09" : "\u6570\u636E\u6765\u6E90\uFF1Aapi.storage\uFF08getProject / saveFlow\uFF09"), error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-error-text" }, error) : null, notice ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, notice) : null, overBudget && /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-split-hint" }, "\u5F53\u524D ", steps.length, " \u6B65\uFF0C\u8D85\u8FC7 9 \u6B65\u5BC6\u5EA6\u9884\u7B97\uFF084/10\uFF09\u2014\u2014\u5EFA\u8BAE\u62C6\u5206\u4E3A\u300C\u4E3B\u6D41\u7A0B\u300D\u4E0E\u300C\u5206\u652F/\u5F02\u5E38\u300D\u4E24\u5F20\u56FE"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-flow-layout" }, /* @__PURE__ */ (0, import_react.createElement)("nav", { className: "pp-panel pp-flow-side", "aria-label": "\u6B65\u9AA4\u5217\u8868" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-flow-side-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-card-title" }, "\u6B65\u9AA4"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm pp-btn-ghost pp-btn-accent", onClick: add }, "+ \u6DFB\u52A0")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-flow-steps" }, steps.map((s, i) => /* @__PURE__ */ (0, import_react.createElement)(
+  ), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-toolbar-spacer" }), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm", onClick: exportSvg }, "\u5BFC\u51FA SVG"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm", onClick: copyJson }, "\u590D\u5236 JSON")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-meta pp-flow-source" }, isMock ? "\u793A\u4F8B\u6570\u636E \u2014 api.storage \u4E0D\u53EF\u7528\uFF0C\u4EE5\u4E0B\u6B65\u9AA4\u4E3A\u6587\u4EF6\u5185 mock\uFF0C\u7F16\u6392\u7ED3\u679C\u4EC5\u5B58\u672C\u5730\u8349\u7A3F\uFF08" + DRAFT_KEY + "\uFF09" : "\u6570\u636E\u6765\u6E90\uFF1Aapi.storage\uFF08getProject / saveFlow\uFF09"), error ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-note pp-note-bad" }, error) : null, notice ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-note pp-note-ok" }, notice) : null, overBudget && /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-split-hint" }, "\u5F53\u524D ", steps.length, " \u6B65\uFF0C\u8D85\u8FC7 9 \u6B65\u5BC6\u5EA6\u9884\u7B97\uFF084/10\uFF09\u2014\u2014\u5EFA\u8BAE\u62C6\u5206\u4E3A\u300C\u4E3B\u6D41\u7A0B\u300D\u4E0E\u300C\u5206\u652F/\u5F02\u5E38\u300D\u4E24\u5F20\u56FE"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-flow-layout" }, /* @__PURE__ */ (0, import_react.createElement)("nav", { className: "pp-panel pp-flow-side", "aria-label": "\u6B65\u9AA4\u5217\u8868" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-flow-side-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-card-title" }, "\u6B65\u9AA4"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm pp-btn-ghost pp-btn-accent", onClick: add }, "+ \u6DFB\u52A0")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-flow-steps" }, steps.map((s, i) => /* @__PURE__ */ (0, import_react.createElement)(
     "div",
     {
       key: i,
@@ -5195,7 +6241,7 @@ function FlowPage(props) {
       value: active.action,
       onChange: (e) => update(activeIdx, { action: e.target.value })
     },
-    ACTIONS.map((a) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: a, value: a }, ACTION_LABEL[a] || a))
+    ACTIONS2.map((a) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: a, value: a }, ACTION_LABEL[a] || a))
   ), /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u63A5\u6536\u65B9"), /* @__PURE__ */ (0, import_react.createElement)(
     "input",
     {
@@ -5260,34 +6306,41 @@ function FlowPage(props) {
 var import_react19 = __toESM(require("react"), 1);
 (window.__postapiQueue = window.__postapiQueue || []).push(["search", SearchPage]);
 var MOCK_RESULT = {
-  endpoints: [{ id: "ep_1001", name: "\u67E5\u8BE2\u8BA2\u5355\u5217\u8868", method: "GET", url: "/api/v1/orders" }],
-  schemas: [{ id: "sch_order", name: "Order", description: "\u8BA2\u5355\u5BF9\u8C61" }],
-  folders: [{ id: "fld_01", name: "\u8BA2\u5355\u7BA1\u7406" }]
+  endpoints: [{ id: "ep_sample01", name: "\u67E5\u8BE2\u8BA2\u5355\u5217\u8868", method: "GET", url: "/api/v1/orders" }],
+  schemas: [{ id: "sch_sample_order", name: "Order", description: "\u8BA2\u5355\u5BF9\u8C61" }],
+  folders: [{ id: "fld_sample01", name: "\u8BA2\u5355\u7BA1\u7406" }],
+  environments: [{ id: "env_sample_dev", name: "\u5F00\u53D1\u73AF\u5883", baseUrl: "http://127.0.0.1:8080" }]
 };
 var GROUPS = [
   { key: "endpoints", label: "\u63A5\u53E3", target: (id) => "#/doc/" + encodeURIComponent(id) },
   { key: "schemas", label: "\u6570\u636E\u6A21\u578B", target: (id) => "#/schema/" + encodeURIComponent(id) },
-  { key: "folders", label: "\u76EE\u5F55", target: (id) => "#/doc/" + encodeURIComponent(id) }
+  { key: "folders", label: "\u76EE\u5F55", target: (id) => "#/doc/" + encodeURIComponent(id) },
+  { key: "environments", label: "\u73AF\u5883", target: () => "#/env" }
 ];
 function groupResults(res) {
   const data = res && res.data !== void 0 ? res.data : res;
   const out = {};
   for (const g of GROUPS) {
     const list = data && Array.isArray(data[g.key]) ? data[g.key] : [];
-    out[g.key] = list.map((item) => ({
-      id: item && item.id ? item.id : "",
-      title: item && (item.name || item.url) || item && item.id || "(\u672A\u547D\u540D)",
-      method: item && item.method ? item.method : "",
-      url: item && item.url ? item.url : "",
-      description: item && item.description ? item.description : ""
+    out[g.key] = list.filter((item) => item && typeof item === "object").map((item) => ({
+      id: item.id ? item.id : "",
+      title: item.name || item.url || item.id || "(\u672A\u547D\u540D)",
+      method: item.method ? item.method : "",
+      url: item.url || item.baseUrl || "",
+      description: item.description || ""
     }));
   }
   return out;
 }
+function matchEnvironments(envs, keyword) {
+  const kw = String(keyword || "").trim().toLowerCase();
+  if (!kw) return [];
+  return (Array.isArray(envs) ? envs : []).filter((e) => e && typeof e === "object").filter((e) => String(e.name || "").toLowerCase().includes(kw) || String(e.baseUrl || "").toLowerCase().includes(kw)).map((e) => ({ id: e.id || "", name: e.name || e.id, baseUrl: e.baseUrl || "" }));
+}
 function hasKeyword(keyword) {
   return String(keyword || "").trim().length > 0;
 }
-function errText9(err) {
+function errText12(err) {
   return err && err.message ? err.message : String(err);
 }
 function markParts(text, keyword) {
@@ -5323,27 +6376,38 @@ function SearchPage(props) {
   const api = props && props.api || (typeof window !== "undefined" ? window.__postapiApi : void 0);
   const storage = api && api.storage;
   const route = props && props.route || {};
-  const [projects, setProjects] = (0, import_react19.useState)([{ id: "proj_demo01", name: "\u8BA2\u5355\u4E2D\u5FC3" }]);
-  const [projectId, setProjectId] = (0, import_react19.useState)("proj_demo01");
+  const [projects, setProjects] = (0, import_react19.useState)([]);
+  const [projectId, setProjectId] = (0, import_react19.useState)("");
   const [keyword, setKeyword] = (0, import_react19.useState)(() => readQueryKeyword(route.query));
-  const [groups, setGroups] = (0, import_react19.useState)(groupResults(MOCK_RESULT));
+  const [groups, setGroups] = (0, import_react19.useState)({ endpoints: [], schemas: [], folders: [], environments: [] });
   const [isMock, setIsMock] = (0, import_react19.useState)(true);
   const [searched, setSearched] = (0, import_react19.useState)(false);
   const [collapsed, setCollapsed] = (0, import_react19.useState)({});
   const [error, setError] = (0, import_react19.useState)("");
-  (0, import_react19.useEffect)(() => applyTheme(rootRef.current), []);
+  (0, import_react19.useEffect)(() => {
+    applyTheme(rootRef.current);
+  }, []);
+  const applyMock = () => {
+    setIsMock(true);
+    setProjects([{ id: "search_sample_project", name: "\u793A\u4F8B\u9879\u76EE" }]);
+  };
   (0, import_react19.useEffect)(() => {
     const boot = async () => {
-      if (!storage || typeof storage.listProjects !== "function") return;
+      if (!storage || typeof storage.listProjects !== "function") {
+        applyMock();
+        return;
+      }
       try {
         const list = await storage.listProjects();
         if (Array.isArray(list) && list.length > 0) {
           setProjects(list);
           setProjectId(list[0].id);
           setIsMock(false);
+        } else {
+          setIsMock(false);
         }
       } catch (err) {
-        setError("\u52A0\u8F7D\u9879\u76EE\u5217\u8868\u5931\u8D25\uFF1A" + errText9(err));
+        setError("\u52A0\u8F7D\u9879\u76EE\u5217\u8868\u5931\u8D25\uFF1A" + errText12(err));
       }
     };
     boot();
@@ -5354,16 +6418,25 @@ function SearchPage(props) {
       return;
     }
     if (!storage || typeof storage.search !== "function") {
-      setError("\u5F53\u524D\u6865\u672A\u63D0\u4F9B api.storage.search");
+      applyMock();
+      setGroups(groupResults(MOCK_RESULT));
+      setSearched(true);
+      setError("\u5F53\u524D\u6865\u672A\u63D0\u4F9B api.storage.search\uFF0C\u4EE5\u4E0B\u4E3A\u6587\u4EF6\u5185 mock \u7ED3\u679C");
       return;
     }
     setError("");
     try {
-      const res = await storage.search(projectId, String(keyword).trim());
-      setGroups(groupResults(res));
+      const kw2 = String(keyword).trim();
+      const res = await storage.search(projectId, kw2);
+      const next = groupResults(res);
+      if (typeof storage.getProject === "function" && projectId) {
+        const loaded = await storage.getProject(projectId);
+        next.environments = groupResults({ environments: matchEnvironments(loaded && loaded.environments, kw2) }).environments;
+      }
+      setGroups(next);
       setSearched(true);
     } catch (err) {
-      setError("\u641C\u7D22\u5931\u8D25\uFF1A" + errText9(err));
+      setError("\u641C\u7D22\u5931\u8D25\uFF1A" + errText12(err));
     }
   };
   const jump = (hash) => {
@@ -5379,19 +6452,20 @@ function SearchPage(props) {
       value: projectId,
       onChange: (e) => setProjectId(e.target.value)
     },
+    /* @__PURE__ */ (0, import_react.createElement)("option", { value: "" }, projects.length ? "\u8BF7\u9009\u62E9\u9879\u76EE" : "\u6682\u65E0\u9879\u76EE"),
     projects.map((p) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: p.id, value: p.id }, p.name || p.id))
   ), /* @__PURE__ */ (0, import_react.createElement)(
     "input",
     {
       className: "pp-input pp-search-input",
-      placeholder: "\u641C\u7D22\u63A5\u53E3\u540D\u79F0 / URL / \u63CF\u8FF0\uFF0C\u56DE\u8F66\u5373\u641C",
+      placeholder: "\u641C\u7D22\u63A5\u53E3\u540D\u79F0 / URL / \u63CF\u8FF0 / \u6A21\u578B / \u76EE\u5F55 / \u73AF\u5883\uFF0C\u56DE\u8F66\u5373\u641C",
       value: keyword,
       onChange: (e) => setKeyword(e.target.value),
       onKeyDown: (e) => {
         if (e.key === "Enter") runSearch();
       }
     }
-  ), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary pp-search-btn", onClick: runSearch }, "\u641C\u7D22")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-meta pp-search-source" }, isMock ? "\u793A\u4F8B\u6570\u636E \u2014 api.storage.search \u4E0D\u53EF\u7528\uFF0C\u4EE5\u4E0B\u4E3A\u6587\u4EF6\u5185 mock" : "\u6570\u636E\u6765\u6E90\uFF1Aapi.storage.search\uFF08\u540D\u79F0 / url / \u63CF\u8FF0\uFF0C\u5927\u5C0F\u5199\u4E0D\u654F\u611F\uFF09"), error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-error-text" }, error) : null, !searched ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-search-hint" }, /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u8F93\u5165\u5173\u952E\u5B57\u5F00\u59CB\u641C\u7D22", hint: "\u53EF\u641C\u63A5\u53E3\u540D\u79F0\u3001URL\u3001\u63CF\u8FF0\uFF0C\u4E5F\u53EF\u641C\u6570\u636E\u6A21\u578B\u4E0E\u76EE\u5F55" })) : total === 0 ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-search-hint" }, /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u6CA1\u6709\u5339\u914D\u300C" + kw + "\u300D\u7684\u7ED3\u679C", hint: "\u6362\u4E2A\u5173\u952E\u5B57\uFF0C\u6216\u68C0\u67E5\u662F\u5426\u9009\u9519\u4E86\u9879\u76EE" })) : /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-search-results" }, visibleGroups.map((g) => /* @__PURE__ */ (0, import_react.createElement)("section", { key: g.key, className: "pp-search-group" }, /* @__PURE__ */ (0, import_react.createElement)(
+  ), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary pp-search-btn", onClick: runSearch }, "\u641C\u7D22")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-meta pp-search-source" }, isMock ? "\u793A\u4F8B\u6570\u636E \u2014 api.storage.search \u4E0D\u53EF\u7528\uFF0C\u4EE5\u4E0B\u4E3A\u6587\u4EF6\u5185 mock" : "\u6570\u636E\u6765\u6E90\uFF1Aapi.storage.search\uFF08\u540D\u79F0 / url / \u63CF\u8FF0\uFF0C\u5927\u5C0F\u5199\u4E0D\u654F\u611F\uFF09+ getProject.environments\uFF08\u73AF\u5883\u7EC4\u672C\u5730\u8FC7\u6EE4\uFF09"), error ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-note pp-note-bad" }, error) : null, !searched ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-search-hint" }, /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u8F93\u5165\u5173\u952E\u5B57\u5F00\u59CB\u641C\u7D22", hint: "\u53EF\u641C\u63A5\u53E3\u540D\u79F0\u3001URL\u3001\u63CF\u8FF0\uFF0C\u4E5F\u53EF\u641C\u6570\u636E\u6A21\u578B\u3001\u76EE\u5F55\u4E0E\u73AF\u5883", icon: "search" })) : total === 0 ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-search-hint" }, /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u6CA1\u6709\u5339\u914D\u300C" + kw + "\u300D\u7684\u7ED3\u679C", hint: "\u6362\u4E2A\u5173\u952E\u5B57\uFF0C\u6216\u68C0\u67E5\u662F\u5426\u9009\u9519\u4E86\u9879\u76EE", icon: "search" })) : /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-search-results" }, visibleGroups.map((g) => /* @__PURE__ */ (0, import_react.createElement)("section", { key: g.key, className: "pp-search-group" }, /* @__PURE__ */ (0, import_react.createElement)(
     "button",
     {
       className: "pp-search-group-head",
@@ -5399,8 +6473,10 @@ function SearchPage(props) {
       onClick: () => setCollapsed({ ...collapsed, [g.key]: !collapsed[g.key] })
     },
     /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-search-caret" }, collapsed[g.key] ? "\u25B8" : "\u25BE"),
-    /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-search-group-label" }, g.label),
-    /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-search-count" }, groups[g.key].length)
+    /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-tree-group" }, g.label),
+    /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-search-count" }, groups[g.key].length),
+    /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-toolbar-spacer" }),
+    /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, "\u547D\u4E2D ", groups[g.key].length, " \u6761")
   ), collapsed[g.key] ? null : /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-list pp-search-list" }, groups[g.key].map((item) => /* @__PURE__ */ (0, import_react.createElement)(
     "div",
     {
@@ -5441,16 +6517,16 @@ function storeRootOf(injected) {
     return DEFAULT_STORE_ROOT;
   }
 }
-function errText10(err) {
+function errText13(err) {
   return err && err.message ? err.message : String(err);
 }
 function SettingsPage(props) {
   const rootRef = (0, import_react20.useRef)(null);
   const api = props && props.api || (typeof window !== "undefined" ? window.__postapiApi : void 0);
   const storage = api && api.storage;
-  const [projects, setProjects] = (0, import_react20.useState)([{ id: "proj_demo01", name: "\u8BA2\u5355\u4E2D\u5FC3" }]);
-  const [projectId, setProjectId] = (0, import_react20.useState)("proj_demo01");
-  const [storeRoot, setStoreRoot] = (0, import_react20.useState)(() => storeRootOf(api && api.storeRoot));
+  const [projects, setProjects] = (0, import_react20.useState)([]);
+  const [projectId, setProjectId] = (0, import_react20.useState)("");
+  const [storeRoot] = (0, import_react20.useState)(() => storeRootOf(props && props.storeRoot || api && api.storeRoot));
   const [theme, setTheme] = (0, import_react20.useState)(readTheme);
   const [locale, setLocale] = (0, import_react20.useState)(readLocale);
   const [settings, setSettings] = (0, import_react20.useState)(DEFAULT_SETTINGS);
@@ -5473,9 +6549,11 @@ function SettingsPage(props) {
             const loaded = await storage.getProject(list[0].id);
             if (loaded && loaded.settings) setSettings(normalizeSettings(loaded.settings));
           }
+        } else {
+          setIsMock(false);
         }
       } catch (err) {
-        setError("\u52A0\u8F7D\u8BBE\u7F6E\u5931\u8D25\uFF1A" + errText10(err));
+        setError("\u52A0\u8F7D\u8BBE\u7F6E\u5931\u8D25\uFF1A" + errText13(err));
       }
     };
     boot();
@@ -5501,13 +6579,14 @@ function SettingsPage(props) {
       return;
     }
     setError("");
+    setNotice("");
     try {
       const payload = normalizeSettings(settings);
       await storage.saveProjectSettings(projectId, payload);
       setSettings(payload);
       setNotice("\u5DF2\u4FDD\u5B58\u9879\u76EE\u8BBE\u7F6E");
     } catch (err) {
-      setError("\u4FDD\u5B58\u8BBE\u7F6E\u5931\u8D25\uFF1A" + errText10(err));
+      setError("\u4FDD\u5B58\u8BBE\u7F6E\u5931\u8D25\uFF1A" + errText13(err));
     }
   };
   const reloadProject = async (id) => {
@@ -5516,33 +6595,36 @@ function SettingsPage(props) {
       return;
     }
     setError("");
+    setNotice("");
     try {
       const loaded = await storage.getProject(id);
       if (loaded) setSettings(normalizeSettings(loaded.settings));
       setNotice("\u5DF2\u8F7D\u5165\u9879\u76EE\u8BBE\u7F6E");
     } catch (err) {
-      setError("\u8F7D\u5165\u8BBE\u7F6E\u5931\u8D25\uFF1A" + errText10(err));
+      setError("\u8F7D\u5165\u8BBE\u7F6E\u5931\u8D25\uFF1A" + errText13(err));
     }
   };
-  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page", "data-page": "settings", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-overview-title" }, "\u8BBE\u7F6E"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-actions" }, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: persist }, "\u4FDD\u5B58\u9879\u76EE\u8BBE\u7F6E"))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-content" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, isMock ? "\u793A\u4F8B\u6570\u636E \u2014 api.storage \u4E0D\u53EF\u7528\uFF0C\u9879\u76EE\u8BBE\u7F6E\u9879\u4E3A\u6587\u4EF6\u5185\u9ED8\u8BA4\u503C" : "\u6570\u636E\u6765\u6E90\uFF1Aapi.storage\uFF08getProject / saveProjectSettings\uFF09")), error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-error-text" }, error) : null, notice ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-note pp-note-ok" }, notice) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-cols-2" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u5916\u89C2\u4E0E\u5B58\u50A8"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u5B58\u50A8\u8DEF\u5F84"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { flex: 1 }, readOnly: true, value: storeRoot })), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-grid", style: { marginBottom: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u4E3B\u9898"), /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: theme, onChange: (e) => applyThemeChoice(e.target.value) }, /* @__PURE__ */ (0, import_react.createElement)("option", { value: "light" }, "\u6D45\u8272"), /* @__PURE__ */ (0, import_react.createElement)("option", { value: "dark" }, "\u6DF1\u8272")), /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u8BED\u8A00"), /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: locale, onChange: (e) => applyLocaleChoice(e.target.value) }, /* @__PURE__ */ (0, import_react.createElement)("option", { value: "zh-CN" }, "\u7B80\u4F53\u4E2D\u6587"), /* @__PURE__ */ (0, import_react.createElement)("option", { value: "en" }, "English"))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-note" }, "\u5B58\u50A8\u6839\u76EE\u5F55\u7531 host \u6784\u9020\u53C2\u6570\u6CE8\u5165\uFF08createStorageService(basePath)\uFF09\uFF0C\u9875\u9762\u53EA\u8BFB\u5C55\u793A\uFF0C\u4E0D\u53EF\u4FEE\u6539\u3002")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u9879\u76EE\u8BBE\u7F6E"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-grid", style: { marginBottom: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u9879\u76EE"), /* @__PURE__ */ (0, import_react.createElement)(
+  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page", "data-page": "settings", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-overview-title" }, "\u8BBE\u7F6E"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-actions" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-meta" }, "\u9879\u76EE"), /* @__PURE__ */ (0, import_react.createElement)(
     "select",
     {
       className: "pp-select",
       value: projectId,
       onChange: (e) => {
-        setProjectId(e.target.value);
-        reloadProject(e.target.value);
+        const v = e.target.value;
+        setProjectId(v);
+        reloadProject(v);
       }
     },
+    /* @__PURE__ */ (0, import_react.createElement)("option", { value: "" }, projects.length ? "\u8BF7\u9009\u62E9\u9879\u76EE" : "\u6682\u65E0\u9879\u76EE"),
     projects.map((p) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: p.id, value: p.id }, p.name || p.id))
-  ), /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "Mock \u7AEF\u53E3"), /* @__PURE__ */ (0, import_react.createElement)(
+  ), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: persist }, "\u4FDD\u5B58\u9879\u76EE\u8BBE\u7F6E"))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-content" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, isMock ? "\u793A\u4F8B\u6570\u636E \u2014 api.storage \u4E0D\u53EF\u7528\uFF0C\u9879\u76EE\u8BBE\u7F6E\u9879\u4E3A\u6587\u4EF6\u5185\u9ED8\u8BA4\u503C" : "\u6570\u636E\u6765\u6E90\uFF1Aapi.storage\uFF08getProject / saveProjectSettings\uFF09"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-toolbar-spacer" }), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, projectId ? "\u5F53\u524D\u9879\u76EE\uFF1A" + projectId : "\u672A\u9009\u62E9\u9879\u76EE")), error ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-note pp-note-bad" }, error) : null, notice ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-note pp-note-ok" }, notice) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-cols-2" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u57FA\u7840\u4FE1\u606F"), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-meta", style: { marginTop: 0 } }, "\u5916\u89C2\u4E0E\u8BED\u8A00\u5B58\u5728\u672C\u673A\u8349\u7A3F\uFF08localStorage\uFF09\uFF0C\u4E0D\u968F\u9879\u76EE\u6587\u4EF6\u540C\u6B65"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u4E3B\u9898"), /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: theme, onChange: (e) => applyThemeChoice(e.target.value) }, /* @__PURE__ */ (0, import_react.createElement)("option", { value: "light" }, "\u6D45\u8272"), /* @__PURE__ */ (0, import_react.createElement)("option", { value: "dark" }, "\u6DF1\u8272"))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u8BED\u8A00"), /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: locale, onChange: (e) => applyLocaleChoice(e.target.value) }, /* @__PURE__ */ (0, import_react.createElement)("option", { value: "zh-CN" }, "\u7B80\u4F53\u4E2D\u6587"), /* @__PURE__ */ (0, import_react.createElement)("option", { value: "en" }, "English"))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u9879\u76EE"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, projectId || "\uFF08\u672A\u9009\u62E9\u9879\u76EE\uFF09"))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u8BF7\u6C42\u8BBE\u7F6E"), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-meta", style: { marginTop: 0 } }, "\u53D1\u9001\u8BF7\u6C42\u65F6\u7684\u8D85\u65F6\u3001\u4EE3\u7406\u4E0E\u5386\u53F2\u4FDD\u7559\u6761\u6570"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u8D85\u65F6 (ms)"), /* @__PURE__ */ (0, import_react.createElement)(
     "input",
     {
       className: "pp-input pp-input-mono",
-      value: settings.mockPort,
-      onChange: (e) => patch({ mockPort: e.target.value })
+      value: settings.requestTimeoutMs,
+      onChange: (e) => patch({ requestTimeoutMs: e.target.value })
     }
-  ), /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u4EE3\u7406"), /* @__PURE__ */ (0, import_react.createElement)(
+  )), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u4EE3\u7406"), /* @__PURE__ */ (0, import_react.createElement)(
     "input",
     {
       className: "pp-input pp-input-mono",
@@ -5550,21 +6632,21 @@ function SettingsPage(props) {
       value: settings.proxyUrl,
       onChange: (e) => patch({ proxyUrl: e.target.value })
     }
-  ), /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u8D85\u65F6 (ms)"), /* @__PURE__ */ (0, import_react.createElement)(
-    "input",
-    {
-      className: "pp-input pp-input-mono",
-      value: settings.requestTimeoutMs,
-      onChange: (e) => patch({ requestTimeoutMs: e.target.value })
-    }
-  ), /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u5386\u53F2\u6761\u6570"), /* @__PURE__ */ (0, import_react.createElement)(
+  )), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u5386\u53F2\u6761\u6570"), /* @__PURE__ */ (0, import_react.createElement)(
     "input",
     {
       className: "pp-input pp-input-mono",
       value: settings.historyLimit,
       onChange: (e) => patch({ historyLimit: e.target.value })
     }
-  )))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card", style: { marginTop: "var(--sp-5)" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u534F\u4F5C\uFF08\u89C4\u5212\u4E2D\uFF09"), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, "\u6210\u5458\u7BA1\u7406\u4E0E\u53D8\u66F4\u5386\u53F2\u4E3A P2 \u5360\u4F4D\uFF1A\u672C\u63D2\u4EF6\u65E0\u670D\u52A1\u7AEF\uFF0C\u4E0D\u505A\u4E91\u7AEF\u8D26\u53F7 / \u56E2\u961F\u540C\u6B65 / \u5BA1\u8BA1\u65E5\u5FD7\u3002"))));
+  ))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "Mock \u8BBE\u7F6E"), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-meta", style: { marginTop: 0 } }, "\u672C\u5730 Mock \u670D\u52A1\u76D1\u542C\u7AEF\u53E3\uFF081~65535\uFF09\uFF0C\u4FDD\u5B58\u540E\u4E0B\u6B21\u542F\u52A8\u751F\u6548"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "Mock \u7AEF\u53E3"), /* @__PURE__ */ (0, import_react.createElement)(
+    "input",
+    {
+      className: "pp-input pp-input-mono",
+      value: settings.mockPort,
+      onChange: (e) => patch({ mockPort: e.target.value })
+    }
+  )), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "Mock \u5730\u5740"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-mono pp-ellipsis" }, "http://127.0.0.1:" + normalizeSettings(settings).mockPort + "/mock/" + (projectId || "<projectId>")))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pane" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u6570\u636E\u76EE\u5F55"), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-meta", style: { marginTop: 0 } }, "\u5B58\u50A8\u6839\u76EE\u5F55\u7531 host \u6784\u9020\u53C2\u6570\u6CE8\u5165\uFF08createStorageService(basePath)\uFF09\uFF0C\u9875\u9762\u53EA\u8BFB\u5C55\u793A"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u5B58\u50A8\u8DEF\u5F84"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { flex: 1 }, readOnly: true, value: storeRoot })), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u9879\u76EE\u6587\u4EF6"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-mono pp-ellipsis" }, storeRoot + "/" + (projectId || "<projectId>") + "/project.json")))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card", style: { marginTop: "var(--sp-4)" } }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-card-title" }, "\u534F\u4F5C\uFF08\u89C4\u5212\u4E2D\uFF09"), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, "\u6210\u5458\u7BA1\u7406\u3001\u53D8\u66F4\u5386\u53F2\u4E0E\u5BA1\u8BA1\u65E5\u5FD7\u4E3A P2 \u5360\u4F4D\uFF1A\u672C\u63D2\u4EF6\u65E0\u670D\u52A1\u7AEF\uFF0C\u4E0D\u505A\u4E91\u7AEF\u8D26\u53F7 / \u56E2\u961F\u540C\u6B65 / \u5BA1\u8BA1\u65E5\u5FD7\u3002"))));
 }
 
 // src/client/pages-entry.js

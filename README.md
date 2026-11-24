@@ -47,18 +47,18 @@ profile 的 `package.json` 里 `dsh.profile.bundles` 必须同时含：
 
 | 路由 | 页面 | 能力 |
 |---|---|---|
-| `#/overview` | 项目总览 | 项目卡片网格、新建/重命名/删除（两段式确认）、最近接口表、快捷入口 |
-| `#/doc/:endpointId` | 接口文档 | 左树（目录折叠 + 未归类分组）、Markdown 描述、Path/Query/Headers/Cookies 四组参数表、请求体、认证、多响应页签、右侧 TOC、复制为 cURL |
-| `#/debug` | 调试发送 | 接口列表、环境选择与 baseUrl 拼接、`{{var}}` 引用标注与未定义提示、Params/Headers/Body/Auth 四页签（Body 七类型）、发送/取消、响应面板（状态胶囊/耗时/大小/响应头/原文↔美化/断言结果/脚本日志/截断标记）、保存为接口 |
-| `#/mock` | Mock | 字段规则表（fixed/regex/increment/random/template）、延迟与启用、本地 Mock 服务启停、命中地址 |
-| `#/schema` | 数据模型 | JSON Schema 列表与编辑、校验、生成示例 |
-| `#/env` | 环境与变量 | 环境增删改、baseUrl、变量表（key/value/enabled/secret）、全局变量、变量优先级说明 |
-| `#/history` | 请求历史 | 时间/方法/URL/状态/耗时/大小、详情、回放到调试页、清空（两段式确认） |
-| `#/test` | 自动化测试 | 用例（断言 + 提取器）、场景（多步骤 + 变量传递）、运行与结果明细 |
-| `#/import` | 导入导出 | 导入 OpenAPI / Postman / HAR / cURL；导出 OpenAPI / Postman / HAR / Markdown；代码生成 8 语言 |
-| `#/flow` | 流程图 | sequence 渲染 + SVG 导出 + 步骤编排落盘 |
-| `#/search` | 全局搜索 | 跨接口/模型/目录关键字搜索与分组跳转 |
-| `#/settings` | 设置 | 存储路径（只读展示 host 注入值）、主题、语言、Mock 端口、代理、超时、历史条数 |
+| `#/overview` | 项目总览 | Apifox 同构：统计卡（大数字 + 四块统计）、模块计数条（接口/文档/模型/单接口用例/场景用例）、右栏 6 动作、三张功能卡（分享列表/自动导入/代码生成）、项目卡片网格、最近接口表；当前项目**默认空**由用户选择 |
+| `#/doc/:endpointId` | 接口文档 | 240px 目录面板 + 新建/编辑/删除接口（两段式确认）、页签「文档/运行/用例/Mock/设置」、sticky 锚点条 + 10 分区（Path/Query/请求头/Cookies/请求体/认证/响应定义/响应示例/状态码/代码生成）、复制 cURL |
+| `#/debug/:endpointId` | 调试发送 | Apifox `.main-input-bar` 结构（URL 胶囊行 + 发送按钮组）、八页签 Params/Body/Headers/Cookies/Auth/前置操作/后置操作/设置、未选接口即快捷请求、响应面板（状态/耗时/大小/Body/Headers/Cookies/实际请求/控制台）、保存响应示例 |
+| `#/mock` | Mock | 本地 Mock 服务卡（端口/状态/命中地址）+ 接口 Mock 配置卡（启用/延迟/规则表六列：启用·字段·类型·规则·示例值·操作） |
+| `#/schema` | 数据模型 | 左「目录 → 模型」两级树、右基本信息 + 树模式/源码模式、校验、生成示例、保存/删除 |
+| `#/env` | 环境与变量 | 左环境列表（+ 新建）+ 右页签「环境变量/全局变量/优先级」、变量表（变量名·值·密钥·启用·类型·操作）、Base URL、前置 URL |
+| `#/history` | 请求历史 | 时间/方法/URL/状态/耗时/大小/操作、方法筛选、详情面板（request/response）、回填调试页、清空（两段式确认） |
+| `#/test` | 自动化测试 | 左「单接口用例 / 自动化场景」双组树、右用例编辑（基本信息/前置步骤/断言表/提取变量/运行）、场景步骤编排带方法徽标 |
+| `#/import` | 导入导出 | 导入 OpenAPI / Postman / HAR / cURL（文本框 + 文件选择 + 解析预览卡 + 保存到项目）、导出 OpenAPI / Postman / HAR / Markdown、代码生成 8 语言 |
+| `#/flow` | 场景编排 | 左步骤列表（序号/起止方/消息/动作）+ 右时序画布（双向选中联动）+ 属性面板；>9 步给拆分提示 |
+| `#/search` | 全局搜索 | 四组结果（接口/模型/目录/环境）、分组折叠与命中计数、命中片段高亮 |
+| `#/settings` | 设置 | 四组卡：基础信息、请求设置（超时/代理/历史条数）、Mock 设置（端口 + 地址）、数据目录（只读） |
 
 ## 架构
 
@@ -69,6 +69,7 @@ profile 的 `package.json` 里 `dsh.profile.bundles` 必须同时含：
 - **请求管线**：`{{var}}` 与 11 个 `{{$dynamic}}`（`$timestamp`/`$isoTimestamp`/`$randomInt`/`$randomString`/`$uuid`/`$randomEmail`/`$randomPhone`/`$randomBoolean`/`$randomFloat`/`$datetime`/`$date`），优先级 局部 > 环境 > 全局 → 前置脚本（`node:vm` 沙箱，`pm.*` 兼容面）→ `fetch` + AbortController（默认 30s）→ 后置脚本 → 断言（status/body/header/time × 9 种 op：`eq`/`neq`/`gt`/`lt`/`contains`/`notContains`/`exists`/`notExists`/`regex`）→ 历史落盘；响应 >2MB 截断标注。
 - **Mock 服务**：`node:http` 独立端口（默认 4010），两种命中路径，规则优先、默认响应回落。
 - **测试运行器**：`runCase` / `runScenario`，场景步骤间用 extractor 提取的变量传递。
+- **模型工具（`PostAPI`）**：host 经 `ctx.tools.register` 暴露 11 个 action，agent 可直接建项目/建接口/改接口/导入 OpenAPI/发请求，不必手工点页面 —— `list_projects`、`get_project`、`create_project`、`list_endpoints`、`get_endpoint`、`create_endpoint`、`update_endpoint`、`delete_endpoint`、`create_folder`、`import_openapi`、`send_request`。返回体刻意不含全量 endpoint body（`get_project` 只给计数与接口概要），避免撑爆模型上下文；`ctx.tools` 缺失时静默跳过，不影响右侧栏。
 
 ## 数据存放位置
 
@@ -93,7 +94,7 @@ src/client/shell/            definition / Body 路由 / registry 桥 api + 桩 /
 src/client/pages/            12 个页面 + components + sequence + design-tokens.css
 locale/                      zh.json / en.json
 dist/client.js               构建产物（esbuild 打包，随包发布）
-tests/                       16 套件 328 用例（node 直跑，无测试框架依赖）
+tests/                       17 套件 348 用例（node 直跑，无测试框架依赖）
 scripts/smoke-host.mjs       宿主端到端冒烟 27 项
 docs/                        契约、视觉规格、功能矩阵、排查报告
 ```
@@ -103,7 +104,7 @@ docs/                        契约、视觉规格、功能矩阵、排查报告
 ```bash
 npm install          # 只装 esbuild（唯一的 devDependency）
 npm run build        # esbuild 打包 src/client → dist/client.js，附 vm smoke
-npm test             # 16 套件 / 328 用例
+npm test             # 17 套件 / 348 用例
 npm run smoke        # 宿主端到端冒烟 27 项（临时基路径 + 真实基路径）
 npm run verify       # 上面三步串跑
 ```
@@ -117,7 +118,9 @@ npm run verify       # 上面三步串跑
 - 无云端账号、团队协作、在线分享；无 AI 生成用例。
 - 自动化测试运行器在宿主侧串行执行，无并发/重试策略。
 - 只支持 `platform: web`（桌面端与 web 端共用右侧栏组件）；无原生客户端实现。
-- `src/client/pages/__tests__/heights.test.js` 是设计纪律静态检查，未纳入 `npm test`（有历史遗留告警）。
+- `src/client/pages/__tests__/heights.test.js` 是设计纪律静态检查（150 checks，当前全 PASS），未纳入 `npm test`。
+- Apifox 深色主题未逐页比对，目前只有浅色字面量取自实测。
+- agent 的 `send_request` 不写请求历史（写历史在 bridge 的 `/request/send` 路由里）。
 
 ## 开发约定
 
@@ -133,6 +136,9 @@ npm run verify       # 上面三步串跑
 - [功能矩阵](docs/feature-matrix.md)：Apifox 功能全表 → 本插件实现矩阵
 - [v2 契约](docs/interface-contract-v2.md)：schema / host face / 桥路由 / 页面约定 / 测试要求
 - [Apifox 视觉规格](docs/apifox-visual-parity-spec.md)：从 Apifox 2.8.55 渲染器 CSS 实测的尺寸与色板
+- [Apifox 全页面拆解规格](docs/apifox-research/pages-spec.md)：12 条路由 + 骨架的类名嵌套、CSS 实测值、i18n 文案、数据来源与映射建议（REA 取证）
+- [Apifox chunk 映射](docs/apifox-research/chunks.md)：38 个工作台 chunk + 121 项名→id 反查 + 复现命令
+- [总览页重建记录](docs/apifox-research/overview-rebuild.md)：解包链、REA 证据与类名映射范式
 - [侧边栏消失根因](docs/rootcause-sidebar-vanish.md)：`ctx.effect` 返回值形态的一次真实事故复盘
 
 ## 许可
