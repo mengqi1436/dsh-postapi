@@ -39,8 +39,14 @@ export const ROUTES = [
   { name: 'settings', hash: '#/settings', labelKey: 'nav.settings', icon: 'gear' },
 ]
 
-/** 带参数的路由（hash 形态 #/name/:arg）。 */
-export const PARAM_ROUTES = ['doc', 'schema']
+/**
+ * 带参数的路由（hash 形态 #/name/:arg）。
+ *
+ * debug 也带参数：#/debug/:endpointId 直接打开某条接口的调试台（doc 页「运行」页签、
+ * history 回放、overview 最近接口都走这个形态）。此前只有 doc/schema，
+ * 导致 #/debug/xxx 的 arg 恒为空，只能靠 localStorage 传目标。
+ */
+export const PARAM_ROUTES = ['doc', 'schema', 'debug']
 
 /**
  * 五个导航分组（v2）：每条路由只出现在一个分组里，一级只显示分组图标。

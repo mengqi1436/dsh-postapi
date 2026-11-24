@@ -14,9 +14,12 @@ import { createVariableResolver, DYNAMIC_VARS } from './variables.js'
 import * as importExport from './import-export.js'
 import * as codegen from './codegen.js'
 import { handlePostapiRequest } from './bridge.js'
+import { createAgentTool } from './agent-tool.js'
 import { appendFileSync } from 'node:fs'
 
 /** cordis 受控 ctx：宿主按此清单注入服务，未声明的属性访问会直接抛错（without inject）。 */
+// tools 是可选服务（cordis 反射读取）：进 inject 会让未提供 tools 的宿主整插件不激活，
+// 故不进 inject，用 ctx.tools?.register 软注册（与 dsh-db-tool 的可选读取同形态）。
 export const inject = ['webServer', 'connection']
 
 /**
@@ -91,6 +94,75 @@ export function apply(ctx, config) {
       }) ?? (() => {}),
     'postapi-api',
   )
+
+  /**
+   * 模型工具：让 agent 直接建/改/查接口（action 枚举见 src/host/agent-tool.js）。
+   *
+   * ctx.tools 为可选服务：宿主未提供时静默跳过（右侧栏功能不受影响）。
+   * 返回值一律 { text, isError? }，execute 内部已保证不抛异常。
+   */
+  if (ctx.tools && typeof ctx.tools.register === 'function') {
+    try {
+      const tool = createAgentTool({ storage, importExport, request })
+      ctx.tools.register({
+        name: 'PostAPI',
+        timeoutMs: 60000,
+        description: [
+          '管理 PostAPI（Apifox 风格 API 工作台）的项目与接口，数据落在本机 ~/.dsh/postapi。',
+          'action 枚举：',
+          'list_projects 列项目；get_project 取项目摘要；create_project 建项目；',
+          'list_endpoints 列接口（可 keyword 过滤）；get_endpoint 取单条接口全量；',
+          'create_endpoint 新建接口（endpoint 至少给 name/method/url）；',
+          'update_endpoint 局部更新接口（patch 浅合并，保留 createdAt）；',
+          'delete_endpoint 删接口；create_folder 建目录；',
+          'import_openapi 导入 OpenAPI/Swagger 文本并落盘；send_request 发送请求（body 截断 4000 字符）。',
+          '所有结果都是 JSON 文本；ok:false 表示失败，原因在 error 字段。',
+        ].join(' '),
+        parameters: {
+          type: 'object',
+          properties: {
+            action: {
+              type: 'string',
+              enum: tool.actions,
+              description: '要执行的操作',
+            },
+            project_id: { type: 'string', description: '项目 id（除 list_projects / create_project 外必填）' },
+            endpoint_id: { type: 'string', description: '接口 id（get/update/delete_endpoint、send_request 用）' },
+            folder_id: { type: 'string', description: 'list_endpoints 的目录过滤' },
+            keyword: { type: 'string', description: 'list_endpoints 的名称/URL 关键字过滤' },
+            name: { type: 'string', description: 'create_project / create_folder 的名称' },
+            parent_id: { type: 'string', description: 'create_folder 的父目录 id（可选）' },
+            endpoint: {
+              type: 'object',
+              description: 'create_endpoint 的接口对象（name/method/url/params/headers/body/auth/responses/description/tags/folderId 等，字段同项目 schema v2）',
+            },
+            patch: { type: 'object', description: 'update_endpoint 的局部字段（浅合并）' },
+            text: { type: 'string', description: 'import_openapi 的 OpenAPI/Swagger 文本（JSON 或 YAML）' },
+            request: { type: 'object', description: 'send_request 直接给的请求对象（method/url/params/headers/body/auth）' },
+          },
+          required: ['action'],
+        },
+        output: {
+          schema: {
+            type: 'object',
+            properties: {
+              text: { type: 'string', description: 'JSON 结果文本' },
+              isError: { type: 'boolean', description: 'true 表示操作被拒或失败' },
+            },
+            required: ['text'],
+          },
+          render: (_args, value) => [{ type: 'text', text: value.text }],
+        },
+        execute: async (args) => tool.execute(args),
+      })
+      bootLog('tools.register PostAPI ok')
+    } catch (err) {
+      // 工具注册失败不拖垮桥与页签（右侧栏是主功能）
+      bootLog('tools.register PostAPI failed: ' + (err && err.message))
+    }
+  } else {
+    bootLog('ctx.tools 不可用，跳过 PostAPI 工具注册')
+  }
 
   // 插件卸载时收掉可能仍在监听的 Mock 端口（effect disposer 随插件生命周期释放）。
   ctx.effect?.(

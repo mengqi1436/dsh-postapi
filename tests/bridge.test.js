@@ -309,6 +309,61 @@ export const tests = [
     }),
   },
   {
+    name: 'host: apply 在 ctx.tools 存在时注册 PostAPI 工具（action 枚举齐 11 项）',
+    fn: () => withTempBase(async (base) => {
+      const tools = []
+      const ctx = {
+        effect: (fn) => fn(),
+        webServer: { register: () => () => {} },
+        tools: { register: (tool) => { tools.push(tool); return () => {} } },
+      }
+      apply(ctx, { storage: { basePath: base } })
+      assert.equal(tools.length, 1, '应注册 1 个工具')
+      const tool = tools[0]
+      assert.equal(tool.name, 'PostAPI')
+      assert.equal(tool.parameters.required[0], 'action')
+      const expected = ['list_projects', 'get_project', 'create_project', 'list_endpoints', 'get_endpoint',
+        'create_endpoint', 'update_endpoint', 'delete_endpoint', 'create_folder', 'import_openapi', 'send_request']
+      assert.deepEqual(tool.parameters.properties.action.enum, expected)
+      assert.equal(typeof tool.execute, 'function')
+      // 真实落盘往返：create_project → create_endpoint → get_endpoint
+      const createdRaw = JSON.parse((await tool.execute({ action: 'create_project', name: '工具项目' })).text)
+      assert.equal(createdRaw.ok, true)
+      // 返回形态兼容两种：平铺 { id } 或带一层 { project: { id } }（host-agent 正在统一为平铺）
+      const created = createdRaw.project ? { ...createdRaw.project } : createdRaw
+      assert.equal(created.name, '工具项目')
+      const ep = JSON.parse((await tool.execute({
+        action: 'create_endpoint',
+        project_id: created.id,
+        endpoint: { name: '工具接口', method: 'GET', url: '/x' },
+      })).text)
+      assert.equal(ep.ok, true)
+      assert.match(ep.endpoint.id, /^ep_/)
+      const got = JSON.parse((await tool.execute({
+        action: 'get_endpoint', project_id: created.id, endpoint_id: ep.endpoint.id,
+      })).text)
+      assert.equal(got.ok, true)
+      assert.equal(got.endpoint.name, '工具接口')
+      // 缺参 → isError 且不抛
+      const bad = await tool.execute({ action: 'get_endpoint' })
+      assert.equal(bad.isError, true)
+      assert.match(bad.text, /project_id/)
+    }),
+  },
+  {
+    name: 'host: apply 在 ctx.tools 缺失时照常注册桥且不抛',
+    fn: () => withTempBase(async (base) => {
+      const registrations = []
+      const ctx = {
+        effect: (fn) => fn(),
+        webServer: { register: (h) => { registrations.push(h); return () => {} } },
+      }
+      apply(ctx, { storage: { basePath: base } })
+      assert.equal(registrations.length, 1)
+      assert.equal(registrations[0].path, '/dsh-postapi/api')
+    }),
+  },
+  {
     name: 'bridge: POST /storage/getProject 兼容分支与 GET 形态同返回',
     fn: () => withTempBase((base) =>
       withHandlerServer(makeBridge(base), async (httpBase) => {
@@ -700,6 +755,12 @@ export const tests = [
             'saveGlobals', 'saveProjectSettings', 'saveFlow', 'saveResponse', 'deleteResponse',
             'appendHistory', 'clearHistory']
           for (const route of routes) {
+            const r = await jsonFetch(httpBase, '/api/storage/' + route, { method: 'POST', body: {} })
+            assert.equal(r.status, 400, route + ' 缺 projectId 应 400')
+            assert.equal(r.json.code, 'INVALID_ARGUMENT', route + ' 错误码应为 INVALID_ARGUMENT')
+          }
+          // 既有 6 条路由同样必须 400（此前会 500 INTERNAL：空 projectId 喂给 storage 读盘抛 ENOENT）
+          for (const route of ['renameProject', 'deleteProject', 'saveEndpoint', 'deleteEndpoint', 'saveFolder', 'deleteFolder']) {
             const r = await jsonFetch(httpBase, '/api/storage/' + route, { method: 'POST', body: {} })
             assert.equal(r.status, 400, route + ' 缺 projectId 应 400')
             assert.equal(r.json.code, 'INVALID_ARGUMENT', route + ' 错误码应为 INVALID_ARGUMENT')

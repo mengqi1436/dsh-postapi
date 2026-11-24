@@ -218,7 +218,7 @@ t('12 条路由齐全且顺序与契约 §3 一致', async () => {
     assert(r.hash === '#/' + r.name, r.name + ' 的 hash 应为 #/' + r.name)
     assert(typeof r.labelKey === 'string' && r.labelKey.indexOf('nav.') === 0, r.name + ' 缺少 nav.* 文案键')
   }
-  assert(ex.PARAM_ROUTES.join(',') === 'doc,schema', 'PARAM_ROUTES 应为 doc,schema')
+  assert(ex.PARAM_ROUTES.join(',') === 'doc,schema,debug', 'PARAM_ROUTES 应为 doc,schema,debug')
   // v2 不再按页切换列数（TWO_COL_ROUTES 已移除），改为断言 5 个导航分组覆盖全部 12 条路由
   assert(Array.isArray(ex.NAV_GROUPS) && ex.NAV_GROUPS.length === 5, 'NAV_GROUPS 应有 5 个分组')
   const covered = ex.NAV_GROUPS.reduce((acc, g) => acc.concat(g.routes), [])

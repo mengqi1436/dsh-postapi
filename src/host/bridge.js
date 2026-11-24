@@ -159,14 +159,17 @@ export async function handlePostapiRequest(req, res, { storage, request, service
     }
 
     const body = method === 'POST' ? await readBody(req) : {}
+    // 需要 projectId 的既有 6 条路由统一走 requireProject：缺参 → 400 INVALID_ARGUMENT。
+    // 此前直接 projectIdOf(b) 会把空串喂给 storage，storage 读盘抛 ENOENT，被最外层
+    // catch 转成 500 INTERNAL —— 与契约 §5「参数错误 400」不符，且掩盖真实原因。
     const routes = {
       'POST /storage/createProject': (b) => storage.createProject(str(b.name)),
-      'POST /storage/renameProject': (b) => storage.renameProject(projectIdOf(b), str(b.name)),
-      'POST /storage/deleteProject': (b) => storage.deleteProject(projectIdOf(b)),
-      'POST /storage/saveEndpoint': (b) => storage.saveEndpoint(projectIdOf(b), b.endpoint),
-      'POST /storage/deleteEndpoint': (b) => storage.deleteEndpoint(projectIdOf(b), str(b.endpointId)),
-      'POST /storage/saveFolder': (b) => storage.saveFolder(projectIdOf(b), b.folder),
-      'POST /storage/deleteFolder': (b) => storage.deleteFolder(projectIdOf(b), str(b.folderId)),
+      'POST /storage/renameProject': (b) => storage.renameProject(requireProject(b), str(b.name)),
+      'POST /storage/deleteProject': (b) => storage.deleteProject(requireProject(b)),
+      'POST /storage/saveEndpoint': (b) => storage.saveEndpoint(requireProject(b), b.endpoint),
+      'POST /storage/deleteEndpoint': (b) => storage.deleteEndpoint(requireProject(b), str(b.endpointId)),
+      'POST /storage/saveFolder': (b) => storage.saveFolder(requireProject(b), b.folder),
+      'POST /storage/deleteFolder': (b) => storage.deleteFolder(requireProject(b), str(b.folderId)),
     }
     const route = routes[key]
     if (route) return sendOk(res, await route(body))
