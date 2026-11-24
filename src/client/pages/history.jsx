@@ -1,23 +1,28 @@
-// history.jsx — 请求历史页（Apifox 工作台：历史表 + 状态胶囊 + 详情面板 + 回放）
+// history.jsx — 请求历史页（对齐 Apifox 2.8.55 async_http_request_history：历史表 + 状态胶囊 + 详情抽屉）
 // 自注册：模块求值期入队 __postapiQueue
 // 数据：api.storage.listProjects / getProject / getHistory / clearHistory
-// 视觉基线：docs/apifox-design-spec.md —— .pp-table / .pp-pill（三档）/ .pp-meta / .pp-pane
+// Apifox 取证（.research/apifox/app/dist/renderer/17888.b25d262e.async.js + async_http_request_history.f1b86d50.css）：
+//   历史是一张等高表格（时间 / 方法 / 名称 / URL / 状态 / 耗时 / 大小），点行开右侧详情；
+//   状态用胶囊三档（2xx 绿 / 4xx 橙 / 其余红），清空是危险动作需二次确认。
+// 视觉基线：docs/apifox-visual-parity-spec.md —— .pp-table / .pp-pill（三档）/ .pp-meta / .pp-pane
 import React, { useEffect, useRef, useState } from 'react'
 import { applyTheme } from './theme.js'
+import { EmptyState } from './components/EmptyState.jsx'
 
 ;(window.__postapiQueue = window.__postapiQueue || []).push(['history', HistoryPage]) // 注册表就绪前入队
 
 const REPLAY_KEY = 'postapi.debug.replay'
 
+// 文件内 mock：仅在 api.storage 缺失时渲染结构示例
 const MOCK_ENTRIES = [
   {
-    id: 'his_1001', at: '2026-11-17T10:20:11.000Z', method: 'GET', url: 'http://127.0.0.1:8080/api/v1/orders?page=1',
+    id: 'his_sample01', at: '2026-11-17T10:20:11.000Z', method: 'GET', url: 'http://127.0.0.1:8080/api/v1/orders?page=1',
     status: 200, timeMs: 42, bodySize: 512,
     request: { method: 'GET', url: '/api/v1/orders', headers: [{ key: 'Accept', value: 'application/json' }], body: '' },
     response: { status: 200, headers: { 'content-type': 'application/json' }, body: '{\n  "code": 0\n}' },
   },
   {
-    id: 'his_1002', at: '2026-11-17T09:05:03.000Z', method: 'POST', url: 'http://127.0.0.1:8080/api/v1/orders',
+    id: 'his_sample02', at: '2026-11-17T09:05:03.000Z', method: 'POST', url: 'http://127.0.0.1:8080/api/v1/orders',
     status: 500, timeMs: 918, bodySize: 128,
     request: { method: 'POST', url: '/api/v1/orders', headers: [{ key: 'Content-Type', value: 'application/json' }], body: '{"skuId":"SKU-1001"}' },
     response: { status: 500, headers: { 'content-type': 'application/json' }, body: '{\n  "error": "internal"\n}' },
@@ -65,31 +70,44 @@ export function replayPayload(entry) {
   }
 }
 
+/** 方法分组过滤（Apifox 历史列表顶部的方法筛选）。 */
+export function matchesMethod(entry, method) {
+  if (!method) return true
+  return String((entry && entry.method) || '').toUpperCase() === String(method).toUpperCase()
+}
+
 function errText(err) {
   return err && err.message ? err.message : String(err)
 }
+
+const METHODS = ['', 'GET', 'POST', 'PUT', 'DELETE', 'PATCH']
 
 export function HistoryPage(props) {
   const rootRef = useRef(null)
   const api = (props && props.api) || (typeof window !== 'undefined' ? window.__postapiApi : undefined)
   const storage = api && api.storage
-  const [projects, setProjects] = useState([{ id: 'proj_demo01', name: '订单中心' }])
-  const [projectId, setProjectId] = useState('proj_demo01')
-  const [entries, setEntries] = useState(MOCK_ENTRIES)
+  // 默认态：项目列表为空、当前项目为空
+  const [projects, setProjects] = useState([])
+  const [projectId, setProjectId] = useState('')
+  const [entries, setEntries] = useState([])
   const [isMock, setIsMock] = useState(true)
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
   const [detailId, setDetailId] = useState('')
   const [pendingClear, setPendingClear] = useState(false)
+  const [method, setMethod] = useState('')
 
-  useEffect(() => applyTheme(rootRef.current), [])
+  useEffect(() => { applyTheme(rootRef.current) }, [])
+
+  const applyMock = () => {
+    setIsMock(true)
+    setProjects([{ id: 'history_sample_project', name: '示例项目' }])
+    setEntries(MOCK_ENTRIES)
+  }
 
   const load = async (id) => {
-    if (!storage || typeof storage.getHistory !== 'function') {
-      setIsMock(true)
-      setEntries(MOCK_ENTRIES)
-      return
-    }
+    if (!storage || typeof storage.getHistory !== 'function') { applyMock(); return }
+    if (!id) { setEntries([]); return }
     try {
       const res = await storage.getHistory(id)
       const list = res && Array.isArray(res.entries) ? res.entries : []
@@ -103,24 +121,24 @@ export function HistoryPage(props) {
 
   useEffect(() => {
     const boot = async () => {
-      if (storage && typeof storage.listProjects === 'function') {
-        try {
-          const list = await storage.listProjects()
-          if (Array.isArray(list) && list.length > 0) {
-            setProjects(list)
-            setProjectId(list[0].id)
-            await load(list[0].id)
-            return
-          }
-        } catch (err) {
-          setError('加载项目列表失败：' + errText(err))
+      if (!storage || typeof storage.listProjects !== 'function') { applyMock(); return }
+      try {
+        const list = await storage.listProjects()
+        if (Array.isArray(list) && list.length > 0) {
+          setProjects(list)
+          setProjectId(list[0].id)
+          await load(list[0].id)
+          return
         }
+        setIsMock(false)
+      } catch (err) {
+        setError('加载项目列表失败：' + errText(err))
       }
-      setIsMock(true)
     }
     boot()
   }, [])
 
+  // 行点击回填调试页：写回放快照后跳转（Apifox 点历史行即重开该请求）
   const replay = (entry) => {
     try {
       localStorage.setItem(REPLAY_KEY, JSON.stringify(replayPayload(entry)))
@@ -140,7 +158,7 @@ export function HistoryPage(props) {
       return
     }
     if (!storage || typeof storage.clearHistory !== 'function') {
-      setError('当前桥未提供 api.storage.clearHistory')
+      setError('当前桥未提供 api.storage.clearHistory（契约 §3）')
       return
     }
     setPendingClear(false)
@@ -148,12 +166,14 @@ export function HistoryPage(props) {
     try {
       const res = await storage.clearHistory(projectId)
       setNotice('已清空历史：' + ((res && res.cleared) || 0) + ' 条')
+      setDetailId('')
       await load(projectId)
     } catch (err) {
       setError('清空历史失败：' + errText(err))
     }
   }
 
+  const rows = entries.filter((e) => matchesMethod(e, method))
   const detail = entries.find((e) => e.id === detailId)
 
   return (
@@ -163,7 +183,8 @@ export function HistoryPage(props) {
         <div className="pp-overview-actions">
           <label className="pp-meta">项目</label>
           <select className="pp-select" value={projectId}
-            onChange={(e) => { setProjectId(e.target.value); load(e.target.value) }}>
+            onChange={(e) => { const v = e.target.value; setProjectId(v); load(v) }}>
+            <option value="">{projects.length ? '请选择项目' : '暂无项目'}</option>
             {projects.map((p) => <option key={p.id} value={p.id}>{p.name || p.id}</option>)}
           </select>
           <button className="pp-btn" onClick={() => load(projectId)}>刷新</button>
@@ -173,49 +194,58 @@ export function HistoryPage(props) {
       <div className="pp-overview-content">
         <div className="pp-toolbar">
           <span className="pp-meta">
-            {isMock ? '示例数据 — api.storage.getHistory 不可用，以下为文件内 mock' : '数据来源：api.storage（getHistory / clearHistory）'}
+            {isMock
+              ? '示例数据 — api.storage.getHistory 不可用，以下为文件内 mock'
+              : '数据来源：api.storage（getHistory / clearHistory）'}
           </span>
+          <span className="pp-toolbar-spacer" />
+          <label className="pp-meta">方法</label>
+          <select className="pp-select pp-input-sm" value={method} onChange={(e) => setMethod(e.target.value)}>
+            {METHODS.map((m) => <option key={m || 'all'} value={m}>{m || '全部'}</option>)}
+          </select>
+          <span className="pp-meta">{rows.length} / {entries.length} 条</span>
         </div>
-        {error ? <p className="pp-error-text">{error}</p> : null}
-        {notice ? <p className="pp-muted">{notice}</p> : null}
-  
+        {error ? <div className="pp-note pp-note-bad">{error}</div> : null}
+        {notice ? <div className="pp-note pp-note-ok">{notice}</div> : null}
+
         <div className="pp-card">
           <div className="pp-table-wrap">
-          <table className="pp-table">
-            <thead>
-              <tr>
-                <th style={{ width: '150px' }}>时间</th>
-                <th style={{ width: '80px' }}>方法</th>
-                <th>URL</th>
-                <th style={{ width: '70px' }}>状态</th>
-                <th style={{ width: '80px' }}>耗时</th>
-                <th style={{ width: '90px' }}>大小</th>
-                <th style={{ width: '130px' }}>操作</th>
-              </tr>
-            </thead>
-            <tbody>
-              {entries.map((e) => (
-                <tr key={e.id} data-active={detailId === e.id ? 'true' : 'false'}>
-                  <td className="pp-meta">{fmtDateTime(e.at)}</td>
-                  <td><span className="pp-method" data-method={e.method}>{e.method}</span></td>
-                  <td className="pp-table-mono pp-ellipsis">{e.url}</td>
-                  <td><span className={pillClass(statusTone(e.status))}>{e.status}</span></td>
-                  <td className="pp-meta">{e.timeMs} ms</td>
-                  <td className="pp-meta">{fmtSize(e.bodySize)}</td>
-                  <td>
-                    <button className="pp-btn pp-btn-sm" onClick={() => setDetailId(detailId === e.id ? '' : e.id)}>详情</button>{' '}
-                    <button className="pp-btn pp-btn-sm" onClick={() => replay(e)}>回放</button>
-                  </td>
+            <table className="pp-table">
+              <thead>
+                <tr>
+                  <th style={{ width: '150px' }}>时间</th>
+                  <th style={{ width: '80px' }}>方法</th>
+                  <th>URL</th>
+                  <th style={{ width: '70px' }}>状态</th>
+                  <th style={{ width: '80px' }}>耗时</th>
+                  <th style={{ width: '90px' }}>大小</th>
+                  <th style={{ width: '110px' }}>操作</th>
                 </tr>
-              ))}
-              {entries.length === 0 ? (
-                <tr><td colSpan={7} className="pp-muted">暂无历史记录，在调试页发送请求后自动记录</td></tr>
-              ) : null}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {rows.map((e) => (
+                  <tr key={e.id} data-active={detailId === e.id ? 'true' : 'false'}
+                    onClick={() => setDetailId(detailId === e.id ? '' : e.id)}>
+                    <td className="pp-meta">{fmtDateTime(e.at)}</td>
+                    <td><span className="pp-method" data-method={e.method}>{e.method}</span></td>
+                    <td className="pp-table-mono pp-ellipsis">{e.url}</td>
+                    <td><span className={pillClass(statusTone(e.status))}>{e.status}</span></td>
+                    <td className="pp-meta">{e.timeMs} ms</td>
+                    <td className="pp-meta">{fmtSize(e.bodySize)}</td>
+                    <td>
+                      <button className="pp-btn pp-btn-sm" onClick={(ev) => { if (ev && ev.stopPropagation) ev.stopPropagation(); setDetailId(detailId === e.id ? '' : e.id) }}>详情</button>{' '}
+                      <button className="pp-btn pp-btn-sm" onClick={(ev) => { if (ev && ev.stopPropagation) ev.stopPropagation(); replay(e) }}>回放</button>
+                    </td>
+                  </tr>
+                ))}
+                {rows.length === 0 ? (
+                  <tr><td colSpan={7} className="pp-muted">暂无历史记录，在调试页发送请求后自动记录</td></tr>
+                ) : null}
+              </tbody>
+            </table>
           </div>
         </div>
-  
+
         {detail ? (
           <div className="pp-pane" style={{ marginTop: 'var(--sp-3)' }}>
             <div className="pp-card-title">详情 · {detail.id}</div>
@@ -224,14 +254,19 @@ export function HistoryPage(props) {
               <span className={pillClass(statusTone(detail.status))}>{detail.status}</span>
               <span className="pp-meta">耗时 {detail.timeMs} ms</span>
               <span className="pp-meta">大小 {fmtSize(detail.bodySize)}</span>
+              <span className="pp-toolbar-spacer" />
+              <button className="pp-btn pp-btn-sm" onClick={() => replay(detail)}>回填到调试页</button>
             </div>
             <div className="pp-meta" style={{ marginTop: 'var(--sp-2)' }}>请求</div>
             <pre className="pp-pre pp-pre-scroll">{JSON.stringify(detail.request || {}, null, 2)}</pre>
             <div className="pp-meta" style={{ marginTop: 'var(--sp-2)' }}>响应</div>
             <pre className="pp-pre pp-pre-scroll">{JSON.stringify(detail.response || {}, null, 2)}</pre>
           </div>
-        ) : null}
-      
+        ) : (
+          <div style={{ marginTop: 'var(--sp-3)' }}>
+            <EmptyState text="选中一行查看请求与响应详情" hint="点表格任意一行，或在「操作」列点「详情」" />
+          </div>
+        )}
       </div>
     </div>
   )

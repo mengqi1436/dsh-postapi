@@ -1,8 +1,9 @@
-// flow.jsx — 流程图页（Apifox 工作台：时序图容器 + 步骤编排表 + 拆分提示）
+// flow.jsx — 测试场景编排 / 时序图页（对齐 Apifox 2.8.55 async_test_scenario：
+//   左步骤列表（可增删改序，显示序号 / 起止方 / 消息 / 动作）+ 右时序画布 + 下方属性面板）
 // 哲学：diagram-design 4/10 密度；steps > 9 显示拆分提示（超过即拆两张图）
 // 自注册；数据契约 §2 project.flow.steps（含可选 op/guard/divider/headline 扩展字段）
 // 编排结果真接 api.storage.saveFlow(projectId, flow) 落盘；api 缺失时用 localStorage 草稿兜底
-// 视觉基线：docs/apifox-design-spec.md —— .pp-seq-wrap / .pp-table / .pp-split-hint
+// 视觉基线：docs/apifox-visual-parity-spec.md —— .pp-flow-layout / .pp-flow-side / .pp-seq-wrap / .pp-flow-props
 import React, { useEffect, useRef, useState } from 'react'
 import { SequenceDiagram, exportSequenceSvg } from './sequence.jsx'
 import { applyTheme } from './theme.js'
@@ -24,7 +25,7 @@ export function collectActors(steps) {
   return out
 }
 
-// —— mock flow（契约 §2 flow 结构；后两条带 alt 片段扩展字段）——
+// 文件内 mock（契约 §2 flow 结构；后两条带 alt 片段扩展字段）——仅在 api.storage 缺失时展示
 const DEFAULT_STEPS = [
   { actor: '页面', action: 'call', target: 'Storage', message: 'loadProject', note: '' },
   { actor: 'Storage', action: 'return', target: '页面', message: 'project', note: '' },
@@ -87,10 +88,11 @@ export function FlowPage(props) {
   const svgRef = useRef(null)
   const api = (props && props.api) || (typeof window !== 'undefined' ? window.__postapiApi : undefined)
   const storage = api && api.storage
-  const [projects, setProjects] = useState([{ id: 'proj_demo01', name: '订单中心' }])
-  const [projectId, setProjectId] = useState('proj_demo01')
-  const [flowName, setFlowName] = useState('接口调试时序')
-  const [steps, setSteps] = useState(() => loadDraft() || DEFAULT_STEPS)
+  // 默认态：项目列表为空、当前项目为空；无 api 时用文件内 mock 步骤（标注示例数据）
+  const [projects, setProjects] = useState([])
+  const [projectId, setProjectId] = useState('')
+  const [flowName, setFlowName] = useState('')
+  const [steps, setSteps] = useState([])
   const [isMock, setIsMock] = useState(true)
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
@@ -101,27 +103,50 @@ export function FlowPage(props) {
     saveDraft(steps)
   }, [steps])
 
-  // 项目列表 + 当前项目 flow 载入（api 缺失时保持 mock 与草稿）
+  const applyMock = () => {
+    setIsMock(true)
+    setProjects([{ id: 'flow_sample_project', name: '示例项目' }])
+    setSteps(loadDraft() || DEFAULT_STEPS)
+    setFlowName('示例时序')
+    setActiveIdx(0)
+  }
+
+  const loadProject = async (id) => {
+    if (!storage || typeof storage.getProject !== 'function') { applyMock(); return }
+    if (!id) { setSteps([]); return }
+    try {
+      const loaded = await storage.getProject(id)
+      const flow = loaded && loaded.flow
+      if (flow && Array.isArray(flow.steps) && flow.steps.length > 0) {
+        setSteps(normalizeSteps(flow.steps))
+        setFlowName(flow.name || '')
+        setActiveIdx(0)
+        setIsMock(false)
+      } else {
+        setSteps([])
+        setFlowName('')
+        setActiveIdx(0)
+        setIsMock(false)
+      }
+    } catch (err) {
+      setError('加载项目失败：' + errText(err))
+    }
+  }
+
   useEffect(() => {
     const boot = async () => {
-      if (!storage || typeof storage.listProjects !== 'function') return
+      if (!storage || typeof storage.listProjects !== 'function') { applyMock(); return }
       try {
         const list = await storage.listProjects()
         if (Array.isArray(list) && list.length > 0) {
           setProjects(list)
           setProjectId(list[0].id)
-          setIsMock(false)
-          if (typeof storage.getProject === 'function') {
-            const loaded = await storage.getProject(list[0].id)
-            const flow = loaded && loaded.flow
-            if (flow && Array.isArray(flow.steps) && flow.steps.length > 0) {
-              setSteps(normalizeSteps(flow.steps))
-              setFlowName(flow.name || '接口调试时序')
-            }
-          }
+          await loadProject(list[0].id)
+          return
         }
+        setIsMock(false)
       } catch (err) {
-        setError('加载项目失败：' + errText(err))
+        setError('加载项目列表失败：' + errText(err))
       }
     }
     boot()
@@ -145,29 +170,12 @@ export function FlowPage(props) {
   }
   const remove = (i) => { setSteps(steps.filter((_, idx) => idx !== i)); setNotice('') }
   const add = () => {
-    setSteps(steps.concat([{ actor: '页面', action: 'call', target: 'Storage', message: '', note: '' }]))
+    const actors = collectActors(steps)
+    setSteps(steps.concat([{
+      actor: actors[0] || '页面', action: 'call', target: actors[1] || 'Storage', message: '', note: '',
+    }]))
+    setActiveIdx(steps.length)
     setNotice('')
-  }
-
-  const reloadProject = async (id) => {
-    if (!storage || typeof storage.getProject !== 'function') {
-      setError('当前桥未提供 api.storage.getProject')
-      return
-    }
-    setError('')
-    try {
-      const loaded = await storage.getProject(id)
-      const flow = loaded && loaded.flow
-      if (flow && Array.isArray(flow.steps)) {
-        setSteps(normalizeSteps(flow.steps))
-        setFlowName(flow.name || '接口调试时序')
-        setNotice('已载入项目流程图：' + (flow.name || '未命名'))
-      } else {
-        setNotice('该项目尚无流程图，可编辑后保存')
-      }
-    } catch (err) {
-      setError('载入流程图失败：' + errText(err))
-    }
   }
 
   const persist = async () => {
@@ -176,6 +184,7 @@ export function FlowPage(props) {
       return
     }
     setError('')
+    setNotice('')
     try {
       const payload = flowPayload(flowName, steps)
       await storage.saveFlow(projectId, payload)
@@ -217,11 +226,12 @@ export function FlowPage(props) {
         <div className="pp-toolbar">
           <label className="pp-meta">项目</label>
           <select className="pp-select pp-input-sm" value={projectId}
-            onChange={(e) => { setProjectId(e.target.value); reloadProject(e.target.value) }}>
+            onChange={(e) => { const v = e.target.value; setProjectId(v); loadProject(v) }}>
+            <option value="">{projects.length ? '请选择项目' : '暂无项目'}</option>
             {projects.map((p) => <option key={p.id} value={p.id}>{p.name || p.id}</option>)}
           </select>
           <input className="pp-input pp-input-sm pp-flow-name" value={flowName}
-            placeholder="图名"
+            placeholder="场景名（如：下单主流程）"
             onChange={(e) => { setFlowName(e.target.value); setNotice('') }} />
           <span className="pp-toolbar-spacer" />
           <button className="pp-btn pp-btn-sm" onClick={exportSvg}>导出 SVG</button>
@@ -229,11 +239,11 @@ export function FlowPage(props) {
         </div>
         <div className="pp-meta pp-flow-source">
           {isMock
-            ? '示例数据 — api.storage.saveFlow 不可用，编排结果仅存本地草稿（' + DRAFT_KEY + '）'
+            ? '示例数据 — api.storage 不可用，以下步骤为文件内 mock，编排结果仅存本地草稿（' + DRAFT_KEY + '）'
             : '数据来源：api.storage（getProject / saveFlow）'}
         </div>
-        {error ? <p className="pp-error-text">{error}</p> : null}
-        {notice ? <p className="pp-muted">{notice}</p> : null}
+        {error ? <div className="pp-note pp-note-bad">{error}</div> : null}
+        {notice ? <div className="pp-note pp-note-ok">{notice}</div> : null}
 
         {overBudget && (
           <div className="pp-split-hint">
@@ -241,8 +251,7 @@ export function FlowPage(props) {
           </div>
         )}
 
-        {/* Apifox 测试场景同构：左侧步骤列表（可增删改序）+ 右侧时序画布。
-            画布常驻可见，改任一步即时重绘；选中步骤在下方属性面板编辑。 */}
+        {/* Apifox 测试场景同构：左侧步骤列表（可增删改序）+ 右侧时序画布 + 下方属性面板 */}
         <div className="pp-flow-layout">
           <nav className="pp-panel pp-flow-side" aria-label="步骤列表">
             <div className="pp-flow-side-head">

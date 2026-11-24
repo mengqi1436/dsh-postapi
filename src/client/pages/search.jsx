@@ -1,40 +1,56 @@
-// search.jsx — 全局搜索页（Apifox 工作台：搜索框 + 分组结果列表）
+// search.jsx — 全局搜索页（对齐 Apifox 2.8.55 全局搜索：搜索条 + 分组结果列表，命中片段高亮）
 // 自注册：模块求值期入队 __postapiQueue
-// 数据：api.storage.listProjects / search(projectId, keyword) -> { endpoints, schemas, folders }
-// 视觉基线：docs/apifox-design-spec.md —— .pp-input / .pp-tree-group / .pp-list-row
+// 数据：api.storage.listProjects / getProject / search(projectId, keyword) -> { endpoints, schemas, folders }
+//      环境组取 getProject 的 environments（契约 §3 search 只返回三类，环境在本地按名称过滤）
+// 视觉基线：docs/apifox-visual-parity-spec.md —— .pp-search-bar / .pp-search-group / .pp-list-row / .pp-input
 import React, { useEffect, useRef, useState } from 'react'
 import { applyTheme } from './theme.js'
 import { EmptyState } from './components/EmptyState.jsx'
 
 ;(window.__postapiQueue = window.__postapiQueue || []).push(['search', SearchPage]) // 注册表就绪前入队
 
+// 文件内 mock：仅在 api.storage 缺失时渲染结构示例
 const MOCK_RESULT = {
-  endpoints: [{ id: 'ep_1001', name: '查询订单列表', method: 'GET', url: '/api/v1/orders' }],
-  schemas: [{ id: 'sch_order', name: 'Order', description: '订单对象' }],
-  folders: [{ id: 'fld_01', name: '订单管理' }],
+  endpoints: [{ id: 'ep_sample01', name: '查询订单列表', method: 'GET', url: '/api/v1/orders' }],
+  schemas: [{ id: 'sch_sample_order', name: 'Order', description: '订单对象' }],
+  folders: [{ id: 'fld_sample01', name: '订单管理' }],
+  environments: [{ id: 'env_sample_dev', name: '开发环境', baseUrl: 'http://127.0.0.1:8080' }],
 }
 
 const GROUPS = [
   { key: 'endpoints', label: '接口', target: (id) => '#/doc/' + encodeURIComponent(id) },
   { key: 'schemas', label: '数据模型', target: (id) => '#/schema/' + encodeURIComponent(id) },
   { key: 'folders', label: '目录', target: (id) => '#/doc/' + encodeURIComponent(id) },
+  { key: 'environments', label: '环境', target: () => '#/env' },
 ]
 
-/** 结果分组：保证三组键都在，非数组一律归一为空数组。 */
+/** 结果分组：保证四组键都在，非数组一律归一为空数组。 */
 export function groupResults(res) {
   const data = res && res.data !== undefined ? res.data : res
   const out = {}
   for (const g of GROUPS) {
     const list = data && Array.isArray(data[g.key]) ? data[g.key] : []
-    out[g.key] = list.map((item) => ({
-      id: item && item.id ? item.id : '',
-      title: (item && (item.name || item.url)) || (item && item.id) || '(未命名)',
-      method: item && item.method ? item.method : '',
-      url: item && item.url ? item.url : '',
-      description: item && item.description ? item.description : '',
-    }))
+    out[g.key] = list
+      .filter((item) => item && typeof item === 'object')
+      .map((item) => ({
+        id: item.id ? item.id : '',
+        title: item.name || item.url || item.id || '(未命名)',
+        method: item.method ? item.method : '',
+        url: item.url || item.baseUrl || '',
+        description: item.description || '',
+      }))
   }
   return out
+}
+
+/** 环境组本地过滤：契约 §3 search 不返回环境，按名称 / baseUrl 命中。 */
+export function matchEnvironments(envs, keyword) {
+  const kw = String(keyword || '').trim().toLowerCase()
+  if (!kw) return []
+  return (Array.isArray(envs) ? envs : [])
+    .filter((e) => e && typeof e === 'object')
+    .filter((e) => String(e.name || '').toLowerCase().includes(kw) || String(e.baseUrl || '').toLowerCase().includes(kw))
+    .map((e) => ({ id: e.id || '', name: e.name || e.id, baseUrl: e.baseUrl || '' }))
 }
 
 /** 关键字非空判断（去首尾空白）。 */
@@ -87,25 +103,33 @@ export function SearchPage(props) {
   const api = (props && props.api) || (typeof window !== 'undefined' ? window.__postapiApi : undefined)
   const storage = api && api.storage
   const route = (props && props.route) || {}
-  const [projects, setProjects] = useState([{ id: 'proj_demo01', name: '订单中心' }])
-  const [projectId, setProjectId] = useState('proj_demo01')
+  // 默认态：项目列表为空、当前项目为空（用户选）；关键字取自 route.query 的 q=
+  const [projects, setProjects] = useState([])
+  const [projectId, setProjectId] = useState('')
   const [keyword, setKeyword] = useState(() => readQueryKeyword(route.query))
-  const [groups, setGroups] = useState(groupResults(MOCK_RESULT))
+  const [groups, setGroups] = useState({ endpoints: [], schemas: [], folders: [], environments: [] })
   const [isMock, setIsMock] = useState(true)
   const [searched, setSearched] = useState(false)
   const [collapsed, setCollapsed] = useState({})
   const [error, setError] = useState('')
 
-  useEffect(() => applyTheme(rootRef.current), [])
+  useEffect(() => { applyTheme(rootRef.current) }, [])
+
+  const applyMock = () => {
+    setIsMock(true)
+    setProjects([{ id: 'search_sample_project', name: '示例项目' }])
+  }
 
   useEffect(() => {
     const boot = async () => {
-      if (!storage || typeof storage.listProjects !== 'function') return
+      if (!storage || typeof storage.listProjects !== 'function') { applyMock(); return }
       try {
         const list = await storage.listProjects()
         if (Array.isArray(list) && list.length > 0) {
           setProjects(list)
           setProjectId(list[0].id)
+          setIsMock(false)
+        } else {
           setIsMock(false)
         }
       } catch (err) {
@@ -121,13 +145,24 @@ export function SearchPage(props) {
       return
     }
     if (!storage || typeof storage.search !== 'function') {
-      setError('当前桥未提供 api.storage.search')
+      // 无桥：用文件内 mock 走一遍分组渲染，标注示例数据
+      applyMock()
+      setGroups(groupResults(MOCK_RESULT))
+      setSearched(true)
+      setError('当前桥未提供 api.storage.search，以下为文件内 mock 结果')
       return
     }
     setError('')
     try {
-      const res = await storage.search(projectId, String(keyword).trim())
-      setGroups(groupResults(res))
+      const kw = String(keyword).trim()
+      const res = await storage.search(projectId, kw)
+      const next = groupResults(res)
+      // 环境组：search 不返回环境，按 getProject 的 environments 本地过滤
+      if (typeof storage.getProject === 'function' && projectId) {
+        const loaded = await storage.getProject(projectId)
+        next.environments = groupResults({ environments: matchEnvironments(loaded && loaded.environments, kw) }).environments
+      }
+      setGroups(next)
       setSearched(true)
     } catch (err) {
       setError('搜索失败：' + errText(err))
@@ -139,7 +174,6 @@ export function SearchPage(props) {
   }
 
   const total = GROUPS.reduce((n, g) => n + groups[g.key].length, 0)
-
   const visibleGroups = GROUPS.filter((g) => groups[g.key].length > 0)
   const kw = String(keyword || '').trim()
 
@@ -154,31 +188,33 @@ export function SearchPage(props) {
         </div>
       </div>
       <div className="pp-overview-content">
-        {/* 搜索条：项目 + 输入框 + 按钮挤在一行，回车即搜。
-            原来「搜索」按钮在页头、输入框在下方卡片里，一次搜索要跨两个区域移动视线。 */}
+        {/* 搜索条：项目 + 输入框 + 按钮同一行，回车即搜 */}
         <div className="pp-search-bar">
           <select className="pp-select pp-search-project" value={projectId}
             onChange={(e) => setProjectId(e.target.value)}>
+            <option value="">{projects.length ? '请选择项目' : '暂无项目'}</option>
             {projects.map((p) => <option key={p.id} value={p.id}>{p.name || p.id}</option>)}
           </select>
-          <input className="pp-input pp-search-input" placeholder="搜索接口名称 / URL / 描述，回车即搜"
+          <input className="pp-input pp-search-input" placeholder="搜索接口名称 / URL / 描述 / 模型 / 目录 / 环境，回车即搜"
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Enter') runSearch() }} />
           <button className="pp-btn pp-btn-primary pp-search-btn" onClick={runSearch}>搜索</button>
         </div>
         <div className="pp-meta pp-search-source">
-          {isMock ? '示例数据 — api.storage.search 不可用，以下为文件内 mock' : '数据来源：api.storage.search（名称 / url / 描述，大小写不敏感）'}
+          {isMock
+            ? '示例数据 — api.storage.search 不可用，以下为文件内 mock'
+            : '数据来源：api.storage.search（名称 / url / 描述，大小写不敏感）+ getProject.environments（环境组本地过滤）'}
         </div>
-        {error ? <p className="pp-error-text">{error}</p> : null}
+        {error ? <div className="pp-note pp-note-bad">{error}</div> : null}
 
         {!searched ? (
           <div className="pp-search-hint">
-            <EmptyState text="输入关键字开始搜索" hint="可搜接口名称、URL、描述，也可搜数据模型与目录" />
+            <EmptyState text="输入关键字开始搜索" hint="可搜接口名称、URL、描述，也可搜数据模型、目录与环境" icon="search" />
           </div>
         ) : total === 0 ? (
           <div className="pp-search-hint">
-            <EmptyState text={'没有匹配「' + kw + '」的结果'} hint="换个关键字，或检查是否选错了项目" />
+            <EmptyState text={'没有匹配「' + kw + '」的结果'} hint="换个关键字，或检查是否选错了项目" icon="search" />
           </div>
         ) : (
           <div className="pp-search-results">
@@ -187,8 +223,10 @@ export function SearchPage(props) {
                 <button className="pp-search-group-head" data-collapsed={collapsed[g.key] ? 'true' : 'false'}
                   onClick={() => setCollapsed({ ...collapsed, [g.key]: !collapsed[g.key] })}>
                   <span className="pp-search-caret">{collapsed[g.key] ? '▸' : '▾'}</span>
-                  <span className="pp-search-group-label">{g.label}</span>
+                  <span className="pp-tree-group">{g.label}</span>
                   <span className="pp-search-count">{groups[g.key].length}</span>
+                  <span className="pp-toolbar-spacer" />
+                  <span className="pp-meta">命中 {groups[g.key].length} 条</span>
                 </button>
                 {collapsed[g.key] ? null : (
                   <div className="pp-list pp-search-list">

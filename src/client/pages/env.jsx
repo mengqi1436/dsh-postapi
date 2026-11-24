@@ -1,16 +1,24 @@
-// env.jsx — 环境与变量页（Apifox 工作台：左环境列表 + 右变量表 + 全局变量 + 优先级说明）
+// env.jsx — 环境与变量页（对齐 Apifox 2.8.55「环境管理」：左环境列表 + 右编辑区 + 全局变量 + 优先级）
 // 自注册：模块求值期入队 __postapiQueue
 // 数据：api.storage.listProjects / getProject / saveEnvironment / deleteEnvironment / saveGlobals
-// 视觉基线：docs/apifox-design-spec.md —— .pp-tree-row / .pp-table（表头 --bg-subtle）/ .pp-toolbar / .pp-note
+// Apifox 取证（.research/apifox/app/dist/renderer/locale.zh-CN.b5edca87b11f70ed.js 的 environment.* 键族）：
+//   环境 = 一组服务；每个环境带「前置 URL」（environment.preUrl / baseUrl）与变量表；
+//   变量表列取自 environment.title.variableName / variableType / variableInitialValue /
+//   variableCurrentValue / securityType / description；优先级见 environment.manageModal.tips。
+//   本插件契约 §2 只存 { key, value, enabled, secret }，故「初始值 / 当前值」合并为「值」一列，
+//   「类型」按值推断后只读展示——不新增落盘字段，不伪造未存储的数据。
+// 视觉基线：docs/apifox-visual-parity-spec.md —— .pp-env-layout / .pp-tree-row / .pp-table / .pp-priority-*
 import React, { useEffect, useRef, useState } from 'react'
 import { applyTheme } from './theme.js'
 import { EmptyState } from './components/EmptyState.jsx'
 
 ;(window.__postapiQueue = window.__postapiQueue || []).push(['env', EnvPage]) // 注册表就绪前入队
 
+// 文件内 mock：仅在 api.storage 缺失时用于渲染结构示例（id 不参与任何写操作）
+const MOCK_PROJECTS = [{ id: 'env_sample_project', name: '示例项目' }]
 const MOCK_PROJECT = {
-  id: 'proj_demo01',
-  name: '订单中心',
+  id: 'env_sample_project',
+  name: '示例项目',
   environments: [
     {
       id: 'env_dev', name: '开发环境', baseUrl: 'http://127.0.0.1:8080', isDefault: true,
@@ -24,8 +32,17 @@ const MOCK_PROJECT = {
   globals: { variables: [{ key: 'userAgent', value: 'postapi/0.1.0', enabled: true, secret: false }] },
 }
 
-const VAR_COLUMNS = ['变量名', '值', '启用', '密钥', '操作']
-/** 右编辑区页签（Apifox 环境管理把「环境变量 / 全局变量」放在同一页，这里补上优先级说明） */
+/** 变量表列（Apifox 环境变量表顺序；初始值/当前值合并见文件头说明）。 */
+const VAR_COLUMNS = [
+  { key: 'key', label: '变量名', width: '32%' },
+  { key: 'value', label: '值', width: 'auto' },
+  { key: 'secret', label: '密钥', width: '44px' },
+  { key: 'enabled', label: '启用', width: '44px' },
+  { key: 'type', label: '类型', width: '72px' },
+  { key: 'op', label: '操作', width: '48px' },
+]
+
+/** 右编辑区页签（Apifox 把「环境变量 / 全局变量」放同一页，优先级说明独立一块） */
 const ENV_TABS = [
   { id: 'env', label: '环境变量' },
   { id: 'globals', label: '全局变量' },
@@ -48,6 +65,19 @@ export function normalizeVars(list) {
       enabled: v.enabled !== false,
       secret: v.secret === true,
     }))
+}
+
+/** 变量类型：按值推断（只读展示，Apifox environment.title.variableType 的位置）。 */
+export function inferVarType(value, secret) {
+  if (secret === true) return 'secret'
+  const raw = String(value === undefined || value === null ? '' : value).trim()
+  if (!raw) return 'string'
+  if (raw === 'true' || raw === 'false') return 'boolean'
+  if (/^-?\d+(\.\d+)?$/.test(raw)) return 'number'
+  if (raw.startsWith('{') || raw.startsWith('[')) {
+    try { JSON.parse(raw); return 'json' } catch { return 'string' }
+  }
+  return 'string'
 }
 
 /** 变量优先级说明行（页面与测试共用同一份数据）。 */
@@ -78,35 +108,40 @@ export function EnvPage(props) {
   const rootRef = useRef(null)
   const api = (props && props.api) || (typeof window !== 'undefined' ? window.__postapiApi : undefined)
   const storage = api && api.storage
-  const [projects, setProjects] = useState([{ id: MOCK_PROJECT.id, name: MOCK_PROJECT.name }])
-  const [projectId, setProjectId] = useState(MOCK_PROJECT.id)
-  const [project, setProject] = useState(MOCK_PROJECT)
+  // 默认态：项目列表为空、当前项目为空——不预填任何硬编码项目 id（用户自行选择或新建）
+  const [projects, setProjects] = useState([])
+  const [projectId, setProjectId] = useState('')
+  const [project, setProject] = useState(null)
   const [isMock, setIsMock] = useState(true)
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
-  const [draft, setDraft] = useState(MOCK_PROJECT.environments[0])
-  const [globals, setGlobals] = useState(normalizeVars(MOCK_PROJECT.globals.variables))
+  const [draft, setDraft] = useState(null)
+  const [globals, setGlobals] = useState([])
   const [envTab, setEnvTab] = useState('env')
+  const [pendingDelete, setPendingDelete] = useState('')
 
-  useEffect(() => applyTheme(rootRef.current), [])
+  useEffect(() => { applyTheme(rootRef.current) }, [])
+
+  const applyMock = () => {
+    const first = MOCK_PROJECT.environments[0]
+    setIsMock(true)
+    setProject(MOCK_PROJECT)
+    setProjects(MOCK_PROJECTS)
+    setDraft({ ...first, variables: normalizeVars(first.variables) })
+    setGlobals(normalizeVars(MOCK_PROJECT.globals.variables))
+  }
 
   const loadProject = async (id) => {
-    if (!storage || typeof storage.getProject !== 'function') {
-      setIsMock(true)
-      setProject(MOCK_PROJECT)
-      setDraft(MOCK_PROJECT.environments[0])
-      setGlobals(normalizeVars(MOCK_PROJECT.globals.variables))
-      return
-    }
+    if (!storage || typeof storage.getProject !== 'function') { applyMock(); return }
+    if (!id) { setProject(null); setDraft(null); setGlobals([]); return }
     try {
       const loaded = await storage.getProject(id)
-      if (loaded) {
-        setProject(loaded)
-        const envs = Array.isArray(loaded.environments) ? loaded.environments : []
-        setDraft(envs.length > 0 ? envs[0] : blankEnv())
-        setGlobals(normalizeVars(loaded.globals && loaded.globals.variables))
-        setIsMock(false)
-      }
+      if (!loaded) { setProject(null); setDraft(null); setGlobals([]); return }
+      setProject(loaded)
+      const envs = Array.isArray(loaded.environments) ? loaded.environments : []
+      setDraft(envs.length > 0 ? { ...envs[0], variables: normalizeVars(envs[0].variables) } : blankEnv())
+      setGlobals(normalizeVars(loaded.globals && loaded.globals.variables))
+      setIsMock(false)
     } catch (err) {
       setError('加载项目失败：' + errText(err))
     }
@@ -114,60 +149,70 @@ export function EnvPage(props) {
 
   useEffect(() => {
     const boot = async () => {
-      if (storage && typeof storage.listProjects === 'function') {
-        try {
-          const list = await storage.listProjects()
-          if (Array.isArray(list) && list.length > 0) {
-            setProjects(list)
-            setProjectId(list[0].id)
-            await loadProject(list[0].id)
-            return
-          }
-        } catch (err) {
-          setError('加载项目列表失败：' + errText(err))
+      if (!storage || typeof storage.listProjects !== 'function') { applyMock(); return }
+      try {
+        const list = await storage.listProjects()
+        if (Array.isArray(list) && list.length > 0) {
+          setProjects(list)
+          setProjectId(list[0].id)
+          await loadProject(list[0].id)
+          return
         }
+        setIsMock(false)
+      } catch (err) {
+        setError('加载项目列表失败：' + errText(err))
       }
-      setIsMock(true)
     }
     boot()
   }, [])
 
-  const envs = Array.isArray(project.environments) ? project.environments : []
+  const envs = Array.isArray(project && project.environments) ? project.environments : []
+  const draftVars = normalizeVars(draft && draft.variables)
 
   const pickEnv = (env) => {
     setDraft({ ...env, variables: normalizeVars(env.variables) })
     setNotice('')
     setError('')
+    setPendingDelete('')
   }
 
-  const patchDraft = (patch) => setDraft({ ...draft, ...patch })
+  const patchDraft = (patch) => { setDraft({ ...draft, ...patch }); setNotice('') }
 
   const setVarAt = (i, patch) => {
-    const next = normalizeVars(draft.variables)
+    const next = normalizeVars(draft && draft.variables)
     next[i] = { ...next[i], ...patch }
     setDraft({ ...draft, variables: next })
+    setNotice('')
   }
-  const addVar = () => setDraft({ ...draft, variables: normalizeVars(draft.variables).concat([{ key: '', value: '', enabled: true, secret: false }]) })
-  const removeVar = (i) => setDraft({ ...draft, variables: normalizeVars(draft.variables).filter((_, idx) => idx !== i) })
+  const addVar = () => setDraft({
+    ...draft,
+    variables: normalizeVars(draft && draft.variables).concat([{ key: '', value: '', enabled: true, secret: false }]),
+  })
+  const removeVar = (i) => setDraft({
+    ...draft,
+    variables: normalizeVars(draft && draft.variables).filter((_, idx) => idx !== i),
+  })
 
   const setGlobalAt = (i, patch) => {
     const next = globals.slice()
     next[i] = { ...next[i], ...patch }
     setGlobals(next)
+    setNotice('')
   }
   const addGlobal = () => setGlobals(globals.concat([{ key: '', value: '', enabled: true, secret: false }]))
   const removeGlobal = (i) => setGlobals(globals.filter((_, idx) => idx !== i))
 
   const saveEnv = async () => {
     if (!storage || typeof storage.saveEnvironment !== 'function') {
-      setError('当前桥未提供 api.storage.saveEnvironment')
+      setError('当前桥未提供 api.storage.saveEnvironment（契约 §3）')
       return
     }
-    if (!String(draft.name || '').trim()) {
+    if (!String((draft && draft.name) || '').trim()) {
       setError('环境名不能为空')
       return
     }
     setError('')
+    setNotice('')
     try {
       const payload = { ...draft, variables: normalizeVars(draft.variables) }
       const saved = await storage.saveEnvironment(projectId, payload)
@@ -178,12 +223,23 @@ export function EnvPage(props) {
     }
   }
 
+  // 两段式删除（不使用弹窗确认）
   const removeEnv = async (envId) => {
+    if (!envId) {
+      setError('请先在左侧选中一个环境')
+      return
+    }
+    if (pendingDelete !== envId) {
+      setPendingDelete(envId)
+      setNotice('再次点击「确认删除环境」将删除该环境')
+      return
+    }
     if (!storage || typeof storage.deleteEnvironment !== 'function') {
-      setError('当前桥未提供 api.storage.deleteEnvironment')
+      setError('当前桥未提供 api.storage.deleteEnvironment（契约 §3）')
       return
     }
     setError('')
+    setPendingDelete('')
     try {
       await storage.deleteEnvironment(projectId, envId)
       setNotice('已删除环境：' + envId)
@@ -195,10 +251,11 @@ export function EnvPage(props) {
 
   const saveGlobals = async () => {
     if (!storage || typeof storage.saveGlobals !== 'function') {
-      setError('当前桥未提供 api.storage.saveGlobals')
+      setError('当前桥未提供 api.storage.saveGlobals（契约 §3）')
       return
     }
     setError('')
+    setNotice('')
     try {
       await storage.saveGlobals(projectId, { variables: globals })
       setNotice('已保存全局变量')
@@ -208,13 +265,15 @@ export function EnvPage(props) {
     }
   }
 
-  const draftVars = normalizeVars(draft.variables)
-
-  // 变量表：表头底色/行高由 .pp-table 统一（--bg-subtle / --row-h），单元格控件用 .pp-input-sm
+  // 变量表：列宽走 th 内联 width（layout），表头底色 / 行高由 .pp-table 统一
   const varTable = (rows, onChange, onRemove) => (
     <table className="pp-table pp-table-vars">
       <thead>
-        <tr>{VAR_COLUMNS.map((c) => <th key={c}>{c}</th>)}</tr>
+        <tr>
+          {VAR_COLUMNS.map((c) => (
+            <th key={c.key} style={{ width: c.width }}>{c.label}</th>
+          ))}
+        </tr>
       </thead>
       <tbody>
         {rows.map((v, i) => (
@@ -229,11 +288,12 @@ export function EnvPage(props) {
                 onChange={(e) => onChange(i, { value: e.target.value })} />
             </td>
             <td>
-              <input type="checkbox" checked={v.enabled} onChange={(e) => onChange(i, { enabled: e.target.checked })} />
-            </td>
-            <td>
               <input type="checkbox" checked={v.secret} onChange={(e) => onChange(i, { secret: e.target.checked })} />
             </td>
+            <td>
+              <input type="checkbox" checked={v.enabled} onChange={(e) => onChange(i, { enabled: e.target.checked })} />
+            </td>
+            <td><span className="pp-meta">{inferVarType(v.value, v.secret)}</span></td>
             <td>
               <button className="pp-btn pp-btn-sm pp-btn-ghost pp-btn-danger pp-icon-btn" onClick={() => onRemove(i)} title="删除该变量" aria-label="删除该变量">×</button>
             </td>
@@ -253,7 +313,8 @@ export function EnvPage(props) {
         <div className="pp-overview-actions">
           <label className="pp-meta">项目</label>
           <select className="pp-select" value={projectId}
-            onChange={(e) => { setProjectId(e.target.value); loadProject(e.target.value) }}>
+            onChange={(e) => { const v = e.target.value; setProjectId(v); loadProject(v) }}>
+            <option value="">{projects.length ? '请选择项目' : '暂无项目'}</option>
             {projects.map((p) => <option key={p.id} value={p.id}>{p.name || p.id}</option>)}
           </select>
         </div>
@@ -261,21 +322,23 @@ export function EnvPage(props) {
       <div className="pp-overview-content">
         <div className="pp-toolbar">
           <span className="pp-meta">
-            {isMock ? '示例数据 — api.storage 不可用，以下为文件内 mock' : '数据来源：api.storage（saveEnvironment / saveGlobals）'}
+            {isMock
+              ? '示例数据 — api.storage 不可用，以下为文件内 mock'
+              : '数据来源：api.storage（getProject / saveEnvironment / saveGlobals / deleteEnvironment）'}
           </span>
+          <span className="pp-toolbar-spacer" />
+          <span className="pp-meta">{envs.length} 个环境 · {globals.length} 个全局变量</span>
         </div>
-        {error ? <p className="pp-error-text">{error}</p> : null}
-        {notice ? <p className="pp-muted">{notice}</p> : null}
-  
-        {/* Apifox 环境管理同构：左环境列表 + 右编辑区（页签分区）。
-            单列纵向堆叠在 500px 主区里要把「环境 / 变量 / 优先级」滚三次才能看全，
-            改成左列表 + 右页签后一屏就能切完三块。 */}
+        {error ? <div className="pp-note pp-note-bad">{error}</div> : null}
+        {notice ? <div className="pp-note pp-note-ok">{notice}</div> : null}
+
+        {/* Apifox 环境管理同构：左环境列表 + 右编辑区（页签分区） */}
         <div className="pp-env-layout">
           <nav className="pp-panel pp-env-side" aria-label="环境列表">
             <div className="pp-env-side-head">
               <span className="pp-card-title">环境</span>
               <button className="pp-btn pp-btn-sm pp-btn-ghost pp-btn-accent" onClick={() => pickEnv(blankEnv())}>
-                + 新建
+                + 新建环境
               </button>
             </div>
             <div className="pp-tree">
@@ -288,7 +351,7 @@ export function EnvPage(props) {
               ))}
             </div>
             {envs.length === 0 ? (
-              <EmptyState text="暂无环境" hint="点上方「+ 新建」创建第一个环境" />
+              <EmptyState text="暂无环境" hint="点上方「+ 新建环境」创建第一个环境" />
             ) : null}
           </nav>
 
@@ -304,12 +367,12 @@ export function EnvPage(props) {
               <div className="pp-env-pane">
                 <div className="pp-env-fields">
                   <div className="pp-env-field">
-                    <label className="pp-form-label">名称</label>
+                    <label className="pp-form-label">环境名</label>
                     <div className="pp-env-field-row">
-                      <input className="pp-input" value={draft.name || ''}
+                      <input className="pp-input" value={(draft && draft.name) || ''}
                         onChange={(e) => patchDraft({ name: e.target.value })} />
                       <label className="pp-env-check">
-                        <input type="checkbox" checked={draft.isDefault === true}
+                        <input type="checkbox" checked={Boolean(draft && draft.isDefault)}
                           onChange={(e) => patchDraft({ isDefault: e.target.checked })} />
                         <span>设为默认</span>
                       </label>
@@ -317,7 +380,7 @@ export function EnvPage(props) {
                   </div>
                   <div className="pp-env-field">
                     <label className="pp-form-label">前置 URL</label>
-                    <input className="pp-input pp-input-mono" value={draft.baseUrl || ''}
+                    <input className="pp-input pp-input-mono" value={(draft && draft.baseUrl) || ''}
                       placeholder="https://api.example.com（末尾不加斜杠）"
                       onChange={(e) => patchDraft({ baseUrl: e.target.value })} />
                   </div>
@@ -328,10 +391,13 @@ export function EnvPage(props) {
                   <button className="pp-btn pp-btn-sm" onClick={addVar}>+ 变量</button>
                   <button className="pp-btn pp-btn-sm pp-btn-primary" onClick={saveEnv}>保存环境</button>
                   <button className="pp-btn pp-btn-sm pp-btn-danger" style={{ marginLeft: 'auto' }}
-                    onClick={() => removeEnv(draft.id || '')}>删除环境</button>
+                    onClick={() => removeEnv(draft && draft.id)}>
+                    {pendingDelete && draft && pendingDelete === draft.id ? '确认删除环境' : '删除环境'}
+                  </button>
                 </div>
                 <div className="pp-meta" style={{ marginTop: 'var(--sp-2)' }}>
-                  仅启用的变量参与 {'{{key}}'} 替换；密钥变量以密码显示
+                  仅启用的变量参与 {'{{key}}'} 替换；密钥变量以密码显示。「类型」按值推断只读展示，
+                  Apifox 的「初始值 / 当前值」在本插件契约里合并为「值」一列（单一存储值）。
                 </div>
               </div>
             ) : null}
@@ -371,7 +437,6 @@ export function EnvPage(props) {
             ) : null}
           </div>
         </div>
-      
       </div>
     </div>
   )

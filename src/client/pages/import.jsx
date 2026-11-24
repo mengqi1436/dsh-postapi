@@ -1,8 +1,10 @@
-// import.jsx — 导入导出 + 代码生成页（Apifox 工作台：导入卡片 + 导出按钮组 + 结果 pre）
+// import.jsx — 导入 / 导出 / 代码生成（对齐 Apifox 2.8.55「导入导出数据」：
+//   页签分区（导入 / 导出 / 代码生成）+ 左格式列表 + 右内容，导入分「解析预览 → 保存到项目」两步）
 // 自注册：模块求值期入队 __postapiQueue
 // 数据：api.import.{openapi,postman,har,curl} / api.export.{openapi,postman,har,markdown} / api.codegen.run
+//      api.storage.listProjects / getProject / importBundle
 // 失败页面内显示错误文案（不弹窗）；结果统一渲染到可复制的 pre 块
-// 视觉基线：docs/apifox-design-spec.md —— .pp-card / .pp-btn 按钮组 / .pp-pre / .pp-select
+// 视觉基线：docs/apifox-visual-parity-spec.md —— .pp-io-layout / .pp-io-side / .pp-io-main / .pp-btn / .pp-pre
 import React, { useEffect, useRef, useState } from 'react'
 import { applyTheme } from './theme.js'
 
@@ -22,10 +24,10 @@ const PH_HAR = ['{', '  "log": { "version": "1.2", "entries": [] }', '}'].join('
 const PH_CURL = "curl -X GET 'https://api.example.com/pets' -H 'Accept: application/json'"
 
 const IMPORT_KINDS = [
-  { id: 'openapi', label: 'OpenAPI / Swagger', hint: '粘贴 OpenAPI 3 或 Swagger 2 JSON/YAML 文本', placeholder: PH_OPENAPI },
-  { id: 'postman', label: 'Postman', hint: '粘贴 Postman Collection v2.1 JSON 文本', placeholder: PH_POSTMAN },
-  { id: 'har', label: 'HAR', hint: '粘贴浏览器导出的 HAR JSON 文本', placeholder: PH_HAR },
-  { id: 'curl', label: 'cURL', hint: '粘贴 cURL 命令（可多条，逐行）', placeholder: PH_CURL },
+  { id: 'openapi', label: 'OpenAPI / Swagger', hint: '粘贴或选择 OpenAPI 3 / Swagger 2 JSON 文档', placeholder: PH_OPENAPI, accept: '.json,.yaml,.yml' },
+  { id: 'postman', label: 'Postman', hint: '粘贴或选择 Postman Collection v2.1 JSON', placeholder: PH_POSTMAN, accept: '.json' },
+  { id: 'har', label: 'HAR', hint: '粘贴或选择浏览器导出的 HAR JSON', placeholder: PH_HAR, accept: '.json,.har' },
+  { id: 'curl', label: 'cURL', hint: '粘贴 cURL 命令（可多条，逐行）', placeholder: PH_CURL, accept: '.txt,.sh' },
 ]
 
 const EXPORT_KINDS = [
@@ -43,10 +45,10 @@ const LANGS = [
   { id: 'go', label: 'Go net/http' },
 ]
 
+// 文件内 mock：仅在 api.* 缺失时用于渲染结构示例
 const MOCK_CURL = "curl -X GET 'https://api.example.test/api/v1/orders?page=1' -H 'Accept: application/json'"
-
 const MOCK_ENDPOINT = {
-  id: 'ep_1001', name: '查询订单列表', method: 'GET', url: 'https://api.example.test/api/v1/orders',
+  id: 'ep_sample01', name: '查询订单列表', method: 'GET', url: 'https://api.example.test/api/v1/orders',
   params: [{ key: 'page', value: '1', enabled: true }],
   headers: [{ key: 'Accept', value: 'application/json', enabled: true }],
   body: { type: 'none', content: '' },
@@ -83,33 +85,39 @@ export function ImportPage(props) {
   const rootRef = useRef(null)
   const api = (props && props.api) || (typeof window !== 'undefined' ? window.__postapiApi : undefined)
   const storage = api && api.storage
-  const [projects, setProjects] = useState([{ id: 'proj_demo01', name: '订单中心' }])
-  const [projectId, setProjectId] = useState('proj_demo01')
+  // 默认态：项目列表为空、当前项目为空（用户自己选）
+  const [projects, setProjects] = useState([])
+  const [projectId, setProjectId] = useState('')
   const [isMock, setIsMock] = useState(true)
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
   const [ioTab, setIoTab] = useState('import')
   const [importKind, setImportKind] = useState('openapi')
-  const [importText, setImportText] = useState(MOCK_CURL)
+  const [importText, setImportText] = useState('')
   const [importOut, setImportOut] = useState('')
   // 最近一次导入的 bundle（folders/endpoints/schemas 骨架），供「保存到项目」真正落盘
   const [bundle, setBundle] = useState(null)
+  const [fileName, setFileName] = useState('')
   const [exportKind, setExportKind] = useState('openapi')
   const [exportOut, setExportOut] = useState('')
   const [lang, setLang] = useState('curl')
   const [codeOut, setCodeOut] = useState('')
   const [busy, setBusy] = useState(false)
 
-  useEffect(() => applyTheme(rootRef.current), [])
+  useEffect(() => { applyTheme(rootRef.current) }, [])
 
   useEffect(() => {
     const boot = async () => {
-      if (!storage || typeof storage.listProjects !== 'function') return
+      if (!storage || typeof storage.listProjects !== 'function') {
+        setIsMock(true)
+        return
+      }
       try {
         const list = await storage.listProjects()
         if (Array.isArray(list) && list.length > 0) {
           setProjects(list)
-          setProjectId(list[0].id)
+          setIsMock(false)
+        } else {
           setIsMock(false)
         }
       } catch (err) {
@@ -123,7 +131,29 @@ export function ImportPage(props) {
     setImportKind(id)
     setImportOut('')
     setBundle(null)
+    setFileName('')
     setError('')
+    setNotice('')
+  }
+
+  // 文件选择：读文本进 textarea（Apifox 导入支持「粘贴」与「选文件」两种入口）
+  const pickFile = (file) => {
+    if (!file) return
+    const reader = typeof FileReader === 'function' ? new FileReader() : null
+    if (!reader) {
+      setError('当前环境不支持读取本地文件，请直接粘贴文本')
+      return
+    }
+    reader.onload = () => {
+      setImportText(String(reader.result || ''))
+      setFileName(file.name || '')
+      setImportOut('')
+      setBundle(null)
+      setError('')
+      setNotice('已载入文件：' + (file.name || '未命名') + '，点「开始导入」解析')
+    }
+    reader.onerror = () => setError('读取文件失败：' + errText(reader.error))
+    reader.readAsText(file)
   }
 
   const runImport = async () => {
@@ -172,7 +202,11 @@ export function ImportPage(props) {
       return
     }
     if (!storage || typeof storage.importBundle !== 'function') {
-      setError('当前桥未提供 api.storage.importBundle（契约 §5 POST /storage/importBundle）')
+      setError('当前桥未提供 api.storage.importBundle（契约 §3）')
+      return
+    }
+    if (!projectId) {
+      setError('请先在页头选择目标项目')
       return
     }
     setBusy(true)
@@ -257,6 +291,7 @@ export function ImportPage(props) {
   const currentImport = IMPORT_KINDS.find((k) => k.id === importKind) || IMPORT_KINDS[0]
   const currentExport = EXPORT_KINDS.find((k) => k.id === exportKind) || EXPORT_KINDS[0]
   const currentLang = LANGS.find((l) => l.id === lang) || LANGS[0]
+  const summary = bundle ? importSummary(bundle) : null
 
   return (
     <div className="pp-scope pp-page" data-page="import" ref={rootRef}>
@@ -265,6 +300,7 @@ export function ImportPage(props) {
         <div className="pp-overview-actions">
           <label className="pp-meta">项目</label>
           <select className="pp-select" value={projectId} onChange={(e) => setProjectId(e.target.value)}>
+            <option value="">{projects.length ? '请选择项目' : '暂无项目'}</option>
             {projects.map((p) => <option key={p.id} value={p.id}>{p.name || p.id}</option>)}
           </select>
         </div>
@@ -272,15 +308,14 @@ export function ImportPage(props) {
       <div className="pp-overview-content">
         <div className="pp-toolbar">
           <span className="pp-meta">
-            {isMock ? '示例数据 — api 桥不可用，操作按钮会提示缺失的方法' : '数据来源：api.import / api.export / api.codegen'}
+            {isMock ? '示例数据 — api 桥不可用，操作按钮会提示缺失的方法' : '数据来源：api.import / api.export / api.codegen / api.storage.importBundle'}
           </span>
+          <span className="pp-toolbar-spacer" />
+          <span className="pp-meta">{projectId ? '目标项目：' + projectId : '未选择目标项目'}</span>
         </div>
-        {error ? <p className="pp-error-text">{error}</p> : null}
-        {notice ? <p className="pp-muted">{notice}</p> : null}
+        {error ? <div className="pp-note pp-note-bad">{error}</div> : null}
+        {notice ? <div className="pp-note pp-note-ok">{notice}</div> : null}
 
-        {/* Apifox 导入导出同构：顶部页签分区（导入 / 导出 / 代码生成），
-            每区「左格式列表 + 右内容」。原来「导入 + 导出」两列并排各占 240px，
-            textarea 与按钮组都被压到换行；代码生成又单独占一整张卡，三块高度参差。 */}
         <div className="pp-io-layout">
           <div className="pp-tabs">
             {IO_TABS.map((t) => (
@@ -325,11 +360,18 @@ export function ImportPage(props) {
                 <>
                   <div className="pp-io-head">
                     <span className="pp-io-title">{currentImport.label}</span>
-                    <button className="pp-btn pp-btn-sm" onClick={() => setImportText('')} disabled={busy || !importText}>
+                    <button className="pp-btn pp-btn-sm" onClick={() => { setImportText(''); setImportOut(''); setBundle(null); setFileName('') }}
+                      disabled={busy || !importText}>
                       清空
                     </button>
                   </div>
                   <div className="pp-note">{currentImport.hint}</div>
+                  <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-2)' }}>
+                    <label className="pp-meta">选择文件</label>
+                    <input className="pp-input pp-input-sm" type="file" accept={currentImport.accept}
+                      onChange={(e) => pickFile(e.target.files && e.target.files[0])} />
+                    {fileName ? <span className="pp-meta pp-ellipsis">{fileName}</span> : null}
+                  </div>
                   <textarea className="pp-textarea pp-io-input" rows={10} value={importText}
                     placeholder={currentImport.placeholder}
                     onChange={(e) => setImportText(e.target.value)} />
@@ -338,15 +380,21 @@ export function ImportPage(props) {
                     <button className="pp-btn" onClick={saveImport} disabled={busy || !bundle}>保存到项目</button>
                     <button className="pp-btn" onClick={() => copy(importOut, '导入结果')} disabled={!importOut}>复制结果</button>
                   </div>
-                  {bundle ? (
-                    <div className="pp-io-stats">
-                      <span className="pp-pill pp-pill-ok">已解析</span>
-                      <span className="pp-meta">接口 {importSummary(bundle).endpoints} 条</span>
-                      <span className="pp-meta">目录 {importSummary(bundle).folders} 个</span>
-                      <span className="pp-meta">模型 {importSummary(bundle).schemas} 个</span>
-                    </div>
-                  ) : null}
-                  {importOut ? <pre className="pp-pre pp-pre-scroll pp-io-pre">{importOut}</pre> : null}
+                  {/* 解析预览卡：Apifox 导入的「预览 → 保存到项目」两步中的预览块 */}
+                  <div className="pp-card" style={{ marginTop: 'var(--sp-3)' }}>
+                    <div className="pp-card-title">解析预览</div>
+                    {summary ? (
+                      <div className="pp-io-stats">
+                        <span className="pp-pill pp-pill-ok">已解析</span>
+                        <span className="pp-meta">接口 {summary.endpoints} 条</span>
+                        <span className="pp-meta">目录 {summary.folders} 个</span>
+                        <span className="pp-meta">模型 {summary.schemas} 个</span>
+                      </div>
+                    ) : (
+                      <p className="pp-meta">尚未解析：点「开始导入」后在此显示接口 / 目录 / 模型计数与原始返回</p>
+                    )}
+                    {importOut ? <pre className="pp-pre pp-pre-scroll pp-io-pre">{importOut}</pre> : null}
+                  </div>
                 </>
               ) : null}
 
@@ -364,7 +412,7 @@ export function ImportPage(props) {
                     <button className="pp-btn" onClick={() => copy(exportOut, '导出结果')} disabled={!exportOut}>复制结果</button>
                   </div>
                   <div className="pp-meta" style={{ marginTop: 'var(--sp-2)' }}>
-                    当前项目：{projectId} · 格式：{exportKind}
+                    当前项目：{projectId || '（未选择）'} · 格式：{exportKind}
                   </div>
                   {exportOut ? <pre className="pp-pre pp-pre-scroll pp-io-pre">{exportOut}</pre> : null}
                 </>
