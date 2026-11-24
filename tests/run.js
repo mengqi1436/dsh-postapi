@@ -48,6 +48,7 @@ const pagesBTests = await optionalSuite('pages-b.test.js', 'tests')
 const shellFrameTests = await optionalSuite('shell-frame.test.js', 'tests')
 const uiAuditTests = await optionalSuite('ui-audit.test.js', 'tests')
 const menuTests = await optionalSuite('menu.test.js', 'tests')
+const agentToolTests = await optionalSuite('agent-tool.test.js', 'tests')
 
 const suites = [
   ['tests/storage.test.js', storageTests],
@@ -66,6 +67,7 @@ const suites = [
   ['tests/shell-frame.test.js', shellFrameTests],
   ['tests/ui-audit.test.js', uiAuditTests],
   ['tests/menu.test.js', menuTests],
+  ['tests/agent-tool.test.js', agentToolTests],
 ]
 
 let passed = 0
