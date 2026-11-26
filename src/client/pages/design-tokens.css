@@ -2935,3 +2935,21 @@
     padding: 0 var(--sp-2);
   }
 }
+
+/* —— 右键菜单（components/ContextMenu.jsx）：面板体复用 .pp-menu / .pp-menu-item 既有类，
+   仅补层级（右键菜单要盖过三级级联菜单）与危险项前景色；项高继承 --menu-item-h，无新裸尺寸。 */
+.pp-ctx-menu {
+  z-index: calc(var(--z-menu) + 3);
+}
+.pp-menu-item.pp-menu-item-danger {
+  color: var(--error);
+}
+.pp-menu-item.pp-menu-item-danger:hover,
+.pp-menu-item.pp-menu-item-danger:focus-visible {
+  color: var(--error);
+}
+/* —— 树拖拽落点提示（FolderTree data-drop）：只变文字色与字重，不变布局（树 hover 同纪律）。 */
+.pp-tree-row[data-drop="true"] {
+  color: var(--accent);
+  font-weight: var(--fw-medium);
+}

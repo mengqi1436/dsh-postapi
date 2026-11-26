@@ -327,6 +327,32 @@ export async function handlePostapiRequest(req, res, { storage, request, service
       'POST /db/test': (b) => need(svc.db, 'test')({ connection: b.connection }),
       'POST /db/query': (b) => need(svc.db, 'query')({ connection: b.connection, sql: b.sql, params: b.params }),
       'POST /db/close': (b) => need(svc.db, 'close')({ connection: b.connection }),
+
+      /* ---- gRPC 调试（grpc-client.js：proto3 解析 + node:http2 unary） ---- */
+      // 服务返回失败封套 { ok:false, error:{code,message} }（不抛错），sendOk 原样透传给 UI 分支展示
+      'POST /grpc/invoke': (b) => need(svc.grpc, 'invoke')({
+        address: str(b.address),
+        proto: str(b.proto),
+        service: str(b.service),
+        method: str(b.method),
+        message: b.message,
+        metadata: b.metadata && typeof b.metadata === 'object' ? b.metadata : undefined,
+        timeoutMs: Number.isFinite(b.timeoutMs) ? b.timeoutMs : undefined,
+      }),
+
+      /* ---- Dubbo 调试（dubbo-client.js：Dubbo 帧 + hessian-lite + node:net） ---- */
+      'POST /dubbo/invoke': (b) => need(svc.dubbo, 'invoke')({
+        address: str(b.address),
+        interface: str(b.interface),
+        version: str(b.version),
+        group: str(b.group),
+        method: str(b.method),
+        parameterTypes: Array.isArray(b.parameterTypes) ? b.parameterTypes.map((s) => str(s)) : undefined,
+        args: Array.isArray(b.args) ? b.args : undefined,
+        generic: b.generic === true,
+        attachments: b.attachments && typeof b.attachments === 'object' && !Array.isArray(b.attachments) ? b.attachments : undefined,
+        timeoutMs: Number.isFinite(b.timeoutMs) ? b.timeoutMs : undefined,
+      }),
     }
     const newRoute = newRoutes[key]
     if (newRoute) return sendOk(res, await newRoute(body, search))

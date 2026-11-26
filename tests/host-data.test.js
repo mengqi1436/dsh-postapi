@@ -430,6 +430,62 @@ export const tests = [
     }),
   },
   {
+    name: 'host-data: saveProjectSettings 含 name/description 时同步写 project 元数据（不写入 settings）',
+    fn: () => withTempStorage(async (storage) => {
+      const p = await storage.createProject('原项目名')
+      const s1 = await storage.saveProjectSettings(p.id, { name: '新项目名', description: '新描述', proxyUrl: 'http://127.0.0.1:8080' })
+      // 元数据同步
+      assert.equal(s1.name, undefined, 'name 不应写进 settings')
+      assert.equal(s1.description, undefined, 'description 不应写进 settings')
+      assert.equal(s1.proxyUrl, 'http://127.0.0.1:8080', '其余键仍浅合并')
+      const got = await storage.getProject(p.id)
+      assert.equal(got.name, '新项目名', 'project.name 应同步')
+      assert.equal(got.description, '新描述', 'project.description 应同步')
+      assert.equal(got.settings.proxyUrl, 'http://127.0.0.1:8080')
+      // 只传 name 不动 description；只传 description 不动 name
+      await storage.saveProjectSettings(p.id, { name: '再改名' })
+      const got2 = await storage.getProject(p.id)
+      assert.equal(got2.name, '再改名')
+      assert.equal(got2.description, '新描述')
+      await storage.saveProjectSettings(p.id, { description: '再改描述' })
+      const got3 = await storage.getProject(p.id)
+      assert.equal(got3.name, '再改名')
+      assert.equal(got3.description, '再改描述')
+      // 索引里的项目名同步（listProjects 可见）
+      const list = await storage.listProjects()
+      assert.equal(list.find((x) => x.id === p.id).name, '再改名')
+    }),
+  },
+  {
+    name: 'host-data: DEFAULT_SETTINGS 补项目设置全族默认值（globalParams/globalAuth/前后置脚本）',
+    fn: () => withTempStorage(async (storage) => {
+      const p = await storage.createProject('全族项目')
+      const got = await storage.getProject(p.id)
+      assert.deepEqual(got.settings.globalParams, { headers: [], query: [], cookies: [] })
+      assert.equal(got.settings.globalAuth.type, 'none')
+      assert.equal(got.settings.preScript, '')
+      assert.equal(got.settings.postScript, '')
+      // 覆盖写：整族保存后读回一致（ParamTable 行结构原样保留）
+      await storage.saveProjectSettings(p.id, {
+        globalParams: { headers: [{ key: 'X-Trace', value: '1', enabled: true }], query: [{ key: 'page', value: '1', enabled: true }], cookies: [] },
+        globalAuth: { type: 'bearer', token: 'tk', username: '', password: '', key: '', value: '', addTo: 'header' },
+        preScript: 'console.log(1)',
+        postScript: 'console.log(2)',
+      })
+      const got2 = await storage.getProject(p.id)
+      assert.equal(got2.settings.globalParams.headers[0].key, 'X-Trace')
+      assert.equal(got2.settings.globalAuth.token, 'tk')
+      assert.equal(got2.settings.preScript, 'console.log(1)')
+      assert.equal(got2.settings.postScript, 'console.log(2)')
+      // 局部合并：只更新 preScript 时其余保留
+      await storage.saveProjectSettings(p.id, { preScript: 'console.log(3)' })
+      const got3 = await storage.getProject(p.id)
+      assert.equal(got3.settings.preScript, 'console.log(3)')
+      assert.equal(got3.settings.globalAuth.token, 'tk')
+      assert.equal(got3.settings.postScript, 'console.log(2)')
+    }),
+  },
+  {
     name: 'host-data: saveFlow 保存流程图步骤，空值回落空结构',
     fn: () => withTempStorage(async (storage) => {
       const p = await storage.createProject('flow 项目')

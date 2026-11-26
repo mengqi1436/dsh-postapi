@@ -22,12 +22,19 @@ export const DEFAULT_BASE_PATH = (() => {
 })()
 export const SCHEMA_VERSION = 2
 
-/** 契约 §2.2 settings 默认值。 */
+/** 契约 §2.2 settings 默认值。v3：补项目设置全族（全局参数 / 全局认证 / 项目级前后置脚本）。 */
 export const DEFAULT_SETTINGS = {
   mockPort: 4010,
   proxyUrl: '',
   requestTimeoutMs: 30000,
   historyLimit: 200,
+  // 全局参数（ParamTable 行结构），send 时与接口参数按「接口优先」合并
+  globalParams: { headers: [], query: [], cookies: [] },
+  // 全局认证：接口 auth.type === 'none' 时兜底生效
+  globalAuth: { type: 'none', token: '', username: '', password: '', key: '', value: '', addTo: 'header' },
+  // 项目级前置 / 后置脚本：先于 / 后于接口脚本执行（同一 runScript 沙箱）
+  preScript: '',
+  postScript: '',
 }
 
 const DEFAULT_HISTORY_LIMIT = DEFAULT_SETTINGS.historyLimit
@@ -661,14 +668,32 @@ export function createStorageService(basePath = DEFAULT_BASE_PATH) {
     async saveProjectSettings(projectId, settings) {
       return enqueue(async () => {
         const project = await loadProjectForWrite(projectId)
+        const incoming = settings && typeof settings === 'object' ? settings : {}
+        // v3 额外语义：传入对象含 name / description 时同步写 project.name / project.description
+        // （调试页「项目设置 → 基本信息」一次调用完成改名 + 设置落盘）；这两个键不写进 settings。
+        if (incoming.name !== undefined) project.name = String(incoming.name)
+        if (incoming.description !== undefined) project.description = String(incoming.description)
         // 局部合并：只覆盖传入键，其余沿用（契约 §3 saveProjectSettings 语义）
+        const merged = { ...incoming }
+        delete merged.name
+        delete merged.description
         project.settings = {
           ...DEFAULT_SETTINGS,
           ...(project.settings || {}),
-          ...(settings && typeof settings === 'object' ? settings : {}),
+          ...merged,
         }
         project.updatedAt = nowIso()
         await saveProject(project)
+        // 元数据改名时同步 index.json 的项目名（与 renameProject 同款，listProjects 可见）
+        if (incoming.name !== undefined) {
+          const index = await readIndex()
+          const entry = index.projects.find((x) => x.id === projectId)
+          if (entry) {
+            entry.name = project.name
+            entry.updatedAt = project.updatedAt
+            await writeIndex(index)
+          }
+        }
         return project.settings
       })
     },

@@ -71,5 +71,14 @@
         "@deepseek-ai/dsh-client-ui-sidebar-right"
       ]
     }
+  },
+  "dependencies": {
+    "gaussdb-node": "^0.2.2",
+    "mongodb": "^7.9.1",
+    "mssql": "^12.8.1",
+    "mysql2": "^3.24.6",
+    "oracledb": "^26.0.0",
+    "pg": "^8.23.1",
+    "redis": "^6.4.0"
   }
 }

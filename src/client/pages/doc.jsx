@@ -11,6 +11,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { applyTheme } from './theme.js'
 import { ParamTable } from './components/ParamTable.jsx'
 import { FolderTree } from './components/FolderTree.jsx'
+import { ContextMenu } from './components/ContextMenu.jsx'
 import { JsonEditor } from './components/JsonEditor.jsx'
 import { EmptyState } from './components/EmptyState.jsx'
 import { StatusPill } from './components/StatusPill.jsx'
@@ -122,6 +123,8 @@ const TOC = [
 ]
 
 const BODY_TYPES = ['none', 'json', 'form', 'urlencoded', 'raw', 'binary', 'xml', 'graphql']
+/** 新建接口行内表单的候选方法（默认 GET，与 debug 页 METHODS 同集）。 */
+const TREE_METHODS = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS']
 const AUTH_LABEL = {
   none: '无认证',
   bearer: 'Bearer Token（Authorization: Bearer <token>）',
@@ -139,6 +142,25 @@ const STATUS_TONE = { developing: 'pp-pill-accent', testing: 'pp-pill-warn', don
 function resolveApi() {
   return typeof window !== 'undefined' ? window.__postapiApi : null
 }
+
+function errText(err) {
+  return err && err.message ? err.message : String(err)
+}
+
+/** 拖拽排序乐观更新：把单条 moveNode op 直接映射到本地 project（与 host moveNode 同语义）。 */
+function applyMoveOp(prev, op) {
+  if (!op || !prev || typeof prev !== 'object' || !op.id) return prev
+  const parentId = op.parentId == null ? null : op.parentId
+  const order = Number.isFinite(op.order) ? op.order : 0
+  if (op.kind === 'folder') {
+    return { ...prev, folders: (prev.folders || []).map((f) => (f.id === op.id ? { ...f, parentId, order } : f)) }
+  }
+  if (op.kind === 'endpoint') {
+    return { ...prev, endpoints: (prev.endpoints || []).map((e) => (e.id === op.id ? { ...e, folderId: parentId, order } : e)) }
+  }
+  return prev
+}
+
 
 function readEndpointIdFromHash() {
   if (typeof window === 'undefined') return ''
@@ -259,6 +281,12 @@ export function DocPage({ route, api }) {
   const [activeSec, setActiveSec] = useState('sec-info')
   const [responseId, setResponseId] = useState('')
   const [copied, setCopied] = useState('')
+  // —— 右键菜单 / 行内表单 / 两段式删除（全部页内交互，不弹窗）——
+  const [ctxMenu, setCtxMenu] = useState(null)          // { kind:'folder'|'endpoint'|'root', id, x, y }
+  const [treeForm, setTreeForm] = useState(null)        // { mode:'newFolder'|'newEndpoint'|'rename', kind, id, parentId, name, method }
+  const [confirmDelete, setConfirmDelete] = useState(null) // { kind:'folder'|'endpoint', id, label }
+  const [treeNotice, setTreeNotice] = useState('')      // 行内提示：空串隐藏
+  const [treeBad, setTreeBad] = useState(false)         // 提示色调（true = 失败红）
 
   // 载入项目：doc 路由只带 endpointId，取项目列表首个项目全量数据
   useEffect(() => {
@@ -388,7 +416,210 @@ export function DocPage({ route, api }) {
       .catch((err) => setError('保存响应失败：' + (err && err.message ? err.message : String(err))))
   }
 
-  // 目录树：递归渲染 parentId 多级层级（Apifox 左树观感），折叠态由本页持有
+  // —— 行内提示（成功绿 / 失败红，均在页内展示，不弹窗）——
+  const notice = (text, bad = false) => {
+    setTreeNotice(text)
+    setTreeBad(Boolean(bad))
+  }
+
+  // —— 拖拽排序：FolderTree 每个 op 回调一次；本地乐观更新 + moveNode 落库，失败回读 ——
+  const handleMove = (op) => {
+    if (!op || !op.id) return
+    setProject((prev) => applyMoveOp(prev, op))
+    const storage = apiRef && apiRef.storage
+    if (!storage || typeof storage.moveNode !== 'function' || !project || !project.id) {
+      notice('排序保存失败：storage.moveNode 不可用，排序仅保存在页面内', true)
+      return
+    }
+    Promise.resolve()
+      .then(() => storage.moveNode(project.id, op))
+      .then(() => notice(''))
+      .catch((err) => {
+        notice('排序保存失败：' + errText(err), true)
+        // 失败回读权威数据，本地乐观态被纠正
+        if (typeof storage.getProject === 'function') {
+          Promise.resolve()
+            .then(() => storage.getProject(project.id))
+            .then((data) => { if (data) setProject(data) })
+            .catch(() => { /* 回读失败保留乐观态，错误文案已显示 */ })
+        }
+      })
+  }
+
+  // —— 右键菜单条目（目录 / 接口 / 树空白三种来源）——
+  const openCtxMenu = (kind, id, x, y) => {
+    setConfirmDelete(null)
+    setTreeForm(null)
+    setCtxMenu({ kind, id, x, y })
+  }
+
+  const startTreeForm = (form) => {
+    setCtxMenu(null)
+    setConfirmDelete(null)
+    setTreeForm(form)
+  }
+
+  const confirmTreeForm = () => {
+    const storage = apiRef && apiRef.storage
+    if (!treeForm) return
+    const name = String(treeForm.name || '').trim()
+    if (!name) {
+      notice('名称不能为空', true)
+      return
+    }
+    const pid = project && project.id
+    const need = (fn, label) => {
+      if (!storage || typeof storage[fn] !== 'function' || !pid) {
+        notice('保存失败：storage.' + label + ' 不可用', true)
+        return true
+      }
+      return false
+    }
+    const folders = Array.isArray(project.folders) ? project.folders : []
+    const endpoints = Array.isArray(project.endpoints) ? project.endpoints : []
+    if (treeForm.mode === 'newFolder') {
+      if (need('saveFolder', 'saveFolder')) return
+      const parentId = treeForm.parentId == null || treeForm.parentId === '' ? null : treeForm.parentId
+      Promise.resolve()
+        .then(() => storage.saveFolder(pid, { name, parentId }))
+        .then((saved) => {
+          setProject((prev) => ({ ...prev, folders: [...(prev.folders || []), saved] }))
+          setTreeForm(null)
+          notice('已新建目录：' + name)
+        })
+        .catch((err) => notice('新建目录失败：' + errText(err), true))
+      return
+    }
+    if (treeForm.mode === 'newEndpoint') {
+      if (need('saveEndpoint', 'saveEndpoint')) return
+      const folderId = treeForm.parentId == null || treeForm.parentId === '' ? null : treeForm.parentId
+      Promise.resolve()
+        .then(() => storage.saveEndpoint(pid, { name, method: treeForm.method || 'GET', folderId, url: '', protocol: 'http' }))
+        .then((saved) => {
+          setProject((prev) => ({ ...prev, endpoints: [...(prev.endpoints || []), saved] }))
+          setTreeForm(null)
+          notice('已新建接口：' + name)
+        })
+        .catch((err) => notice('新建接口失败：' + errText(err), true))
+      return
+    }
+    // 重命名：目录与接口各走自己的 save face（带 id 覆盖语义）
+    if (treeForm.kind === 'folder') {
+      const folder = folders.find((f) => f.id === treeForm.id)
+      if (!folder) { notice('目录不存在：' + treeForm.id, true); return }
+      if (need('saveFolder', 'saveFolder')) return
+      Promise.resolve()
+        .then(() => storage.saveFolder(pid, { ...folder, name }))
+        .then((saved) => {
+          setProject((prev) => ({
+            ...prev,
+            folders: (prev.folders || []).map((f) => (f.id === saved.id ? saved : f)),
+          }))
+          setTreeForm(null)
+          notice('已重命名目录：' + name)
+        })
+        .catch((err) => notice('重命名失败：' + errText(err), true))
+      return
+    }
+    const endpoint = endpoints.find((e) => e.id === treeForm.id)
+    if (!endpoint) { notice('接口不存在：' + treeForm.id, true); return }
+    if (need('saveEndpoint', 'saveEndpoint')) return
+    Promise.resolve()
+      .then(() => storage.saveEndpoint(pid, { ...endpoint, name }))
+      .then((saved) => {
+        setProject((prev) => ({
+          ...prev,
+          endpoints: (prev.endpoints || []).map((e) => (e.id === saved.id ? saved : e)),
+        }))
+        setTreeForm(null)
+        notice('已重命名接口：' + name)
+      })
+      .catch((err) => notice('重命名失败：' + errText(err), true))
+  }
+
+  // —— 两段式删除：先挂行内确认条（「确认删除 X？」+ 删除/取消），再点「删除」才执行 ——
+  const requestDelete = (kind, id, label) => {
+    setCtxMenu(null)
+    setTreeForm(null)
+    setConfirmDelete({ kind, id, label: label || id })
+  }
+
+  const doDelete = () => {
+    const storage = apiRef && apiRef.storage
+    if (!confirmDelete) return
+    const pid = project && project.id
+    if (!storage || !pid) { notice('删除失败：storage 不可用', true); return }
+    const isFolder = confirmDelete.kind === 'folder'
+    const fn = isFolder ? 'deleteFolder' : 'deleteEndpoint'
+    if (typeof storage[fn] !== 'function') {
+      notice('删除失败：storage.' + fn + ' 不可用', true)
+      return
+    }
+    const { kind, id, label } = confirmDelete
+    setConfirmDelete(null)
+    Promise.resolve()
+      .then(() => storage[fn](pid, id))
+      .then(() => {
+        setProject((prev) => (isFolder
+          ? { ...prev, folders: (prev.folders || []).filter((f) => f.id !== id) }
+          : { ...prev, endpoints: (prev.endpoints || []).filter((e) => e.id !== id) }))
+        if (!isFolder && ep && ep.id === id) setSelectedId('')
+        notice('已删除' + (kind === 'folder' ? '目录' : '接口') + '：' + label)
+      })
+      .catch((err) => notice('删除失败：' + errText(err), true))
+  }
+
+  /** 复制接口 URL：只走 navigator.clipboard，失败行内文案。 */
+  const copyEndpointUrl = (endpointId) => {
+    const endpoints = Array.isArray(project.endpoints) ? project.endpoints : []
+    const target = endpoints.find((e) => e.id === endpointId)
+    const url = target ? String(target.url || '') : ''
+    setCtxMenu(null)
+    if (typeof navigator === 'undefined' || !navigator.clipboard || typeof navigator.clipboard.writeText !== 'function') {
+      notice('复制失败：剪贴板不可用', true)
+      return
+    }
+    Promise.resolve(navigator.clipboard.writeText(url))
+      .then(() => notice('已复制 URL'))
+      .catch((err) => notice('复制失败：' + errText(err), true))
+  }
+
+  const ctxItems = useMemo(() => {
+    if (!ctxMenu) return []
+    const folders = Array.isArray(project.folders) ? project.folders : []
+    const endpoints = Array.isArray(project.endpoints) ? project.endpoints : []
+    if (ctxMenu.kind === 'folder') {
+      const folder = folders.find((f) => f.id === ctxMenu.id)
+      if (!folder) return []
+      return [
+        { label: '新建子目录', onClick: () => startTreeForm({ mode: 'newFolder', parentId: folder.id, name: '', kind: '', id: '', method: 'GET' }) },
+        { label: '新建接口', onClick: () => startTreeForm({ mode: 'newEndpoint', parentId: folder.id, name: '', kind: '', id: '', method: 'GET' }) },
+        { label: '重命名', onClick: () => startTreeForm({ mode: 'rename', kind: 'folder', id: folder.id, parentId: null, name: folder.name || '', method: 'GET' }) },
+        { divider: true },
+        { label: '删除', danger: true, onClick: () => requestDelete('folder', folder.id, folder.name || folder.id) },
+      ]
+    }
+    if (ctxMenu.kind === 'endpoint') {
+      const target = endpoints.find((e) => e.id === ctxMenu.id)
+      if (!target) return []
+      return [
+        { label: '在调试页打开', onClick: () => { setCtxMenu(null); if (typeof window !== 'undefined') window.location.hash = '#/debug' } },
+        { label: '复制 URL', onClick: () => copyEndpointUrl(target.id) },
+        { label: '重命名', onClick: () => startTreeForm({ mode: 'rename', kind: 'endpoint', id: target.id, parentId: null, name: target.name || '', method: target.method || 'GET' }) },
+        { divider: true },
+        { label: '删除', danger: true, onClick: () => requestDelete('endpoint', target.id, target.name || target.id) },
+      ]
+    }
+    // 树空白 / 项目名行：只提供新建
+    return [
+      { label: '新建目录', onClick: () => startTreeForm({ mode: 'newFolder', parentId: null, name: '', kind: '', id: '', method: 'GET' }) },
+      { label: '新建接口', onClick: () => startTreeForm({ mode: 'newEndpoint', parentId: null, name: '', kind: '', id: '', method: 'GET' }) },
+    ]
+  }, [ctxMenu, project, ep])
+
+
+  // 目录树：递归渲染 parentId 多级层级（Apifox 左树观感），折叠态由本页持有。
+  // v3：行可拖拽重排（onMove 逐条落库）+ 行右键菜单（onContextMenu）。
   const tree = (
     <FolderTree
       project={project}
@@ -396,8 +627,53 @@ export function DocPage({ route, api }) {
       collapsed={collapsed}
       onPick={pick}
       onToggle={(folderId) => setCollapsed((prev) => ({ ...prev, [folderId]: !prev[folderId] }))}
+      onMove={handleMove}
+      onContextMenu={openCtxMenu}
     />
   )
+
+  /**
+   * 树面板顶部行内表单：新建目录 / 新建接口 / 重命名共用一条（输入框 + 确定/取消）。
+   * 新建接口带方法下拉（默认 GET）；Enter 确认、Escape 取消；不弹任何模态框。
+   */
+  const treeFormNode = treeForm ? (
+    <div className="pp-toolbar-inline" data-tree-form="true" style={{ marginBottom: 'var(--sp-2)' }}>
+      {treeForm.mode === 'newEndpoint' ? (
+        <select
+          className="pp-select pp-input-sm"
+          value={treeForm.method || 'GET'}
+          onChange={(e) => setTreeForm((prev) => ({ ...prev, method: e.target.value }))}
+          aria-label="请求方法"
+        >
+          {TREE_METHODS.map((m) => <option key={m} value={m}>{m}</option>)}
+        </select>
+      ) : null}
+      <input
+        className="pp-input pp-input-sm"
+        style={{ flex: 1, minWidth: 0 }}
+        placeholder={treeForm.mode === 'newFolder' ? '目录名称' : treeForm.mode === 'newEndpoint' ? '接口名称' : '新名称'}
+        value={treeForm.name || ''}
+        onChange={(e) => setTreeForm((prev) => ({ ...prev, name: e.target.value }))}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') confirmTreeForm()
+          else if (e.key === 'Escape') setTreeForm(null)
+        }}
+        aria-label="名称"
+      />
+      <button className="pp-btn pp-btn-sm pp-btn-primary" onClick={confirmTreeForm}>确定</button>
+      <button className="pp-btn pp-btn-sm" onClick={() => setTreeForm(null)}>取消</button>
+    </div>
+  ) : null
+
+  // 两段式删除确认条：第一次点「删除」只挂这条（不执行），再点「删除」才落库
+  const confirmDeleteNode = confirmDelete ? (
+    <div className="pp-toolbar-inline" data-confirm-delete="true" style={{ marginBottom: 'var(--sp-2)' }}>
+      <span className="pp-meta">确认删除「{confirmDelete.label}」？</span>
+      <button className="pp-btn pp-btn-sm pp-btn-danger" onClick={doDelete}>删除</button>
+      <button className="pp-btn pp-btn-sm" onClick={() => setConfirmDelete(null)}>取消</button>
+    </div>
+  ) : null
+
 
   /**
    * 页内锚点条：原先的右栏「本页目录」在窄容器里要吃掉 240px，把正文挤成窄条。
@@ -465,7 +741,12 @@ export function DocPage({ route, api }) {
   return (
     <div className="pp-scope pp-page-flush" data-page="doc" ref={rootRef}>
       <div className="pp-split">
-        <nav className="pp-panel" aria-label="接口目录">{tree}</nav>
+        <nav className="pp-panel" aria-label="接口目录">
+          {treeFormNode}
+          {confirmDeleteNode}
+          {treeNotice ? <p className={'pp-note ' + (treeBad ? 'pp-note-bad' : 'pp-note-ok')} data-tree-notice="true">{treeNotice}</p> : null}
+          {tree}
+        </nav>
 
         <div className="pp-doc-main">
           {docHead}
@@ -584,6 +865,14 @@ export function DocPage({ route, api }) {
           </div>
         </div>
       </div>
+      {ctxMenu ? (
+        <ContextMenu
+          x={ctxMenu.x}
+          y={ctxMenu.y}
+          items={ctxItems}
+          onClose={() => setCtxMenu(null)}
+        />
+      ) : null}
     </div>
   )
 }

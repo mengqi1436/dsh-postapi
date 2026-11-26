@@ -6,6 +6,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { applyTheme } from './theme.js'
 import { EmptyState } from './components/EmptyState.jsx'
+import { ContextMenu } from './components/ContextMenu.jsx'
 
 ;(window.__postapiQueue = window.__postapiQueue || []).push(['overview', OverviewPage]) // 注册表就绪前入队
 
@@ -94,6 +95,9 @@ export function OverviewPage(props) {
   const [pendingDelete, setPendingDelete] = useState('')
   // 新建/重命名表单折叠态：页头只留一个「新建项目」按钮
   const [formOpen, setFormOpen] = useState(false)
+  // —— 项目卡片右键菜单：重命名（行内输入）/ 删除（两段式，复用 pendingDelete）——
+  const [cardMenu, setCardMenu] = useState(null)     // { id, x, y }
+  const [cardRename, setCardRename] = useState(null) // { id, name }
 
   useEffect(() => applyTheme(rootRef.current), [])
 
@@ -217,6 +221,58 @@ export function OverviewPage(props) {
     }
   }
 
+  // —— 项目卡片右键：重命名（任意卡片，行内输入，storage.renameProject 落库）——
+  const confirmCardRename = async () => {
+    if (!cardRename) return
+    const name = String(cardRename.name || '').trim()
+    if (!name) {
+      setError('新项目名不能为空')
+      return
+    }
+    if (!storage || typeof storage.renameProject !== 'function') {
+      setError('当前桥未提供 api.storage.renameProject')
+      return
+    }
+    setError('')
+    try {
+      await storage.renameProject(cardRename.id, name)
+      setNotice('已重命名：' + name)
+      setCardRename(null)
+      setCardMenu(null)
+      // 改的是当前打开的项目：同步页头重命名输入框与本地详情，避免旧名残留
+      if (cardRename.id === currentId) {
+        setRenameName(name)
+        setProject((prev) => (prev && prev.id === cardRename.id ? { ...prev, name } : prev))
+      }
+      await refresh()
+    } catch (err) {
+      setError('重命名失败：' + errText(err))
+    }
+  }
+
+  /** 卡片右键菜单条目：重命名 → 行内表单；删除 → 复用 pendingDelete 两段式（卡片按钮变「确认删除」）。 */
+  const cardMenuItems = (projectId) => {
+    const hit = (Array.isArray(projects) ? projects : []).find((p) => p && p.id === projectId)
+    return [
+      {
+        label: '重命名',
+        onClick: () => {
+          setCardMenu(null)
+          setCardRename({ id: projectId, name: (hit && hit.name) || '' })
+        },
+      },
+      { divider: true },
+      {
+        label: '删除',
+        danger: true,
+        onClick: () => {
+          setCardMenu(null)
+          deleteProject(projectId) // 首次只标记待确认（行内提示），再点卡片上的「确认删除」执行
+        },
+      },
+    ]
+  }
+
   const recent = recentEndpoints(project)
   const cards = projectCards(projects)
   const stats = overviewStats(projects, project)
@@ -291,11 +347,38 @@ export function OverviewPage(props) {
   
         <div className="pp-overview-grid">
           {cards.map((p) => (
-            <div key={p.id} className="pp-card pp-card-hover" data-active={currentId === p.id ? 'true' : 'false'}>
+            <div
+              key={p.id}
+              className="pp-card pp-card-hover"
+              data-active={currentId === p.id ? 'true' : 'false'}
+              onContextMenu={(e) => {
+                e.preventDefault()
+                setCardRename(null)
+                setCardMenu({ id: p.id, x: e.clientX, y: e.clientY })
+              }}
+            >
               <div className="pp-card-title pp-ellipsis">{p.name}</div>
               <div className="pp-meta">
                 {p.endpointCount === undefined ? '接口数未知' : p.endpointCount + ' 个接口'} · 更新于 {fmtTime(p.updatedAt)}
               </div>
+              {cardRename && cardRename.id === p.id ? (
+                <div className="pp-toolbar-inline" data-card-rename="true" style={{ marginTop: 'var(--sp-2)' }}>
+                  <input
+                    className="pp-input pp-input-sm"
+                    style={{ flex: 1, minWidth: 0 }}
+                    placeholder="新名称"
+                    value={cardRename.name}
+                    onChange={(e) => setCardRename((prev) => ({ ...prev, name: e.target.value }))}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') confirmCardRename()
+                      else if (e.key === 'Escape') setCardRename(null)
+                    }}
+                    aria-label="新项目名"
+                  />
+                  <button className="pp-btn pp-btn-sm pp-btn-primary" onClick={confirmCardRename}>确定</button>
+                  <button className="pp-btn pp-btn-sm" onClick={() => setCardRename(null)}>取消</button>
+                </div>
+              ) : null}
               <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
                 <button className="pp-btn" onClick={() => openProject(p.id)}>打开</button>
                 <button className="pp-btn pp-btn-danger" onClick={() => deleteProject(p.id)}>
@@ -347,6 +430,14 @@ export function OverviewPage(props) {
         </div>
 
       </div>
+      {cardMenu ? (
+        <ContextMenu
+          x={cardMenu.x}
+          y={cardMenu.y}
+          items={cardMenuItems(cardMenu.id)}
+          onClose={() => setCardMenu(null)}
+        />
+      ) : null}
     </div>
   )
 }
