@@ -142,10 +142,13 @@ export function SearchPage(props) {
     if (!hasKeyword(q)) return
     setKeyword(q)
     if (!storage || typeof storage.search !== 'function') return
+    // 等真实项目列表就位再自动查：挂载瞬间 projectId 还是 mock 占位
+    // proj_demo01，直接查会在桥上炸 500 且结果必然为空。
+    if (isMock) return
     if (autoQuery === route.query) return
     setAutoQuery(route.query)
     runSearch()
-  }, [route.query, projectId, storage, autoQuery])
+  }, [route.query, projectId, storage, autoQuery, isMock])
 
   const total = GROUPS.reduce((n, g) => n + groups[g.key].length, 0)
 

@@ -784,7 +784,9 @@ export function createStorageService(basePath = DEFAULT_BASE_PATH) {
       const kw = typeof keyword === 'string' ? keyword.trim().toLowerCase() : ''
       if (kw === '') return { endpoints: [], schemas: [], folders: [] }
       const loaded = await loadProjectData(projectId)
-      if (!loaded) throw new Error(`project not found: ${projectId}`)
+      // 未知项目返回空结果而非 500：搜索是只读查询，项目缺失（页面初挂载带
+      // mock 占位 id 自动查一次）不该炸成 INTERNAL，也不该把 console 染红。
+      if (!loaded) return { endpoints: [], schemas: [], folders: [] }
       const project = loaded.data
       const hit = (...fields) =>
         fields.some((f) => typeof f === 'string' && f.toLowerCase().includes(kw))

@@ -5907,10 +5907,11 @@ function SearchPage(props) {
     if (!hasKeyword(q)) return;
     setKeyword(q);
     if (!storage || typeof storage.search !== "function") return;
+    if (isMock) return;
     if (autoQuery === route.query) return;
     setAutoQuery(route.query);
     runSearch();
-  }, [route.query, projectId, storage, autoQuery]);
+  }, [route.query, projectId, storage, autoQuery, isMock]);
   const total = GROUPS.reduce((n, g) => n + groups[g.key].length, 0);
   const visibleGroups = GROUPS.filter((g) => groups[g.key].length > 0);
   const kw = String(keyword || "").trim();
