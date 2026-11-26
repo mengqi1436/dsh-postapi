@@ -25,6 +25,12 @@ const hostDataTests = await optionalSuite('host-data.test.js', 'tests')
 const hostRuntimeTests = await optionalSuite('host-runtime.test.js', 'tests')
 const hostWsTests = await optionalSuite('host-ws.test.js', 'tests')
 const hostDbTests = await optionalSuite('host-db.test.js', 'tests')
+// 功能补齐轮新增套件：文件落地前 optionalSuite 自动跳过，收录行先行占位（lead 统一接线点）
+const hostDbMysqlTests = await optionalSuite('host-db-mysql.test.js', 'tests')
+const hostDbPgTests = await optionalSuite('host-db-pg.test.js', 'tests')
+const hostDbExtraTests = await optionalSuite('host-db-extra.test.js', 'tests')
+const hostGrpcTests = await optionalSuite('host-grpc.test.js', 'tests')
+const hostDubboTests = await optionalSuite('host-dubbo.test.js', 'tests')
 
 /** 页面套件在 src/ 下，用绝对路径动态导入。 */
 async function optionalPageSuite(relPath, exportName) {
@@ -69,6 +75,11 @@ const suites = [
   ['tests/host-runtime.test.js', hostRuntimeTests],
   ['tests/host-ws.test.js', hostWsTests],
   ['tests/host-db.test.js', hostDbTests],
+  ['tests/host-db-mysql.test.js', hostDbMysqlTests],
+  ['tests/host-db-pg.test.js', hostDbPgTests],
+  ['tests/host-db-extra.test.js', hostDbExtraTests],
+  ['tests/host-grpc.test.js', hostGrpcTests],
+  ['tests/host-dubbo.test.js', hostDubboTests],
   ['src/client/pages/components/__tests__/pages-a.test.js', pagesATests],
   ['src/client/pages/components/__tests__/apifox-ui.test.js', apifoxUiTests],
   ['src/client/pages/components/__tests__/tree.test.js', treeTests],

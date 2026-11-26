@@ -192,8 +192,8 @@ async function tempStage() {
 
     const health = await httpJson(base, PREFIX + '/health')
     assert.equal(health.status, 200)
-    assert.deepEqual(health.json, { ok: true, data: { status: 'up' } })
-    record('GET ' + PREFIX + '/health', 'status=200 ok=true')
+    assert.deepEqual(health.json, { ok: true, data: { status: 'up', storeRoot: basePath } })
+    record('GET ' + PREFIX + '/health', 'status=200 ok=true storeRoot=' + health.json.data.storeRoot)
 
     const empty = await httpJson(base, PREFIX + '/storage/listProjects')
     assert.equal(empty.status, 200)
@@ -484,7 +484,7 @@ async function v2Stage(base, projectId) {
 
   const dbUnsupported = await httpJson(base, PREFIX + '/db/test', {
     method: 'POST',
-    body: { connection: { type: 'mysql', host: '127.0.0.1' } },
+    body: { connection: { type: 'db2', host: '127.0.0.1' } },
   })
   assert.equal(dbUnsupported.status, 200)
   assert.equal(dbUnsupported.json.data.ok, false)

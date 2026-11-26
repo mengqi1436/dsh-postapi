@@ -70,6 +70,7 @@ const TABS = [
   { id: 'script', label: '脚本' },
   { id: 'db', label: '数据库' },
   { id: 'settings', label: '设置' },
+  { id: 'projSettings', label: '项目设置' },
 ]
 
 /** WebSocket 模式下只保留与握手相关的页签（Body/Auth/脚本属于 HTTP 语义）。 */
@@ -78,10 +79,90 @@ const WS_TABS = [
   { id: 'headers', label: 'Headers' },
 ]
 
+/** gRPC / Dubbo 模式页签：Params 暂不参与调用（gRPC 走 message JSON、Dubbo 走 args），仅留 Headers 当 metadata/attachment 编辑位。 */
+const RPC_TABS = [
+  { id: 'params', label: 'Params' },
+  { id: 'headers', label: 'Headers' },
+]
+
+/** RPC 调用的草稿字段默认值（挂在 draft 上，protocol 切换时互不干扰）。 */
+function emptyRpcDraft(ep) {
+  return {
+    rpcAddress: '',
+    rpcProto: '',
+    rpcService: '',
+    rpcMethod: '',
+    rpcMessage: '',
+    rpcInterface: '',
+    rpcVersion: '',
+    rpcGroup: '',
+    rpcParamTypes: '',
+    rpcArgs: '',
+    rpcGeneric: true,
+    ...(ep && typeof ep === 'object' ? {
+      rpcAddress: ep.rpcAddress == null ? '' : String(ep.rpcAddress),
+      rpcProto: ep.rpcProto == null ? '' : String(ep.rpcProto),
+      rpcService: ep.rpcService == null ? '' : String(ep.rpcService),
+      rpcMethod: ep.rpcMethod == null ? '' : String(ep.rpcMethod),
+      rpcMessage: ep.rpcMessage == null ? '' : String(ep.rpcMessage),
+      rpcInterface: ep.rpcInterface == null ? '' : String(ep.rpcInterface),
+      rpcVersion: ep.rpcVersion == null ? '' : String(ep.rpcVersion),
+      rpcGroup: ep.rpcGroup == null ? '' : String(ep.rpcGroup),
+      rpcParamTypes: ep.rpcParamTypes == null ? '' : String(ep.rpcParamTypes),
+      rpcArgs: ep.rpcArgs == null ? '' : String(ep.rpcArgs),
+      rpcGeneric: ep.rpcGeneric === false ? false : true,
+    } : {}),
+  }
+}
+
+/** 项目设置全族（project.settings）页面侧归一：缺字段回落空值，类型不对时兜底。 */
+export function emptyProjSettings(project) {
+  const s = (project && project.settings && typeof project.settings === 'object') ? project.settings : {}
+  const gp = (s.globalParams && typeof s.globalParams === 'object') ? s.globalParams : {}
+  const ga = (s.globalAuth && typeof s.globalAuth === 'object') ? s.globalAuth : {}
+  const rows = (v) => (Array.isArray(v) ? v.map((r) => ({ ...r })) : [])
+  return {
+    name: (project && project.name) || '',
+    description: (project && project.description) || '',
+    globalParams: { headers: rows(gp.headers), query: rows(gp.query), cookies: rows(gp.cookies) },
+    globalAuth: {
+      type: ga.type || 'none',
+      token: ga.token == null ? '' : String(ga.token),
+      username: ga.username == null ? '' : String(ga.username),
+      password: ga.password == null ? '' : String(ga.password),
+      key: ga.key == null ? '' : String(ga.key),
+      value: ga.value == null ? '' : String(ga.value),
+      addTo: ga.addTo || 'header',
+    },
+    preScript: s.preScript == null ? '' : String(s.preScript),
+    postScript: s.postScript == null ? '' : String(s.postScript),
+  }
+}
+
 const DB_TYPES = [
-  { id: 'sqlite', label: 'SQLite（内置驱动）' },
-  { id: 'mysql', label: 'MySQL（需独立驱动）' },
-  { id: 'postgresql', label: 'PostgreSQL（需独立驱动）' },
+  { id: 'sqlite', label: 'SQLite（node 内置驱动）' },
+  { id: 'mysql', label: 'MySQL（官方 mysql2）' },
+  { id: 'postgresql', label: 'PostgreSQL（官方 pg）' },
+  { id: 'gaussdb', label: 'GaussDB / openGauss（官方 gaussdb-node）' },
+  { id: 'mssql', label: 'SQL Server（官方 mssql）' },
+  { id: 'oracle', label: 'Oracle（官方 oracledb）' },
+  { id: 'mongodb', label: 'MongoDB（官方 mongodb）' },
+  { id: 'redis', label: 'Redis（官方 redis）' },
+]
+
+/** 各驱动默认端口提示（placeholder 用）。 */
+const DB_DEFAULT_PORT = { mysql: '3306（默认）', postgresql: '5432（默认）', gaussdb: '5432（默认，DWS 常见 8000）', mssql: '1433（默认）', oracle: '1521（默认）', redis: '6379（默认）' }
+/** SSL 开关适用面：关系型 + Redis TLS；MongoDB 走 URL 里的 ssl 参数。 */
+const DB_SSL_TYPES = ['mysql', 'postgresql', 'gaussdb', 'mssql', 'redis']
+/** 端口字段适用的驱动（sqlite 走文件路径、mongodb 走 URL）。 */
+const DB_HOST_TYPES = ['mysql', 'postgresql', 'mssql', 'oracle', 'redis']
+
+/** 项目设置子页签（基本信息 / 全局参数 / 全局认证 / 前后置脚本）。 */
+const PROJ_SUBTABS = [
+  { id: 'basic', label: '基本信息' },
+  { id: 'globalParams', label: '全局参数' },
+  { id: 'globalAuth', label: '全局认证' },
+  { id: 'scripts', label: '前后置脚本' },
 ]
 
 /** 回放快照 key：与 history 页写入的 key 一致，切到调试页即按快照重填。 */
@@ -93,6 +174,22 @@ const AUTH_LABEL = { none: '无认证', bearer: 'Bearer', basic: 'Basic', apikey
 
 function resolveApi() {
   return typeof window !== 'undefined' ? window.__postapiApi : null
+}
+
+function errText(err) {
+  return err && err.message ? err.message : String(err)
+}
+
+/** Dubbo args JSON 数组解析：非法返回 null（发送前拦截并给出行内错误）。 */
+function parseJsonArray(text) {
+  const raw = String(text == null ? '' : text).trim()
+  if (!raw) return []
+  try {
+    const parsed = JSON.parse(raw)
+    return Array.isArray(parsed) ? parsed : null
+  } catch {
+    return null
+  }
 }
 
 function emptyDraft(ep) {
@@ -124,6 +221,8 @@ function emptyDraft(ep) {
     postScript: (ep && ep.postScript) || '',
     assertions: (ep && Array.isArray(ep.assertions) ? ep.assertions : []).map((a) => ({ ...a })),
     waitMs: Number.isFinite(ep && ep.waitMs) ? ep.waitMs : 0,
+    // RPC（gRPC / Dubbo）草稿字段：地址沿用 url 输入框，其余独立字段
+    ...emptyRpcDraft(ep),
   }
 }
 
@@ -270,11 +369,16 @@ export function DebugPage({ route, api }) {
   const wsIndexRef = useRef(0) // 增量取消息游标（宿主 messages({ since })）
   const wsTimerRef = useRef(null)
   // —— 数据库页签状态 ——
-  const [dbConfig, setDbConfig] = useState({ type: 'sqlite', path: '', host: '', port: '', user: '', password: '', database: '' })
+  const [dbConfig, setDbConfig] = useState({ type: 'sqlite', path: '', url: '', host: '', port: '', user: '', password: '', database: '', ssl: false })
   const [dbSql, setDbSql] = useState('SELECT 1')
   const [dbHint, setDbHint] = useState('')
   const [dbResult, setDbResult] = useState(null)
   const [dbBusy, setDbBusy] = useState(false)
+  // —— 项目设置全族（project.settings）：加载进 state，保存走 renameProject + saveProjectSettings ——
+  const [projSettings, setProjSettings] = useState(() => emptyProjSettings(MOCK_PROJECT))
+  const [projSub, setProjSub] = useState('basic')
+  const [projSaveHint, setProjSaveHint] = useState('')
+  const [projSaveBad, setProjSaveBad] = useState(false)
 
   // 载入项目（列表首个）
   useEffect(() => {
@@ -292,6 +396,7 @@ export function DebugPage({ route, api }) {
         setProject(data)
         setIsMock(false)
         setError('')
+        setProjSettings(emptyProjSettings(data))
         const envs = Array.isArray(data.environments) ? data.environments : []
         const def = envs.find((e) => e.isDefault) || envs[0]
         setEnvId(def ? def.id : '')
@@ -331,10 +436,15 @@ export function DebugPage({ route, api }) {
     const raw = String(draft.url || '')
     // ws(s):// 绝对地址不拼 baseUrl（joinUrl 只认 http 绝对地址）
     if (/^wss?:\/\//i.test(raw)) return raw
+    // RPC（gRPC/Dubbo）地址必须是完整 host:port，不与 baseUrl 拼接
+    if (draft.protocol === 'grpc' || draft.protocol === 'dubbo') return raw
     return joinUrl(env && env.baseUrl, raw)
-  }, [env, draft.url])
+  }, [env, draft.url, draft.protocol])
   const wsMode = draft.protocol === 'websocket'
-  const activeTabs = wsMode ? WS_TABS : TABS
+  const grpcMode = draft.protocol === 'grpc'
+  const dubboMode = draft.protocol === 'dubbo'
+  const rpcMode = grpcMode || dubboMode
+  const activeTabs = wsMode ? WS_TABS : rpcMode ? RPC_TABS : TABS
   const dbConnections = useMemo(
     () => (project && project.settings && Array.isArray(project.settings.dbConnections) ? project.settings.dbConnections : []),
     [project],
@@ -398,6 +508,12 @@ export function DebugPage({ route, api }) {
       },
       projectId: project && project.id ? project.id : '',
     }
+    // v3：项目设置全族随发送下发（host request.send 负责合并语义）；字段缺失时不传
+    const ps = project && project.settings && typeof project.settings === 'object' ? project.settings : null
+    if (ps && ps.globalParams) payload.globalParams = ps.globalParams
+    if (ps && ps.globalAuth) payload.globalAuth = ps.globalAuth
+    if (ps && ps.preScript) payload.projectPreScript = ps.preScript
+    if (ps && ps.postScript) payload.projectPostScript = ps.postScript
     if (!requestApi || typeof requestApi.send !== 'function') {
       // 无 api：本地 mock 响应（结构对齐契约 §4 request.send 返回值）
       setResp({
@@ -445,7 +561,7 @@ export function DebugPage({ route, api }) {
     }
     const endpoint = {
       ...draft,
-      protocol: wsMode ? 'websocket' : 'http',
+      protocol: wsMode ? 'websocket' : (draft.protocol || 'http'),
       name: draft.name || (wsMode ? 'WS ' : draft.method + ' ') + draft.url,
       responses: draft.responses.length ? draft.responses : [],
     }
@@ -456,6 +572,160 @@ export function DebugPage({ route, api }) {
         setDraft((prev) => ({ ...prev, id: (saved && saved.id) || prev.id }))
       })
       .catch((err) => setSavedHint('保存失败：' + (err && err.message ? err.message : String(err))))
+  }
+
+  // —— RPC（gRPC / Dubbo）发送：结果进右侧响应面板，错误形态与 ws/send 同款（页内显示，不弹窗）——
+  const enabledRpcRows = (rows) => (Array.isArray(rows) ? rows : []).filter((r) => r && r.enabled !== false && r.key)
+  // host 侧 metadata/attachments 要的是普通对象 {k:v}（不是 ParamTable 行数组），在这里收敛
+  const rowsToObject = (rows) => {
+    const out = {}
+    for (const r of enabledRpcRows(rows)) out[String(r.key)] = r.value == null ? '' : String(r.value)
+    return out
+  }
+
+  const rpcSend = () => {
+    const face = grpcMode ? (apiRef && apiRef.grpc) : (apiRef && apiRef.dubbo)
+    const faceName = grpcMode ? 'api.grpc' : 'api.dubbo'
+    const cancelled = { cancelled: false }
+    abortRef.current = cancelled
+    const fail = (message) => setResp({ status: 0, statusText: '', headers: {}, body: '', bodySize: 0, timeMs: 0, error: { message } })
+    if (!face || typeof face.invoke !== 'function') {
+      fail(faceName + ' 不可用（桥降级或宿主未注入）')
+      return
+    }
+    const address = String(draft.url || '').trim()
+    const timeout = timeoutMs > 0 ? timeoutMs : 30000
+    let dubboArgs = null
+    let grpcMessage = null
+    let call
+    if (grpcMode) {
+      // host 要求 message 是 JSON 对象：textarea 文本在这里解析（空串视为 {}）
+      const raw = String(draft.rpcMessage || '').trim()
+      if (raw !== '') {
+        try {
+          grpcMessage = JSON.parse(raw)
+        } catch (err) {
+          fail('Message JSON 解析失败：' + (err && err.message ? err.message : String(err)))
+          return
+        }
+      } else {
+        grpcMessage = {}
+      }
+      call = face.invoke({
+        address,
+        proto: draft.rpcProto || '',
+        service: draft.rpcService || '',
+        method: draft.rpcMethod || '',
+        message: grpcMessage,
+        metadata: rowsToObject(draft.headers),
+        timeoutMs: timeout,
+      })
+    } else {
+      dubboArgs = parseJsonArray(draft.rpcArgs)
+      if (dubboArgs === null) {
+        fail('Args JSON 解析失败：需要 JSON 数组，如 [1, "a", {"k":"v"}]')
+        return
+      }
+      call = face.invoke({
+        address,
+        interface: draft.rpcInterface || '',
+        version: draft.rpcVersion || '',
+        group: draft.rpcGroup || '',
+        method: draft.rpcMethod || '',
+        parameterTypes: String(draft.rpcParamTypes || '').split(',').map((s) => s.trim()).filter(Boolean),
+        args: dubboArgs,
+        generic: draft.rpcGeneric !== false,
+        attachments: rowsToObject(draft.headers),
+        timeoutMs: timeout,
+      })
+    }
+    setSending(true)
+    setResp(null)
+    Promise.resolve()
+      .then(() => call)
+      .then((result) => {
+        if (cancelled.cancelled) return
+        // 桩返回 { ok:false, error }；桥成功返回 data（无 ok 包装）——两种形态都处理
+        if (result && result.ok === false) {
+          setResp({ status: 0, statusText: '', headers: {}, body: '', bodySize: 0, timeMs: 0,
+            error: { message: (result.error && result.error.message) || '调用失败' } })
+          return
+        }
+        const data = result && typeof result === 'object' ? result : {}
+        setResp(grpcMode ? {
+          // status 胶囊吃 gRPC 的 statusCode；trailers 进 Headers 页签
+          status: Number(data.statusCode) || 0,
+          statusText: 'gRPC',
+          headers: data.trailers && typeof data.trailers === 'object' ? data.trailers : {},
+          body: prettyJson(data.message),
+          bodySize: 0,
+          timeMs: data.timeMs == null ? 0 : data.timeMs,
+        } : {
+          status: Number(data.status) || 200,
+          statusText: 'Dubbo',
+          headers: {},
+          body: data.value == null ? '' : prettyJson(JSON.stringify(data.value)),
+          bodySize: 0,
+          timeMs: data.timeMs == null ? 0 : data.timeMs,
+        })
+        setError('')
+      })
+      .catch((err) => {
+        if (cancelled.cancelled) return
+        fail(errText(err))
+      })
+      .finally(() => { if (!cancelled.cancelled) setSending(false) })
+  }
+
+  // —— 项目设置全族：归一化的本地草稿 + 保存（renameProject + saveProjectSettings）——
+  const patchProj = (field, value) => setProjSettings((prev) => ({ ...prev, [field]: value }))
+  const patchProjAuth = (field, value) => setProjSettings((prev) => ({ ...prev, globalAuth: { ...prev.globalAuth, [field]: value } }))
+  const patchProjParams = (group, rows) => setProjSettings((prev) => ({ ...prev, globalParams: { ...prev.globalParams, [group]: rows } }))
+
+  const saveProjSettings = () => {
+    const storage = apiRef && apiRef.storage
+    const pid = project && project.id
+    if (!storage || typeof storage.saveProjectSettings !== 'function' || !pid) {
+      setProjSaveHint('保存失败：storage.saveProjectSettings 不可用')
+      setProjSaveBad(true)
+      return
+    }
+    const name = String(projSettings.name || '').trim()
+    if (!name) {
+      setProjSaveHint('项目名不能为空')
+      setProjSaveBad(true)
+      return
+    }
+    const payload = {
+      name,
+      description: projSettings.description,
+      globalParams: projSettings.globalParams,
+      globalAuth: projSettings.globalAuth,
+      preScript: projSettings.preScript,
+      postScript: projSettings.postScript,
+    }
+    setProjSaveHint('')
+    Promise.resolve()
+      .then(async () => {
+        // 基本信息：改名走 renameProject（索引同步），其余键走 saveProjectSettings（name/description 由 host 同步进 project）
+        if (typeof storage.renameProject === 'function') await storage.renameProject(pid, name)
+        return storage.saveProjectSettings(pid, payload)
+      })
+      .then((savedSettings) => {
+        setProject((prev) => ({
+          ...prev,
+          name,
+          description: projSettings.description,
+          settings: { ...(prev.settings || {}), ...(savedSettings || payload) },
+        }))
+        // 本地 project.settings 已更新：下一次「发送」直接吃到全局参数 / 认证 / 项目级脚本
+        setProjSaveHint('已保存项目设置')
+        setProjSaveBad(false)
+      })
+      .catch((err) => {
+        setProjSaveHint('保存失败：' + errText(err))
+        setProjSaveBad(true)
+      })
   }
 
   // —— WebSocket 模式动作：连接 / 发送消息 / 断开 ——
@@ -546,7 +816,7 @@ export function DebugPage({ route, api }) {
       setDbHint('保存失败：storage.saveProjectSettings 不可用')
       return
     }
-    const name = (dbConfig.type === 'sqlite' ? dbConfig.path : dbConfig.host) || dbConfig.type
+    const name = (dbConfig.type === 'sqlite' ? dbConfig.path : dbConfig.type === 'mongodb' ? (dbConfig.url || dbConfig.host) : dbConfig.host) || dbConfig.type
     const next = [...dbConnections.filter((c) => c && c.name !== name), { ...dbConfig, name }]
     storage.saveProjectSettings(project.id, { dbConnections: next })
       .then(() => setProject((prev) => ({ ...prev, settings: { ...(prev.settings || {}), dbConnections: next } })))
@@ -557,7 +827,7 @@ export function DebugPage({ route, api }) {
   const dbLoad = (name) => {
     const hit = dbConnections.find((c) => c && c.name === name)
     if (!hit) return
-    setDbConfig({ type: 'sqlite', path: '', host: '', port: '', user: '', password: '', database: '', ...hit })
+    setDbConfig({ type: 'sqlite', path: '', url: '', host: '', port: '', user: '', password: '', database: '', ssl: false, ...hit })
     setDbHint('已载入连接：' + name)
   }
 
@@ -611,23 +881,30 @@ export function DebugPage({ route, api }) {
         <section className="pp-pane pp-debug-request">
           {/* URL 行（Apifox .main-input-bar）：40px 高，方法 + baseUrl 胶囊 + path + 发送按钮组 */}
           <div className="pp-url-row">
-            {/* 协议切换：HTTP / WebSocket（Apifox 调试台同款双态）；WS 模式无方法语义 */}
+            {/* 协议切换：HTTP / WebSocket / gRPC / Dubbo（Apifox 调试台同款四态）；WS/RPC 模式无 HTTP 方法语义 */}
             <select
               className="pp-select pp-input-sm"
               value={draft.protocol || 'http'}
               onChange={(e) => {
                 patch('protocol', e.target.value)
                 // 切协议后当前页签可能不在新协议的页签集里（如 Body/Auth），落回 Params
-                setTab((prev) => (e.target.value === 'websocket' && !WS_TABS.some((t) => t.id === prev) ? 'params' : prev))
+                const nextTabs = e.target.value === 'websocket' ? WS_TABS
+                  : (e.target.value === 'grpc' || e.target.value === 'dubbo') ? RPC_TABS
+                  : TABS
+                setTab((prev) => (nextTabs.some((t) => t.id === prev) ? prev : 'params'))
               }}
               aria-label="协议"
-              title="WebSocket 走 WS 调试模式，其余协议回落 HTTP"
+              title="WebSocket 走 WS 调试模式；gRPC / Dubbo 走 RPC 调用面板；其余协议回落 HTTP"
             >
               <option value="http">HTTP</option>
               <option value="websocket">WebSocket</option>
+              <option value="grpc">gRPC</option>
+              <option value="dubbo">Dubbo</option>
             </select>
             {wsMode ? (
               <span className="pp-method" data-method="WS" title="WebSocket 连接">WS</span>
+            ) : rpcMode ? (
+              <span className="pp-method" data-method="RPC" title={grpcMode ? 'gRPC 调用' : 'Dubbo 调用'}>RPC</span>
             ) : (
               <>
                 <span className="pp-method" data-method={draft.method}>{draft.method}</span>
@@ -647,7 +924,13 @@ export function DebugPage({ route, api }) {
             <input
               className="pp-input pp-input-mono"
               value={draft.url}
-              placeholder={wsMode ? 'ws://TARGET/path 或 /path（拼 baseUrl），支持 {{var}}' : '/api/v1/... 或 https://TARGET/endpoint，支持 {{var}}'}
+              placeholder={wsMode
+                ? 'ws://TARGET/path 或 /path（拼 baseUrl），支持 {{var}}'
+                : grpcMode
+                  ? 'http(s)://TARGET:port，支持 {{var}}'
+                  : dubboMode
+                    ? 'TARGET:port（Dubbo 地址），支持 {{var}}'
+                    : '/api/v1/... 或 https://TARGET/endpoint，支持 {{var}}'}
               onChange={(e) => patch('url', e.target.value)}
               aria-label="请求路径"
             />
@@ -662,6 +945,12 @@ export function DebugPage({ route, api }) {
                     {wsState.status === 'connecting' ? '连接中…' : '连接'}
                   </button>
                 )
+              ) : rpcMode ? (
+                <button className="pp-btn pp-btn-primary" onClick={rpcSend}
+                  disabled={sending || !String(draft.url || '').trim()}
+                  title={String(draft.url || '').trim() ? '' : '先填写 RPC 地址'}>
+                  {sending ? '发送中…' : '发送'}
+                </button>
               ) : (
                 <>
                   <button className="pp-btn pp-btn-primary" onClick={send} disabled={sending || !String(draft.url || '').trim()}
@@ -712,6 +1001,98 @@ export function DebugPage({ route, api }) {
           ) : null}
           {isMock ? <p className="pp-note pp-note-warn">示例数据 — window.__postapiApi 未注入或读取失败，发送将返回 mock 响应</p> : null}
           {error ? <p className="pp-note pp-note-bad">{error}</p> : null}
+
+          {/* —— RPC（gRPC / Dubbo）调用面板：位于 URL 行下、页签条上；metadata/attachments 复用 Headers 页签 —— */}
+          {rpcMode ? (
+            <div data-rpc-panel="true">
+              {grpcMode ? (
+                <div>
+                  <div className="pp-form-row">
+                    <label className="pp-form-label">service</label>
+                    <input className="pp-input pp-input-mono" style={{ flex: 1 }} value={draft.rpcService}
+                      placeholder="包名.服务名，如 pkg.Greeter" onChange={(e) => patch('rpcService', e.target.value)} aria-label="gRPC service" />
+                  </div>
+                  <div className="pp-form-row">
+                    <label className="pp-form-label">method</label>
+                    <input className="pp-input pp-input-mono" style={{ flex: 1 }} value={draft.rpcMethod}
+                      placeholder="如 SayHello" onChange={(e) => patch('rpcMethod', e.target.value)} aria-label="gRPC method" />
+                  </div>
+                  <div className="pp-form-row">
+                    <label className="pp-form-label">.proto</label>
+                    <textarea
+                      className="pp-textarea pp-input-mono"
+                      rows={8}
+                      style={{ width: '100%' }}
+                      value={draft.rpcProto}
+                      placeholder="粘贴 .proto 全文（service / message 定义）"
+                      onChange={(e) => patch('rpcProto', e.target.value)}
+                      aria-label="proto 定义"
+                    />
+                  </div>
+                  <div className="pp-form-row">
+                    <label className="pp-form-label">消息 JSON</label>
+                    <textarea
+                      className="pp-textarea pp-input-mono"
+                      rows={6}
+                      style={{ width: '100%' }}
+                      value={draft.rpcMessage}
+                      placeholder='{ "name": "world" }'
+                      onChange={(e) => patch('rpcMessage', e.target.value)}
+                      aria-label="gRPC 消息"
+                    />
+                  </div>
+                  <p className="pp-meta">metadata 在 Headers 页签维护（启用行生效）；结果含 trailers，status 胶囊显示 gRPC statusCode。</p>
+                </div>
+              ) : (
+                <div>
+                  <div className="pp-form-row">
+                    <label className="pp-form-label">interface</label>
+                    <input className="pp-input pp-input-mono" style={{ flex: 1 }} value={draft.rpcInterface}
+                      placeholder="如 com.example.UserService" onChange={(e) => patch('rpcInterface', e.target.value)} aria-label="Dubbo interface" />
+                  </div>
+                  <div className="pp-form-row">
+                    <label className="pp-form-label">method</label>
+                    <input className="pp-input pp-input-mono" style={{ flex: 1 }} value={draft.rpcMethod}
+                      placeholder="如 getUser" onChange={(e) => patch('rpcMethod', e.target.value)} aria-label="Dubbo method" />
+                  </div>
+                  <div className="pp-form-row">
+                    <label className="pp-form-label">version</label>
+                    <input className="pp-input pp-input-mono" style={{ flex: 1, maxWidth: 160 }} value={draft.rpcVersion}
+                      placeholder="如 1.0.0（可空）" onChange={(e) => patch('rpcVersion', e.target.value)} aria-label="Dubbo version" />
+                  </div>
+                  <div className="pp-form-row">
+                    <label className="pp-form-label">group</label>
+                    <input className="pp-input pp-input-mono" style={{ flex: 1, maxWidth: 160 }} value={draft.rpcGroup}
+                      placeholder="分组（可空）" onChange={(e) => patch('rpcGroup', e.target.value)} aria-label="Dubbo group" />
+                  </div>
+                  <div className="pp-form-row">
+                    <label className="pp-form-label">参数类型</label>
+                    <input className="pp-input pp-input-mono" style={{ flex: 1 }} value={draft.rpcParamTypes}
+                      placeholder="逗号分隔，如 java.lang.String,java.lang.Integer"
+                      onChange={(e) => patch('rpcParamTypes', e.target.value)} aria-label="parameterTypes" />
+                  </div>
+                  <div className="pp-form-row">
+                    <label className="pp-form-label">Args JSON</label>
+                    <textarea
+                      className="pp-textarea pp-input-mono"
+                      rows={5}
+                      style={{ width: '100%' }}
+                      value={draft.rpcArgs}
+                      placeholder='[ "alice", 18 ]'
+                      onChange={(e) => patch('rpcArgs', e.target.value)}
+                      aria-label="Dubbo 参数"
+                    />
+                  </div>
+                  <div className="pp-form-row">
+                    <label className="pp-form-label">泛化调用</label>
+                    <input type="checkbox" checked={draft.rpcGeneric !== false} onChange={(e) => patch('rpcGeneric', e.target.checked)} aria-label="泛化调用" />
+                    <span className="pp-meta">generic=true（默认）：无需本地接口类，宿主按 parameterTypes + args 发起泛化调用</span>
+                  </div>
+                  <p className="pp-meta">attachments 在 Headers 页签维护（启用行生效）；结果 value 以 JSON 展示。</p>
+                </div>
+              )}
+            </div>
+          ) : null}
 
           <div className="pp-tabs">
             {activeTabs.map((t) => (
@@ -783,6 +1164,138 @@ export function DebugPage({ route, api }) {
                 </table>
               </div>
             ) : null}
+            {tab === 'projSettings' ? (
+              <div data-proj-settings="true">
+                {/* 顶部保存条：保存按钮 + 行内结果文案（成功 ok / 失败 bad，不弹窗） */}
+                <div className="pp-group-head">
+                  <span className="pp-group-title">项目设置</span>
+                  <button className="pp-btn pp-btn-primary" onClick={saveProjSettings}>保存项目设置</button>
+                </div>
+                {projSaveHint ? (
+                  <p className={'pp-note ' + (projSaveBad ? 'pp-note-bad' : 'pp-note-ok')} data-proj-save-hint="true">{projSaveHint}</p>
+                ) : null}
+                <div className="pp-tabs pp-sub-tabs">
+                  {PROJ_SUBTABS.map((t) => (
+                    <button key={t.id} className="pp-tab" data-active={projSub === t.id} onClick={() => setProjSub(t.id)}>{t.label}</button>
+                  ))}
+                </div>
+                {projSub === 'basic' ? (
+                  <div>
+                    <div className="pp-form-row">
+                      <label className="pp-form-label">项目名</label>
+                      <input className="pp-input" style={{ flex: 1 }} value={projSettings.name}
+                        onChange={(e) => patchProj('name', e.target.value)} aria-label="项目名" />
+                    </div>
+                    <div className="pp-form-row">
+                      <label className="pp-form-label">描述</label>
+                      <input className="pp-input" style={{ flex: 1 }} value={projSettings.description}
+                        placeholder="项目描述（可选）"
+                        onChange={(e) => patchProj('description', e.target.value)} aria-label="项目描述" />
+                    </div>
+                    <p className="pp-meta">保存时写 project.name / project.description（renameProject + saveProjectSettings 同步）。</p>
+                  </div>
+                ) : null}
+                {projSub === 'globalParams' ? (
+                  <div>
+                    <div className="pp-group-title">全局请求头（接口同名头优先）</div>
+                    <div className="pp-table-wrap">
+                      <ParamTable rows={projSettings.globalParams.headers} onChange={(rows) => patchProjParams('headers', rows)} emptyText="无全局请求头" />
+                    </div>
+                    <div className="pp-group-title">全局 Query 参数（接口同名参数优先）</div>
+                    <div className="pp-table-wrap">
+                      <ParamTable rows={projSettings.globalParams.query} onChange={(rows) => patchProjParams('query', rows)} emptyText="无全局 Query 参数" />
+                    </div>
+                    <div className="pp-group-title">全局 Cookies（排在接口 Cookies 之后合并为 Cookie 头）</div>
+                    <div className="pp-table-wrap">
+                      <ParamTable rows={projSettings.globalParams.cookies} onChange={(rows) => patchProjParams('cookies', rows)} emptyText="无全局 Cookies" />
+                    </div>
+                  </div>
+                ) : null}
+                {projSub === 'globalAuth' ? (
+                  <div>
+                    <p className="pp-meta">接口 Auth 类型为「无认证」时全局认证兜底生效；接口自带认证时不覆盖。</p>
+                    <div className="pp-form-row">
+                      <label className="pp-form-label">类型</label>
+                      <select className="pp-select" value={projSettings.globalAuth.type} onChange={(e) => patchProjAuth('type', e.target.value)}>
+                        {AUTH_TYPES.map((t) => <option key={t} value={t}>{AUTH_LABEL[t] || t}</option>)}
+                      </select>
+                    </div>
+                    {projSettings.globalAuth.type === 'bearer' ? (
+                      <div className="pp-form-row">
+                        <label className="pp-form-label">Token</label>
+                        <input className="pp-input pp-input-mono" style={{ flex: 1 }} value={projSettings.globalAuth.token}
+                          onChange={(e) => patchProjAuth('token', e.target.value)} />
+                      </div>
+                    ) : null}
+                    {projSettings.globalAuth.type === 'basic' ? (
+                      <div>
+                        <div className="pp-form-row">
+                          <label className="pp-form-label">用户名</label>
+                          <input className="pp-input pp-input-mono" style={{ flex: 1 }} value={projSettings.globalAuth.username}
+                            onChange={(e) => patchProjAuth('username', e.target.value)} />
+                        </div>
+                        <div className="pp-form-row">
+                          <label className="pp-form-label">密码</label>
+                          <input className="pp-input pp-input-mono" style={{ flex: 1 }} value={projSettings.globalAuth.password}
+                            onChange={(e) => patchProjAuth('password', e.target.value)} />
+                        </div>
+                      </div>
+                    ) : null}
+                    {projSettings.globalAuth.type === 'apikey' ? (
+                      <div>
+                        <div className="pp-form-row">
+                          <label className="pp-form-label">Key</label>
+                          <input className="pp-input pp-input-mono" style={{ flex: 1 }} value={projSettings.globalAuth.key}
+                            onChange={(e) => patchProjAuth('key', e.target.value)} />
+                        </div>
+                        <div className="pp-form-row">
+                          <label className="pp-form-label">Value</label>
+                          <input className="pp-input pp-input-mono" style={{ flex: 1 }} value={projSettings.globalAuth.value}
+                            onChange={(e) => patchProjAuth('value', e.target.value)} />
+                        </div>
+                        <div className="pp-form-row">
+                          <label className="pp-form-label">位置</label>
+                          <select className="pp-select" value={projSettings.globalAuth.addTo} onChange={(e) => patchProjAuth('addTo', e.target.value)}>
+                            <option value="header">header</option>
+                            <option value="query">query</option>
+                          </select>
+                        </div>
+                      </div>
+                    ) : null}
+                    {projSettings.globalAuth.type === 'none' ? <p className="pp-meta">无认证</p> : null}
+                  </div>
+                ) : null}
+                {projSub === 'scripts' ? (
+                  <div>
+                    <div className="pp-form-row" style={{ alignItems: 'flex-start' }}>
+                      <label className="pp-form-label">项目前置脚本</label>
+                      <textarea
+                        className="pp-textarea pp-input-mono"
+                        rows={6}
+                        style={{ flex: 1 }}
+                        placeholder="// 早于接口前置脚本执行，可用 pm.request / pm.environment.set / console.log"
+                        value={projSettings.preScript}
+                        onChange={(e) => patchProj('preScript', e.target.value)}
+                        aria-label="项目前置脚本"
+                      />
+                    </div>
+                    <div className="pp-form-row" style={{ alignItems: 'flex-start' }}>
+                      <label className="pp-form-label">项目后置脚本</label>
+                      <textarea
+                        className="pp-textarea pp-input-mono"
+                        rows={6}
+                        style={{ flex: 1 }}
+                        placeholder="// 晚于接口后置脚本执行，可用 pm.response / pm.test / pm.globals.set"
+                        value={projSettings.postScript}
+                        onChange={(e) => patchProj('postScript', e.target.value)}
+                        aria-label="项目后置脚本"
+                      />
+                    </div>
+                    <p className="pp-meta">pm.* 沙箱执行：日志前缀分别为「project pre 」「project post 」，与接口脚本共用同一沙箱。</p>
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
             {tab === 'db' ? (
               <div>
                 <div className="pp-group-head">
@@ -801,16 +1314,22 @@ export function DebugPage({ route, api }) {
                     <input className="pp-input pp-input-mono" style={{ flex: 1 }} value={dbConfig.path} placeholder="/path/to/data.db 或 :memory:"
                       onChange={(e) => dbPatch('path', e.target.value)} />
                   </div>
-                ) : (
+                ) : dbConfig.type === 'mongodb' ? (
                   <div>
-                    <p className="pp-note">当前仅内置 SQLite 驱动（node:sqlite）；MySQL / PostgreSQL 需独立驱动包，测试连接会明确报错。</p>
+                    <div className="pp-form-row">
+                      <label className="pp-form-label">连接 URL</label>
+                      <input className="pp-input pp-input-mono" style={{ flex: 1 }} value={dbConfig.url} aria-label="MongoDB URL"
+                        placeholder="mongodb://user:pass@127.0.0.1:27017（填了 URL 则忽略下方主机/端口）"
+                        onChange={(e) => dbPatch('url', e.target.value)} />
+                    </div>
                     <div className="pp-form-row">
                       <label className="pp-form-label">主机</label>
                       <input className="pp-input pp-input-mono" style={{ flex: 1 }} value={dbConfig.host} onChange={(e) => dbPatch('host', e.target.value)} />
                     </div>
                     <div className="pp-form-row">
                       <label className="pp-form-label">端口</label>
-                      <input className="pp-input pp-input-sm" style={{ flex: 1, maxWidth: 120 }} value={dbConfig.port} onChange={(e) => dbPatch('port', e.target.value)} />
+                      <input className="pp-input pp-input-sm" style={{ flex: 1, maxWidth: 120 }} value={dbConfig.port} placeholder="27017（默认）"
+                        onChange={(e) => dbPatch('port', e.target.value)} />
                     </div>
                     <div className="pp-form-row">
                       <label className="pp-form-label">用户名</label>
@@ -824,6 +1343,42 @@ export function DebugPage({ route, api }) {
                       <label className="pp-form-label">数据库</label>
                       <input className="pp-input" style={{ flex: 1 }} value={dbConfig.database} onChange={(e) => dbPatch('database', e.target.value)} />
                     </div>
+                    <p className="pp-meta">MongoDB 执行的是命令文档：下方输入 JSON，如 {'{"find":"users","filter":{},"limit":10}'}</p>
+                  </div>
+                ) : (
+                  <div>
+                    <div className="pp-form-row">
+                      <label className="pp-form-label">主机</label>
+                      <input className="pp-input pp-input-mono" style={{ flex: 1 }} value={dbConfig.host} onChange={(e) => dbPatch('host', e.target.value)} />
+                    </div>
+                    <div className="pp-form-row">
+                      <label className="pp-form-label">端口</label>
+                      <input className="pp-input pp-input-sm" style={{ flex: 1, maxWidth: 120 }} value={dbConfig.port}
+                        placeholder={DB_DEFAULT_PORT[dbConfig.type] || ''}
+                        onChange={(e) => dbPatch('port', e.target.value)} />
+                    </div>
+                    <div className="pp-form-row">
+                      <label className="pp-form-label">用户名</label>
+                      <input className="pp-input" style={{ flex: 1 }} value={dbConfig.user} onChange={(e) => dbPatch('user', e.target.value)} />
+                    </div>
+                    <div className="pp-form-row">
+                      <label className="pp-form-label">密码</label>
+                      <input className="pp-input" type="password" style={{ flex: 1 }} value={dbConfig.password} onChange={(e) => dbPatch('password', e.target.value)} />
+                    </div>
+                    <div className="pp-form-row">
+                      <label className="pp-form-label">{dbConfig.type === 'oracle' ? '服务名（ServiceName）' : '数据库'}</label>
+                      <input className="pp-input" style={{ flex: 1 }} value={dbConfig.database} onChange={(e) => dbPatch('database', e.target.value)} />
+                    </div>
+                    {DB_SSL_TYPES.includes(dbConfig.type) ? (
+                      <div className="pp-form-row">
+                        <label className="pp-form-label">SSL</label>
+                        <input type="checkbox" checked={Boolean(dbConfig.ssl)} onChange={(e) => dbPatch('ssl', e.target.checked)} aria-label="SSL" />
+                        <span className="pp-meta">可选：启用 TLS 连接（服务端需支持）</span>
+                      </div>
+                    ) : null}
+                    {dbConfig.type === 'mongodb' || dbConfig.type === 'redis' ? (
+                      <p className="pp-meta">{dbConfig.type === 'redis' ? 'Redis 执行单条命令：如 GET mykey / HGETALL myhash' : null}</p>
+                    ) : null}
                   </div>
                 )}
                 {dbConnections.length > 0 ? (
@@ -853,9 +1408,19 @@ export function DebugPage({ route, api }) {
                   style={{ width: '100%', minHeight: 72, fontFamily: 'var(--font-mono, monospace)' }}
                   value={dbSql}
                   onChange={(e) => setDbSql(e.target.value)}
-                  placeholder="SELECT * FROM users LIMIT 10"
+                  placeholder={dbConfig.type === 'mongodb'
+                    ? '{ "find": "users", "filter": {}, "limit": 10 }'
+                    : dbConfig.type === 'redis'
+                      ? 'GET mykey'
+                      : 'SELECT * FROM users LIMIT 10'}
                 />
                 {dbHint ? <p className={'pp-note ' + (dbHint.indexOf('连接成功') === 0 || dbHint.indexOf('已保存') === 0 ? 'pp-note-ok' : 'pp-note-bad')}>{dbHint}</p> : null}
+                {dbResult && dbResult.output !== undefined ? (
+                  <div>
+                    <div className="pp-group-title">结果（{dbResult.driver === 'redis' ? 'Redis 命令输出' : 'MongoDB 命令输出'}）</div>
+                    <pre className="pp-pre pp-pre-scroll">{prettyJson(typeof dbResult.output === 'string' ? dbResult.output : JSON.stringify(dbResult.output))}</pre>
+                  </div>
+                ) : null}
                 {dbResult && Array.isArray(dbResult.rows) ? (
                   <div>
                     <div className="pp-group-title">结果（{dbResult.rowCount} 行{dbResult.truncated ? '，超过 1000 行已截断' : ''}）</div>

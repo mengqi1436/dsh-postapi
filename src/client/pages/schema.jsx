@@ -131,6 +131,9 @@ export function SchemaPage(props) {
             setProjects(list)
             setProjectId(list[0].id)
             await loadProject(list[0].id)
+            // 顶栏「新建」菜单落地：#/schema?new=1 打开一张空白模型表单
+            const query = route.query && typeof route.query === 'string' ? route.query : ''
+            if (query.includes('new=1')) blank()
             return
           }
         } catch (err) {

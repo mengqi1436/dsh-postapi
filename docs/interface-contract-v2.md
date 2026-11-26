@@ -135,7 +135,8 @@ send({ method, url, params, headers, body, auth, timeoutMs = 30000,
 // src/host/mock-server.js
 createMockServer({ getProject, port })  -> { start(), stop(), status() -> { running, port } }
 // 规则：GET /mock/<projectId>/<endpointId> 与 /mock/<projectId><endpointPath> 两种命中；
-// 按 project.mocks 字段规则生成 body；未命中回落 endpoint.responses[isDefault] 或 200 {}
+// 字段规则两个落点都认：project.mocks（带 endpointId）与 endpoint.mock.rules（Mock 页
+// 「保存配置」落点）合并生效；两处都未命中时回落 endpoint.responses[isDefault] 或 200 {}
 
 // src/host/test-runner.js
 createTestRunner({ storage, request })
@@ -173,3 +174,63 @@ client 侧 `src/client/shell/registry.js` 的 `createBridgeStorage()` / `createB
 2. 契约偏离（若无写「无」）。
 3. 未实现 / 降级项（明确写 P2 或原因）。
 4. 自测输出摘要：`node tests/run.js` 的通过/失败计数与失败明细（必须全绿才汇报完成）。
+
+---
+
+## 9. 功能补齐轮增补（2026-11-26 · gRPC/Dubbo/数据库驱动/拖拽/右键菜单/项目设置全族）
+
+> 本节为「expand-feature-parity」工票的接口增补，全部真实现、零新 npm 依赖（协议客户端用 node 内置模块）。
+> 云端账号、团队协作、SSO 明确不做（见 §5，本节不改变该边界）。
+
+### 9.1 桥路由增补
+
+| 方法 路径 | 作用 | 归属 | 备注 |
+|---|---|---|---|
+| POST /grpc/invoke | gRPC unary 真调用：body `{ address, proto, service, method, message, metadata?, timeoutMs? }` → `{ path, message, trailers, status, statusCode, timeMs }` | host-runtime（grpc-client.js） | proto3 解析 + protobuf 编解码 + node:http2（h2c/TLS+ALPN）；超时头发规范形态 `grpc-timeout: <ms>m`；错误码 INVALID_ARGUMENT / UNAVAILABLE / GRPC_ERROR / TIMEOUT |
+| POST /dubbo/invoke | Dubbo 真调用：body `{ address, interface, version, group, method, parameterTypes, args, generic?, timeoutMs? }` → `{ value, status, timeMs }` | host-runtime（dubbo-client.js） | Dubbo 协议帧 + hessian-lite 编解码（node:net）；parameterTypes 为类名数组，协议描述符串按 ReflectUtils.getDesc 直接拼接（`ILjava/lang/String;`，无空格）；generic=true 走 GenericService.$invoke（body 的 path/interface=GenericService，attachments 的 path/interface 保留目标服务名供寻址）；错误码 INVALID_ARGUMENT / UNAVAILABLE / DUBBO_ERROR / TIMEOUT |
+
+两条路由的服务方法失败时**返回封套不抛出**：HTTP 200 + `data = { ok:false, error:{ code, message } }`（与 db.js 同模式，UI 按 `data.error.code` 分支）。client 侧 `api.grpc.invoke` / `api.dubbo.invoke` 同名映射；降级桩返回同形 `{ok:false,error:{code:'UNAVAILABLE'}}`。
+
+### 9.2 数据库驱动（db.js · 2026-11-26 二次扩展：全官方驱动）
+
+`SUPPORTED_DRIVERS = ['sqlite','mysql','postgresql','gaussdb','mssql','oracle','mongodb','redis']`。全部官方驱动（npm dependencies，client bundle 不受影响）：
+
+| type | 驱动包 | 连接配置（除 type 外） | query 语义 |
+|---|---|---|---|
+| sqlite | node:sqlite（内置） | path（:memory: 可用） | SQL；`?` 位置参数 |
+| mysql | mysql2 ^3.24 | host, port(3306), user, password, database, ssl? | SQL；`?` 参数原生透传；行集 / ResultSetHeader→changes/insertId |
+| postgresql | pg ^8.23 | host, port(5432), user, password, database, ssl? | SQL；`?` 改写 $n（引号保护，无法安全改写报 INVALID_ARGUMENT）；CommandComplete→changes |
+| gaussdb | gaussdb-node ^0.2（华为云 HuaweiCloudDeveloper 官方，node-postgres 适配分支，含 GaussDB/openGauss sha256 认证） | host, port(5432，DWS 常见 8000), user, password, database, ssl? | 同 pg 语义（`?` 改写 $n、行集/changes） |
+| mssql | mssql ^12.8 | host(server), port(1433), user, password, database, ssl?（ssl=true→encrypt+trustServerCertificate，false→encrypt:false） | SQL；`?` 改写 @pN + request.input（同引号保护）；rowsAffected→changes |
+| oracle | oracledb ^26 | host, port(1521), user, password, database=服务名 | SQL；`?` 改写 :n（同引号保护）；OUT_FORMAT_OBJECT；rowsAffected→changes |
+| mongodb | mongodb ^7.9 | url?（优先）或 host/port/user/password，database 必填 | **命令文档**：sql 为 JSON 文档（`{"find":"users","filter":{},"limit":10}`）→ db.command → `{driver:'mongodb', output}` |
+| redis | redis ^6.4 | host, port(6379), password?, database?(db 序号), ssl?(TLS) | **命令行**：sql 按空白/引号切参（`GET mykey`）→ sendCommand → `{driver:'redis', output}` |
+
+- 通用机制不变：指纹池复用（探活 SELECT 1 / PING / command({ping:1})）、MAX_ROWS=1000 截断、close/closeAll、UNSUPPORTED_DRIVER 只给未知 type、错误归一 DbError（连接/认证失败 CONNECTION_ERROR，执行错 SQL_ERROR）。
+- 可选注入缝（只增）：`createDbService({ drivers })` 供测试注入 fake 驱动工厂。
+- output 值 JSON 安全化：bigint→字符串、Buffer→base64；UI 的 DB 页签对 `output` 渲染 JSON 块。
+
+### 9.3 项目设置全族（settings 增补字段）
+
+`project.settings` 新增（DEFAULT_SETTINGS 同步）：
+
+```jsonc
+"settings": {
+  // ……既有 mockPort/proxyUrl/requestTimeoutMs/historyLimit/dbConnections 不变
+  "globalParams": { "headers": [], "query": [], "cookies": [] },   // ParamTable 行结构
+  "globalAuth":   { "type": "none|bearer|basic|apikey", "token": "", "username": "", "password": "", "key": "", "value": "", "addTo": "header" },
+  "preScript":   "",   // 项目级前置脚本（先于接口前置脚本）
+  "postScript":  ""    // 项目级后置脚本（后于接口后置脚本）
+}
+```
+
+- saveProjectSettings 额外语义：入参含 `name` / `description` 时同步写 project.name / project.description（其余键仍浅合并）。
+- request.send 新可选入参（只增不改）：`globalParams`（query/headers/cookies 与接口参数合并，同名接口优先）、`globalAuth`（接口 auth.type==='none' 时兜底注入）、`projectPreScript` / `projectPostScript`（在接口脚本前后执行同一沙箱）、`cookies`（接口 cookies 并入 Cookie 头）。
+
+### 9.4 页面约定增补（doc / debug / overview）
+
+- 左树拖拽排序：FolderTree 行 draggable；drop 语义 = 落目录行「移入」、落接口行「同层重排到其前」；禁止拖入自身子孙；持久化走既有 `moveNode`（操作序列由纯函数 `computeTreeMove` 产出，同层 order 归一化 0..n）。
+- 右键菜单：`components/ContextMenu.jsx`（fixed 定位、越界翻转、Escape/外点关闭；样式复用 .pp-menu-* 家族）。目录行：新建子目录/新建接口/重命名/删除；接口行：调试页打开/复制 URL/重命名/删除；树空白：新建目录/新建接口；overview 项目卡：重命名/删除。删除一律两段式行内确认（禁 alert/confirm/prompt 不变）。
+- debug 页协议族：HTTP / WebSocket / gRPC / Dubbo 四态；gRPC 面板（地址/proto/service/method/消息 JSON/metadata←headers）、Dubbo 面板（地址/interface/version/group/method/parameterTypes/args/generic/attachments←headers）；两协议页签集 = [params, headers]，响应进右侧面板（状态胶囊=statusCode、body=消息 JSON）。
+- debug 页新增「项目设置」页签：基本信息/全局参数/全局认证/前置脚本/后置脚本，保存走 renameProject + saveProjectSettings；发送时携带 globalParams/globalAuth/projectPreScript/projectPostScript。
+- DB 页签驱动全内置：sqlite/mysql/postgresql 三选一（mysql/pg 增加 ssl 可选开关），移除「需独立驱动」文案。

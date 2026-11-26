@@ -45,6 +45,9 @@ const LANGS = [
   { id: 'axios', label: 'JavaScript axios' },
   { id: 'python', label: 'Python requests' },
   { id: 'go', label: 'Go net/http' },
+  { id: 'java', label: 'Java' },
+  { id: 'php', label: 'PHP' },
+  { id: 'csharp', label: 'C#' },
 ]
 
 const MOCK_CURL = "curl -X GET 'https://api.example.test/api/v1/orders?page=1' -H 'Accept: application/json'"
@@ -107,6 +110,15 @@ export function ImportPage(props) {
   const [busy, setBusy] = useState(false)
 
   useEffect(() => applyTheme(rootRef.current), [])
+
+  // 顶栏「新建 → 导入」菜单落地：#/import?kind=<id> 预选导入格式（未知 kind 忽略）
+  useEffect(() => {
+    const query = props && props.route && typeof props.route.query === 'string' ? props.route.query : ''
+    const m = /(?:^|&)kind=([^&]+)/.exec(query)
+    if (!m) return
+    const kind = decodeURIComponent(m[1])
+    if (IMPORT_KINDS.some((k) => k.id === kind)) pickImportKind(kind)
+  }, [])
 
   useEffect(() => {
     const boot = async () => {

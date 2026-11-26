@@ -19,6 +19,19 @@
 - 新增 `npm run mutation`（`scripts/mutation-test.mjs`）：`src/host` 核心逻辑异变测试（等价变异 + 全套测试验证击杀），总分门槛 60%；首次实测 330 变异体全部击杀（100%）。
 - 套件用例 338 → 342；报告见 `docs/full-parity-retest.md`。
 
+## 0.2.0 — 功能对齐补齐与逐页功能测试
+
+### 功能
+
+- **数据库驱动全族补齐**：MySQL / PostgreSQL / SQL Server / Oracle / MongoDB / Redis / 达梦等七类全部切换 npm 官方包（mysql2 / pg / mssql / oracledb / mongodb / redis / dmDB），新增华为 GaussDB / openGauss 官方驱动（gaussdb-node）；数据库页签从 SQLite 单库扩展到全族真实连接与执行。
+- **gRPC / Dubbo 真调用**：调试与测试场景支持 gRPC 与 Dubbo 后端真实请求。
+- **交互补齐**：接口树与集合支持拖拽排序、右键菜单；项目设置全族补齐。
+- **逐页功能测试**：12 页 E2E 全部跑通，修复 6 项功能缺陷（含菜单二级展开、设置存储路径），补 Before/After 视觉证据截图。
+
+### 测试
+
+- 套件新增 host-grpc / host-drivers 等测试，用例 338 → 413；冒烟 30 项全过；dist/client.js 同步重建。
+
 ## 0.1.0 — 核心功能对标 Apifox（WebSocket 调试 / 数据库操作 / Apifox·YApi 导入）
 
 ### 功能

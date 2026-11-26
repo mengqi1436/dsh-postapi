@@ -11,6 +11,8 @@ import { createMockServer } from './mock-server.js'
 import { createTestRunner } from './test-runner.js'
 import { createWsClient } from './ws-client.js'
 import { createDbService } from './db.js'
+import { createGrpcClient } from './grpc-client.js'
+import { createDubboClient } from './dubbo-client.js'
 import { runScript } from './script-sandbox.js'
 import { createVariableResolver, DYNAMIC_VARS } from './variables.js'
 import * as importExport from './import-export.js'
@@ -52,6 +54,8 @@ export function apply(ctx, config) {
   const runner = createTestRunner({ storage, request })
   const ws = createWsClient()
   const db = createDbService()
+  const grpc = createGrpcClient()
+  const dubbo = createDubboClient()
 
   // 桥第三参：服务方法缺失时对应路由返回 501 NOT_WIRED，绝不崩 handler。
   const services = {
@@ -66,6 +70,8 @@ export function apply(ctx, config) {
     codegen,
     ws,
     db,
+    grpc,
+    dubbo,
   }
 
   // cordis ctx 为受控对象，禁止直接挂属性（cannot set property without provide）；
@@ -98,12 +104,15 @@ export function apply(ctx, config) {
     'postapi-api',
   )
 
-  // 插件卸载时收掉可能仍在监听的 Mock 端口与 WS 连接、DB 连接（effect disposer 随插件生命周期释放）。
+  // 插件卸载时收掉可能仍在监听的 Mock 端口与 WS 连接、DB 连接、gRPC/Dubbo 在途请求
+  //（effect disposer 随插件生命周期释放）。
   ctx.effect?.(
     () => () => {
       mock.stop().catch(() => {})
       ws.closeAll().catch(() => {})
       db.closeAll().catch(() => {})
+      grpc.closeAll().catch(() => {})
+      dubbo.closeAll().catch(() => {})
     },
     'postapi-mock-teardown',
   )

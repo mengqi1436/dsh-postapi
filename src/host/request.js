@@ -60,6 +60,22 @@ function paramsToList(input) {
   return []
 }
 
+/** Cookie 行归一：取 enabled !== false 且有 key 的行，值转字符串（接口 cookies 与全局 cookies 共用）。 */
+function cookieRows(input) {
+  return (Array.isArray(input) ? input : [])
+    .filter((c) => c && c.enabled !== false && c.key != null && c.key !== '')
+    .map((c) => ({ key: String(c.key), value: c.value == null ? '' : String(c.value) }))
+}
+
+/** globalAuth 兜底判定：接口认证是 none（或缺）且全局认证类型非 none 时才生效。 */
+function pickAuth(authValue, globalAuth) {
+  const endpointType = authValue && typeof authValue === 'object' ? String(authValue.type || 'none') : 'none'
+  if (endpointType !== 'none') return authValue
+  const g = globalAuth && typeof globalAuth === 'object' ? globalAuth : null
+  if (!g || String(g.type || 'none') === 'none') return authValue
+  return { ...g }
+}
+
 /** 'a.b[0].c' 取值；解析失败返回 undefined。 */
 export function pickValue(res, source, path) {
   const src = String(source || 'body')
@@ -147,10 +163,16 @@ function evalAssertion(a, res) {
 export function createRequestService() {
   return {
     /**
-     * send({ method,url,params,headers,body,auth,timeoutMs=30000,
-     *        variables, preScript, postScript, assertions })
+     * send({ method,url,params,headers,body,auth,cookies,timeoutMs=30000,
+     *        variables, preScript, postScript, assertions,
+     *        globalParams:{headers,query,cookies}, globalAuth,
+     *        projectPreScript, projectPostScript })
      * → { status,statusText,headers,body,bodySize,timeMs,error?,truncated?,
      *     request, tests, variables, logs }
+     * v3 合并语义（只增不改）：globalParams 的 query/headers 先放、接口的局部参数后放
+     * （URLSearchParams.set / 对象展开都让同名时接口优先）；cookies = 接口 cookies 在前、
+     * 全局 cookies 在后，分号连接成 Cookie 头；globalAuth 仅在接口 auth.type === 'none' 时生效；
+     * projectPreScript / projectPostScript 分别先于 / 后于接口脚本跑同一个 runScript 沙箱。
      */
     async send(options = {}) {
       const {
@@ -158,6 +180,7 @@ export function createRequestService() {
         url,
         params,
         headers,
+        cookies,
         body,
         auth,
         timeoutMs = 30000,
@@ -165,6 +188,10 @@ export function createRequestService() {
         preScript,
         postScript,
         assertions,
+        globalParams,
+        globalAuth,
+        projectPreScript,
+        projectPostScript,
       } = options || {}
       const started = Date.now()
       const result = {
@@ -194,21 +221,32 @@ export function createRequestService() {
 
         let methodValue = String(method || 'GET').toUpperCase()
         let urlValue = R(String(url))
+        // —— v3 全局合并：先全局后局部，局部同名覆盖（query 靠 searchParams.set 的后写覆盖语义）——
+        const gp = globalParams && typeof globalParams === 'object' ? globalParams : {}
+        const globalQuery = paramsToList(gp.query).map((p) => ({ key: R(p.key), value: R(p.value) }))
+        const globalHeaders = headersToObject(gp.headers)
         let paramList = paramsToList(params).map((p) => ({ key: R(p.key), value: R(p.value) }))
+        paramList = globalQuery.concat(paramList)
         let headerMap = headersToObject(headers)
+        // 全局头先放、接口头后放（同名接口头优先）；再逐值做变量替换
+        headerMap = { ...globalHeaders, ...headerMap }
         for (const k of Object.keys(headerMap)) headerMap[k] = R(headerMap[k])
+        // 接口 cookies（此前 send 未消费）与全局 cookies 都收集；真正的 Cookie 头在 fetch 前拼装
+        const endpointCookies = cookieRows(cookies).map((c) => ({ key: R(c.key), value: R(c.value) }))
+        const globalCookies = cookieRows(gp.cookies).map((c) => ({ key: R(c.key), value: R(c.value) }))
         let bodyValue = body && typeof body === 'object' ? { ...body } : body
         if (bodyValue && typeof bodyValue === 'object' && bodyValue.content != null) {
           bodyValue = { ...bodyValue, content: R(String(bodyValue.content)) }
         }
-        let authValue = auth && typeof auth === 'object' ? { ...auth } : auth
+        // v3：接口 auth.type === 'none' 时用 globalAuth 兜底（与现有注入逻辑同一套）
+        let authValue = pickAuth(auth, globalAuth)
         if (authValue) {
           for (const k of ['token', 'username', 'password', 'key', 'value']) {
             if (authValue[k] != null) authValue[k] = R(String(authValue[k]))
           }
         }
 
-        // ---- 2. 前置脚本：可改 request 的 method/url/params/headers/body ----
+        // ---- 2. 前置脚本：项目级先于接口级，两者跑同一 runScript 沙箱、都可改 request ----
         const ctxRequest = {
           method: methodValue,
           url: urlValue,
@@ -216,18 +254,26 @@ export function createRequestService() {
           headers: { ...headerMap },
           body: bodyValue,
         }
-        if (preScript) {
-          const out = runScript(preScript, {
+        let ranPre = false
+        for (const [script, logPrefix, phase] of [
+          [projectPreScript, 'project pre ', 'projectPreScript'],
+          [preScript, 'pre ', 'preScript'],
+        ]) {
+          if (!script) continue
+          const out = runScript(script, {
             context: { request: ctxRequest, response: null, env: {}, globals: {}, variables: {} },
             timeoutMs,
           })
-          result.logs.push(...out.logs.map((l) => 'pre ' + l))
+          result.logs.push(...out.logs.map((l) => logPrefix + l))
           Object.assign(result.variables, out.variables)
           if (!out.ok) {
             result.timeMs = Date.now() - started
-            result.error = { kind: out.error.kind === 'timeout' ? 'timeout' : 'script', message: `preScript: ${out.error.message}`, phase: 'preScript' }
+            result.error = { kind: out.error.kind === 'timeout' ? 'timeout' : 'script', message: `${phase}: ${out.error.message}`, phase }
             return result
           }
+          ranPre = true
+        }
+        if (ranPre) {
           methodValue = String(ctxRequest.method || methodValue).toUpperCase()
           urlValue = String(ctxRequest.url || urlValue)
           paramList = paramsToList(ctxRequest.params)
@@ -260,6 +306,13 @@ export function createRequestService() {
           const addTo = String(authValue.addTo || 'header')
           if (addTo === 'query') target.searchParams.set(String(authValue.key), String(authValue.value == null ? '' : authValue.value))
           else h.set(String(authValue.key), String(authValue.value == null ? '' : authValue.value))
+        }
+
+        // v3 Cookie 头：接口 cookies 在前、全局 cookies 在后，分号连接（接口 cookie 优先的呈现顺序）。
+        // 若 params/headers（含全局头）已显式带 Cookie，遵循「同名接口头优先」，不再覆盖。
+        const cookiePairs = endpointCookies.concat(globalCookies)
+        if (cookiePairs.length && !h.has('Cookie')) {
+          h.set('Cookie', cookiePairs.map((c) => `${c.key}=${c.value}`).join('; '))
         }
 
         // body 按 type 序列化并补默认 Content-Type（显式 header 优先）
@@ -308,9 +361,13 @@ export function createRequestService() {
         }
         result.timeMs = Date.now() - started
 
-        // ---- 3. 后置脚本：读 pm.response，可 set 变量 ----
-        if (postScript) {
-          const out = runScript(postScript, {
+        // ---- 3. 后置脚本：接口级先跑、项目级收尾，读 pm.response，可 set 变量 ----
+        for (const [script, logPrefix, phase] of [
+          [postScript, 'post ', 'postScript'],
+          [projectPostScript, 'project post ', 'projectPostScript'],
+        ]) {
+          if (!script) continue
+          const out = runScript(script, {
             context: {
               request: result.request,
               response: { status: result.status, headers: result.headers, body: result.body, timeMs: result.timeMs },
@@ -321,11 +378,11 @@ export function createRequestService() {
             },
             timeoutMs,
           })
-          result.logs.push(...out.logs.map((l) => 'post ' + l))
+          result.logs.push(...out.logs.map((l) => logPrefix + l))
           Object.assign(result.variables, out.variables)
           for (const t of out.tests) result.tests.push(t)
           if (!out.ok) {
-            result.tests.push({ name: 'postScript 执行', passed: false, error: out.error.message })
+            result.tests.push({ name: phase + ' 执行', passed: false, error: out.error.message })
           }
         }
 
