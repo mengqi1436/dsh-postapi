@@ -800,17 +800,17 @@ export const tests = [
           assert.equal(w.status, 200)
           assert.equal(w.json.data.changes, 0)
           // 不支持的驱动：db/test 返回 ok:false + UNSUPPORTED_DRIVER（验证端点不抛）；db/query 抛 400
-          // （mysql/postgresql 已内置驱动，这里用未知 type 走同一条 UNSUPPORTED 路径）
+          // （七驱动已全部内置，这里用未知 type 走同一条 UNSUPPORTED 路径）
           const u = await jsonFetch(httpBase, '/api/db/test', {
             method: 'POST',
-            body: { connection: { type: 'oracle', host: '127.0.0.1' } },
+            body: { connection: { type: 'db2', host: '127.0.0.1' } },
           })
           assert.equal(u.status, 200)
           assert.equal(u.json.data.ok, false)
           assert.equal(u.json.data.error.code, 'UNSUPPORTED_DRIVER')
           const uq = await jsonFetch(httpBase, '/api/db/query', {
             method: 'POST',
-            body: { connection: { type: 'oracle', host: '127.0.0.1' }, sql: 'SELECT 1' },
+            body: { connection: { type: 'db2', host: '127.0.0.1' }, sql: 'SELECT 1' },
           })
           assert.equal(uq.status, 400)
           assert.equal(uq.json.code, 'UNSUPPORTED_DRIVER')

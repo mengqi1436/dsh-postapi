@@ -1,10 +1,11 @@
 /**
- * mysql/postgresql 驱动套件（postgresql 部分）：自建 mock PostgreSQL 服务端（读 StartupMessage/
- * 密码消息/Query/扩展协议 Parse+Bind+Describe+Execute+Sync，回 Authentication/RowDescription/
- * DataRow/CommandComplete/ReadyForQuery 或 ErrorResponse；SCRAM-SHA-256 服务端侧按 RFC 5802
- * 独立实现 proof 校验与 ServerSignature 下发）。
+ * postgresql 驱动套件：官方驱动 pg（new Pool）× 自建 mock PostgreSQL 服务端端到端。
+ * mock 侧实现：读 StartupMessage/密码消息/Query/扩展协议 Parse+Bind+Describe+Execute+Sync，
+ * 回 Authentication/RowDescription/DataRow/CommandComplete/ReadyForQuery 或 ErrorResponse；
+ * SCRAM-SHA-256 服务端侧按 RFC 5802 独立实现 proof 校验与 ServerSignature 下发。
  * 覆盖：cleartext/md5/SCRAM 三种认证、简单查询行集、扩展协议 $1 参数（服务端断言 Bind 文本）、
  * CommandComplete→changes、ErrorResponse→DbError、int8/bool/json 类型转换、池复用与 close。
+ * 认证失败按新契约归一 CONNECTION_ERROR（旧实现曾以 SQL_ERROR 呈现）。
  * node tests/host-db-pg.test.js 直接执行（mini runner），node tests/run.js 汇总执行。
  */
 import assert from 'node:assert/strict'
@@ -213,7 +214,9 @@ function createMockPgServer(options = {}) {
       }
       if (opts.auth === 'md5') {
         const resp = payload.toString('utf8', 0, payload.length - 1)
-        const expect = 'md5' + md5Hex(md5Hex(opts.password + opts.user) + state.md5SaltHex)
+        // 真实协议（pg 客户端行为）：'md5' + md5hex(md5hex(password+user) + 4 字节原始 salt)
+        const inner = md5Hex(opts.password + opts.user)
+        const expect = 'md5' + crypto.createHash('md5').update(Buffer.concat([Buffer.from(inner, 'utf8'), md5Salt])).digest('hex')
         if (resp === expect) authSuccess()
         else denyAuth('密码错误（md5）')
         return
@@ -413,7 +416,7 @@ export const tests = [
     },
   },
   {
-    name: 'postgresql: md5 认证（服务端校验 md5hex(md5hex(pw+user)+salt)）+ 错误口令被拒',
+    name: 'postgresql: md5 认证（md5hex(md5hex(pw+user)+raw salt)）+ 错误口令被拒',
     fn: async () => {
       const mock = await startMock({ auth: 'md5', password: 'correct-pw' })
       const db = createDbService()
@@ -422,7 +425,7 @@ export const tests = [
         assert.equal(ok.ok, true, JSON.stringify(ok))
         const bad = await db.test({ connection: pgConnection(mock.port, { password: 'nope' }) })
         assert.equal(bad.ok, false)
-        assert.equal(bad.error.code, 'SQL_ERROR', '认证失败应以 SQL_ERROR 呈现')
+        assert.equal(bad.error.code, 'CONNECTION_ERROR', '认证失败应归一为 CONNECTION_ERROR')
         assert.match(bad.error.message, /28P01/)
         assert.equal(mock.state.failReasons.length, 1)
       } finally {
@@ -476,7 +479,8 @@ export const tests = [
         assert.deepEqual(q.columns, ['id', 'count', 'flag', 'payload', 'note'])
         assert.equal(q.rowCount, 2)
         assert.equal(q.truncated, false)
-        assert.deepEqual(q.rows[0], { id: 42, count: 7, flag: true, payload: { a: 1 }, note: 'ok' })
+        // pg 官方解析行为：int8(oid 20) 一律返回字符串（parseBigInteger，避免精度丢失）
+        assert.deepEqual(q.rows[0], { id: '42', count: 7, flag: true, payload: { a: 1 }, note: 'ok' })
         assert.equal(q.rows[1].id, '9223372036854775807', 'int8 超安全整数保留字符串')
         assert.equal(q.rows[1].count, null)
         assert.equal(q.rows[1].flag, false)
@@ -507,9 +511,13 @@ export const tests = [
         // bigint 参数 → 字符串化
         await db.query({ connection: pgConnection(mock.port), sql: 'SELECT $1', params: [9007199254740993n] })
         assert.deepEqual(mock.state.lastBindParams, ['9007199254740993'])
-        // Date 参数 → ISO
+        // Date 参数 → pg dateToString：'YYYY-MM-DDTHH:mm:ss.sss±HH:MM'（本地时区，小时/偏移随 TZ 变化）
         await db.query({ connection: pgConnection(mock.port), sql: 'SELECT $1', params: [new Date('2024-01-02T03:04:05.678Z')] })
-        assert.deepEqual(mock.state.lastBindParams, ['2024-01-02T03:04:05.678Z'])
+        assert.match(
+          String(mock.state.lastBindParams[0]),
+          /^2024-01-02T\d{2}:04:05\.678(?:Z|[+-]\d{2}:\d{2})$/,
+          'Date 参数应为 pg 文本化时间戳：' + mock.state.lastBindParams[0],
+        )
       } finally {
         await db.closeAll()
         await mock.stop()
@@ -586,6 +594,8 @@ export const tests = [
         assert.equal(q1.rows[0].n, 7)
         assert.equal(q2.rows[0].n, 7)
         await db.close({ connection: conn })
+        // pg 连接在 X(Terminate) 写入后即 resolve pool.end，等一拍让 mock 收到包
+        await new Promise((resolve) => setTimeout(resolve, 20))
         assert.equal(mock.state.terminations, 1, 'close 应发 Terminate(X)')
         const closed = await db.close({ connection: conn })
         assert.equal(closed.closed, false, '重复 close 幂等')
@@ -607,6 +617,7 @@ export const tests = [
         assert.equal(mock.state.connections, 2)
         const all = await db.closeAll()
         assert.equal(all.closed, 2)
+        await new Promise((resolve) => setTimeout(resolve, 20))
         assert.equal(mock.state.terminations, 2)
       } finally {
         await db.closeAll()
@@ -641,10 +652,10 @@ export const tests = [
     fn: async () => {
       const db = createDbService()
       await assert.rejects(
-        () => db.query({ connection: { type: 'oracle', host: 'x' }, sql: 'SELECT 1' }),
+        () => db.query({ connection: { type: 'db2', host: 'x' }, sql: 'SELECT 1' }),
         (err) => err instanceof DbError && err.code === 'UNSUPPORTED_DRIVER' && err.status === 400,
       )
-      const t = await db.test({ connection: { type: 'oracle', host: 'x' } })
+      const t = await db.test({ connection: { type: 'db2', host: 'x' } })
       assert.equal(t.ok, false)
       assert.equal(t.error.code, 'UNSUPPORTED_DRIVER')
       await assert.rejects(

@@ -1,16 +1,20 @@
 /**
- * mysql/postgresql 驱动套件（mysql 部分）：自建 mock MySQL 服务端（协议服务器侧按 wire protocol
- * 实现：发握手 v10、校验 HandshakeResponse41、按 auth 插件独立计算期望 scramble、收 COM_PING/
- * COM_QUERY/COM_QUIT、回 column def + text 行或 OK/ERR；3B len + 1B seq 分帧读写自己实现）。
- * 覆盖：test 连接、native/caching fast/caching full(RSA)/AUTH_SWITCH、SELECT/INSERT/ERR、
- * params 转义（服务端断言最终 SQL）、池复用（只握手一次）、close/closeAll、SSLRequest 拒绝、大包分帧。
+ * mysql 驱动套件：官方驱动 mysql2/promise × 自建 mock MySQL 服务端端到端。
+ * mock 侧按 wire protocol 实现服务端：发握手 v10、校验 HandshakeResponse41、按 auth 插件独立计算
+ * 期望 scramble、收 COM_PING/COM_QUERY/COM_QUIT、回 column def + text 行或 OK/ERR；3B len + 1B seq
+ * 分帧读写自实现。覆盖：test 连接、native/caching fast/caching full(RSA)/AUTH_SWITCH、
+ * SELECT/INSERT/ERR、params 客户端转义（服务端断言最终 SQL）、池复用（只握手一次）、
+ * close/closeAll、SSLRequest 拒绝、长 SQL 文本完整性（>250B 分帧由 mysql2 官方驱动负责）。
+ * mock 与旧客户端的两处协议差异已按 mysql2（真实协议）最小修正：
+ *   1) caching_sha2 full auth 的公钥请求字节为 0x02，公钥回复为 AuthMoreData(0x01)+PEM（无 0x02 前缀）；
+ *   2) 握手能力位补 CLIENT_SSL(0x800)（真实服务器都宣告 SSL，mysql2 见无 SSL 直接报错不发 SSLRequest）；
+ *   3) VAR_STRING 列 charset 用 utf8mb4(45)（mysql2 对 charset 63 binary 的字符串列回 Buffer）。
  * node tests/host-db-mysql.test.js 直接执行（mini runner），node tests/run.js 汇总执行。
  */
 import assert from 'node:assert/strict'
 import net from 'node:net'
 import crypto from 'node:crypto'
 import { createDbService, DbError, SUPPORTED_DRIVERS } from '../src/host/db.js'
-import { splitPayload } from '../src/host/db-drivers/mysql.js'
 
 const MAX_PAYLOAD = 0xffffff
 
@@ -63,8 +67,8 @@ function serverSha256Scramble(password, seed) {
   return Buffer.from(s1.map((b, i) => b ^ s3[i]))
 }
 
-/** mock 服务端能力位（与被测客户端约定一致的最小集）。 */
-const SERVER_CAPS = 0x1 | 0x200 | 0x2000 | 0x8000 | 0x80000 // LONG_PASSWORD|PROTOCOL_41|TRANSACTIONS|SECURE_CONNECTION|PLUGIN_AUTH
+/** mock 服务端能力位（对齐真实服务器最小集：含 CLIENT_SSL 供 ssl 协商）。 */
+const SERVER_CAPS = 0x1 | 0x200 | 0x2000 | 0x8000 | 0x800 | 0x80000 // LONG_PASSWORD|PROTOCOL_41|TRANSACTIONS|SECURE_CONNECTION|SSL|PLUGIN_AUTH
 
 function createMockMysqlServer(options = {}) {
   const opts = {
@@ -108,7 +112,7 @@ function createMockMysqlServer(options = {}) {
       }
     }
 
-    // 服务端侧分帧（与客户端 splitPayload 同规则：0xffffff 续帧，整除补空帧）
+    // 服务端侧分帧（mysql2 客户端同规则：0xffffff 续帧，整除补空帧）
     function splitServerFrames(payload) {
       if (payload.length === 0) return [Buffer.alloc(0)]
       const frames = []
@@ -138,6 +142,7 @@ function createMockMysqlServer(options = {}) {
     }
 
     function sendColumnDef(name, type) {
+      // charset：VAR_STRING 用 utf8mb4_general_ci(45)；mysql2 对 charset 63(binary) 的字符串列回 Buffer
       writePacket(Buffer.concat([
         mockLenencStr('def'),
         mockLenencStr(''),
@@ -146,7 +151,7 @@ function createMockMysqlServer(options = {}) {
         mockLenencStr(name),
         mockLenencStr(name),
         mockLenencInt(0x0c),
-        u16le(63), // charset binary
+        u16le(type === 0xfd ? 45 : 63), // charset
         u32le(64), // column length
         Buffer.from([type]),
         u16le(0),
@@ -178,7 +183,7 @@ function createMockMysqlServer(options = {}) {
       Buffer.from([45]), // charset
       u16le(0x0002), // status
       u16le((SERVER_CAPS >>> 16) & 0xffff),
-      Buffer.from([21]), // auth data len = 8 + 12 + 1(\0)
+      Buffer.from([21]), // auth data len = 8 + 12 + 1(\\0)
       Buffer.alloc(10), // reserved
       Buffer.concat([seed.subarray(8), Buffer.from([0])]), // seed part2 (13B)
       mockCstring(opts.plugin),
@@ -289,12 +294,12 @@ function createMockMysqlServer(options = {}) {
         return
       }
       if (stage === 'await-full-key') {
-        if (pkt.length === 1 && pkt[0] === 0x01) {
-          // 客户端请求 RSA 公钥 → AuthMoreData 0x02 + PEM cstring
-          writePacket(Buffer.concat([Buffer.from([0x01, 0x02]), mockCstring(opts.rsaPublicKey)]))
+        if (pkt.length === 1 && pkt[0] === 0x02) {
+          // mysql2 协议约定：客户端以单字节 0x02 请求 RSA 公钥 → AuthMoreData(0x01) + PEM cstring
+          writePacket(Buffer.concat([Buffer.from([0x01]), mockCstring(opts.rsaPublicKey)]))
           stage = 'await-full-rsa'
         } else {
-          denyAuth('full auth 期待公钥请求 0x01')
+          denyAuth('full auth 期待公钥请求 0x02（mysql2 协议约定）')
         }
         return
       }
@@ -395,22 +400,30 @@ function mysqlConnection(port, extra = {}) {
   return { type: 'mysql', host: '127.0.0.1', port, user: 'root', password: 'secret', ...extra }
 }
 
+/** 正则元字符转义（拼装「精确段落 + 日期段」的最终 SQL 断言用）。 */
+function escapeRe(text) {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
 export const tests = [
   {
-    name: 'mysql: test 连接成功（COM_PING）+ driver 标记 + SUPPORTED_DRIVERS 注册',
+    name: 'mysql: test 连接成功（COM_PING）+ driver 标记 + SUPPORTED_DRIVERS 七驱动注册',
     fn: async () => {
-      assert.deepEqual(SUPPORTED_DRIVERS, ['sqlite', 'mysql', 'postgresql'])
+      assert.deepEqual(
+        SUPPORTED_DRIVERS,
+        ['sqlite', 'mysql', 'postgresql', 'mssql', 'oracle', 'mongodb', 'redis'],
+      )
       const mock = await startMock()
       const db = createDbService()
       try {
         const t = await db.test({ connection: mysqlConnection(mock.port) })
-        assert.equal(t.ok, true)
+        assert.equal(t.ok, true, JSON.stringify(t))
         assert.equal(t.driver, 'mysql')
         assert.equal(mock.state.handshakes, 1)
         assert.equal(mock.state.pings, 1, 'test 应走 COM_PING')
         assert.equal(mock.state.clientUser, 'root')
         assert.equal(mock.state.clientPlugin, 'mysql_native_password', '应回显服务器插件名')
-        // 客户端能力位：PROTOCOL_41 | SECURE_CONNECTION | PLUGIN_AUTH
+        // 客户端能力位：PROTOCOL_41 | SECURE_CONNECTION | PLUGIN_AUTH（mysql2 默认能力位集合）
         assert.equal((mock.state.clientCaps & 0x200) !== 0, true)
         assert.equal((mock.state.clientCaps & 0x8000) !== 0, true)
         assert.equal((mock.state.clientCaps & 0x80000) !== 0, true)
@@ -421,7 +434,7 @@ export const tests = [
     },
   },
   {
-    name: 'mysql: mysql_native_password SHA1 scramble 服务端校验 + 错误口令被拒',
+    name: 'mysql: mysql_native_password SHA1 scramble 服务端校验 + 错误口令 → CONNECTION_ERROR',
     fn: async () => {
       const mock = await startMock({ password: 'correct-horse' })
       const db = createDbService()
@@ -429,10 +442,10 @@ export const tests = [
         const ok = await db.test({ connection: mysqlConnection(mock.port, { password: 'correct-horse' }) })
         assert.equal(ok.ok, true)
         assert.deepEqual(mock.state.authFailures, [])
-        // 错误口令 → 客户端 scramble 与服务端期望不一致 → ERR 1045
+        // 错误口令 → 客户端 scramble 与服务端期望不一致 → ERR 1045 → 认证失败归一 CONNECTION_ERROR
         const bad = await db.test({ connection: mysqlConnection(mock.port, { password: 'wrong' }) })
         assert.equal(bad.ok, false)
-        assert.equal(bad.error.code, 'SQL_ERROR')
+        assert.equal(bad.error.code, 'CONNECTION_ERROR')
         assert.match(bad.error.message, /1045/)
       } finally {
         await db.closeAll()
@@ -447,7 +460,7 @@ export const tests = [
       const db = createDbService()
       try {
         const t = await db.test({ connection: mysqlConnection(mock.port) })
-        assert.equal(t.ok, true)
+        assert.equal(t.ok, true, JSON.stringify(t))
         const q = await db.query({ connection: mysqlConnection(mock.port), sql: 'SELECT 1' })
         assert.equal(q.driver, 'mysql')
         assert.equal(q.rows[0]['1'], 1)
@@ -459,7 +472,7 @@ export const tests = [
     },
   },
   {
-    name: 'mysql: caching_sha2_password full auth（RSA 公钥 OAEP 加密回发，服务端解密校验）',
+    name: 'mysql: caching_sha2_password full auth（公钥请求 0x02 + RSA OAEP 加密回发，服务端解密校验）',
     fn: async () => {
       const mock = await startMock({ plugin: 'caching_sha2_password', cachingMode: 'full' })
       const db = createDbService()
@@ -515,7 +528,7 @@ export const tests = [
         assert.equal(q.truncated, false)
         assert.deepEqual(q.rows[0], { id: 1, name: '张三', score: 9.5, big: 42 })
         assert.equal(q.rows[1].name, null)
-        assert.equal(q.rows[1].big, '9223372036854775807', 'int8 超安全整数应保留字符串')
+        assert.equal(q.rows[1].big, '9223372036854775807', 'int8 超安全整数应保留字符串（supportBigNumbers:true）')
       } finally {
         await db.closeAll()
         await mock.stop()
@@ -523,7 +536,7 @@ export const tests = [
     },
   },
   {
-    name: 'mysql: INSERT OK 包 → changes/lastInsertRowid（lenenc 解析）',
+    name: 'mysql: INSERT OK 包 → changes/lastInsertRowid（affectedRows/insertId）',
     fn: async () => {
       const mock = await startMock()
       const db = createDbService()
@@ -572,21 +585,27 @@ export const tests = [
         await db.query({
           connection: mysqlConnection(mock.port),
           sql: 'INSERT INTO t (a,b,c,d,e,f,g) VALUES (?, ?, ?, ?, ?, ?, ?) /* ? 注释内不替换 */ -- ? 也不替换',
-          params: ["O'Brien", 'line1\nline2\0tab', null, true, 3.5, at, 'back\\slash'],
+          params: ["O'Brien", 'line1\\nline2\\0tab', null, true, 3.5, at, 'back\\\\slash'],
         })
-        assert.equal(
+        // mysql2 转义规则：' → \'、\ → \\、\0/\n 原样转义；boolean → true/false 字面量；
+        // Date → 'YYYY-MM-DD HH:mm:ss.SSS'（本机时区，小时段随 TZ 变化故用 \d{2}）
+        const prefix = "INSERT INTO t (a,b,c,d,e,f,g) VALUES ('O\\'Brien', 'line1\\\\nline2\\\\0tab', NULL, true, 3.5, "
+        const suffix = ", 'back\\\\\\\\slash') /* ? 注释内不替换 */ -- ? 也不替换"
+        assert.match(
           mock.state.lastSql,
-          "INSERT INTO t (a,b,c,d,e,f,g) VALUES ('O\\'Brien', 'line1\\nline2\\0tab', NULL, 1, 3.5, "
-          + "'2024-01-02T03:04:05.678Z', 'back\\\\slash') /* ? 注释内不替换 */ -- ? 也不替换",
+          new RegExp('^' + escapeRe(prefix) + "'2024-01-02 \\d{2}:04:05\\.678'" + escapeRe(suffix) + '$'),
+          '最终 SQL：' + mock.state.lastSql,
         )
-        // 引号内的 ? 不替换 + 参数个数校验
+        // 引号内的 ? 不替换 + 注释内 ? 不替换
         mock.setOnQuery(() => ({ columns: [{ name: 'x', type: 0xfd }], rows: [['?']] }))
         await db.query({ connection: mysqlConnection(mock.port), sql: "SELECT '?' AS x, ? AS y", params: ['literal'] })
         assert.equal(mock.state.lastSql, "SELECT '?' AS x, 'literal' AS y")
+        // 旧契约保留：Buffer 参数 → INVALID_ARGUMENT（mysql2 官方支持，但保持旧接口行为）
         await assert.rejects(
           () => db.query({ connection: mysqlConnection(mock.port), sql: 'SELECT ?', params: [Buffer.from('x')] }),
           (err) => err.code === 'INVALID_ARGUMENT',
         )
+        // 旧契约保留：? 个数与参数个数严格一致
         await assert.rejects(
           () => db.query({ connection: mysqlConnection(mock.port), sql: 'SELECT ?', params: [] }),
           (err) => err.code === 'INVALID_ARGUMENT',
@@ -615,6 +634,8 @@ export const tests = [
         await db.close({ connection: conn })
         await db.query({ connection: conn, sql: 'SELECT 1 AS n' })
         assert.equal(mock.state.connections, 2, 'close 后重开新连接')
+        // pool.end() 在 COM_QUIT 入队后即 resolve，等一拍让 mock 收到包
+        await new Promise((resolve) => setTimeout(resolve, 20))
         assert.equal(mock.state.quitCount, 1, 'close 应发送 COM_QUIT')
       } finally {
         await db.closeAll()
@@ -636,10 +657,12 @@ export const tests = [
         const closed = await db.close({ connection: conn })
         assert.equal(closed.ok, true)
         assert.equal(closed.closed, true)
+        await new Promise((resolve) => setTimeout(resolve, 20))
         assert.equal(mock.state.quitCount, 1)
         await db.query({ connection: mysqlConnection(mock.port), sql: 'INSERT INTO t VALUES (2)' })
         const all = await db.closeAll()
         assert.equal(all.closed, 1)
+        await new Promise((resolve) => setTimeout(resolve, 20))
         assert.equal(mock.state.quitCount, 2)
       } finally {
         await db.closeAll()
@@ -648,7 +671,7 @@ export const tests = [
     },
   },
   {
-    name: 'mysql: ssl:true 且服务器不支持（回 N）→ CONNECTION_ERROR',
+    name: 'mysql: ssl:true 且服务器拒绝升级（回 N）→ CONNECTION_ERROR',
     fn: async () => {
       const mock = await startMock()
       const db = createDbService()
@@ -664,19 +687,9 @@ export const tests = [
     },
   },
   {
-    name: 'mysql: 大 payload 发送分帧（>16MB 按 0xffffff 续帧 + seq 连续）',
+    name: 'mysql: 长 SQL 文本完整性（跨命令 seq 重置后服务端重组正确）',
     fn: async () => {
-      // splitPayload 纯函数验证：17MB SQL → 2 帧（0xffffff + 余量）；整除时补空帧
-      const big = Buffer.alloc(MAX_PAYLOAD + 16, 0x41)
-      const frames = splitPayload(big)
-      assert.equal(frames.length, 2)
-      assert.equal(frames[0].length, MAX_PAYLOAD)
-      assert.equal(frames[1].length, 16)
-      const aligned = splitPayload(Buffer.alloc(MAX_PAYLOAD * 2))
-      assert.equal(aligned.length, 3, '恰好整除时补空帧')
-      assert.equal(aligned[2].length, 0)
-      assert.equal(splitPayload(Buffer.alloc(0)).length, 1)
-      // seq 连续性在真实服务端上验证：发送 >250B 的多帧约束在 16MB 以下用多次命令覆盖（seq 跨命令重置）
+      // 大包分帧由 mysql2 官方驱动负责；此处验证 >250B 文本原样到达服务端（seq 跨命令重置场景）
       const mock = await startMock()
       const db = createDbService()
       try {

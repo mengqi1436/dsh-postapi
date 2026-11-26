@@ -79,12 +79,12 @@ export const tests = [
         () => db.query({ connection, sql: 'SELECT * FROM missing_table' }),
         (err) => err instanceof DbError && err.code === 'SQL_ERROR',
       )
-      // 不支持驱动：query 抛 400 DbError；test 返回 ok:false 结构化（mysql/postgresql 已内置，用未知 type 验证）
+      // 不支持驱动：query 抛 400 DbError；test 返回 ok:false 结构化（七驱动已内置，用未知 type 验证）
       await assert.rejects(
-        () => db.query({ connection: { type: 'oracle', host: 'x' }, sql: 'SELECT 1' }),
+        () => db.query({ connection: { type: 'db2', host: 'x' }, sql: 'SELECT 1' }),
         (err) => err instanceof DbError && err.code === 'UNSUPPORTED_DRIVER' && err.status === 400,
       )
-      const t = await db.test({ connection: { type: 'oracle', host: 'x' } })
+      const t = await db.test({ connection: { type: 'db2', host: 'x' } })
       assert.equal(t.ok, false)
       assert.equal(t.error.code, 'UNSUPPORTED_DRIVER')
       // mysql 缺 user → INVALID_ARGUMENT（内置驱动走参数校验）
@@ -95,9 +95,11 @@ export const tests = [
       const noPath = await db.test({ connection: { type: 'sqlite' } })
       assert.equal(noPath.ok, false)
       assert.equal(noPath.error.code, 'INVALID_ARGUMENT')
-      assert.ok(SUPPORTED_DRIVERS.includes('sqlite'))
-      assert.ok(SUPPORTED_DRIVERS.includes('mysql'))
-      assert.ok(SUPPORTED_DRIVERS.includes('postgresql'))
+      assert.deepEqual(
+        SUPPORTED_DRIVERS,
+        ['sqlite', 'mysql', 'postgresql', 'mssql', 'oracle', 'mongodb', 'redis'],
+        'SUPPORTED_DRIVERS 应注册全部七驱动',
+      )
       await db.closeAll()
     },
   },

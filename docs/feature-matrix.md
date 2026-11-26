@@ -22,7 +22,7 @@
 | 6 | 响应管理 | 多响应（code/name/contentType/body/schema/enabled）、默认响应 | host-data + pages-a | P1 | 响应增删改测试 |
 | 7 | 环境与变量 | 环境列表、环境变量、全局变量、变量优先级（局部>环境>全局）、动态变量 {{$timestamp}} 等 | host-runtime + pages-b | P0 | 变量替换单测 + env 页 |
 | 8 | 认证 | none/bearer/basic/apikey/oauth2/digest 位 | host-runtime + pages-a | P1 | auth 注入测试 |
-| 9 | 前置/后置操作 | JS 脚本（pm.* 兼容沙箱）、断言、变量提取、继承开关、数据库操作 | host-runtime | P0(脚本/断言/提取) P1(数据库：2026-11-26 sqlite/mysql/postgresql 全部内置驱动真实现——mysql/pg 走自实现 wire-protocol 客户端，零依赖；项目级前置/后置脚本并入请求管线) | 沙箱单测 + 断言单测 + db 桥测试（mysql/pg mock 服务端） |
+| 9 | 前置/后置操作 | JS 脚本（pm.* 兼容沙箱）、断言、变量提取、继承开关、数据库操作 | host-runtime | P0(脚本/断言/提取) P1(数据库：2026-11-26 七类型全部官方驱动——sqlite=node:sqlite、mysql=mysql2、postgresql=pg、mssql=mssql、oracle=oracledb、mongodb=mongodb(命令文档)、redis=redis(命令行)；项目级前置/后置脚本并入请求管线) | 沙箱单测 + 断言单测 + db 桥测试（官方驱动 glue + mock 服务端/注入 fake） |
 | 10 | Mock | 智能 Mock、字段规则、Mock 期望、本地 Mock 服务 | host-runtime + pages-a | P1 | mock 规则测试 + mock 页 |
 | 11 | 调试发送 | 发送请求、响应展示（status/耗时/大小/headers/body/预览）、取消、历史记录、保存为接口 | host-runtime + pages-a | P0 | request 测试 + debug 页 |
 | 12 | 请求历史 | 按项目记录最近 N 条、可回放、可清空 | host-data + pages-b | P1 | history 测试 + history 页 |

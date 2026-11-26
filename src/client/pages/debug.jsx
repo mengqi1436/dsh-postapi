@@ -140,10 +140,21 @@ export function emptyProjSettings(project) {
 }
 
 const DB_TYPES = [
-  { id: 'sqlite', label: 'SQLite（内置驱动）' },
-  { id: 'mysql', label: 'MySQL（内置驱动）' },
-  { id: 'postgresql', label: 'PostgreSQL（内置驱动）' },
+  { id: 'sqlite', label: 'SQLite（node 内置驱动）' },
+  { id: 'mysql', label: 'MySQL（官方 mysql2）' },
+  { id: 'postgresql', label: 'PostgreSQL（官方 pg）' },
+  { id: 'mssql', label: 'SQL Server（官方 mssql）' },
+  { id: 'oracle', label: 'Oracle（官方 oracledb）' },
+  { id: 'mongodb', label: 'MongoDB（官方 mongodb）' },
+  { id: 'redis', label: 'Redis（官方 redis）' },
 ]
+
+/** 各驱动默认端口提示（placeholder 用）。 */
+const DB_DEFAULT_PORT = { mysql: '3306（默认）', postgresql: '5432（默认）', mssql: '1433（默认）', oracle: '1521（默认）', redis: '6379（默认）' }
+/** SSL 开关适用面：关系型 + Redis TLS；MongoDB 走 URL 里的 ssl 参数。 */
+const DB_SSL_TYPES = ['mysql', 'postgresql', 'mssql', 'redis']
+/** 端口字段适用的驱动（sqlite 走文件路径、mongodb 走 URL）。 */
+const DB_HOST_TYPES = ['mysql', 'postgresql', 'mssql', 'oracle', 'redis']
 
 /** 项目设置子页签（基本信息 / 全局参数 / 全局认证 / 前后置脚本）。 */
 const PROJ_SUBTABS = [
@@ -357,7 +368,7 @@ export function DebugPage({ route, api }) {
   const wsIndexRef = useRef(0) // 增量取消息游标（宿主 messages({ since })）
   const wsTimerRef = useRef(null)
   // —— 数据库页签状态 ——
-  const [dbConfig, setDbConfig] = useState({ type: 'sqlite', path: '', host: '', port: '', user: '', password: '', database: '', ssl: false })
+  const [dbConfig, setDbConfig] = useState({ type: 'sqlite', path: '', url: '', host: '', port: '', user: '', password: '', database: '', ssl: false })
   const [dbSql, setDbSql] = useState('SELECT 1')
   const [dbHint, setDbHint] = useState('')
   const [dbResult, setDbResult] = useState(null)
@@ -804,7 +815,7 @@ export function DebugPage({ route, api }) {
       setDbHint('保存失败：storage.saveProjectSettings 不可用')
       return
     }
-    const name = (dbConfig.type === 'sqlite' ? dbConfig.path : dbConfig.host) || dbConfig.type
+    const name = (dbConfig.type === 'sqlite' ? dbConfig.path : dbConfig.type === 'mongodb' ? (dbConfig.url || dbConfig.host) : dbConfig.host) || dbConfig.type
     const next = [...dbConnections.filter((c) => c && c.name !== name), { ...dbConfig, name }]
     storage.saveProjectSettings(project.id, { dbConnections: next })
       .then(() => setProject((prev) => ({ ...prev, settings: { ...(prev.settings || {}), dbConnections: next } })))
@@ -815,7 +826,7 @@ export function DebugPage({ route, api }) {
   const dbLoad = (name) => {
     const hit = dbConnections.find((c) => c && c.name === name)
     if (!hit) return
-    setDbConfig({ type: 'sqlite', path: '', host: '', port: '', user: '', password: '', database: '', ssl: false, ...hit })
+    setDbConfig({ type: 'sqlite', path: '', url: '', host: '', port: '', user: '', password: '', database: '', ssl: false, ...hit })
     setDbHint('已载入连接：' + name)
   }
 
@@ -1302,16 +1313,21 @@ export function DebugPage({ route, api }) {
                     <input className="pp-input pp-input-mono" style={{ flex: 1 }} value={dbConfig.path} placeholder="/path/to/data.db 或 :memory:"
                       onChange={(e) => dbPatch('path', e.target.value)} />
                   </div>
-                ) : (
+                ) : dbConfig.type === 'mongodb' ? (
                   <div>
+                    <div className="pp-form-row">
+                      <label className="pp-form-label">连接 URL</label>
+                      <input className="pp-input pp-input-mono" style={{ flex: 1 }} value={dbConfig.url} aria-label="MongoDB URL"
+                        placeholder="mongodb://user:pass@127.0.0.1:27017（填了 URL 则忽略下方主机/端口）"
+                        onChange={(e) => dbPatch('url', e.target.value)} />
+                    </div>
                     <div className="pp-form-row">
                       <label className="pp-form-label">主机</label>
                       <input className="pp-input pp-input-mono" style={{ flex: 1 }} value={dbConfig.host} onChange={(e) => dbPatch('host', e.target.value)} />
                     </div>
                     <div className="pp-form-row">
                       <label className="pp-form-label">端口</label>
-                      <input className="pp-input pp-input-sm" style={{ flex: 1, maxWidth: 120 }} value={dbConfig.port}
-                        placeholder={dbConfig.type === 'mysql' ? '3306（默认）' : '5432（默认）'}
+                      <input className="pp-input pp-input-sm" style={{ flex: 1, maxWidth: 120 }} value={dbConfig.port} placeholder="27017（默认）"
                         onChange={(e) => dbPatch('port', e.target.value)} />
                     </div>
                     <div className="pp-form-row">
@@ -1326,11 +1342,42 @@ export function DebugPage({ route, api }) {
                       <label className="pp-form-label">数据库</label>
                       <input className="pp-input" style={{ flex: 1 }} value={dbConfig.database} onChange={(e) => dbPatch('database', e.target.value)} />
                     </div>
+                    <p className="pp-meta">MongoDB 执行的是命令文档：下方输入 JSON，如 {'{"find":"users","filter":{},"limit":10}'}</p>
+                  </div>
+                ) : (
+                  <div>
                     <div className="pp-form-row">
-                      <label className="pp-form-label">SSL</label>
-                      <input type="checkbox" checked={Boolean(dbConfig.ssl)} onChange={(e) => dbPatch('ssl', e.target.checked)} aria-label="SSL" />
-                      <span className="pp-meta">可选：启用 TLS 连接（服务端需支持）</span>
+                      <label className="pp-form-label">主机</label>
+                      <input className="pp-input pp-input-mono" style={{ flex: 1 }} value={dbConfig.host} onChange={(e) => dbPatch('host', e.target.value)} />
                     </div>
+                    <div className="pp-form-row">
+                      <label className="pp-form-label">端口</label>
+                      <input className="pp-input pp-input-sm" style={{ flex: 1, maxWidth: 120 }} value={dbConfig.port}
+                        placeholder={DB_DEFAULT_PORT[dbConfig.type] || ''}
+                        onChange={(e) => dbPatch('port', e.target.value)} />
+                    </div>
+                    <div className="pp-form-row">
+                      <label className="pp-form-label">用户名</label>
+                      <input className="pp-input" style={{ flex: 1 }} value={dbConfig.user} onChange={(e) => dbPatch('user', e.target.value)} />
+                    </div>
+                    <div className="pp-form-row">
+                      <label className="pp-form-label">密码</label>
+                      <input className="pp-input" type="password" style={{ flex: 1 }} value={dbConfig.password} onChange={(e) => dbPatch('password', e.target.value)} />
+                    </div>
+                    <div className="pp-form-row">
+                      <label className="pp-form-label">{dbConfig.type === 'oracle' ? '服务名（ServiceName）' : '数据库'}</label>
+                      <input className="pp-input" style={{ flex: 1 }} value={dbConfig.database} onChange={(e) => dbPatch('database', e.target.value)} />
+                    </div>
+                    {DB_SSL_TYPES.includes(dbConfig.type) ? (
+                      <div className="pp-form-row">
+                        <label className="pp-form-label">SSL</label>
+                        <input type="checkbox" checked={Boolean(dbConfig.ssl)} onChange={(e) => dbPatch('ssl', e.target.checked)} aria-label="SSL" />
+                        <span className="pp-meta">可选：启用 TLS 连接（服务端需支持）</span>
+                      </div>
+                    ) : null}
+                    {dbConfig.type === 'mongodb' || dbConfig.type === 'redis' ? (
+                      <p className="pp-meta">{dbConfig.type === 'redis' ? 'Redis 执行单条命令：如 GET mykey / HGETALL myhash' : null}</p>
+                    ) : null}
                   </div>
                 )}
                 {dbConnections.length > 0 ? (
@@ -1360,9 +1407,19 @@ export function DebugPage({ route, api }) {
                   style={{ width: '100%', minHeight: 72, fontFamily: 'var(--font-mono, monospace)' }}
                   value={dbSql}
                   onChange={(e) => setDbSql(e.target.value)}
-                  placeholder="SELECT * FROM users LIMIT 10"
+                  placeholder={dbConfig.type === 'mongodb'
+                    ? '{ "find": "users", "filter": {}, "limit": 10 }'
+                    : dbConfig.type === 'redis'
+                      ? 'GET mykey'
+                      : 'SELECT * FROM users LIMIT 10'}
                 />
                 {dbHint ? <p className={'pp-note ' + (dbHint.indexOf('连接成功') === 0 || dbHint.indexOf('已保存') === 0 ? 'pp-note-ok' : 'pp-note-bad')}>{dbHint}</p> : null}
+                {dbResult && dbResult.output !== undefined ? (
+                  <div>
+                    <div className="pp-group-title">结果（{dbResult.driver === 'redis' ? 'Redis 命令输出' : 'MongoDB 命令输出'}）</div>
+                    <pre className="pp-pre pp-pre-scroll">{prettyJson(typeof dbResult.output === 'string' ? dbResult.output : JSON.stringify(dbResult.output))}</pre>
+                  </div>
+                ) : null}
                 {dbResult && Array.isArray(dbResult.rows) ? (
                   <div>
                     <div className="pp-group-title">结果（{dbResult.rowCount} 行{dbResult.truncated ? '，超过 1000 行已截断' : ''}）</div>

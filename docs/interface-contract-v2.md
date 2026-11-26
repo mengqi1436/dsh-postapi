@@ -190,14 +190,23 @@ client 侧 `src/client/shell/registry.js` 的 `createBridgeStorage()` / `createB
 
 两条路由的服务方法失败时**返回封套不抛出**：HTTP 200 + `data = { ok:false, error:{ code, message } }`（与 db.js 同模式，UI 按 `data.error.code` 分支）。client 侧 `api.grpc.invoke` / `api.dubbo.invoke` 同名映射；降级桩返回同形 `{ok:false,error:{code:'UNAVAILABLE'}}`。
 
-### 9.2 数据库驱动（db.js）
+### 9.2 数据库驱动（db.js · 2026-11-26 二次扩展：全官方驱动）
 
-`SUPPORTED_DRIVERS = ['sqlite','mysql','postgresql']`。mysql/postgresql 为自实现 wire-protocol 客户端（零依赖）：
+`SUPPORTED_DRIVERS = ['sqlite','mysql','postgresql','mssql','oracle','mongodb','redis']`。全部官方驱动（npm dependencies，client bundle 不受影响）：
 
-- 连接配置 `{ type:'mysql'|'postgresql', host, port, user, password, database, ssl? }`；sqlite 原样保留。
-- mysql：MySQL 文本协议（握手 v10、mysql_native_password、caching_sha2_password fast/full（明文通道 RSA-OAEP）、AUTH_SWITCH、COM_PING/COM_QUERY、ERR/OK 包解析）；params 为客户端安全转义替换 `?`（mysql2 text 模式同款）。
-- postgresql：v3 协议（cleartext/md5/SCRAM-SHA-256 认证、Simple Query 与扩展协议参数查询、RowDescription/DataRow/CommandComplete 解析、按 type OID 的值归一）。
-- query 返回形态不变；mysql 写语句 → OK 包 affected/insert id；pg → CommandComplete 解析 changes。
+| type | 驱动包 | 连接配置（除 type 外） | query 语义 |
+|---|---|---|---|
+| sqlite | node:sqlite（内置） | path（:memory: 可用） | SQL；`?` 位置参数 |
+| mysql | mysql2 ^3.24 | host, port(3306), user, password, database, ssl? | SQL；`?` 参数原生透传；行集 / ResultSetHeader→changes/insertId |
+| postgresql | pg ^8.23 | host, port(5432), user, password, database, ssl? | SQL；`?` 改写 $n（引号保护，无法安全改写报 INVALID_ARGUMENT）；CommandComplete→changes |
+| mssql | mssql ^12.8 | host(server), port(1433), user, password, database, ssl?（ssl=true→encrypt+trustServerCertificate，false→encrypt:false） | SQL；`?` 改写 @pN + request.input（同引号保护）；rowsAffected→changes |
+| oracle | oracledb ^26 | host, port(1521), user, password, database=服务名 | SQL；`?` 改写 :n（同引号保护）；OUT_FORMAT_OBJECT；rowsAffected→changes |
+| mongodb | mongodb ^7.9 | url?（优先）或 host/port/user/password，database 必填 | **命令文档**：sql 为 JSON 文档（`{"find":"users","filter":{},"limit":10}`）→ db.command → `{driver:'mongodb', output}` |
+| redis | redis ^6.4 | host, port(6379), password?, database?(db 序号), ssl?(TLS) | **命令行**：sql 按空白/引号切参（`GET mykey`）→ sendCommand → `{driver:'redis', output}` |
+
+- 通用机制不变：指纹池复用（探活 SELECT 1 / PING / command({ping:1})）、MAX_ROWS=1000 截断、close/closeAll、UNSUPPORTED_DRIVER 只给未知 type、错误归一 DbError（连接/认证失败 CONNECTION_ERROR，执行错 SQL_ERROR）。
+- 可选注入缝（只增）：`createDbService({ drivers })` 供测试注入 fake 驱动工厂。
+- output 值 JSON 安全化：bigint→字符串、Buffer→base64；UI 的 DB 页签对 `output` 渲染 JSON 块。
 
 ### 9.3 项目设置全族（settings 增补字段）
 

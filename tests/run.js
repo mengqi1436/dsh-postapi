@@ -28,6 +28,7 @@ const hostDbTests = await optionalSuite('host-db.test.js', 'tests')
 // 功能补齐轮新增套件：文件落地前 optionalSuite 自动跳过，收录行先行占位（lead 统一接线点）
 const hostDbMysqlTests = await optionalSuite('host-db-mysql.test.js', 'tests')
 const hostDbPgTests = await optionalSuite('host-db-pg.test.js', 'tests')
+const hostDbExtraTests = await optionalSuite('host-db-extra.test.js', 'tests')
 const hostGrpcTests = await optionalSuite('host-grpc.test.js', 'tests')
 const hostDubboTests = await optionalSuite('host-dubbo.test.js', 'tests')
 
@@ -76,6 +77,7 @@ const suites = [
   ['tests/host-db.test.js', hostDbTests],
   ['tests/host-db-mysql.test.js', hostDbMysqlTests],
   ['tests/host-db-pg.test.js', hostDbPgTests],
+  ['tests/host-db-extra.test.js', hostDbExtraTests],
   ['tests/host-grpc.test.js', hostGrpcTests],
   ['tests/host-dubbo.test.js', hostDubboTests],
   ['src/client/pages/components/__tests__/pages-a.test.js', pagesATests],

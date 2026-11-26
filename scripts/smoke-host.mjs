@@ -484,7 +484,7 @@ async function v2Stage(base, projectId) {
 
   const dbUnsupported = await httpJson(base, PREFIX + '/db/test', {
     method: 'POST',
-    body: { connection: { type: 'oracle', host: '127.0.0.1' } },
+    body: { connection: { type: 'db2', host: '127.0.0.1' } },
   })
   assert.equal(dbUnsupported.status, 200)
   assert.equal(dbUnsupported.json.data.ok, false)
