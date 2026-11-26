@@ -2,7 +2,7 @@
 
 本项目版本遵循语义化版本；发布包见 https://www.npmjs.com/package/dsh-postapi 。
 
-## 未发布 — 核心功能对标 Apifox（WebSocket 调试 / 数据库操作 / Apifox·YApi 导入）
+## 0.1.0 — 核心功能对标 Apifox（WebSocket 调试 / 数据库操作 / Apifox·YApi 导入）
 
 ### 功能
 
