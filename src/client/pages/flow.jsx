@@ -95,6 +95,9 @@ export function FlowPage(props) {
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
   const [activeIdx, setActiveIdx] = useState(0)
+  // 两段式删除（与 history 清空同款交互，不引弹窗）：第一次点标记待确认，误触有草稿兜底
+  const [pendingDel, setPendingDel] = useState(false)
+  const pickStep = (idx) => { setActiveIdx(idx); setPendingDel(false) }
 
   useEffect(() => {
     applyTheme(rootRef.current)
@@ -209,25 +212,28 @@ export function FlowPage(props) {
       <div className="pp-overview-head">
         <span className="pp-overview-title">流程图</span>
         <div className="pp-overview-actions">
+          {/* 项目切换 32px 档放页头：与 history/test 页同律（工具条只留次级操作） */}
+          <select className="pp-select" value={projectId}
+            onChange={(e) => { setProjectId(e.target.value); reloadProject(e.target.value) }}>
+            {projects.map((p) => <option key={p.id} value={p.id}>{p.name || p.id}</option>)}
+          </select>
           <span className="pp-pill">{steps.length} 步 · {actors.length} 参与方</span>
           <button className="pp-btn pp-btn-primary" onClick={persist}>保存到项目</button>
         </div>
       </div>
       <div className="pp-overview-content">
         <div className="pp-toolbar">
-          <label className="pp-meta">项目</label>
-          <select className="pp-select pp-input-sm" value={projectId}
-            onChange={(e) => { setProjectId(e.target.value); reloadProject(e.target.value) }}>
-            {projects.map((p) => <option key={p.id} value={p.id}>{p.name || p.id}</option>)}
-          </select>
           <input className="pp-input pp-input-sm pp-flow-name" value={flowName}
             placeholder="图名"
             onChange={(e) => { setFlowName(e.target.value); setNotice('') }} />
           <span className="pp-toolbar-spacer" />
           <button className="pp-btn pp-btn-sm" onClick={exportSvg}>导出 SVG</button>
           <button className="pp-btn pp-btn-sm" onClick={copyJson}>复制 JSON</button>
+<<<<<<< HEAD
         </div>
         <div className="pp-toolbar">
+=======
+>>>>>>> origin/master
           <span className="pp-meta">
             {isMock
               ? '示例数据 — api.storage.saveFlow 不可用，编排结果仅存本地草稿（' + DRAFT_KEY + '）'
@@ -235,7 +241,7 @@ export function FlowPage(props) {
           </span>
         </div>
         {error ? <p className="pp-error-text">{error}</p> : null}
-        {notice ? <p className="pp-muted">{notice}</p> : null}
+        {notice ? <p className="pp-note pp-note-ok">{notice}</p> : null}
 
         {overBudget && (
           <div className="pp-split-hint">
@@ -254,7 +260,7 @@ export function FlowPage(props) {
             <div className="pp-flow-steps">
               {steps.map((s, i) => (
                 <div key={i} className="pp-flow-step" data-active={i === activeIdx ? 'true' : 'false'}
-                  onClick={() => setActiveIdx(i)}>
+                  onClick={() => pickStep(i)}>
                   <span className="pp-flow-step-no">{i + 1}</span>
                   <div className="pp-flow-step-body">
                     <span className="pp-ellipsis pp-flow-step-name">{s.actor || '—'} → {s.target || '—'}</span>
@@ -270,7 +276,8 @@ export function FlowPage(props) {
           </nav>
 
           <div className="pp-flow-main">
-            <div className="pp-flow-canvas pp-seq-wrap">
+            {/* 画布只用 .pp-seq-wrap（与 .pp-flow-canvas 重复的两套样式已合并到一处） */}
+            <div className="pp-seq-wrap">
               {steps.length > 0 ? (
                 <SequenceDiagram
                   steps={steps}
@@ -279,7 +286,7 @@ export function FlowPage(props) {
                   title={flowName || '接口调试时序'}
                   desc="页面经 Storage 载入项目、Request 发起 HTTP 调用，并按响应状态渲染或提示错误的时序图"
                   activeIndex={activeIdx}
-                  onSelectRow={setActiveIdx}
+                  onSelectRow={pickStep}
                 />
               ) : <EmptyState text="暂无可渲染的时序" hint="添加步骤后自动生成" />}
             </div>
@@ -332,7 +339,14 @@ export function FlowPage(props) {
                   <span className="pp-toolbar-spacer" />
                   <button className="pp-btn pp-btn-sm" onClick={() => move(activeIdx, -1)} disabled={activeIdx === 0}>↑ 上移</button>
                   <button className="pp-btn pp-btn-sm" onClick={() => move(activeIdx, 1)} disabled={activeIdx === steps.length - 1}>↓ 下移</button>
-                  <button className="pp-btn pp-btn-sm pp-btn-ghost pp-btn-danger" onClick={() => { remove(activeIdx); setActiveIdx(Math.max(0, activeIdx - 1)) }}>删除</button>
+                  <button className="pp-btn pp-btn-sm pp-btn-ghost pp-btn-danger"
+                  title={pendingDel ? '再次点击确认删除该步骤' : '删除步骤（本地草稿自动保存，误删可撤销编排后重存）'}
+                  onClick={() => {
+                    if (!pendingDel) { setPendingDel(true); return }
+                    setPendingDel(false)
+                    remove(activeIdx)
+                    setActiveIdx(Math.max(0, activeIdx - 1))
+                  }}>{pendingDel ? '确认删除' : '删除'}</button>
                 </div>
                 <datalist id="pp-flow-actors">
                   {actors.map((a) => <option key={a} value={a} />)}

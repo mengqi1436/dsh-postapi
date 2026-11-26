@@ -50,6 +50,10 @@ export function SettingsPage(props) {
   const [theme, setTheme] = useState(readTheme)
   const [locale, setLocale] = useState(readLocale)
   const [settings, setSettings] = useState(DEFAULT_SETTINGS)
+  // 脏标记：与最近一次落盘/载入的规整结果比对，只有真的改过才允许保存
+  const [savedSnapshot, setSavedSnapshot] = useState(() => JSON.stringify(normalizeSettings(DEFAULT_SETTINGS)))
+  const settingsKey = JSON.stringify(normalizeSettings(settings))
+  const dirty = settingsKey !== savedSnapshot
   const [isMock, setIsMock] = useState(true)
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
@@ -69,7 +73,11 @@ export function SettingsPage(props) {
           setIsMock(false)
           if (typeof storage.getProject === 'function') {
             const loaded = await storage.getProject(list[0].id)
-            if (loaded && loaded.settings) setSettings(normalizeSettings(loaded.settings))
+            if (loaded && loaded.settings) {
+              const payload = normalizeSettings(loaded.settings)
+              setSettings(payload)
+              setSavedSnapshot(JSON.stringify(payload))
+            }
           }
         }
       } catch (err) {
@@ -81,17 +89,17 @@ export function SettingsPage(props) {
 
   const patch = (p) => { setSettings({ ...settings, ...p }); setNotice('') }
 
-  // 主题/语言即时生效并写本地草稿（theme.js 既有机制）
+  // 主题/语言即时生效并写本地草稿（theme.js 既有机制）；提示显示用户所选 label
   const applyThemeChoice = (value) => {
     setTheme(value)
     saveTheme(value)
     if (rootRef.current) rootRef.current.setAttribute('data-theme', value)
-    setNotice('主题已切换：' + value)
+    setNotice('主题已切换：' + (value === 'dark' ? '深色' : '浅色'))
   }
   const applyLocaleChoice = (value) => {
     setLocale(value)
     saveLocale(value)
-    setNotice('语言已切换：' + value)
+    setNotice('语言已切换：' + (value === 'zh-CN' ? '简体中文' : 'English'))
   }
 
   const persist = async () => {
@@ -104,6 +112,7 @@ export function SettingsPage(props) {
       const payload = normalizeSettings(settings)
       await storage.saveProjectSettings(projectId, payload)
       setSettings(payload)
+      setSavedSnapshot(JSON.stringify(payload))
       setNotice('已保存项目设置')
     } catch (err) {
       setError('保存设置失败：' + errText(err))
@@ -129,9 +138,6 @@ export function SettingsPage(props) {
     <div className="pp-scope pp-page" data-page="settings" ref={rootRef}>
       <div className="pp-overview-head">
         <span className="pp-overview-title">设置</span>
-        <div className="pp-overview-actions">
-          <button className="pp-btn pp-btn-primary" onClick={persist}>保存项目设置</button>
-        </div>
       </div>
       <div className="pp-overview-content">
         <div className="pp-toolbar">
@@ -143,15 +149,18 @@ export function SettingsPage(props) {
         </div>
         {error ? <p className="pp-error-text">{error}</p> : null}
         {notice ? <div className="pp-note pp-note-ok">{notice}</div> : null}
-  
+
         <div className="pp-cols-2">
           <div className="pp-pane">
             <div className="pp-card-title">外观与存储</div>
+            <div className="pp-meta" style={{ marginBottom: 'var(--sp-3)' }}>
+              主题 / 语言选择即生效；存储路径由 host 注入只读。项目设置（右侧）需保存落盘。
+            </div>
             <div className="pp-form-row">
               <label className="pp-form-label">存储路径</label>
-              <input className="pp-input pp-input-mono" style={{ flex: 1 }} readOnly value={storeRoot} />
+              <input className="pp-input pp-input-mono" readOnly value={storeRoot} />
             </div>
-            <div className="pp-form-grid" style={{ marginBottom: 'var(--sp-3)' }}>
+            <div className="pp-form-grid">
               <label className="pp-form-label">主题</label>
               <select className="pp-select" value={theme} onChange={(e) => applyThemeChoice(e.target.value)}>
                 <option value="light">浅色</option>
@@ -163,36 +172,44 @@ export function SettingsPage(props) {
                 <option value="en">English</option>
               </select>
             </div>
-            <div className="pp-note">
+            <div className="pp-note" style={{ marginTop: 'var(--sp-3)' }}>
               存储根目录由 host 构造参数注入（createStorageService(basePath)），页面只读展示，不可修改。
             </div>
           </div>
   
           <div className="pp-pane">
             <div className="pp-card-title">项目设置</div>
-            <div className="pp-form-grid" style={{ marginBottom: 'var(--sp-3)' }}>
+            <div className="pp-form-grid">
               <label className="pp-form-label">项目</label>
               <select className="pp-select" value={projectId}
                 onChange={(e) => { setProjectId(e.target.value); reloadProject(e.target.value) }}>
                 {projects.map((p) => <option key={p.id} value={p.id}>{p.name || p.id}</option>)}
               </select>
               <label className="pp-form-label">Mock 端口</label>
-              <input className="pp-input pp-input-mono" value={settings.mockPort}
+              <input className="pp-input pp-input-mono" inputMode="numeric" value={settings.mockPort}
+                onBlur={() => patch(normalizeSettings(settings))}
                 onChange={(e) => patch({ mockPort: e.target.value })} />
               <label className="pp-form-label">代理</label>
               <input className="pp-input pp-input-mono" placeholder="http://127.0.0.1:7890（留空为直连）"
                 value={settings.proxyUrl} onChange={(e) => patch({ proxyUrl: e.target.value })} />
               <label className="pp-form-label">超时 (ms)</label>
-              <input className="pp-input pp-input-mono" value={settings.requestTimeoutMs}
+              <input className="pp-input pp-input-mono" inputMode="numeric" value={settings.requestTimeoutMs}
+                onBlur={() => patch(normalizeSettings(settings))}
                 onChange={(e) => patch({ requestTimeoutMs: e.target.value })} />
               <label className="pp-form-label">历史条数</label>
-              <input className="pp-input pp-input-mono" value={settings.historyLimit}
+              <input className="pp-input pp-input-mono" inputMode="numeric" value={settings.historyLimit}
+                onBlur={() => patch(normalizeSettings(settings))}
                 onChange={(e) => patch({ historyLimit: e.target.value })} />
+            </div>
+            {/* 保存动作收进它实际作用的面板：带未保存标记，不再与即改即存的外观项混在页头 */}
+            <div className="pp-form-actions">
+              {dirty ? <span className="pp-pill pp-pill-warn">未保存</span> : null}
+              <button className="pp-btn pp-btn-primary" onClick={persist} disabled={!dirty}>保存项目设置</button>
             </div>
           </div>
         </div>
   
-        <div className="pp-card" style={{ marginTop: 'var(--sp-5)' }}>
+        <div className="pp-card">
           <div className="pp-card-title">协作（规划中）</div>
           <p className="pp-muted">
             成员管理与变更历史为 P2 占位：本插件无服务端，不做云端账号 / 团队同步 / 审计日志。

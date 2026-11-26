@@ -242,7 +242,7 @@ export function OverviewPage(props) {
           </span>
         </div>
         {error ? <p className="pp-error-text">{error}</p> : null}
-        {notice ? <p className="pp-muted">{notice}</p> : null}
+        {notice ? <p className="pp-note pp-note-ok">{notice}</p> : null}
   
         <div className="pp-stats">
           <div className="pp-stat">
@@ -286,7 +286,7 @@ export function OverviewPage(props) {
 
         <div className="pp-toolbar-inline">
           <span className="pp-meta">当前项目</span>
-          <input className="pp-input pp-input-mono" style={{ width: '180px' }} readOnly value={currentId || '-'} />
+          <span className="pp-mono pp-ellipsis">{currentId || '-'}</span>
         </div>
   
         <div className="pp-overview-grid">
@@ -307,43 +307,45 @@ export function OverviewPage(props) {
           {cards.length === 0 ? <EmptyState text="暂无项目" hint="先在上方新建一个项目" /> : null}
         </div>
   
-        <div className="pp-card" style={{ marginTop: 'var(--sp-5)' }}>
+        <div className="pp-card">
           <div className="pp-card-title">最近接口</div>
           <div className="pp-table-wrap">
-          <table className="pp-table">
+          <table className="pp-table pp-table-recent">
             <thead>
               <tr>
-                <th style={{ width: '90px' }}>方法</th>
+                <th>方法</th>
                 <th>名称</th>
                 <th>URL</th>
-                <th style={{ width: '150px' }}>更新时间</th>
+                <th>更新时间</th>
               </tr>
             </thead>
             <tbody>
               {recent.map((e) => (
-                <tr key={e.id} onClick={() => { window.location.hash = '#/doc/' + encodeURIComponent(e.id) }}>
+                <tr key={e.id} onClick={() => { window.location.hash = '#/doc/' + encodeURIComponent(e.id) }} data-clickable="true">
                   <td><span className="pp-method" data-method={e.method}>{e.method}</span></td>
                   <td>{e.name || '-'}</td>
-                  <td className="pp-table-mono pp-muted">{e.url || '-'}</td>
+                  <td className="pp-table-mono pp-muted pp-cell-clip" title={e.url || ''}>{e.url || '-'}</td>
                   <td className="pp-muted">{fmtTime(e.updatedAt)}</td>
                 </tr>
               ))}
               {recent.length === 0 ? (
-                <tr><td colSpan={4} className="pp-muted">当前项目暂无接口</td></tr>
+                <tr><td colSpan={4} className="pp-muted pp-table-empty">当前项目暂无接口</td></tr>
               ) : null}
             </tbody>
           </table>
           </div>
         </div>
-  
-        <div className="pp-toolbar" style={{ marginTop: 'var(--sp-5)' }}>
-          <span className="pp-card-title" style={{ margin: 0 }}>快捷入口</span>
-          <span className="pp-toolbar-spacer" />
-          {SHORTCUTS.map((s) => (
-            <a key={s.hash} className="pp-btn" href={s.hash}>{s.label}</a>
-          ))}
+
+        <div className="pp-card">
+          <div className="pp-toolbar-inline">
+            <span className="pp-card-title">快捷入口</span>
+            <span className="pp-toolbar-spacer" />
+            {SHORTCUTS.map((s) => (
+              <a key={s.hash} className="pp-btn-link" href={s.hash}>{s.label}</a>
+            ))}
+          </div>
         </div>
-      
+
       </div>
     </div>
   )

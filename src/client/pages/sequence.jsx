@@ -156,8 +156,9 @@ function msgLabel(row) {
 }
 
 function maskWidth(text) {
-  // mono 8px ≈ 0.62em/char（skill 字宽预算），加两侧 padding
-  return Math.max(24, Math.round(text.length * 5 + 10))
+  // --fs-chart(10px) mono ≈ 6.2px/char，加两侧 padding（原按 8px 字宽估 5px/char，
+  // 遮罩恒窄于文字，消息标签两端压到生命线上）
+  return Math.max(24, Math.round(text.length * 6 + 12))
 }
 
 export function SequenceDiagram({ steps, idPrefix = 'flow-seq', title = '时序图', desc = '接口调用时序', svgRef: externalSvgRef, activeIndex = -1, onSelectRow }) {
@@ -214,9 +215,11 @@ export function SequenceDiagram({ steps, idPrefix = 'flow-seq', title = '时序�
     const isActive = i === activeIndex
     if (s.action === 'note') {
       const cx = centers[idxOf(s.actor)] ?? width / 2
+      // note 框宽度随文案：固定 120px 会让长备注溢出边框压到邻近图元
+      const nw = Math.max(120, maskWidth((s.message || '').toUpperCase()) + 16)
       return (
         <g key={'m-' + i}>
-          <rect x={cx - 60} y={y - 12} width={120} height={20} rx="4" fill={PAPER}
+          <rect x={cx - nw / 2} y={y - 12} width={nw} height={20} rx="4" fill={PAPER}
             stroke={INK} strokeOpacity="0.22" strokeWidth="1" />
           <text x={cx} y={y + 2} fill={MUTED} fontSize="var(--fs-chart)" fontFamily={FONT_MONO}
             textAnchor="middle" letterSpacing="0.04em">{(s.message || '').toUpperCase()}</text>
@@ -312,16 +315,26 @@ export function SequenceDiagram({ steps, idPrefix = 'flow-seq', title = '时序�
 
   // 图例：水平底条（skill：legend 不许浮在图内）
   const legendY = height - LEGEND_H + 8
+  // 图例分段随画布宽度自适应：窄画布（1 个参与方，MIN_W=480）只放 3 段，
+  // ≥640px 再补第 4 段；固定 x 偏移在窄画布上会把「FRAME = BRANCH」顶出 viewBox
+  const legendItems = [
+    { text: 'SOLID = CALL', fill: MUTED },
+    { text: 'DASHED = RETURN', fill: MUTED },
+    { text: 'ACCENT = HEADLINE', fill: ACCENT },
+    { text: 'FRAME = BRANCH', fill: MUTED },
+  ]
+  const legendCols = width >= 640 ? 4 : 3
+  const legendStep = Math.round((width - MARGIN_X * 2 - 80) / legendCols)
   const legend = (
     <g>
       <line x1={MARGIN_X} y1={legendY - 8} x2={width - MARGIN_X} y2={legendY - 8}
         stroke={INK} strokeOpacity="0.1" strokeWidth="0.8" />
       <text x={MARGIN_X} y={legendY + 8} fill={MUTED} fontSize="var(--fs-chart)" fontFamily={FONT_MONO}
         letterSpacing="0.14em">LEGEND</text>
-      <text x={MARGIN_X + 80} y={legendY + 8} fill={MUTED} fontSize="var(--fs-chart)" fontFamily={FONT_MONO}>SOLID = CALL</text>
-      <text x={MARGIN_X + 200} y={legendY + 8} fill={MUTED} fontSize="var(--fs-chart)" fontFamily={FONT_MONO}>DASHED = RETURN</text>
-      <text x={MARGIN_X + 340} y={legendY + 8} fill={ACCENT} fontSize="var(--fs-chart)" fontFamily={FONT_MONO}>ACCENT = HEADLINE</text>
-      <text x={MARGIN_X + 520} y={legendY + 8} fill={MUTED} fontSize="var(--fs-chart)" fontFamily={FONT_MONO}>FRAME = BRANCH</text>
+      {legendItems.slice(0, legendCols).map((item, i) => (
+        <text key={item.text} x={MARGIN_X + 80 + i * legendStep} y={legendY + 8}
+          fill={item.fill} fontSize="var(--fs-chart)" fontFamily={FONT_MONO}>{item.text}</text>
+      ))}
     </g>
   )
 

@@ -5,6 +5,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { applyTheme } from './theme.js'
 import { EmptyState } from './components/EmptyState.jsx'
+import { FolderTree } from './components/FolderTree.jsx'
 
 ;(window.__postapiQueue = window.__postapiQueue || []).push(['mock', MockPage]) // 注册表就绪前入队，ensureGlobals 统一重放（模块求值顺序无关）
 
@@ -63,6 +64,8 @@ export function MockPage({ route, api }) {
   const apiRef = resolveApi() || api
 
   const [project, setProject] = useState(MOCK_PROJECT)
+  const [projects, setProjects] = useState([])
+  const [projectId, setProjectId] = useState('')
   const [isMock, setIsMock] = useState(true)
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
@@ -78,6 +81,27 @@ export function MockPage({ route, api }) {
   const port = (project && project.settings && project.settings.mockPort) || 4010
 
   // 载入项目 + Mock 服务状态
+  const loadProject = (id) => {
+    const storage = apiRef && apiRef.storage
+    if (!storage || typeof storage.getProject !== 'function') return Promise.resolve()
+    return Promise.resolve()
+      .then(() => storage.getProject(id))
+      .then((data) => {
+        if (!data) return
+        setProject(data)
+        setIsMock(false)
+        const list = Array.isArray(data.endpoints) ? data.endpoints : []
+        const first = list[0] || null
+        setCurrentId(first ? first.id : '')
+        setRules(first && first.mock && Array.isArray(first.mock.rules) ? first.mock.rules : [])
+        setDelayMs(first && first.mock ? first.mock.delayMs || 0 : 0)
+        setMockEnabled(Boolean(first && first.mock && first.mock.enabled))
+      })
+      .catch((err) => {
+        setError('读取项目失败：' + (err && err.message ? err.message : String(err)))
+      })
+  }
+
   useEffect(() => {
     const storage = apiRef && apiRef.storage
     let cancelled = false
@@ -85,7 +109,9 @@ export function MockPage({ route, api }) {
       Promise.resolve()
         .then(() => storage.listProjects())
         .then((list) => {
+          if (!cancelled && Array.isArray(list)) setProjects(list)
           const first = Array.isArray(list) && list.length ? list[0] : null
+          if (!cancelled && first) setProjectId(first.id)
           return first ? storage.getProject(first.id) : null
         })
         .then((data) => {
@@ -197,12 +223,21 @@ export function MockPage({ route, api }) {
       <div className="pp-overview-head">
         <span className="pp-overview-title">Mock</span>
         <div className="pp-overview-actions">
+          {/* 项目切换 32px 档放页头：与 schema/env/history 页同律 */}
+          <select className="pp-select" value={projectId}
+            onChange={(e) => { setProjectId(e.target.value); loadProject(e.target.value) }}>
+            {(projects.length ? projects : [{ id: (project && project.id) || '', name: (project && project.name) || '示例项目' }]).map((p) => (
+              <option key={p.id} value={p.id}>{p.name || p.id}</option>
+            ))}
+          </select>
           <span className="pp-pill">{service.running ? '运行中' : '已停止'}</span>
-          <button className="pp-btn pp-btn-primary" onClick={startService} disabled={busy || service.running}>启动</button>
-          <button className="pp-btn" onClick={stopService} disabled={busy || !service.running}>停止</button>
+          {/* 页头动作区统一 sm 档（次要操作），主启动钮保持 primary */}
+          <button className="pp-btn pp-btn-sm pp-btn-primary" onClick={startService} disabled={busy || service.running}>启动</button>
+          <button className="pp-btn pp-btn-sm" onClick={stopService} disabled={busy || !service.running}>停止</button>
         </div>
       </div>
       <div className="pp-overview-content">
+<<<<<<< HEAD
         <div className="pp-toolbar">
           <span className="pp-meta">
             {isMock ? '示例数据 — window.__postapiApi 未注入或读取失败，以下为文件内 mock' : '数据来源：postapi.storage + postapi.mock'}
@@ -212,19 +247,23 @@ export function MockPage({ route, api }) {
         {notice ? <p className="pp-muted">{notice}</p> : null}
   
         {/* 左：接口列表（与文档页目录树同规格）+ 右：配置纵向两卡。
+=======
+        <p className="pp-muted">
+          {isMock ? '示例数据 — window.__postapiApi 未注入或读取失败，以下为文件内 mock' : '数据来源：postapi.storage + postapi.mock'}
+        </p>
+        {error ? <p className="pp-error-text">{error}</p> : null}
+        {notice ? <p className="pp-note pp-note-ok">{notice}</p> : null}
+
+        {/* 左：接口列表（FolderTree 与文档页完全同组件：分组/计数/空态一致）+ 右：配置纵向两卡。
+>>>>>>> origin/master
             原来是 3 个子项塞进 2 列网格，第三块被挤到第二行左侧，与右侧形成高度差。 */}
         <div className="pp-mock-layout">
           <nav className="pp-panel" aria-label="接口列表">
-            <div className="pp-tree">
-              <div className="pp-tree-group">接口</div>
-              {endpoints.length === 0 ? <EmptyState text="暂无接口" hint="在总览页新建项目后创建接口" /> : null}
-              {endpoints.map((ep) => (
-                <div key={ep.id} className="pp-tree-row" data-active={ep.id === currentId} onClick={() => selectEndpoint(ep)}>
-                  <span className="pp-method" data-method={ep.method}>{ep.method}</span>
-                  <span className="pp-ellipsis">{ep.name}</span>
-                </div>
-              ))}
-            </div>
+            <FolderTree project={project} activeEndpointId={currentId}
+              collapsed={{}} onPick={(id) => {
+                const ep = endpoints.find((e) => e.id === id)
+                if (ep) selectEndpoint(ep)
+              }} />
           </nav>
           <div className="pp-mock-side">
   
@@ -242,18 +281,19 @@ export function MockPage({ route, api }) {
               />
             </div>
   
-            <div className="pp-card-title" style={{ marginTop: 'var(--sp-3)' }}>字段规则</div>
+            <div className="pp-card-title">字段规则</div>
             {rules.length === 0 ? <p className="pp-meta">尚无规则；未命中规则时回落默认响应</p> : null}
             {rules.length > 0 ? (
               <div className="pp-table-wrap">
-              <table className="pp-table">
+              {/* 列宽走 .pp-table-mock-rules（CSS 承载，与 env 变量表同管理方式）；表内控件 sm 档 */}
+              <table className="pp-table pp-table-mock-rules">
                 <thead>
                   <tr>
-                    <th style={{ width: '56px' }}>启用</th>
-                    <th style={{ width: '180px' }}>字段</th>
-                    <th style={{ width: '110px' }}>规则</th>
+                    <th>启用</th>
+                    <th>字段</th>
+                    <th>规则</th>
                     <th>值</th>
-                    <th style={{ width: '64px' }}>操作</th>
+                    <th>操作</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -261,20 +301,23 @@ export function MockPage({ route, api }) {
                     <tr key={index}>
                       <td><input type="checkbox" checked={rule.enabled !== false} onChange={(e) => patchRule(index, 'enabled', e.target.checked)} /></td>
                       <td>
-                        <input className="pp-input pp-input-mono" style={{ width: '100%' }} value={rule.field || ''}
+                        <input className="pp-input pp-input-sm pp-input-mono" value={rule.field || ''}
                           placeholder="data.items[0].id" onChange={(e) => patchRule(index, 'field', e.target.value)} />
                       </td>
                       <td>
-                        <select className="pp-select" value={rule.rule || 'fixed'} onChange={(e) => patchRule(index, 'rule', e.target.value)}>
+                        <select className="pp-select pp-input-sm" value={rule.rule || 'fixed'} onChange={(e) => patchRule(index, 'rule', e.target.value)}>
                           {RULES.map((r) => <option key={r} value={r}>{RULE_LABEL[r] || r}</option>)}
                         </select>
                       </td>
                       <td>
-                        <input className="pp-input pp-input-mono" style={{ width: '100%' }} value={rule.value || ''}
+                        <input className="pp-input pp-input-sm pp-input-mono" value={rule.value || ''}
                           onChange={(e) => patchRule(index, 'value', e.target.value)} />
                       </td>
                       <td>
-                        <button className="pp-btn" onClick={() => setRules(rules.filter((_, i) => i !== index))}>删除</button>
+                        <span className="pp-row-actions">
+                          <button className="pp-icon-btn" title="删除该规则" aria-label="删除该规则"
+                            onClick={() => setRules(rules.filter((_, i) => i !== index))}>✕</button>
+                        </span>
                       </td>
                     </tr>
                   ))}
@@ -282,29 +325,40 @@ export function MockPage({ route, api }) {
               </table>
               </div>
             ) : null}
-            <div style={{ display: 'flex', gap: 'var(--sp-2)', marginTop: 'var(--sp-2)' }}>
-              <button className="pp-btn" onClick={() => setRules(rules.concat([blankRule(current && current.id)]))}>+ 添加规则</button>
-              <button className="pp-btn pp-btn-primary" onClick={persist} disabled={busy}>保存配置</button>
+            <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-2)' }}>
+              <button className="pp-btn pp-btn-sm" onClick={() => setRules(rules.concat([blankRule(current && current.id)]))}>+ 添加规则</button>
+              <button className="pp-btn pp-btn-sm pp-btn-primary" onClick={persist} disabled={busy}>保存配置</button>
             </div>
           </section>
-  
-            {/* 下：本地 Mock 服务（端口 / 命中地址 / 规则优先级） */}
+
+            {/* 下：本地 Mock 服务（端口 / 命中地址 / 规则优先级）；状态只在页头胶囊表达一次 */}
             <section className="pp-card">
               <div className="pp-card-title">本地 Mock 服务</div>
               <div className="pp-form-grid">
                 <label className="pp-form-label">端口</label>
                 <span className="pp-mono">{service.port || port}</span>
-                <label className="pp-form-label">状态</label>
-                <span className="pp-meta">{service.running ? '运行中' : '已停止'}</span>
               </div>
-  
-            <div className="pp-card-title" style={{ marginTop: 'var(--sp-3)' }}>命中地址</div>
+
+            <div className="pp-card-title">命中地址</div>
             {urls.length === 0 ? (
               <p className="pp-meta">选择接口后显示命中地址</p>
             ) : (
-              urls.map((u) => <pre key={u} className="pp-pre" style={{ marginBottom: 'var(--sp-1)' }}>{u}</pre>)
+              urls.map((u) => (
+                <div key={u} className="pp-toolbar-inline" style={{ marginBottom: 'var(--sp-1)' }}>
+                  <pre className="pp-pre" style={{ margin: 0, flex: 1, minWidth: 0 }}>{u}</pre>
+                  <button className="pp-btn pp-btn-sm pp-btn-ghost" title="复制命中地址"
+                    onClick={async () => {
+                      try {
+                        await navigator.clipboard.writeText(u)
+                        setNotice('已复制命中地址')
+                      } catch (err) {
+                        setError('复制失败：' + (err && err.message ? err.message : String(err)))
+                      }
+                    }}>复制</button>
+                </div>
+              ))
             )}
-  
+
             <p className="pp-meta" style={{ marginTop: 'var(--sp-2)' }}>
               规则优先级：字段规则 → 默认响应（isDefault）→ 200 {'{}'}
             </p>
