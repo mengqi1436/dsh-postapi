@@ -49,7 +49,7 @@ profile 的 `package.json` 里 `dsh.profile.bundles` 必须同时含：
 |---|---|---|
 | `#/overview` | 项目总览 | 项目卡片网格、新建/重命名/删除（两段式确认）、**卡片右键菜单（重命名/删除）**、最近接口表、快捷入口 |
 | `#/doc/:endpointId` | 接口文档 | 左树（目录折叠 + 未归类分组 + **拖拽排序/跨目录移动（落库 `moveNode`）** + **右键菜单：新建目录/接口、重命名、删除、调试页打开、复制 URL**）、Markdown 描述、Path/Query/Headers/Cookies 四组参数表、请求体、认证、多响应页签、右侧 TOC、复制为 cURL |
-| `#/debug` | 调试发送 | 四协议切换（HTTP / WebSocket / **gRPC** / **Dubbo**）：HTTP 全管线（环境选择与 baseUrl 拼接、`{{var}}` 引用标注、Params/Headers/Body/Auth/脚本/数据库/项目设置/设置页签、发送/取消、响应面板）；WS（连接/发送/日志/断走）；**gRPC unary**（proto 解析 + protobuf 编解码 + HTTP/2，metadata←Headers）；**Dubbo**（Dubbo 协议 + hessian-lite 直连 + 泛化调用，attachments←Headers）；**数据库页签七类型官方驱动**（SQLite/MySQL/PostgreSQL/SQL Server/Oracle/MongoDB/Redis：连接测试、SQL/命令执行、连接存项目、SSL 开关）；**项目设置页签**（基本信息/全局参数/全局认证/前置脚本/后置脚本，全局参数与认证真实并入发送管线）；保存为接口 |
+| `#/debug` | 调试发送 | 四协议切换（HTTP / WebSocket / **gRPC** / **Dubbo**）：HTTP 全管线（环境选择与 baseUrl 拼接、`{{var}}` 引用标注、Params/Headers/Body/Auth/脚本/数据库/项目设置/设置页签、发送/取消、响应面板）；WS（连接/发送/日志/断走）；**gRPC unary**（proto 解析 + protobuf 编解码 + HTTP/2，metadata←Headers）；**Dubbo**（Dubbo 协议 + hessian-lite 直连 + 泛化调用，attachments←Headers）；**数据库页签八类型官方驱动**（SQLite/MySQL/PostgreSQL/GaussDB·openGauss/SQL Server/Oracle/MongoDB/Redis：连接测试、SQL/命令执行、连接存项目、SSL 开关）；**项目设置页签**（基本信息/全局参数/全局认证/前置脚本/后置脚本，全局参数与认证真实并入发送管线）；保存为接口 |
 | `#/mock` | Mock | 字段规则表（fixed/regex/increment/random/template）、延迟与启用、本地 Mock 服务启停、命中地址 |
 | `#/schema` | 数据模型 | JSON Schema 列表与编辑、校验、生成示例 |
 | `#/env` | 环境与变量 | 环境增删改、baseUrl、变量表（key/value/enabled/secret）、全局变量、变量优先级说明 |
@@ -70,7 +70,7 @@ profile 的 `package.json` 里 `dsh.profile.bundles` 必须同时含：
 - **WebSocket 调试**：`ws-client.js` 连接注册表（Node 全局 WebSocket + `{ headers }` 握手头扩展），变量替换与认证注入语义对齐 HTTP 管线，http(s) 地址自动归一 ws(s)，消息日志上限 200 条。
 - **gRPC 调试**：`grpc-client.js` 零依赖真实现——proto3 文本解析器（message/enum/oneof/map/repeated/service）+ protobuf wire 编解码（int64 字符串保精度）+ `node:http2` unary 调用（h2c/TLS+ALPN、gRPC 帧与 trailers、状态码 0..16 映射、grpc-timeout）。仅 unary；streaming 明确报错。
 - **Dubbo 调试**：`dubbo-client.js` 零依赖真实现——Dubbo 协议帧（0xdabb/hessian2）+ hessian-lite 编解码（2.0 全表解码）+ `node:net` 直连；支持 Apache 泛化 `$invoke`（generic=true，POJO 参数走泛化）；attachments 可从 Headers 表注入（寻址键保护）。
-- **数据库操作**：`db.js` 七种类型全部官方驱动——SQLite 走 `node:sqlite`（node 内置）；MySQL=`mysql2`、PostgreSQL=`pg`、SQL Server=`mssql`、Oracle=`oracledb`、MongoDB=`mongodb`（命令文档）、Redis=`redis`（命令行）。连接按指纹复用（探活重开）、行上限 1000 截断标注、SQL 型 `?` 位置参数（pg/mssql/oracle 做引号保护改写）。
+- **数据库操作**：`db.js` 八种类型全部官方驱动——SQLite 走 `node:sqlite`（node 内置）；MySQL=`mysql2`、PostgreSQL=`pg`、**GaussDB/openGauss=`gaussdb-node`（华为云官方适配分支，含 sha256 认证）**、SQL Server=`mssql`、Oracle=`oracledb`、MongoDB=`mongodb`（命令文档）、Redis=`redis`（命令行）。连接按指纹复用（探活重开）、行上限 1000 截断标注、SQL 型 `?` 位置参数（pg/gaussdb/mssql/oracle 做引号保护改写）。
 - **Mock 服务**：`node:http` 独立端口（默认 4010），两种命中路径，规则优先、默认响应回落。
 - **测试运行器**：`runCase` / `runScenario`，场景步骤间用 extractor 提取的变量传递。
 
@@ -117,7 +117,7 @@ npm run verify       # 上面三步串跑
 
 ## 已知边界
 
-- **数据库驱动**：七类型全部官方驱动（SQLite=node:sqlite；MySQL=mysql2；PostgreSQL=pg；SQL Server=mssql；Oracle=oracledb；MongoDB=mongodb 命令文档；Redis=redis 命令行）。`?` 位置参数在 pg/mssql/oracle 走引号保护改写（无法安全改写时报 INVALID_ARGUMENT）；redis/mongodb 输出为 JSON（`output` 字段）。npm 依赖体积约 97MB（oracledb/mongodb 占大头），随插件安装一次拉取。
+- **数据库驱动**：八类型全部官方驱动（SQLite=node:sqlite；MySQL=mysql2；PostgreSQL=pg；GaussDB/openGauss=gaussdb-node（华为云官方，含 sha256 认证）；SQL Server=mssql；Oracle=oracledb；MongoDB=mongodb 命令文档；Redis=redis 命令行）。`?` 位置参数在 pg/gaussdb/mssql/oracle 走引号保护改写（无法安全改写时报 INVALID_ARGUMENT）；redis/mongodb 输出为 JSON（`output` 字段）。npm 依赖体积约 97MB（oracledb/mongodb 占大头），随插件安装一次拉取。
 - **gRPC**：仅 unary（streaming 明确报错）；proto3 子集（proto2 required/group、自定义 option 求值不做）；响应仅 uncompressed；TLS 走系统证书校验。
 - **Dubbo**：直连 host:port（无 zk 注册中心发现、单次调用一连接）；hessian 无 POJO 字节码，复杂对象参数走泛化调用（generic=true）；不处理 event 帧。
 - Tars / Socket.IO：只有协议字段与 UI 提示，未做真实收发（WebSocket / gRPC / Dubbo 已真实现）。

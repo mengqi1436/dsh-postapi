@@ -97,8 +97,8 @@ export const tests = [
       assert.equal(noPath.error.code, 'INVALID_ARGUMENT')
       assert.deepEqual(
         SUPPORTED_DRIVERS,
-        ['sqlite', 'mysql', 'postgresql', 'mssql', 'oracle', 'mongodb', 'redis'],
-        'SUPPORTED_DRIVERS 应注册全部七驱动',
+        ['sqlite', 'mysql', 'postgresql', 'mssql', 'oracle', 'mongodb', 'redis', 'gaussdb'],
+        'SUPPORTED_DRIVERS 应注册全部八驱动',
       )
       await db.closeAll()
     },

@@ -73,6 +73,7 @@
     }
   },
   "dependencies": {
+    "gaussdb-node": "^0.2.2",
     "mongodb": "^7.9.1",
     "mssql": "^12.8.1",
     "mysql2": "^3.24.6",

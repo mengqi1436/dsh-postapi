@@ -27,6 +27,7 @@ import { DatabaseSync } from 'node:sqlite'
 import { createHash } from 'node:crypto'
 import { createMysqlDriver } from './db-drivers/mysql.js'
 import { createPgDriver } from './db-drivers/pg.js'
+import { createGaussdbDriver } from './db-drivers/gaussdb.js'
 import { createMssqlDriver } from './db-drivers/mssql.js'
 import { createOracleDriver } from './db-drivers/oracle.js'
 import { createMongodbDriver } from './db-drivers/mongodb.js'
@@ -44,7 +45,7 @@ export class DbError extends Error {
   }
 }
 
-export const SUPPORTED_DRIVERS = ['sqlite', 'mysql', 'postgresql', 'mssql', 'oracle', 'mongodb', 'redis']
+export const SUPPORTED_DRIVERS = ['sqlite', 'mysql', 'postgresql', 'mssql', 'oracle', 'mongodb', 'redis', 'gaussdb']
 
 /** 连接配置指纹：同配置复用连接。password 参与指纹但不回传。 */
 function connectionKey(config) {
@@ -104,6 +105,7 @@ const DRIVER_FACTORIES = {
   sqlite: createSqliteDriver,
   mysql: createMysqlDriver,
   postgresql: createPgDriver,
+  gaussdb: createGaussdbDriver,
   mssql: createMssqlDriver,
   oracle: createOracleDriver,
   mongodb: createMongodbDriver,

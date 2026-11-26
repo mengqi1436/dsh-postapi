@@ -192,13 +192,14 @@ client 侧 `src/client/shell/registry.js` 的 `createBridgeStorage()` / `createB
 
 ### 9.2 数据库驱动（db.js · 2026-11-26 二次扩展：全官方驱动）
 
-`SUPPORTED_DRIVERS = ['sqlite','mysql','postgresql','mssql','oracle','mongodb','redis']`。全部官方驱动（npm dependencies，client bundle 不受影响）：
+`SUPPORTED_DRIVERS = ['sqlite','mysql','postgresql','gaussdb','mssql','oracle','mongodb','redis']`。全部官方驱动（npm dependencies，client bundle 不受影响）：
 
 | type | 驱动包 | 连接配置（除 type 外） | query 语义 |
 |---|---|---|---|
 | sqlite | node:sqlite（内置） | path（:memory: 可用） | SQL；`?` 位置参数 |
 | mysql | mysql2 ^3.24 | host, port(3306), user, password, database, ssl? | SQL；`?` 参数原生透传；行集 / ResultSetHeader→changes/insertId |
 | postgresql | pg ^8.23 | host, port(5432), user, password, database, ssl? | SQL；`?` 改写 $n（引号保护，无法安全改写报 INVALID_ARGUMENT）；CommandComplete→changes |
+| gaussdb | gaussdb-node ^0.2（华为云 HuaweiCloudDeveloper 官方，node-postgres 适配分支，含 GaussDB/openGauss sha256 认证） | host, port(5432，DWS 常见 8000), user, password, database, ssl? | 同 pg 语义（`?` 改写 $n、行集/changes） |
 | mssql | mssql ^12.8 | host(server), port(1433), user, password, database, ssl?（ssl=true→encrypt+trustServerCertificate，false→encrypt:false） | SQL；`?` 改写 @pN + request.input（同引号保护）；rowsAffected→changes |
 | oracle | oracledb ^26 | host, port(1521), user, password, database=服务名 | SQL；`?` 改写 :n（同引号保护）；OUT_FORMAT_OBJECT；rowsAffected→changes |
 | mongodb | mongodb ^7.9 | url?（优先）或 host/port/user/password，database 必填 | **命令文档**：sql 为 JSON 文档（`{"find":"users","filter":{},"limit":10}`）→ db.command → `{driver:'mongodb', output}` |

@@ -407,11 +407,11 @@ function escapeRe(text) {
 
 export const tests = [
   {
-    name: 'mysql: test 连接成功（COM_PING）+ driver 标记 + SUPPORTED_DRIVERS 七驱动注册',
+    name: 'mysql: test 连接成功（COM_PING）+ driver 标记 + SUPPORTED_DRIVERS 八驱动注册',
     fn: async () => {
       assert.deepEqual(
         SUPPORTED_DRIVERS,
-        ['sqlite', 'mysql', 'postgresql', 'mssql', 'oracle', 'mongodb', 'redis'],
+        ['sqlite', 'mysql', 'postgresql', 'mssql', 'oracle', 'mongodb', 'redis', 'gaussdb'],
       )
       const mock = await startMock()
       const db = createDbService()

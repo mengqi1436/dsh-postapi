@@ -3392,13 +3392,14 @@ var DB_TYPES = [
   { id: "sqlite", label: "SQLite\uFF08node \u5185\u7F6E\u9A71\u52A8\uFF09" },
   { id: "mysql", label: "MySQL\uFF08\u5B98\u65B9 mysql2\uFF09" },
   { id: "postgresql", label: "PostgreSQL\uFF08\u5B98\u65B9 pg\uFF09" },
+  { id: "gaussdb", label: "GaussDB / openGauss\uFF08\u5B98\u65B9 gaussdb-node\uFF09" },
   { id: "mssql", label: "SQL Server\uFF08\u5B98\u65B9 mssql\uFF09" },
   { id: "oracle", label: "Oracle\uFF08\u5B98\u65B9 oracledb\uFF09" },
   { id: "mongodb", label: "MongoDB\uFF08\u5B98\u65B9 mongodb\uFF09" },
   { id: "redis", label: "Redis\uFF08\u5B98\u65B9 redis\uFF09" }
 ];
-var DB_DEFAULT_PORT = { mysql: "3306\uFF08\u9ED8\u8BA4\uFF09", postgresql: "5432\uFF08\u9ED8\u8BA4\uFF09", mssql: "1433\uFF08\u9ED8\u8BA4\uFF09", oracle: "1521\uFF08\u9ED8\u8BA4\uFF09", redis: "6379\uFF08\u9ED8\u8BA4\uFF09" };
-var DB_SSL_TYPES = ["mysql", "postgresql", "mssql", "redis"];
+var DB_DEFAULT_PORT = { mysql: "3306\uFF08\u9ED8\u8BA4\uFF09", postgresql: "5432\uFF08\u9ED8\u8BA4\uFF09", gaussdb: "5432\uFF08\u9ED8\u8BA4\uFF0CDWS \u5E38\u89C1 8000\uFF09", mssql: "1433\uFF08\u9ED8\u8BA4\uFF09", oracle: "1521\uFF08\u9ED8\u8BA4\uFF09", redis: "6379\uFF08\u9ED8\u8BA4\uFF09" };
+var DB_SSL_TYPES = ["mysql", "postgresql", "gaussdb", "mssql", "redis"];
 var PROJ_SUBTABS = [
   { id: "basic", label: "\u57FA\u672C\u4FE1\u606F" },
   { id: "globalParams", label: "\u5168\u5C40\u53C2\u6570" },

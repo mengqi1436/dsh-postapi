@@ -143,6 +143,7 @@ const DB_TYPES = [
   { id: 'sqlite', label: 'SQLite（node 内置驱动）' },
   { id: 'mysql', label: 'MySQL（官方 mysql2）' },
   { id: 'postgresql', label: 'PostgreSQL（官方 pg）' },
+  { id: 'gaussdb', label: 'GaussDB / openGauss（官方 gaussdb-node）' },
   { id: 'mssql', label: 'SQL Server（官方 mssql）' },
   { id: 'oracle', label: 'Oracle（官方 oracledb）' },
   { id: 'mongodb', label: 'MongoDB（官方 mongodb）' },
@@ -150,9 +151,9 @@ const DB_TYPES = [
 ]
 
 /** 各驱动默认端口提示（placeholder 用）。 */
-const DB_DEFAULT_PORT = { mysql: '3306（默认）', postgresql: '5432（默认）', mssql: '1433（默认）', oracle: '1521（默认）', redis: '6379（默认）' }
+const DB_DEFAULT_PORT = { mysql: '3306（默认）', postgresql: '5432（默认）', gaussdb: '5432（默认，DWS 常见 8000）', mssql: '1433（默认）', oracle: '1521（默认）', redis: '6379（默认）' }
 /** SSL 开关适用面：关系型 + Redis TLS；MongoDB 走 URL 里的 ssl 参数。 */
-const DB_SSL_TYPES = ['mysql', 'postgresql', 'mssql', 'redis']
+const DB_SSL_TYPES = ['mysql', 'postgresql', 'gaussdb', 'mssql', 'redis']
 /** 端口字段适用的驱动（sqlite 走文件路径、mongodb 走 URL）。 */
 const DB_HOST_TYPES = ['mysql', 'postgresql', 'mssql', 'oracle', 'redis']
 

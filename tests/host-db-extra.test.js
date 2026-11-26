@@ -84,7 +84,7 @@ export const tests = [
     fn: async () => {
       assert.deepEqual(
         SUPPORTED_DRIVERS,
-        ['sqlite', 'mysql', 'postgresql', 'mssql', 'oracle', 'mongodb', 'redis'],
+        ['sqlite', 'mysql', 'postgresql', 'mssql', 'oracle', 'mongodb', 'redis', 'gaussdb'],
       )
       const stats = { opens: [], pings: 0, closes: 0, selects: [], execs: [], commands: [] }
       const db = createDbService({
@@ -365,6 +365,53 @@ export const tests = [
         await db3.closeAll()
         await db4.closeAll()
       }
+    },
+  },
+  {
+    name: 'extra: gaussdb glue — open 校验 + select/exec 映射（fake pool）+ formatError',
+    fn: async () => {
+      const { createGaussdbDriver } = await import('../src/host/db-drivers/gaussdb.js')
+      const ctx = { DbError, maxRows: MAX_ROWS, normalizeCell }
+      const driver = createGaussdbDriver(ctx)
+      assert.equal(driver.key, 'gaussdb')
+      // open 校验：host/user/database 缺失 → INVALID_ARGUMENT
+      await assert.rejects(() => driver.open({ user: 'u', database: 'd' }), (e) => e instanceof DbError && e.code === 'INVALID_ARGUMENT')
+      await assert.rejects(() => driver.open({ host: 'h', database: 'd' }), (e) => e instanceof DbError && e.code === 'INVALID_ARGUMENT')
+      await assert.rejects(() => driver.open({ host: 'h', user: 'u' }), (e) => e instanceof DbError && e.code === 'INVALID_ARGUMENT')
+      // 行集映射：fields 名 → columns；截断标记
+      const queries = []
+      const pool = {
+        async query(sql, params) {
+          queries.push([sql, params])
+          return {
+            rows: [{ id: 1n, name: 'a' }, { id: 2n, name: 'b' }],
+            fields: [{ name: 'id' }, { name: 'name' }],
+            rowCount: 2,
+          }
+        },
+      }
+      const handle = await driver.open({ host: '127.0.0.1', port: 5432, user: 'u', password: 'p', database: 'db' })
+      assert.equal(queries.length, 0) // Pool 惰性建连：open 不发命令
+      const sel = await driver.select({ pool }, 'SELECT id, name FROM t WHERE id = ?', [7])
+      assert.deepEqual(sel.columns, ['id', 'name'])
+      assert.deepEqual(sel.rows, [{ id: '1', name: 'a' }, { id: '2', name: 'b' }]) // bigint → 字符串
+      assert.equal(sel.rowCount, 2)
+      assert.equal(sel.truncated, false)
+      // ? → $n 改写已下发到 pool.query
+      assert.equal(queries[0][0], 'SELECT id, name FROM t WHERE id = $1')
+      assert.deepEqual(queries[0][1], [7])
+      const execRes = await driver.exec({ pool }, 'UPDATE t SET name = ? WHERE id = ?', [1])
+      assert.deepEqual(execRes, { changes: 2, lastInsertRowid: null })
+      assert.equal(queries[1][0], 'UPDATE t SET name = $1 WHERE id = $2')
+      // formatError：severity + 5 位 SQLSTATE
+      const f = driver.formatError({ message: 'sha256 认证失败', code: '28P01', severity: 'FATAL' })
+      assert.equal(f.message, 'FATAL 28P01: sha256 认证失败')
+      assert.equal(f.sqlState, '28P01')
+      // 真实官方客户端 × 关闭端口：db.test 的 open/ping 失败归一 CONNECTION_ERROR（不抛栈）
+      const db = createDbService()
+      const t = await db.test({ connection: { type: 'gaussdb', host: '127.0.0.1', port: 1, user: 'u', database: 'd' } })
+      assert.equal(t.ok, false)
+      assert.equal(t.error.code, 'CONNECTION_ERROR')
     },
   },
   {
