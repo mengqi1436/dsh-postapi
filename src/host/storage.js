@@ -324,6 +324,29 @@ export function createStorageService(basePath = DEFAULT_BASE_PATH) {
     }
   }
 
+  /**
+   * settings.historyLimit 读取缓存：appendHistory 是每次发送请求的热路径，
+   * 逐次 parse + normalize 大项目（数千接口）成本过高（压测实测 5000 接口 ~130ms/次）。
+   * 全部写都经本服务串行队列，单进程内缓存不会脏；saveProjectSettings / deleteProject 时失效。
+   */
+  const historyLimitCache = new Map()
+
+  async function historyLimitOf(id) {
+    if (historyLimitCache.has(id)) return historyLimitCache.get(id)
+    let limit = DEFAULT_HISTORY_LIMIT
+    try {
+      const raw = await readJson(projectFile(id))
+      // 与原 `Number(x) || DEFAULT` 语义一致：0/NaN 回落默认，负数保留（kept=[] 全不保留）
+      const n = Number(raw && raw.settings && raw.settings.historyLimit)
+      if (n) limit = n
+    } catch (err) {
+      if (err.code === 'ENOENT') throw new Error(`project not found: ${id}`)
+      // 项目损坏：不在历史热路径里重建（getProject 会处理），回落默认上限照常记历史
+    }
+    historyLimitCache.set(id, limit)
+    return limit
+  }
+
   return {
     // 存储根目录：health 桥透传给设置页只读展示（README「存储路径 host 注入值」）
     basePath,
@@ -373,6 +396,7 @@ export function createStorageService(basePath = DEFAULT_BASE_PATH) {
         const index = await readIndex()
         index.projects = index.projects.filter((p) => p.id !== id)
         await writeIndex(index)
+        historyLimitCache.delete(id)
         return { id }
       })
     },
@@ -684,6 +708,7 @@ export function createStorageService(basePath = DEFAULT_BASE_PATH) {
         }
         project.updatedAt = nowIso()
         await saveProject(project)
+        historyLimitCache.delete(projectId)
         // 元数据改名时同步 index.json 的项目名（与 renameProject 同款，listProjects 可见）
         if (incoming.name !== undefined) {
           const index = await readIndex()
@@ -768,9 +793,9 @@ export function createStorageService(basePath = DEFAULT_BASE_PATH) {
     async appendHistory(projectId, entry) {
       return enqueue(async () => {
         if (!projectId) throw new Error('appendHistory: projectId is required')
-        const project = await loadProjectForWrite(projectId)
+        // 轻量取 limit：不走 loadProjectForWrite（避免大项目 normalizeProject 深合并进入热路径）
+        const limit = await historyLimitOf(projectId)
         const history = await readHistory(projectId)
-        const limit = Number((project.settings && project.settings.historyLimit) || DEFAULT_HISTORY_LIMIT)
         const e = entry && typeof entry === 'object' ? entry : {}
         const saved = {
           id: hasRealId(e.id)

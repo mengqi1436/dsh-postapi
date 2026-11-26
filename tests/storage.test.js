@@ -17,6 +17,23 @@ async function withTempStorage(fn) {
 
 export const tests = [
   {
+    name: 'storage: appendHistory 的 historyLimit 改动即时生效（热路径 limit 缓存失效）',
+    fn: () => withTempStorage(async (storage) => {
+      const p = await storage.createProject('历史限流')
+      // 先追加 3 条：默认上限 200，此时 limit 缓存已建立
+      for (let i = 0; i < 3; i += 1) await storage.appendHistory(p.id, { method: 'GET', url: 'https://x.test#' + i, status: 200 })
+      assert.equal((await storage.getHistory(p.id)).entries.length, 3)
+      // 改小上限后必须立即生效（缓存要在 saveProjectSettings 时失效）
+      await storage.saveProjectSettings(p.id, { historyLimit: 5 })
+      for (let i = 3; i < 10; i += 1) await storage.appendHistory(p.id, { method: 'GET', url: 'https://x.test#' + i, status: 200 })
+      const h = await storage.getHistory(p.id)
+      assert.equal(h.entries.length, 5, '上限改为 5 后应只保留最新 5 条')
+      assert.ok(h.entries[4].url.endsWith('#9'), '应保留最新一条')
+      // 不存在的项目追加历史：明确报错（与原 loadProjectForWrite 行为一致）
+      await assert.rejects(() => storage.appendHistory('proj_none', {}), /project not found/)
+    }),
+  },
+  {
     name: 'storage: 项目建列删 + rename 同步 index + .trash 备份',
     fn: () => withTempStorage(async (storage, base) => {
       const created = await storage.createProject('演示项目')

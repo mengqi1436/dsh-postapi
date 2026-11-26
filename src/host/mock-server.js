@@ -200,23 +200,45 @@ export function createMockServer({ getProject, port = 4010 } = {}) {
   let actualPort = 0
   const counters = new Map()
 
+  // 项目短 TTL 缓存：mock 每个请求都要读项目，逐次 normalize 大项目成本过高
+  // （压测实测 5000 接口 ~220ms/次 × 500 并发 ≈ 110s）。规则/响应改动 300ms 内可见，对 mock 语义无感。
+  // single-flight：TTL 过期瞬间的并发请求合并为一次加载，避免雷群效应各自全量 normalize。
+  const PROJECT_CACHE_TTL_MS = 300
+  let cache = { id: null, at: 0, data: null }
+  let inflight = null // { id, promise }
+
+  async function cachedGetProject(projectId) {
+    if (cache.id === projectId && Date.now() - cache.at < PROJECT_CACHE_TTL_MS) return cache.data
+    if (inflight && inflight.id === projectId) return inflight.promise
+    const promise = getProject(projectId).then(
+      (data) => {
+        cache = { id: projectId, at: Date.now(), data }
+        inflight = null
+        return data
+      },
+      (err) => {
+        if (inflight && inflight.id === projectId) inflight = null
+        throw err
+      },
+    )
+    inflight = { id: projectId, promise }
+    return promise
+  }
+
   function status() {
     return { running: server != null, port: actualPort }
   }
 
   function buildBody(project, endpoint) {
-    // 规则两个落点都认（契约 §2 两种形态并存）：
-    //   - project.mocks（带 endpointId，批量/导入形态）
-    //   - endpoint.mock.rules（Mock 页「保存配置」的落点——此前只读 project.mocks，
-    //     页面配置的规则从不生效，命中地址永远回落默认响应）
-    const fromProject = (Array.isArray(project.mocks) ? project.mocks : []).filter(
+    // 规则双来源：项目级 project.mocks + 接口级 endpoint.mock.rules（mock 页保存的就是后者，契约 §2）
+    const projectRules = (Array.isArray(project.mocks) ? project.mocks : []).filter(
       (r) => r && r.enabled !== false && String(r.endpointId || '') === String(endpoint.id || ''),
     )
-    const fromEndpoint = (endpoint && endpoint.mock && Array.isArray(endpoint.mock.rules)
-      ? endpoint.mock.rules
+    const endpointMock = endpoint && endpoint.mock && typeof endpoint.mock === 'object' ? endpoint.mock : null
+    const endpointRules = endpointMock && endpointMock.enabled !== false && Array.isArray(endpointMock.rules)
+      ? endpointMock.rules.filter((r) => r && r.enabled !== false)
       : []
-    ).filter((r) => r && r.enabled !== false)
-    const rules = fromProject.concat(fromEndpoint)
+    const rules = [...projectRules, ...endpointRules]
     if (rules.length === 0) return null
     const root = {}
     let whole = null
@@ -258,7 +280,7 @@ export function createMockServer({ getProject, port = 4010 } = {}) {
 
       let project
       try {
-        project = await getProject(projectId)
+        project = await cachedGetProject(projectId)
       } catch (err) {
         return sendJson(res, 404, { ok: false, error: `mock: project not found: ${projectId}` })
       }
@@ -303,6 +325,7 @@ export function createMockServer({ getProject, port = 4010 } = {}) {
     const s = server
     server = null
     actualPort = 0
+    cache = { id: null, at: 0, data: null }
     return new Promise((resolve) => {
       s.close(() => resolve(status()))
     })
