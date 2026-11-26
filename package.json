@@ -33,6 +33,9 @@
     "test": "node tests/run.js",
     "smoke": "node scripts/smoke-host.mjs",
     "verify": "node build.mjs && node tests/run.js && node scripts/smoke-host.mjs",
+    "retest": "node scripts/parity-retest.mjs",
+    "stress": "node scripts/stress-test.mjs",
+    "mutation": "node scripts/mutation-test.mjs",
     "prepack": "node build.mjs",
     "prepublishOnly": "node build.mjs && node tests/run.js"
   },

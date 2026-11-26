@@ -583,6 +583,44 @@ const mockTests = [
       assert.equal(r3.status, 404)
     }),
   },
+  {
+    name: 'mock: 接口级 endpoint.mock.rules 参与响应生成（mock 页保存落点）',
+    fn: () => {
+      const project = mockProject()
+      delete project.mocks // 仅接口级规则：无项目级 mocks 时规则仍要生效
+      project.endpoints[0].mock = {
+        enabled: true,
+        delayMs: 0,
+        rules: [
+          { id: 'mk_e1', endpointId: 'ep_m1', field: 'data.seq', rule: 'increment', value: '100', enabled: true },
+          { id: 'mk_e2', endpointId: 'ep_m1', field: 'skip', rule: 'fixed', value: 'no', enabled: false },
+        ],
+      }
+      return withMockServer(async (srv, base) => {
+        const b1 = await (await fetch(`${base}/mock/proj_m/ep_m1`)).json()
+        const b2 = await (await fetch(`${base}/mock/proj_m/ep_m1`)).json()
+        assert.equal(b1.data.seq, 100, 'increment 首次返回基值（coerce 后为数值）')
+        assert.equal(b2.data.seq, 101, 'increment 应递增')
+        assert.equal(b1.skip, undefined, 'enabled=false 的接口级规则应忽略')
+      }, project)
+    },
+  },
+  {
+    name: 'mock: endpoint.mock.enabled=false 时不套用接口级规则',
+    fn: () => {
+      const project = mockProject()
+      delete project.mocks
+      project.endpoints[0].mock = {
+        enabled: false,
+        delayMs: 0,
+        rules: [{ id: 'mk_e3', endpointId: 'ep_m1', field: 'name', rule: 'fixed', value: 'blocked', enabled: true }],
+      }
+      return withMockServer(async (srv, base) => {
+        const b = await (await fetch(`${base}/mock/proj_m/ep_m1`)).json()
+        assert.deepEqual(b, { fallback: true }, '应回落默认响应')
+      }, project)
+    },
+  },
 ]
 
 /* ------------------------------------------------------------------ 自动化测试执行 */

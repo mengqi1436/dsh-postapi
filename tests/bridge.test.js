@@ -237,7 +237,7 @@ export const tests = [
       })),
   },
   {
-    name: 'bridge: 坏 JSON body 转 500 INTERNAL 且存储不受损',
+    name: 'bridge: 坏 JSON body 转 400 INVALID_ARGUMENT（契约 §5 参数错误）且存储不受损',
     fn: () => withTempBase((base) =>
       withHandlerServer(makeBridge(base), async (httpBase) => {
         const created = await jsonFetch(httpBase, '/api/storage/createProject', {
@@ -249,10 +249,10 @@ export const tests = [
           headers: { 'Content-Type': 'application/json' },
           body: 'not json at all',
         })
-        assert.equal(r.status, 500)
+        assert.equal(r.status, 400)
         const j = await r.json()
         assert.equal(j.ok, false)
-        assert.equal(j.code, 'INTERNAL')
+        assert.equal(j.code, 'INVALID_ARGUMENT')
         const got = await jsonFetch(httpBase, '/api/storage/getProject?projectId=' + projectId)
         assert.equal(got.json.ok, true)
       })),

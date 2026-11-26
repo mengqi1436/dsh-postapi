@@ -44,6 +44,20 @@ async function withEchoServer(fn) {
 
 export const tests = [
   {
+    name: 'request: 前置脚本 pm.variables.set 的变量参与请求模板替换（Apifox 语义）',
+    fn: () => withEchoServer(async (svc, base) => {
+      const res = await svc.send({
+        method: 'GET',
+        url: `${base}/echo?uid={{myId}}`,
+        preScript: 'pm.variables.set("myId", "42")',
+      })
+      assert.equal(res.status, 200)
+      const echoed = JSON.parse(res.body)
+      assert.ok(echoed.url.includes('uid=42'), `前置脚本变量应替换占位符: ${echoed.url}`)
+      assert.equal(res.variables.myId, '42')
+    }),
+  },
+  {
     name: 'request: params 拼 query，enabled=false 不拼',
     fn: () => withEchoServer(async (svc, base) => {
       const res = await svc.send({

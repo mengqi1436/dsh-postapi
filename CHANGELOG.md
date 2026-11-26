@@ -2,6 +2,23 @@
 
 本项目版本遵循语义化版本；发布包见 https://www.npmjs.com/package/dsh-postapi 。
 
+## 未发布 — 全功能复测对比（压力 + 异变）修复
+
+### 修复
+
+- **Mock 接口级规则生效**：mock 页保存的 `endpoint.mock.rules` 此前被服务端忽略（只读项目级 `project.mocks`），现规则双来源合并；`endpoint.mock.enabled=false` 时接口级规则跳过。（复测域 10 + host-runtime 新增 2 用例）
+- **前置脚本变量参与请求**：`pm.variables.set` 设置的变量现在参与本次请求的 URL/params/headers/body 模板替换（对齐 Apifox/Postman「先跑前置脚本再定稿请求」语义），脚本变量按 local 最高优先级。（request 新增用例）
+- **坏 JSON body → 400**：桥层非法 JSON / 非 JSON 对象 / 超 2MB 请求体由 500 INTERNAL 修正为 400 INVALID_ARGUMENT（契约 §5 参数错误）。（bridge 用例按契约更新）
+- **历史追加热路径**：`appendHistory` 不再全量 normalize 项目，`historyLimit` 轻量读取 + 进程内缓存（saveProjectSettings/deleteProject 失效）。5000 接口项目 1200 次追加 160.6s → 1.9s（83×）。（storage 新增用例）
+- **Mock 服务并发**：项目读取加 300ms TTL 缓存 + single-flight 合并并发加载（规则改动 300ms 内可见）。5000 接口项目 500 并发 mock 请求 114.7s → 6.5s（17.7×）。
+
+### 测试与工具
+
+- 新增 `npm run retest`（`scripts/parity-retest.mjs`）：对照 feature-matrix 18 功能域 + 桥契约的 90 项端到端断言（真实落盘 + 本地 HTTP/WS 目标服务）。
+- 新增 `npm run stress`（`scripts/stress-test.mjs`）：16 项阈值压测（5000 接口导入/导出/搜索、并发写、Mock 500 并发、20MB 截断、WS 洪泛、深嵌套 Schema、SQLite 万行、沙箱并发）。
+- 新增 `npm run mutation`（`scripts/mutation-test.mjs`）：`src/host` 核心逻辑异变测试（等价变异 + 全套测试验证击杀），总分门槛 60%；首次实测 330 变异体全部击杀（100%）。
+- 套件用例 338 → 342；报告见 `docs/full-parity-retest.md`。
+
 ## 0.1.0 — 核心功能对标 Apifox（WebSocket 调试 / 数据库操作 / Apifox·YApi 导入）
 
 ### 功能

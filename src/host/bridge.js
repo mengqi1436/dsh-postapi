@@ -34,7 +34,7 @@ function readBody(req) {
     req.on('data', (c) => {
       size += c.length
       if (size > MAX_JSON_BODY_BYTES) {
-        reject(new Error('request body exceeds 2MB limit'))
+        reject(badRequest('request body exceeds 2MB limit'))
         req.destroy()
         return
       }
@@ -46,9 +46,9 @@ function readBody(req) {
       try {
         const parsed = JSON.parse(text)
         if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) resolve(parsed)
-        else reject(new Error('request body must be a JSON object'))
+        else reject(badRequest('request body must be a JSON object'))
       } catch {
-        reject(new Error('request body is not valid JSON'))
+        reject(badRequest('request body is not valid JSON'))
       }
     })
     req.on('error', reject)
