@@ -62,6 +62,24 @@ export function SettingsPage(props) {
     applyTheme(rootRef.current)
   }, [])
 
+  // storeRoot 经 /health 异步回填（installApi 拉取），挂载后短轮询等它到位；
+  // 4s 内没等到就保持本地草稿/默认值，不再无限轮询。
+  useEffect(() => {
+    if (api && typeof api.storeRoot === 'string' && api.storeRoot.trim()) return undefined
+    let tries = 0
+    const id = setInterval(() => {
+      tries += 1
+      const value = api && api.storeRoot
+      if (typeof value === 'string' && value.trim()) {
+        setStoreRoot(value)
+        clearInterval(id)
+        return
+      }
+      if (tries > 20) clearInterval(id)
+    }, 200)
+    return () => clearInterval(id)
+  }, [])
+
   useEffect(() => {
     const boot = async () => {
       if (!storage || typeof storage.listProjects !== 'function') return

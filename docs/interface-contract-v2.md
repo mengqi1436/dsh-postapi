@@ -135,7 +135,8 @@ send({ method, url, params, headers, body, auth, timeoutMs = 30000,
 // src/host/mock-server.js
 createMockServer({ getProject, port })  -> { start(), stop(), status() -> { running, port } }
 // 规则：GET /mock/<projectId>/<endpointId> 与 /mock/<projectId><endpointPath> 两种命中；
-// 按 project.mocks 字段规则生成 body；未命中回落 endpoint.responses[isDefault] 或 200 {}
+// 字段规则两个落点都认：project.mocks（带 endpointId）与 endpoint.mock.rules（Mock 页
+// 「保存配置」落点）合并生效；两处都未命中时回落 endpoint.responses[isDefault] 或 200 {}
 
 // src/host/test-runner.js
 createTestRunner({ storage, request })

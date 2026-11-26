@@ -319,6 +319,37 @@ export function DocPage({ route, api }) {
     return () => window.removeEventListener('hashchange', onHash)
   }, [])
 
+  // 顶栏「新建」菜单落地：#/doc?new=1 新建接口、#/doc?newFolder=1 新建目录。
+  // 项目载入完成后执行一次，随后把 query 从地址栏清掉，避免刷新/切页重复创建。
+  const newQueryHandledRef = useRef('')
+  useEffect(() => {
+    const query = route && typeof route.query === 'string' ? route.query : ''
+    const wants = query.includes('new=1') || query.includes('newFolder=1')
+    if (!wants || isMock || !project || !project.id) return
+    if (newQueryHandledRef.current === query) return
+    newQueryHandledRef.current = query
+    const storage = apiRef && apiRef.storage
+    if (!storage || typeof storage.saveEndpoint !== 'function') return
+    if (query.includes('newFolder=1')) {
+      if (typeof storage.saveFolder !== 'function') return
+      Promise.resolve()
+        .then(() => storage.saveFolder(project.id, { name: '新建目录' }))
+        .then(() => { setError('') })
+        .catch((err) => setError('新建目录失败：' + (err && err.message ? err.message : String(err))))
+    } else {
+      Promise.resolve()
+        .then(() => storage.saveEndpoint(project.id, { name: '新建接口', method: 'GET', url: '' }))
+        .then((saved) => {
+          setError('')
+          if (saved && saved.id) pick(saved.id)
+        })
+        .catch((err) => setError('新建接口失败：' + (err && err.message ? err.message : String(err))))
+    }
+    if (typeof window !== 'undefined' && /#\?|new=|newFolder=/.test(window.location.hash)) {
+      window.location.hash = '#/doc' + (selectedId ? '/' + encodeURIComponent(selectedId) : '')
+    }
+  }, [project.id, isMock, route && route.query])
+
   const endpoints = useMemo(() => (Array.isArray(project && project.endpoints) ? project.endpoints : []), [project])
   const folders = useMemo(() => (Array.isArray(project && project.folders) ? project.folders : []), [project])
   const ep = endpoints.find((e) => e.id === selectedId) || endpoints[0] || null

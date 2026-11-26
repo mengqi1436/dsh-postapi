@@ -647,7 +647,8 @@ export const tests = [
       assert.deepEqual(await storage.search(p.id, 'zzz'), { endpoints: [], schemas: [], folders: [] })
       // 边界
       await assert.rejects(() => storage.search('', 'x'), /projectId is required/)
-      await assert.rejects(() => storage.search('proj_missing', 'x'), /project not found/)
+      // 未知项目 → 空集（只读查询不炸 500；搜索页初挂载会用占位 id 自动查一次）
+      assert.deepEqual(await storage.search('proj_missing', 'x'), { endpoints: [], schemas: [], folders: [] })
     }),
   },
 

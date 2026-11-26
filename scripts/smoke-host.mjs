@@ -192,8 +192,8 @@ async function tempStage() {
 
     const health = await httpJson(base, PREFIX + '/health')
     assert.equal(health.status, 200)
-    assert.deepEqual(health.json, { ok: true, data: { status: 'up' } })
-    record('GET ' + PREFIX + '/health', 'status=200 ok=true')
+    assert.deepEqual(health.json, { ok: true, data: { status: 'up', storeRoot: basePath } })
+    record('GET ' + PREFIX + '/health', 'status=200 ok=true storeRoot=' + health.json.data.storeRoot)
 
     const empty = await httpJson(base, PREFIX + '/storage/listProjects')
     assert.equal(empty.status, 200)

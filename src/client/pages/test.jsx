@@ -65,17 +65,19 @@ export function normalizeAssertions(list) {
     }))
 }
 
-/** 从项目对象取用例/场景：顶层优先，回落 settings 子键（落盘通道）。 */
+/** 从项目对象取用例/场景：settings 子键（落盘通道）优先，回落顶层兼容位。
+ *  顶层 testCases/testScenarios 是 v2 骨架兼容位，空项目时恒为 []——放前面会把
+ *  settings 里已保存的用例遮蔽成「暂无用例」（逐页 E2E 实测）。 */
 export function casesOf(project) {
   const p = project && typeof project === 'object' ? project : {}
   const settings = p.settings && typeof p.settings === 'object' ? p.settings : {}
-  const src = Array.isArray(p.testCases) ? p.testCases : (Array.isArray(settings.testCases) ? settings.testCases : [])
+  const src = Array.isArray(settings.testCases) ? settings.testCases : (Array.isArray(p.testCases) ? p.testCases : [])
   return src.filter((c) => c && typeof c === 'object')
 }
 export function scenariosOf(project) {
   const p = project && typeof project === 'object' ? project : {}
   const settings = p.settings && typeof p.settings === 'object' ? p.settings : {}
-  const src = Array.isArray(p.testScenarios) ? p.testScenarios : (Array.isArray(settings.testScenarios) ? settings.testScenarios : [])
+  const src = Array.isArray(settings.testScenarios) ? settings.testScenarios : (Array.isArray(p.testScenarios) ? p.testScenarios : [])
   return src.filter((s) => s && typeof s === 'object')
 }
 
@@ -130,6 +132,10 @@ export function TestPage(props) {
             setProjects(list)
             setProjectId(list[0].id)
             await loadProject(list[0].id)
+            // 顶栏「新建」菜单落地：#/test?new=case / new=scenario 同样建一个空用例/空场景
+            const query = props && props.route && typeof props.route.query === 'string' ? props.route.query : ''
+            if (query.includes('new=case')) addCase()
+            if (query.includes('new=scenario')) { setTab('scenarios'); addScenario() }
             return
           }
         } catch (err) {

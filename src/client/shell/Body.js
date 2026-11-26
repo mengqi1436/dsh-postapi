@@ -321,8 +321,9 @@ export function PostApiBody({ useTabInfo }) {
     const onKey = (event) => {
       if (!event) return
       if (event.key === 'Escape') {
-        // Esc 逐级收起：先关最深一层，路径空了再关面板
-        setMenuPath((prev) => (prev.length > 0 ? prev.slice(0, -1) : prev))
+        // Esc 逐级收起：先关最深一层，路径空了再关面板与帮助卡
+        if (menuPath.length > 0) setMenuPath(menuPath.slice(0, -1))
+        else setMenuOpen(false)
         setHelpOpen(false)
       }
     }
@@ -330,7 +331,9 @@ export function PostApiBody({ useTabInfo }) {
       const target = event && event.target
       if (!target || !shellRef.current) return
       if (typeof shellRef.current.contains === 'function' && shellRef.current.contains(target)) {
-        // 点在侧栏 / 帮助卡 / 菜单内部：交给各自的 onClick 处理
+        // 点在侧栏 / 帮助卡 / 菜单内部：交给各自的 onClick 处理。
+        // shellRef 挂在 pp-scope 根（含顶栏）：挂 .pp-shell 时顶栏的菜单项会被
+        // 误判为「外部点击」，一级菜单点开二级前整个面板先被关掉（二级永远打不开）。
         if (target.closest && (target.closest('.pp-sider') || target.closest('.pp-help-card') || target.closest('.pp-menu-anchor'))) return
       }
       setHelpOpen(false)
@@ -346,7 +349,8 @@ export function PostApiBody({ useTabInfo }) {
       }
     }
     return undefined
-  }, [])
+    // menuPath 进依赖：Esc 需要读到当前展开层级（空路径时改为收起整个面板）
+  }, [menuPath])
 
   // 路由变化时收起帮助卡片（跳转后说明卡不该留在屏幕上）。
   useEffect(() => { setHelpOpen(false) }, [route.name, route.arg])
@@ -374,7 +378,7 @@ export function PostApiBody({ useTabInfo }) {
   const toggleHelp = () => setHelpOpen((prev) => !prev)
 
   return (
-    <div className="pp-scope pp-workbench-v2" data-theme={theme} data-route={route.name}>
+    <div className="pp-scope pp-workbench-v2" data-theme={theme} data-route={route.name} ref={shellRef}>
       {/* 顶栏：Apifox 是「产品标识 + 面包屑（分组/当前页）+ 搜索 + 动作」。
           原来这里还单独显示当前页名，与页签条、页面页头三重重复，已去掉。 */}
       <header className="pp-topbar">
@@ -442,7 +446,7 @@ export function PostApiBody({ useTabInfo }) {
           <Icon name="help" size={18} />
         </button>
       </header>
-      <div className="pp-shell" ref={shellRef}>
+      <div className="pp-shell">
         {/* 左侧 240px 常驻文字菜单（Apifox .sider-bxNtfB 同规格）：
             分组标题 + 组内路由，全部文字直接可见，不再有「图标看不懂」与「二级要点开」两个问题。 */}
         <nav className="pp-sider" aria-label={zh['aside.nav']}>
