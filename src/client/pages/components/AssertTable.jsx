@@ -9,11 +9,12 @@ export const ASSERT_SOURCES = ['status', 'body', 'header', 'time']
 /** 断言操作符：eq / neq / gt / lt / contains / notContains / exists / notExists / regex。 */
 export const ASSERT_OPS = ['eq', 'neq', 'gt', 'lt', 'contains', 'notContains', 'exists', 'notExists', 'regex']
 
-/** 列定义：标题一处写死，表头与单元格共用（宽度合计由 .pp-table-wide 的 min-width 兜住）。 */
+/** 列定义：标题一处写死，表头与单元格共用；width 是该列的建议列宽（内联 th style，纯 layout）。
+    来源/操作符下拉列收窄、路径吃百分比，让「期望值/说明」在窄容器首屏可见。 */
 export const ASSERT_COLUMNS = [
-  { field: 'source', title: '来源' },
-  { field: 'path', title: '路径', mono: true },
-  { field: 'op', title: '操作' },
+  { field: 'source', title: '来源', width: 88 },
+  { field: 'path', title: '路径', mono: true, width: '20%' },
+  { field: 'op', title: '操作符', width: 96 },
   { field: 'value', title: '期望值', mono: true },
   { field: 'message', title: '说明' },
 ]
@@ -89,9 +90,10 @@ export function AssertTable({ rows, onChange }) {
       <thead>
         <tr>
           {ASSERT_COLUMNS.map((column) => (
-            <th key={column.field} data-col={column.field}>{column.title}</th>
+            <th key={column.field} data-col={column.field}
+              style={column.width ? { width: column.width } : undefined}>{column.title}</th>
           ))}
-          <th data-col="op-cell">操作</th>
+          <th data-col="op-cell" style={{ width: '52px' }}>操作</th>
         </tr>
       </thead>
       <tbody>

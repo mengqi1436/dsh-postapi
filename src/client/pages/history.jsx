@@ -81,6 +81,10 @@ export function HistoryPage(props) {
   const [notice, setNotice] = useState('')
   const [detailId, setDetailId] = useState('')
   const [pendingClear, setPendingClear] = useState(false)
+  // 筛选条：状态段（2xx/3xx/4xx/5xx）+ 方法 + URL 关键字
+  const [filterStatus, setFilterStatus] = useState('')
+  const [filterMethod, setFilterMethod] = useState('')
+  const [filterText, setFilterText] = useState('')
 
   useEffect(() => applyTheme(rootRef.current), [])
 
@@ -155,6 +159,16 @@ export function HistoryPage(props) {
   }
 
   const detail = entries.find((e) => e.id === detailId)
+  // 筛选：状态段按百位分类（无状态码的条目只受关键字/方法筛选影响）
+  const filtered = entries.filter((e) => {
+    if (filterStatus) {
+      const seg = String(e.status).charAt(0) + 'xx'
+      if (seg !== filterStatus) return false
+    }
+    if (filterMethod && String(e.method || '').toUpperCase() !== filterMethod) return false
+    if (filterText && String(e.url || '').toLowerCase().indexOf(filterText.toLowerCase()) < 0) return false
+    return true
+  })
 
   return (
     <div className="pp-scope pp-page" data-page="history" ref={rootRef}>
@@ -172,16 +186,31 @@ export function HistoryPage(props) {
       </div>
       <div className="pp-overview-content">
         <div className="pp-toolbar">
+          {/* 筛选条：状态 / 方法 / URL 关键字（历史一多靠肉眼扫不过来） */}
+          <select className="pp-select pp-input-sm" value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} aria-label="按状态筛选">
+            <option value="">全部状态</option>
+            <option value="2xx">2xx</option>
+            <option value="3xx">3xx</option>
+            <option value="4xx">4xx</option>
+            <option value="5xx">5xx</option>
+          </select>
+          <select className="pp-select pp-input-sm" value={filterMethod} onChange={(e) => setFilterMethod(e.target.value)} aria-label="按方法筛选">
+            <option value="">全部方法</option>
+            {['GET', 'POST', 'PUT', 'DELETE', 'PATCH'].map((m) => <option key={m} value={m}>{m}</option>)}
+          </select>
+          <input className="pp-input pp-input-sm" style={{ width: '180px' }} placeholder="按 URL 过滤"
+            value={filterText} onChange={(e) => setFilterText(e.target.value)} />
+          <span className="pp-toolbar-spacer" />
           <span className="pp-meta">
             {isMock ? '示例数据 — api.storage.getHistory 不可用，以下为文件内 mock' : '数据来源：api.storage（getHistory / clearHistory）'}
           </span>
         </div>
         {error ? <p className="pp-error-text">{error}</p> : null}
-        {notice ? <p className="pp-muted">{notice}</p> : null}
-  
+        {notice ? <p className="pp-note pp-note-ok">{notice}</p> : null}
+
         <div className="pp-card">
           <div className="pp-table-wrap">
-          <table className="pp-table">
+          <table className="pp-table pp-table-wide">
             <thead>
               <tr>
                 <th style={{ width: '150px' }}>时间</th>
@@ -190,34 +219,37 @@ export function HistoryPage(props) {
                 <th style={{ width: '70px' }}>状态</th>
                 <th style={{ width: '80px' }}>耗时</th>
                 <th style={{ width: '90px' }}>大小</th>
-                <th style={{ width: '130px' }}>操作</th>
+                <th style={{ width: '120px' }}>操作</th>
               </tr>
             </thead>
             <tbody>
-              {entries.map((e) => (
-                <tr key={e.id} data-active={detailId === e.id ? 'true' : 'false'}>
+              {filtered.map((e) => (
+                <tr key={e.id} data-active={detailId === e.id ? 'true' : 'false'} data-clickable="true"
+                  onClick={() => setDetailId(detailId === e.id ? '' : e.id)}>
                   <td className="pp-meta">{fmtDateTime(e.at)}</td>
                   <td><span className="pp-method" data-method={e.method}>{e.method}</span></td>
-                  <td className="pp-table-mono pp-ellipsis">{e.url}</td>
+                  <td className="pp-table-mono pp-cell-clip" title={e.url}>{e.url}</td>
                   <td><span className={pillClass(statusTone(e.status))}>{e.status}</span></td>
                   <td className="pp-meta">{e.timeMs} ms</td>
                   <td className="pp-meta">{fmtSize(e.bodySize)}</td>
-                  <td>
-                    <button className="pp-btn pp-btn-sm" onClick={() => setDetailId(detailId === e.id ? '' : e.id)}>详情</button>{' '}
-                    <button className="pp-btn pp-btn-sm" onClick={() => replay(e)}>回放</button>
+                  <td onClick={(ev) => ev.stopPropagation()}>
+                    <span className="pp-row-actions">
+                      <button className="pp-btn pp-btn-sm" onClick={() => setDetailId(detailId === e.id ? '' : e.id)}>详情</button>
+                      <button className="pp-btn pp-btn-sm" onClick={() => replay(e)}>回放</button>
+                    </span>
                   </td>
                 </tr>
               ))}
-              {entries.length === 0 ? (
-                <tr><td colSpan={7} className="pp-muted">暂无历史记录，在调试页发送请求后自动记录</td></tr>
+              {filtered.length === 0 ? (
+                <tr><td colSpan={7} className="pp-muted pp-table-empty">暂无历史记录，在调试页发送请求后自动记录</td></tr>
               ) : null}
             </tbody>
           </table>
           </div>
         </div>
-  
+
         {detail ? (
-          <div className="pp-pane" style={{ marginTop: 'var(--sp-3)' }}>
+          <div className="pp-pane">
             <div className="pp-card-title">详情 · {detail.id}</div>
             <div className="pp-toolbar-inline">
               <span className="pp-meta">状态</span>
@@ -231,7 +263,7 @@ export function HistoryPage(props) {
             <pre className="pp-pre pp-pre-scroll">{JSON.stringify(detail.response || {}, null, 2)}</pre>
           </div>
         ) : null}
-      
+
       </div>
     </div>
   )

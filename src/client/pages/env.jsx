@@ -90,7 +90,7 @@ export function EnvPage(props) {
 
   useEffect(() => applyTheme(rootRef.current), [])
 
-  const loadProject = async (id) => {
+  const loadProject = async (id, keepId) => {
     if (!storage || typeof storage.getProject !== 'function') {
       setIsMock(true)
       setProject(MOCK_PROJECT)
@@ -103,7 +103,9 @@ export function EnvPage(props) {
       if (loaded) {
         setProject(loaded)
         const envs = Array.isArray(loaded.environments) ? loaded.environments : []
-        setDraft(envs.length > 0 ? envs[0] : blankEnv())
+        // keepId：保存后重载时保住当前编辑的环境（不重置回第一个）
+        const prevId = keepId !== undefined ? keepId : (draft && draft.id)
+        setDraft(envs.find((e) => e.id === prevId) || (envs.length > 0 ? envs[0] : blankEnv()))
         setGlobals(normalizeVars(loaded.globals && loaded.globals.variables))
         setIsMock(false)
       }
@@ -172,7 +174,8 @@ export function EnvPage(props) {
       const payload = { ...draft, variables: normalizeVars(draft.variables) }
       const saved = await storage.saveEnvironment(projectId, payload)
       setNotice('已保存环境：' + ((saved && saved.name) || payload.name))
-      await loadProject(projectId)
+      // 保住当前编辑环境：保存后不跳回第一个
+      await loadProject(projectId, payload.id)
     } catch (err) {
       setError('保存环境失败：' + errText(err))
     }
@@ -277,6 +280,11 @@ export function EnvPage(props) {
               <button className="pp-btn pp-btn-sm pp-btn-ghost pp-btn-accent" onClick={() => pickEnv(blankEnv())}>
                 + 新建
               </button>
+              {/* 复制当前环境为新草稿（同构多环境只改 baseUrl 时免手抄变量表） */}
+              <button className="pp-btn pp-btn-sm pp-btn-ghost pp-btn-accent" title="以当前环境为底稿新建"
+                onClick={() => pickEnv({ ...draft, id: '', name: (draft.name || '环境') + ' 副本', isDefault: false })}>
+                复制
+              </button>
             </div>
             <div className="pp-tree">
               {envSummary(envs).map((e) => (
@@ -288,7 +296,7 @@ export function EnvPage(props) {
               ))}
             </div>
             {envs.length === 0 ? (
-              <EmptyState text="暂无环境" hint="点上方「+ 新建」创建第一个环境" />
+              <EmptyState text="暂无环境" hint="在右侧填写名称与前置 URL 后点「保存环境」" />
             ) : null}
           </nav>
 
@@ -327,8 +335,11 @@ export function EnvPage(props) {
                 <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
                   <button className="pp-btn pp-btn-sm" onClick={addVar}>+ 变量</button>
                   <button className="pp-btn pp-btn-sm pp-btn-primary" onClick={saveEnv}>保存环境</button>
+                  {/* 未落盘的空白草稿没有 id：删除入口置灰防误触空 id 请求 */}
                   <button className="pp-btn pp-btn-sm pp-btn-danger" style={{ marginLeft: 'auto' }}
-                    onClick={() => removeEnv(draft.id || '')}>删除环境</button>
+                    disabled={!draft.id}
+                    title={draft.id ? '' : '该环境尚未保存，无需删除'}
+                    onClick={() => { if (draft.id) removeEnv(draft.id) }}>删除环境</button>
                 </div>
                 <div className="pp-meta" style={{ marginTop: 'var(--sp-2)' }}>
                   仅启用的变量参与 {'{{key}}'} 替换；密钥变量以密码显示

@@ -179,19 +179,20 @@ export const tests = [
     },
   },
   {
-    name: 'prepost: 等待时间走数字输入（pp-input pp-input-sm），并回填 ms 值',
+    name: 'prepost: 等待时间走数字输入（pp-input，表单行控件 32px 档），并回填 ms 值',
     async fn() {
       const { ScriptPanel } = await loadModule(FILE.scriptPanel)
       const tree = ScriptPanel({ value: BASE_VALUE, onChange: () => {} })
       const num = findByClass(tree, 'pp-input', 'input').filter((el) => el.props.type === 'number')
       assert(num.length === 1, '等待时间数字输入应为 1 个，实际 ' + num.length)
-      assert(num[0].props.className === 'pp-input pp-input-sm', '等待输入类名不符：' + num[0].props.className)
+      // 表单行控件统一 32px 档（与 auth 页签同档）；表内单元格才用 sm
+      assert(num[0].props.className === 'pp-input', '等待输入类名不符：' + num[0].props.className)
       assert(num[0].props.value === '500', '等待时间未回填：' + num[0].props.value)
       assert(findByClass(tree, 'pp-meta').map(textOf).some((t) => t.includes('发送前等待')), '缺「发送前等待」说明')
     },
   },
   {
-    name: 'prepost: 断言表六列（来源/路径/操作/期望值/说明/操作）',
+    name: 'prepost: 断言表六列（来源/路径/操作符/期望值/说明/操作）',
     async fn() {
       const { ScriptPanel } = await loadModule(FILE.scriptPanel)
       const tree = ScriptPanel({ value: BASE_VALUE, onChange: () => {} })
@@ -203,7 +204,8 @@ export const tests = [
       const ths = childElements(childElements(thead)[0])
       assert(ths.length === 6, '断言表列数应为 6，实际 ' + ths.length)
       const heads = ths.map(textOf)
-      assert(heads.join('/') === '来源/路径/操作/期望值/说明/操作', '表头文案不符：' + heads.join('/'))
+      // 第 3 列是比较符（eq/contains…），叫「操作符」与末列的「操作」（删除按钮）区分
+      assert(heads.join('/') === '来源/路径/操作符/期望值/说明/操作', '表头文案不符：' + heads.join('/'))
       // 断言表必须在 .pp-table-wrap 里（窄容器整体横向滚动）
       assert(findByClass(tree, 'pp-table-wrap').length === 1, '断言表未套 .pp-table-wrap')
     },

@@ -134,9 +134,18 @@ export function SearchPage(props) {
     }
   }
 
-  const jump = (hash) => {
-    window.location.hash = hash
-  }
+  // 顶栏搜索（回车 → #/search?q=…）落地后自动执行查询：进来就是结果，不再多点一次「搜索」。
+  // 同一 query 只自动跑一次（state 承载去重标记，跨渲染稳定）；顶栏换词时同步输入框并重查。
+  const [autoQuery, setAutoQuery] = useState('')
+  useEffect(() => {
+    const q = readQueryKeyword(route.query)
+    if (!hasKeyword(q)) return
+    setKeyword(q)
+    if (!storage || typeof storage.search !== 'function') return
+    if (autoQuery === route.query) return
+    setAutoQuery(route.query)
+    runSearch()
+  }, [route.query, projectId, storage, autoQuery])
 
   const total = GROUPS.reduce((n, g) => n + groups[g.key].length, 0)
 
@@ -174,17 +183,18 @@ export function SearchPage(props) {
 
         {!searched ? (
           <div className="pp-search-hint">
-            <EmptyState text="输入关键字开始搜索" hint="可搜接口名称、URL、描述，也可搜数据模型与目录" />
+            <EmptyState icon="search" text="输入关键字开始搜索" hint="可搜接口名称、URL、描述，也可搜数据模型与目录" />
           </div>
         ) : total === 0 ? (
           <div className="pp-search-hint">
-            <EmptyState text={'没有匹配「' + kw + '」的结果'} hint="换个关键字，或检查是否选错了项目" />
+            <EmptyState icon="search" text={'没有匹配「' + kw + '」的结果'} hint="换个关键字，或检查是否选错了项目" />
           </div>
         ) : (
           <div className="pp-search-results">
             {visibleGroups.map((g) => (
               <section key={g.key} className="pp-search-group">
                 <button className="pp-search-group-head" data-collapsed={collapsed[g.key] ? 'true' : 'false'}
+                  aria-expanded={collapsed[g.key] ? 'false' : 'true'}
                   onClick={() => setCollapsed({ ...collapsed, [g.key]: !collapsed[g.key] })}>
                   <span className="pp-search-caret">{collapsed[g.key] ? '▸' : '▾'}</span>
                   <span className="pp-search-group-label">{g.label}</span>
@@ -193,8 +203,8 @@ export function SearchPage(props) {
                 {collapsed[g.key] ? null : (
                   <div className="pp-list pp-search-list">
                     {groups[g.key].map((item) => (
-                      <div key={g.key + '-' + item.id} className="pp-list-row pp-search-row"
-                        onClick={() => jump(g.target(item.id))}>
+                      <a key={g.key + '-' + item.id} className="pp-list-row pp-search-row"
+                        href={g.target(item.id)}>
                         {item.method
                           ? <span className="pp-method" data-method={item.method}>{item.method}</span>
                           : <span className="pp-search-dot" />}
@@ -202,7 +212,7 @@ export function SearchPage(props) {
                         <span className="pp-meta pp-ellipsis pp-search-sub">
                           {item.url || item.description || ''}
                         </span>
-                      </div>
+                      </a>
                     ))}
                   </div>
                 )}
