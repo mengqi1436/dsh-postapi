@@ -1162,10 +1162,9 @@
   grid-column: 1 / -1;
 }
 
-/* —— 调试：整页 padding 与其它分页同格 —— */
-/* 调试页：Apifox .apiCase 原文是 padding:10px；这里改 16px（--sp-4）与
-   .pp-overview-content / .pp-split 同格——12 个分页内容左缘一致，
-   切页时不再 10/16/20px 跳动。右侧不再单独补偿滚动条宽度（其余页面同样不补）。 */
+/* —— 调试：整页 padding 10px（Apifox .apiCase padding:10px）—— */
+/* 调试页：Apifox .apiCase 原文（width/height 100%、padding 10px、overflow auto）。
+   单栏结构——接口树由左侧全局导航承担，页面内不再自带。 */
 .pp-debug-page {
   display: flex;
   flex-direction: column;
@@ -1216,6 +1215,1261 @@
 .pp-search-btn {
   flex: none;
   min-width: 72px;
+}
+.pp-search-source {
+  /* 与来源区/结果区的间距交给 .pp-overview-content 的 gap，不再自带 margin 叠加 */
+  margin: 0;
+}
+.pp-search-hint {
+  display: flex;
+  min-height: calc(var(--row-h) * 6);
+}
+.pp-search-results {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+.pp-search-group {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+}
+/* 分组头：可折叠，整行可点 */
+.pp-search-group-head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  width: 100%;
+  height: var(--ctl-h);
+  padding: 0 var(--sp-3);
+  font-family: var(--font-sans);
+  font-size: var(--fs-13);
+  color: var(--fg-secondary);
+  text-align: left;
+  background: var(--bg-subtle);
+  border: none;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+}
+.pp-search-group-head:hover {
+  color: var(--fg);
+}
+.pp-search-caret {
+  flex: none;
+  width: 12px;
+  font-size: var(--fs-12);
+  color: var(--fg-tertiary);
+}
+.pp-search-group-label {
+  font-weight: var(--fw-medium);
+  color: var(--fg-strong);
+}
+.pp-search-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  /* 计数徽标与 .pp-method/.pp-pill 同档：定高 --pill-h，不再靠 line-height 撑出 */
+  height: var(--pill-h);
+  min-width: var(--pill-h);
+  padding: 0 var(--sp-1);
+  font-size: var(--fs-12);
+  line-height: 1;
+  color: var(--fg-tertiary);
+  text-align: center;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+}
+.pp-search-list {
+  padding: var(--sp-1) var(--sp-2) var(--sp-2);
+}
+.pp-search-row {
+  gap: var(--sp-2);
+}
+/* 非接口条目（模型 / 目录）用一个小圆点占位，保持三行缩进对齐 */
+/* 非接口条目（模型 / 目录）：用一个与 method 徽标同宽的小圆点占位，
+   保证三组的名称列左边缘对齐。method 徽标 min-width 44px。 */
+.pp-search-dot {
+  flex: none;
+  width: 6px;
+  height: 6px;
+  margin: 0 19px;
+  background: var(--fg-tertiary);
+  border-radius: var(--radius-pill);
+}
+.pp-search-name {
+  flex: 0 1 auto;
+  font-size: var(--fs-13);
+}
+.pp-search-sub {
+  /* 靠右但不吃满：名称与 URL 之间留 16px 起，长名称时 URL 让位 */
+  flex: 0 1 auto;
+  margin-left: var(--sp-4);
+  text-align: right;
+}
+/* 页头统计：不参与收缩，窄栏里也完整显示 */
+.pp-search-summary {
+  flex: none;
+  white-space: nowrap;
+}
+.pp-search-mark {
+  padding: 0 1px;
+  color: var(--fg-strong);
+  font-weight: var(--fw-semibold);
+  background: var(--accent-tint);
+  border-radius: 2px;
+}
+/* 导入导出页（Apifox「导入导出数据」同构）：页签分区 + 左格式列表 + 右内容。
+   原来「导入 / 导出」两列并排，各只剩 240px：textarea 与按钮组都换行，
+   代码生成再单独占一整张卡，三块高度参差。 */
+.pp-io-layout {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+}
+.pp-io-layout > .pp-tabs {
+  border-bottom: 1px solid var(--border);
+}
+.pp-io-body {
+  display: grid;
+  grid-template-columns: 168px minmax(0, 1fr);
+  min-height: 0;
+}
+@container ppmain (max-width: 720px) {
+  .pp-io-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  /* 堆叠后格式列表改成横向可滚的一行 */
+  .pp-io-layout .pp-io-side {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    padding: var(--sp-2);
+  }
+  .pp-io-layout .pp-io-side-title {
+    display: none;
+  }
+  .pp-io-layout .pp-io-item {
+    flex: none;
+    white-space: nowrap;
+  }
+  /* 堆叠后主区独占整宽，但 grid 子项默认 min-width:auto 会被内容顶开，
+     表现为「清空」按钮被切掉一半。这里显式压到 0。 */
+  .pp-io-layout .pp-io-main {
+    min-width: 0;
+    padding: var(--sp-3);
+    padding-right: calc(var(--sp-3) + var(--sp-1));
+  }
+}
+.pp-io-side {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: var(--sp-2);
+  border-right: 1px solid var(--border);
+  background: var(--bg-app);
+}
+.pp-io-side-title {
+  padding: var(--sp-1) var(--sp-2) var(--sp-2);
+  font-size: var(--fs-12);
+  color: var(--fg-tertiary);
+}
+.pp-io-item {
+  display: flex;
+  align-items: center;
+  height: var(--ctl-h);
+  padding: 0 var(--sp-2);
+  font-family: var(--font-sans);
+  font-size: var(--fs-13);
+  color: var(--fg-secondary);
+  text-align: left;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-ctl);
+  cursor: pointer;
+}
+.pp-io-item:hover {
+  color: var(--fg);
+  background: var(--bg-hover);
+}
+.pp-io-item[data-active="true"] {
+  color: var(--accent);
+  background: var(--accent-tint);
+  font-weight: var(--fw-medium);
+}
+.pp-io-main {
+  min-width: 0;
+  /* 右侧比左侧多留 4px：卡片右边框 + 滚动条在窄栏里会贴住 textarea/按钮 */
+  padding: var(--sp-4) var(--sp-4) var(--sp-4) var(--sp-4);
+  padding-right: calc(var(--sp-4) + var(--sp-1));
+}
+.pp-io-head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+  margin-bottom: var(--sp-2);
+}
+.pp-io-title {
+  font-size: var(--fs-14);
+  font-weight: var(--fw-semibold);
+  color: var(--fg-strong);
+}
+/* head 是 flex + flex-wrap：子项默认可收缩，窄栏里「清空」会被压到 42px 把字裁掉。
+   标题允许省略，按钮一律不收缩。 */
+.pp-io-head > .pp-io-title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pp-io-head > .pp-btn {
+  flex: none;
+  /* 两字按钮（清空）在 42px 时贴边，给一点余量 */
+  min-width: 56px;
+}
+.pp-io-head > .pp-btn:last-child {
+  margin-left: auto;
+}
+.pp-io-input {
+  margin-top: var(--sp-2);
+  /* 与 .pp-pre-scroll（--row-h × 12）同档：粘贴区与结果区等高，
+     替代 HTML rows 属性（rows 不受 token 高度纪律约束，曾造出 224px vs 384px 的档位差） */
+  height: calc(var(--row-h) * 12);
+}
+/* 动作反馈区：error/notice 挂在触发按钮所在的主区内，不再跨整屏找结果；空时零占位 */
+.pp-io-status {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  margin-top: var(--sp-2);
+}
+.pp-io-status:empty {
+  display: none;
+}
+/* 各页签的工具行与上方内容拉开一档（替代页面里三处内联 marginTop） */
+.pp-io-main .pp-toolbar-inline {
+  margin-top: var(--sp-3);
+}
+.pp-io-stats {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+  margin-top: var(--sp-2);
+}
+.pp-io-pre {
+  margin-top: var(--sp-3);
+}
+.pp-io-sample {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-top: var(--sp-2);
+  min-width: 0;
+}
+/* 环境页（Apifox「环境管理」同构）：左环境列表 + 右编辑区。
+   左列宽与文档页目录树共用 --panel-w，右区顶上是页签（环境变量 / 全局变量 / 优先级）。
+   原来的一行三卡在 500px 主区里每卡只剩 250px，变量表要横向滚动、
+   优先级卡说明逐字折行，操作路径也不对——切换环境在左、编辑在右才对得上 Apifox。 */
+.pp-env-layout {
+  display: grid;
+  /* 左轨与 doc/test/debug 同律：clamp 自适应（240 下限 / 32% / 320 上限） */
+  grid-template-columns: clamp(var(--panel-w), 32%, var(--panel-w-max)) minmax(0, 1fr);
+  gap: var(--sp-3);
+  align-items: start;
+}
+@container ppmain (max-width: 820px) {
+  .pp-env-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--sp-3);
+  }
+  /* 堆叠后左列表独占一行：环境条目改成横向可滚的胶囊，不再占掉整屏高度。
+     .pp-panel 自带 width:var(--panel-w) 与 overflow:auto，这里必须一起覆盖，
+     否则左列仍是 240px 定宽、右侧留一大片空白。 */
+  .pp-env-layout .pp-env-side {
+    width: auto;
+    padding: 0;
+    overflow: visible;
+  }
+  .pp-env-layout .pp-env-tree,
+  .pp-env-layout .pp-tree {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: var(--sp-2);
+    overflow-x: auto;
+    padding: var(--sp-1) var(--sp-3);
+  }
+  .pp-env-layout .pp-tree-row {
+    flex: none;
+    max-width: 200px;
+    margin: 0;
+    padding: 0 var(--sp-3);
+    height: var(--ctl-h);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+  }
+  .pp-env-layout .pp-tree-row[data-active="true"] {
+    border-color: var(--accent);
+  }
+}
+.pp-env-side {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: var(--sp-2) 0;
+}
+.pp-env-side-head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 0 var(--sp-4) var(--sp-2);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: var(--sp-1);
+}
+.pp-env-side-head .pp-card-title {
+  margin: 0;
+  font-size: var(--fs-13);
+}
+.pp-env-side-head > .pp-btn:last-child {
+  margin-left: auto;
+}
+.pp-btn-accent {
+  color: var(--accent);
+}
+.pp-env-main {
+  min-width: 0;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+}
+.pp-env-main > .pp-tabs {
+  border-bottom: 1px solid var(--border);
+}
+.pp-env-pane {
+  padding: var(--sp-4);
+}
+.pp-env-fields {
+  display: grid;
+  /* 单列到堆叠阈值为止：环境页只有名称/前置 URL 两个字段，
+     auto-fit 在 440~520px 段会突跳成两列导致宽度跳变，单列不亏密度 */
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-4);
+}
+.pp-env-pane > .pp-card-title {
+  margin: 0 0 var(--sp-2) 0;
+}
+/* 变量表空行：左对齐一行提示，不要占满行高的居中留白 */
+.pp-env-vars-empty {
+  height: auto;
+  padding: var(--sp-2) var(--sp-1);
+  font-size: var(--fs-12);
+  line-height: var(--lh-18);
+  color: var(--fg-tertiary);
+  white-space: normal;
+}
+.pp-env-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  margin-bottom: var(--sp-3);
+}
+.pp-env-field .pp-form-label {
+  width: auto;
+}
+.pp-env-field-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+.pp-env-field-row .pp-input {
+  flex: 1;
+  min-width: 0;
+}
+.pp-env-check {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  flex: none;
+  font-size: var(--fs-12);
+  color: var(--fg-secondary);
+  white-space: nowrap;
+}
+/* 变量优先级：纵向四级，每级一行「序号 + 作用域」，说明缩进在下一行。
+   199px 的卡里「1（最高）」这种长徽标会把作用域挤成逐字换行，改成圆形序号。 */
+.pp-priority-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+}
+.pp-priority-item {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  gap: var(--sp-2);
+  padding: var(--sp-2) 0;
+  border-bottom: 1px solid var(--border);
+}
+.pp-priority-item:last-child {
+  border-bottom: none;
+}
+.pp-priority-level {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--pill-h);
+  height: var(--pill-h);
+  font-size: var(--fs-12);
+  line-height: 1;
+  font-weight: var(--fw-semibold);
+  color: var(--fg-secondary);
+  background: var(--bg-subtle);
+  border-radius: var(--radius-pill);
+}
+.pp-priority-item:first-child .pp-priority-level {
+  color: var(--fg-on-accent);
+  background: var(--accent);
+}
+.pp-priority-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.pp-priority-scope {
+  font-size: var(--fs-13);
+  line-height: var(--lh-18);
+  font-weight: var(--fw-medium);
+  color: var(--fg-strong);
+}
+.pp-priority-note {
+  font-size: var(--fs-12);
+  line-height: var(--lh-18);
+  color: var(--fg-secondary);
+}
+/* Mock 页：左接口列表（与文档页目录树同轨宽）+ 右配置纵向两卡。
+   之前是两列网格塞三个子项，第三块被挤到第二行左侧、与右侧形成高度差。 */
+.pp-mock-layout {
+  display: grid;
+  grid-template-columns: clamp(var(--panel-w), 32%, var(--panel-w-max)) minmax(0, 1fr);
+  gap: var(--sp-3);
+  align-items: start;
+}
+.pp-mock-side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  min-width: 0;
+}
+@container ppmain (max-width: 820px) {
+  .pp-mock-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .pp-mock-layout .pp-panel {
+    width: auto;
+    /* 堆叠态左列表限高与 doc/test 同律：--row-h × 14 */
+    max-height: calc(var(--row-h) * 14);
+  }
+}
+/* Schema 页：左模型列表 + 右编辑纵排（编辑卡 + 示例卡）。
+   之前三块 pane 塞两列 grid，「示例数据」自动换行到左轨正下方、右列整块留白
+   （mock 页修过一模一样的问题，schema 未同步）。 */
+.pp-schema-layout {
+  display: grid;
+  grid-template-columns: clamp(var(--panel-w), 32%, var(--panel-w-max)) minmax(0, 1fr);
+  gap: var(--sp-3);
+  align-items: start;
+}
+.pp-schema-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  min-width: 0;
+}
+@container ppmain (max-width: 820px) {
+  .pp-schema-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .pp-schema-layout .pp-panel {
+    width: auto;
+    max-height: calc(var(--row-h) * 14);
+  }
+}
+/* 测试页右主列：断言面板 + 运行结果面板纵向成组，占 grid 第 2 列——
+   否则第三个 pane 掉进 .pp-debug-layout 左轨（宽窗口下被夹进 240px 窄列） */
+.pp-test-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  min-width: 0;
+}
+/* 测试页页签条卡片壳：与 env 页 .pp-env-main 同构，页签不再悬空 */
+.pp-test-tabs {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+}
+.pp-test-tabs > .pp-tabs {
+  border-bottom: none;
+}
+/* 面板头：标题 + 右侧主操作（test 左列表与 flow 步骤列表共用，
+   结构同 .pp-env-side-head，env 页沿用既有类） */
+.pp-pane-head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 0 var(--sp-1) var(--sp-2);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: var(--sp-1);
+}
+.pp-pane-head .pp-card-title {
+  margin: 0;
+  font-size: var(--fs-13);
+}
+.pp-pane-head > .pp-btn:last-child {
+  margin-left: auto;
+}
+.pp-debug-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  margin-top: var(--sp-2);
+  font-size: var(--fs-12);
+}
+.pp-debug-meta .pp-select {
+  flex: none;
+  width: auto;
+  min-width: 96px;
+}
+.pp-debug-meta .pp-mono {
+  flex: 1;
+  min-width: 0;
+}
+/* 页签体：与页签条之间留 8px，内容区自己滚动 */
+.pp-debug-tabbody {
+  margin-top: var(--sp-2);
+  min-width: 0;
+}
+/* —— 调试：宽容器三栏 / 窄容器单列 —— */
+/* 三栏（树 / 请求编辑 / 响应）在 400~700px 的主区里每栏只剩 100 多像素，
+   参数表被挤成一条，这才是「布局错乱」的根因。窄容器下改为单列纵向堆叠。
+   首列与文档页共用 --panel-w，两页的接口树宽度保持一致。 */
+
+.pp-pane {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: var(--card-pad);
+  min-width: 0;
+}
+/* —— 调试台 URL 行（对齐 Apifox .apiCase .main-input-bar）——
+   整行高 40px；method 左内边距 12px 右 8px；baseUrl / path 是两个胶囊
+   （圆角 6px、margin 5px、内边距 0 10px、行高 28px）；发送按钮组 主 + 25px 下拉。 */
+.pp-url-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  min-height: var(--ctl-h-lg);
+}
+.pp-url-row .pp-select {
+  width: 104px;
+  flex: none;
+  padding-left: var(--sp-3);
+}
+.pp-url-row .pp-input {
+  flex: 1;
+  /* 与发送按钮同档 32px：URL 行是全页视觉锚点，核心输入框不再比次要按钮矮一档 */
+  height: var(--ctl-h);
+}
+/* 窄容器：URL 行挤在一行时路径输入框只剩几十像素（"未配置 baseUrl" 胶囊本身就要 90px）。
+   让路径输入框独占第二行，宽度拉满，发送组仍留在第一行末尾。 */
+@container ppmain (max-width: 640px) {
+  .pp-url-row .pp-input {
+    order: 9;
+    flex-basis: 100%;
+  }
+  .pp-url-row .pp-url-pill {
+    max-width: 32%;
+  }
+}
+.pp-url-method {
+  flex: none;
+  padding: 0 var(--sp-2) 0 var(--sp-3);
+  font-size: var(--fs-14);
+  font-weight: var(--fw-medium);
+  color: var(--fg-strong);
+  line-height: var(--ctl-h-lg);
+}
+/* 方法下拉本身承担方法色（替代「徽标 + 下拉」双元素并排：省 148px 宽、去掉 22/32 混档） */
+.pp-select.pp-url-method[data-method="GET"]     { color: var(--method-get); border-color: var(--method-get); }
+.pp-select.pp-url-method[data-method="POST"]    { color: var(--method-post); border-color: var(--method-post); }
+.pp-select.pp-url-method[data-method="PUT"]     { color: var(--method-put); border-color: var(--method-put); }
+.pp-select.pp-url-method[data-method="DELETE"]  { color: var(--method-delete); border-color: var(--method-delete); }
+.pp-select.pp-url-method[data-method="PATCH"]   { color: var(--method-patch); border-color: var(--method-patch); }
+.pp-select.pp-url-method[data-method="HEAD"],
+.pp-select.pp-url-method[data-method="OPTIONS"],
+.pp-select.pp-url-method[data-method="TRACE"]   { color: var(--method-other); border-color: var(--method-other); }
+/* baseUrl / path 胶囊：Apifox 把两者拆成独立的圆角块，视觉上区分「环境域」与「路径」 */
+.pp-url-pill {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  max-width: 40%;
+  height: var(--ctl-h-sm);
+  margin: 0 var(--sp-1);
+  padding: 0 var(--sp-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-12);
+  line-height: var(--ctl-h-sm);
+  color: var(--fg-secondary);
+  background: var(--bg-subtle);
+  border-radius: var(--radius-ctl);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pp-url-pill-grow {
+  flex: 1;
+  max-width: none;
+}
+/* 发送按钮组：主按钮吃满剩余宽度、右端 28px 下拉位（--hit 命中区标准）
+   原 95px 定宽在「发送中…」时必然裁字，改为随文案自适应 */
+.pp-send-group {
+  display: inline-flex;
+  flex: 0 1 auto;
+  min-width: 0;
+  gap: 0;
+}
+.pp-url-row .pp-send-group {
+  flex: none;
+  width: auto;
+}
+.pp-send-group .pp-btn:first-child {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.pp-send-group .pp-btn:last-child {
+  width: var(--hit);
+  padding: 0;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+/* 分组标题：左边 3px 主色竖线 + 左内边距 10px + 16px 字
+   （Apifox .apiDebug .group-title 原文：border-left:3px; margin-left:2px; padding-left:10px; font-size:16px） */
+.pp-group-title {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin: var(--sp-2) 0 var(--sp-1) var(--sp-1);
+  /* 10px 不在 4/8/12 刻度上，但这是 Apifox 原文值，写 calc 保持可追溯 */
+  padding-left: calc(var(--sp-2) + var(--sp-1) / 2);
+  font-size: var(--fs-16);
+  line-height: var(--lh-24);
+  font-weight: var(--fw-medium);
+  color: var(--fg-strong);
+  border-left: 3px solid var(--accent);
+}
+
+/* —— 流程图容器 —— */
+/* 流程图页（Apifox 测试场景同构）：左步骤列表 + 右画布 + 下方属性面板。
+   画布常驻，改任一步即时重绘；不再用「整宽画布 + 整宽表格」上下堆叠——
+   表格在 500px 主区里要横向滚 640px，改一步得来回滚两次。 */
+.pp-flow-layout {
+  display: grid;
+  /* 左轨与 doc/test/debug 同律：clamp 自适应，宽窗口下步骤名不再被 240px 截断 */
+  grid-template-columns: clamp(var(--panel-w), 32%, var(--panel-w-max)) minmax(0, 1fr);
+  gap: var(--sp-3);
+  align-items: start;
+}
+@container ppmain (max-width: 820px) {
+  .pp-flow-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--sp-3);
+  }
+  /* 堆叠后步骤列表高度压到约 6 行（行高 = 2×--lh-18 + 2×--sp-1 padding），避免把画布挤到首屏之外 */
+  .pp-flow-layout .pp-flow-steps {
+    max-height: calc(var(--lh-18) * 2 * 6 + var(--sp-1) * 2 * 6);
+  }
+  .pp-flow-layout .pp-flow-side {
+    width: auto;
+    overflow: visible;
+  }
+}
+.pp-flow-side {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: var(--sp-2) 0;
+}
+.pp-flow-side-head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 0 var(--sp-4) var(--sp-2);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: var(--sp-1);
+}
+.pp-flow-side-head .pp-card-title {
+  margin: 0;
+  font-size: var(--fs-13);
+}
+.pp-flow-side-head > .pp-btn:last-child {
+  margin-left: auto;
+}
+.pp-flow-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  /* 双行步骤（名称 + mono 消息）约 12 行：行高 = 2×--lh-18 + 2×--sp-1 padding，全部 token 派生 */
+  max-height: calc(var(--lh-18) * 2 * 12 + var(--sp-1) * 2 * 12);
+  overflow: auto;
+}
+.pp-flow-step {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-1) var(--sp-3);
+  margin: 0 var(--sp-2);
+  font-size: var(--fs-12);
+  line-height: var(--lh-18);
+  color: var(--fg-secondary);
+  border-radius: var(--radius-ctl);
+  cursor: pointer;
+}
+.pp-flow-step:hover {
+  color: var(--fg);
+}
+.pp-flow-step[data-active="true"] {
+  color: var(--fg);
+  background: var(--bg-hover);
+  font-weight: var(--fw-medium);
+}
+.pp-flow-step-no {
+  flex: none;
+  width: 18px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-12);
+  color: var(--fg-tertiary);
+  text-align: right;
+}
+.pp-flow-step[data-active="true"] .pp-flow-step-no {
+  color: var(--accent);
+}
+.pp-flow-step-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+.pp-flow-step-name {
+  color: inherit;
+}
+.pp-flow-step-msg {
+  font-family: var(--font-mono);
+  font-size: var(--fs-12);
+  color: var(--fg-tertiary);
+}
+.pp-flow-step-act {
+  flex: none;
+  font-size: var(--fs-12);
+  color: var(--fg-tertiary);
+}
+.pp-flow-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  min-width: 0;
+}
+.pp-flow-props {
+  padding: var(--sp-4);
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+}
+.pp-flow-prop-grid {
+  display: grid;
+  /* 标签列对齐 .pp-form-label 的 104px：跨页表单标签一套标准 */
+  grid-template-columns: 104px minmax(0, 1fr);
+  gap: var(--sp-2) var(--sp-3);
+  align-items: center;
+}
+.pp-flow-prop-grid .pp-form-label {
+  width: auto;
+  font-size: var(--fs-13);
+}
+.pp-flow-prop-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  min-width: 0;
+}
+.pp-flow-prop-row .pp-input {
+  flex: 1;
+  min-width: 0;
+}
+.pp-flow-name {
+  width: 180px;
+}
+.pp-seq-wrap {
+  /* 画布列 flex 容器：常态子级只有 svg（空态时居中），纵排不影响 svg 的块级表现 */
+  display: flex;
+  flex-direction: column;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--bg-surface);
+  padding: var(--sp-4);
+}
+.pp-seq-wrap svg {
+  /* 任何容器宽度下都保住可读下限（--seq-min-w）：文字 1:1，不足由本容器横滚。
+     宽容器里内联 width:100% 仍会拉满，min 只是下限 */
+  min-width: var(--seq-min-w);
+  display: block;
+}
+/* 画布/属性面板里的空态：不要 360px 大虚线卡贴顶，给一圈呼吸 */
+.pp-seq-wrap > .pp-empty,
+.pp-flow-props > .pp-empty {
+  margin: var(--sp-3) auto;
+  padding: var(--sp-4) var(--sp-3);
+}
+.pp-split-hint {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-3);
+  font-size: var(--fs-13);
+  line-height: var(--lh-20);
+  color: var(--warning);
+  border: 1px solid var(--warning);
+  border-radius: var(--radius-ctl);
+  background: var(--bg-surface);
+}
+
+/* —— 空态 —— */
+/* 空态：紧凑居中卡。收窄到 --empty-w（360px）——之前铺满 460px 宽只放一行字，
+   视觉上像一块没做完的占位。图标用三级色，主文案用二级色，层级靠颜色与字号区分。 */
+.pp-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  width: 100%;
+  max-width: var(--empty-w);
+  /* margin:auto 在 flex 容器（.pp-page 是 flex column）里同时水平与垂直居中；
+     之前写死 var(--sp-6) auto 只水平居中，空态会贴在顶部，下方留一大片空白。 */
+  margin: auto;
+  padding: var(--sp-6) var(--sp-4);
+  text-align: center;
+  font-size: var(--fs-14);
+  line-height: var(--lh-20);
+  color: var(--fg-tertiary);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-card);
+  background: var(--bg-surface);
+}
+.pp-empty-icon {
+  color: var(--fg-tertiary);
+}
+.pp-empty-text {
+  color: var(--fg-secondary);
+  font-weight: var(--fw-medium);
+}
+.pp-empty-action {
+  margin-top: var(--sp-1);
+}
+/* 面板内的空态（左树）：不要虚线框与图标，只留一行说明 + 紧凑动作钮 */
+.pp-panel .pp-empty {
+  max-width: none;
+  margin: var(--sp-3) 0;
+  padding: var(--sp-3) var(--sp-2);
+  border: none;
+  background: transparent;
+  font-size: var(--fs-12);
+  line-height: var(--lh-18);
+}
+.pp-panel .pp-empty-icon {
+  display: none;
+}
+/* 面板内空态允许紧凑动作钮（原 display:none 让 EmptyState 的 action 能力形同虚设） */
+.pp-panel .pp-empty-action {
+  display: block;
+  margin-top: var(--sp-1);
+}
+/* 测试页左列表（.pp-pane 内包 .pp-tree）：与 .pp-panel 空态同一紧凑档 */
+.pp-tree .pp-empty {
+  max-width: none;
+  margin: var(--sp-3) 0;
+  padding: var(--sp-3) var(--sp-2);
+  border: none;
+  background: transparent;
+  font-size: var(--fs-12);
+  line-height: var(--lh-18);
+}
+.pp-tree .pp-empty-icon {
+  display: none;
+}
+.pp-tree .pp-empty-action {
+  display: block;
+  margin-top: var(--sp-1);
+}
+
+
+/* ============================================================
+/* ============================================================
+   工作台骨架 v3：顶栏 48px + 左侧 240px 文字导航 + 44px 页签条
+   数值全部对齐 Apifox 2.8.55 实测（docs/apifox-visual-parity-spec.md）：
+     顶栏 --ui-layout-header-height: 48px，内边距 0 50px
+     左侧 .sider-bxNtfB: width 240px / padding 20px / 菜单项高 32px / 分组高 24px
+     页签条 --app-main-tabs-height: 44px
+   原 64px 图标轨 + 浮层二级菜单已废弃：图标下的小字仍不足以让人一眼认出功能，
+   且二级藏在浮层里多一次点击；Apifox 用 240px 常驻文字菜单，这里照做。
+   ============================================================ */
+
+/* —— 工作台：顶栏 + sider/主区 两行两列 —— */
+.pp-workbench-v2 {
+  display: grid;
+  grid-template-rows: var(--topbar-h) minmax(0, 1fr);
+  height: 100%;
+  min-height: 0;
+}
+.pp-shell {
+  display: grid;
+  grid-template-columns: var(--sider-w) minmax(0, 1fr);
+  min-height: 0;
+  position: relative;
+}
+
+/* —— 左侧导航（Apifox .sider-bxNtfB 同规格）—— */
+.pp-sider {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  padding: var(--sider-pad);
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border);
+  min-height: 0;
+  overflow: auto;
+}
+/* 分组标题：12px / 三级色 / 高 24px，组间上间距 12px（Apifox menu-item-group） */
+.pp-sider-group {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  height: var(--sider-group-h);
+  margin-top: var(--sp-3);
+  padding: 0 var(--sp-2);
+  font-size: var(--fs-12);
+  font-weight: var(--fw-medium);
+  color: var(--fg-tertiary);
+  white-space: nowrap;
+}
+.pp-sider-group:first-child {
+  margin-top: 0;
+}
+/* 菜单项：高 32px、圆角 6px、14px 字，左内边距 8px（Apifox menu-item） */
+.pp-sider-item {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  height: var(--sider-item-h);
+  padding: 0 var(--sp-2);
+  font-size: var(--fs-14);
+  line-height: var(--lh-20);
+  color: var(--fg-secondary);
+  text-decoration: none;
+  border-radius: var(--radius-ctl);
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.pp-sider-item:hover {
+  color: var(--fg);
+  background: var(--bg-hover);
+}
+.pp-sider-item:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+/* 选中：主色文字 + 淡主色底（Apifox 菜单选中态） */
+.pp-sider-item[data-active="true"] {
+  color: var(--accent);
+  background: var(--accent-tint);
+  font-weight: var(--fw-medium);
+}
+.pp-sider-icon {
+  flex: none;
+  width: var(--icon);
+  height: var(--icon);
+  color: inherit;
+}
+.pp-sider-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pp-sider-spacer {
+  flex: 1;
+}
+
+/* —— 弹层菜单（三级，对齐 Apifox .ui-dropdown-menu / .ui-menu-item）——
+   一级面板挂在触发按钮下方；二级、三级向右/左浮出并垂直对齐到触发项。
+   Apifox 原文：项高 32px、内边距 0 8px、子菜单箭头宽 10px 靠右 16px、
+   分组标题 12px/500 内边距 0 16px、面板圆角 8px + 两段式投影。 */
+.pp-menu-anchor {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+}
+/* 面板内的项锚点必须撑满宽度，否则子面板的 right:100% 会贴到文字而不是面板边缘 */
+.pp-menu .pp-menu-anchor {
+  display: block;
+  width: 100%;
+}
+.pp-menu {
+  /* 用 fixed 而不是 absolute：宿主侧边栏面板是 720px 且带 overflow:hidden/clip，
+     三级级联（200×3）从按钮往左展开会越出容器左边界被裁掉。
+     fixed 不受祖先 overflow 裁剪，坐标由 JS 用 getBoundingClientRect 给出。 */
+  position: fixed;
+  z-index: var(--z-menu);
+  min-width: var(--menu-w);
+  padding: var(--menu-pad);
+  overflow: visible;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-menu);
+}
+/* 内层滚动容器：只有它限高并滚动，保证父面板仍可 overflow: visible */
+.pp-menu-scroll {
+  max-height: calc(var(--menu-item-h) * 12);
+  overflow: auto;
+}
+/* 二级 / 三级面板：相对父项浮出。因为触发按钮在主区右缘，
+   子面板统一向左开（Apifox 靠边时同样翻转方向）。 */
+/* 子面板层级：逐层 +1，避免浅层盖住已展开的深层内容 */
+.pp-menu[data-depth="2"] { z-index: calc(var(--z-menu) + 1); }
+.pp-menu[data-depth="3"] { z-index: calc(var(--z-menu) + 2); }
+.pp-menu .pp-menu .pp-menu {
+  z-index: calc(var(--z-menu) + 2);
+}
+/* 子面板内不再需要自己的内层滚动限高 */
+.pp-menu .pp-menu-scroll {
+  max-height: calc(var(--menu-item-h) * 12);
+}
+.pp-menu-item {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  width: 100%;
+  height: var(--menu-item-h);
+  padding: 0 var(--sp-2);
+  font-family: var(--font-sans);
+  font-size: var(--fs-14);
+  line-height: var(--lh-20);
+  color: var(--fg);
+  text-align: left;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-ctl);
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.pp-menu-item:hover,
+.pp-menu-item[data-open="true"] {
+  background: var(--bg-hover);
+}
+.pp-menu-item:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.pp-menu-item[data-active="true"] {
+  color: var(--accent);
+  font-weight: var(--fw-medium);
+}
+.pp-menu-item[disabled] {
+  color: var(--fg-tertiary);
+  cursor: not-allowed;
+}
+.pp-menu-label {
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* 子菜单箭头：10px 宽，两条 1.5px 斜线（Apifox .ui-menu-submenu-arrow） */
+.pp-menu-arrow {
+  flex: none;
+  width: var(--sp-3);
+  height: var(--icon-sm);
+  color: var(--fg-tertiary);
+  font-size: var(--fs-12);
+  line-height: var(--icon-sm);
+  text-align: center;
+}
+.pp-menu-hint {
+  flex: none;
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: var(--fs-12);
+  color: var(--fg-tertiary);
+}
+.pp-menu-group {
+  height: var(--ctl-h-sm);
+  padding: 0 var(--sp-4);
+  font-size: var(--fs-12);
+  line-height: var(--lh-20);
+  font-weight: var(--fw-medium);
+  color: var(--fg-tertiary);
+  white-space: nowrap;
+}
+.pp-menu-sep {
+  height: 1px;
+  margin: var(--sp-1) calc(var(--sp-2) * -1);
+  background: var(--border);
+}
+
+/* —— 页签条（Apifox .layoutTabBar，44px 卡片式）—— */
+.pp-tabbar {
+  display: flex;
+  align-items: flex-end;
+  height: var(--tabbar-h);
+  padding: 0 var(--sp-2);
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+}
+.pp-tabbar::-webkit-scrollbar {
+  height: calc(var(--scrollbar) * 0);
+}
+.pp-tabbar-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  height: var(--tabbar-h);
+  padding: 0 var(--sp-4);
+  font-size: var(--fs-14);
+  line-height: var(--lh-20);
+  color: var(--fg-secondary);
+  background: transparent;
+  border: none;
+  border-left: 1px solid var(--border);
+  cursor: pointer;
+  white-space: nowrap;
+  flex: none;
+}
+.pp-tabbar-item:first-child {
+  border-left: none;
+}
+.pp-tabbar-item:hover {
+  color: var(--fg);
+}
+/* 激活：白底 + 左右 1px 边框 + 深色文字（Apifox tabs-tab-active） */
+.pp-tabbar-item[data-active="true"] {
+  color: var(--fg-strong);
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border);
+  border-top: 1px solid transparent;
+  font-weight: var(--fw-medium);
+}
+.pp-tabbar-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--icon-sm);
+  height: var(--icon-sm);
+  margin-left: var(--sp-1);
+  color: var(--fg-tertiary);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+.pp-tabbar-close:hover {
+  color: var(--fg);
+  background: var(--bg-hover);
+}
+
+/* —— 主区（v2：占满剩余宽度）—— */
+/* 主区是容器查询的锚点：侧边栏里的宽度只有 400~700px，页面内部布局必须按
+   「容器宽度」而不是「视口宽度」自适应——用 @media 判断视口永远命中不了窄态。 */
+.pp-main-v2 {
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+  background: var(--bg-app);
+  container-type: inline-size;
+  container-name: ppmain;
+  /* 帮助浮层的定位参照（.pp-help-card 用 absolute 贴右上角） */
+  position: relative;
+}
+
+/* —— 页头 —— */
+/* 页头：对齐 Apifox .overview-header-container（下边框 1px / padding 16px 20px 16px 14px / 最大宽 1512px） */
+.pp-page-head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  max-width: var(--content-max-w);
+  padding: var(--sp-4) var(--sp-5) var(--sp-4) var(--sp-3);
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border);
+}
+/* 概览页头：标题 18px / 700（Apifox .overview-header__title） */
+/* 页头：Apifox .overview-header-container 原文
+   （border-bottom:1px split; max-width:1512px; padding:16px 20px 16px 14px）。
+   窄容器（侧边栏里只有 455px）时动作区必须换行，否则会把页面顶出 111~693px 横向溢出。 */
+.pp-overview-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-3);
+  width: 100%;
+  max-width: var(--content-max-w);
+  padding: var(--sp-4) var(--sp-5) var(--sp-4) var(--sp-3);
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border);
+}
+.pp-overview-title {
+  margin-right: auto;
+  font-size: var(--fs-18);
+  line-height: var(--lh-24);
+  font-weight: 700;
+  color: var(--fg-strong);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* 动作区：Apifox .overview-header-actions（inline-flex / 高 32px）。
+   加 flex-wrap 与 min-width:0：动作区里塞 4 个控件时（总览页）在 455px 容器里必然溢出，
+   允许换行是唯一不改语义的解法；子控件用 flex:0 1 auto 允许收缩。 */
+.pp-overview-actions {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  min-width: 0;
+  margin-left: auto;
+  min-height: var(--ctl-h);
+}
+.pp-overview-actions > .pp-input,
+.pp-overview-actions > .pp-select {
+  flex: 0 1 auto;
+  min-width: 96px;
 }
 /* 页头动作区里的行内提示（复制成功等）：压成与按钮同基线的色字，不撑高动作区 */
 .pp-overview-actions .pp-note {
@@ -1305,8 +2559,7 @@
   grid-template-columns: clamp(var(--panel-w), 32%, var(--panel-w-max)) minmax(0, 1fr);
   gap: var(--sp-4);
   align-items: start;
-  /* 内边距与 .pp-overview-content 同格（16px 四边）：文档页与其它 10 个分页的内容左缘一致 */
-  padding: var(--sp-4);
+  padding: var(--sp-4) var(--sp-5);
   min-height: 0;
 }
 /* 并排时面板宽度由 grid 轨道决定，自身不再定宽（否则比轨道窄会留白）；
@@ -1343,8 +2596,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  /* 空态主列独占一行：外边距与 .pp-overview-content 同格（16px 四边） */
-  margin: var(--sp-4);
+  margin: var(--sp-4) var(--sp-5);
 }
 .pp-doc-main .pp-page {
   padding: var(--sp-5);
