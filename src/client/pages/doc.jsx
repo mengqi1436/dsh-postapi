@@ -133,6 +133,8 @@ const AUTH_LABEL = {
 
 /** 接口状态胶囊文案（Apifox 文档页头右侧状态位）。 */
 const STATUS_LABEL = { developing: '开发中', testing: '测试中', done: '已完成', deprecated: '已废弃' }
+/* 状态胶囊三档：沿用 .pp-pill-ok/warn/bad（响应码 StatusPill 同体系），不再四种状态一律主色 */
+const STATUS_TONE = { developing: 'pp-pill-accent', testing: 'pp-pill-warn', done: 'pp-pill-ok', deprecated: 'pp-pill-bad' }
 
 function resolveApi() {
   return typeof window !== 'undefined' ? window.__postapiApi : null
@@ -170,7 +172,7 @@ function renderInline(text, keyPrefix) {
 /** 极简块级 Markdown（标题 / 列表 / 代码围栏 / 段落）。 */
 function Markdown({ text }) {
   const src = text == null ? '' : String(text)
-  if (src.trim() === '') return <EmptyState text="（无描述）" />
+  if (src.trim() === '') return <p className="pp-meta">（无描述）</p>
   const blocks = []
   let buffer = []
   let inFence = false
@@ -422,8 +424,9 @@ export function DocPage({ route, api }) {
         {copied ? (
           <span className={'pp-note ' + (copied === '已复制' ? 'pp-note-ok' : 'pp-note-bad')}>{copied}</span>
         ) : null}
-        {statusLabel ? <span className="pp-pill pp-pill-accent">{statusLabel}</span> : null}
-        <button className="pp-btn pp-btn-sm" onClick={copyCurl}>复制为 cURL</button>
+        {statusLabel ? <span className={'pp-pill ' + (STATUS_TONE[ep.status] || 'pp-pill-accent')}>{statusLabel}</span> : null}
+        {/* 页头主动作 32px：与 overview/flow 页头动作区同档 */}
+        <button className="pp-btn" onClick={copyCurl}>复制为 cURL</button>
       </div>
     </div>
   )
@@ -440,19 +443,19 @@ export function DocPage({ route, api }) {
             {isMock ? <p className="pp-note pp-note-warn">示例数据 — window.__postapiApi 未注入或读取失败，以下为文件内 mock</p> : null}
             {error ? <p className="pp-note pp-note-bad">{error}</p> : null}
 
-            <section id="sec-info">
+            <section id="sec-info" className="pp-doc-section">
               <h1 className="pp-doc-h1">
                 <span className="pp-method" data-method={ep.method}>{ep.method}</span>
                 <span className="pp-ellipsis">{ep.name}</span>
               </h1>
-              <p className="pp-mono pp-muted" style={{ margin: '0 0 var(--sp-2) 0' }}>{ep.method} {ep.url}</p>
+              <p className="pp-mono pp-muted">{ep.method} {ep.url}</p>
               {ep.protocol && ep.protocol === 'websocket' ? (
                 <p className="pp-meta">协议 WebSocket：调试页已支持真实连接（连接 / 发送 / 消息日志 / 断走），文档仅展示定义。</p>
               ) : null}
               {ep.protocol && ep.protocol !== 'http' && ep.protocol !== 'websocket' && ep.protocol !== 'graphql' ? (
                 <p className="pp-meta">协议 {ep.protocol}：规划中（仅保留类型位，发送回落 HTTP）</p>
               ) : null}
-              <div style={{ marginTop: 'var(--sp-2)' }}><Markdown text={ep.description} /></div>
+              <div><Markdown text={ep.description} /></div>
             </section>
 
             <section id="sec-path" className="pp-doc-section">
@@ -514,8 +517,8 @@ export function DocPage({ route, api }) {
                     ))}
                   </div>
                   {activeResponse ? (
-                    <div style={{ marginTop: 'var(--sp-2)' }}>
-                      <div className="pp-toolbar-inline" style={{ marginBottom: 'var(--sp-2)' }}>
+                    <div className="pp-doc-sec-body">
+                      <div className="pp-toolbar-inline">
                         <StatusPill status={activeResponse.code} text={activeResponse.name || ''} />
                         <span className="pp-meta">{activeResponse.contentType || 'application/json'}</span>
                         {activeResponse.isDefault ? <span className="pp-pill pp-pill-accent">默认</span> : null}
@@ -532,8 +535,8 @@ export function DocPage({ route, api }) {
                         onChange={(next) => patchResponse({ body: next })}
                       />
                       {Array.isArray(activeResponse.headers) && activeResponse.headers.length > 0 ? (
-                        <div style={{ marginTop: 'var(--sp-2)' }}>
-                          <h3 className="pp-doc-h2">响应头</h3>
+                        <div className="pp-doc-sec-body">
+                          <h3 className="pp-doc-h3">响应头</h3>
                           <div className="pp-table-wrap"><ParamTable rows={activeResponse.headers} readOnly columns={['key', 'value']} emptyText="无响应头" /></div>
                         </div>
                       ) : null}

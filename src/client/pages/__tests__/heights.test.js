@@ -24,7 +24,9 @@ const REGISTERED_PAGES = [
 
 // 允许的高度值：尺寸 token 引用 / 含 token 或 100% 的 calc / 自适应关键字
 // 尺寸 token 家族：主控件 / 小控件 / 大控件 / 行 / 胶囊 / 顶栏（Apifox 版新增三档控件高）
-const TOKEN_HEIGHT_RE = /^var\(--(ctl-h|ctl-h-sm|ctl-h-lg|row-h|tree-row-h|pill-h|topbar-h|tabbar-h|sider-item-h|sider-group-h|hit|sider-w|content-max-w)\)$/
+// 图标（--icon/--icon-sm）与菜单项（--menu-item-h）同属尺寸 token 家族：
+// 图标格、关闭钮、菜单项高度都由它们承载，缺位会把「图标对齐」逼成裸 px。
+const TOKEN_HEIGHT_RE = /^var\(--(ctl-h|ctl-h-sm|ctl-h-lg|row-h|tree-row-h|pill-h|topbar-h|tabbar-h|sider-item-h|sider-group-h|hit|sider-w|content-max-w|icon|icon-sm|menu-item-h)\)$/
 const AUTO_VALUES = new Set(['100%', 'auto', 'inherit', 'fit-content', 'min-content', 'max-content'])
 
 function checkHeightValue(value) {
@@ -34,6 +36,8 @@ function checkHeightValue(value) {
   if (v === '0') return null
   // calc 里只要引用 token 变量或 100% 就算合规（滚动条、分段高度等派生值都走 calc）
   if (/^calc\(/.test(v) && /var\(--|100%/.test(v)) return null
+  // 装饰性微尺寸（≤6px：分隔线、小圆点）不属于控件高度纪律，放行
+  if (/^[1-6]px$/.test(v)) return null
   return '高度值未引用尺寸 token（--ctl-h/--row-h/--pill-h）'
 }
 

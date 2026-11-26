@@ -5,6 +5,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { applyTheme } from './theme.js'
 import { EmptyState } from './components/EmptyState.jsx'
+import { JsonEditor } from './components/JsonEditor.jsx'
 
 ;(window.__postapiQueue = window.__postapiQueue || []).push(['schema', SchemaPage]) // 注册表就绪前入队
 
@@ -256,24 +257,38 @@ export function SchemaPage(props) {
           {isMock ? '示例数据 — api.storage 不可用，以下为文件内 mock' : '数据来源：api.storage（saveSchema / deleteSchema）'}
         </p>
         {error ? <p className="pp-error-text">{error}</p> : null}
-        {notice ? <p className="pp-muted">{notice}</p> : null}
-  
-        <div className="pp-debug-layout">
-          <div className="pp-pane">
-            <div className="pp-card-title">模型</div>
+        {notice ? <p className="pp-note pp-note-ok">{notice}</p> : null}
+
+        {/* 左模型列表（pp-panel，与 doc/mock 左树同容器）+ 右编辑纵排两卡。
+            之前三块 pane 塞两列 grid，「示例数据」掉到左轨正下方、右列整块留白。 */}
+        <div className="pp-schema-layout">
+          <nav className="pp-panel" aria-label="模型列表">
+            <div className="pp-env-side-head">
+              <span className="pp-card-title">模型</span>
+            </div>
             <div className="pp-tree">
               {schemas.map((s) => (
-                <div key={s.id} className="pp-tree-row" data-active={s.id === currentId ? 'true' : 'false'} onClick={() => pick(s)}>
+                <div key={s.id} className="pp-tree-row" data-active={s.id === currentId} onClick={() => pick(s)}>
                   <span className="pp-ellipsis">{s.name || s.id}</span>
                 </div>
               ))}
             </div>
             {schemas.length === 0 ? <EmptyState text="暂无模型" hint="点下方「新建模型」创建数据模型" /> : null}
             <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
-              <button className="pp-btn pp-btn-sm" onClick={blank}>新建模型</button>
+              <button className="pp-btn pp-btn-sm pp-btn-ghost pp-btn-accent" onClick={blank}>新建模型</button>
+              <button className="pp-btn pp-btn-sm pp-btn-ghost pp-btn-accent" disabled={!currentId}
+                title={currentId ? '以当前模型为底稿新建' : '先选中一个模型'}
+                onClick={() => {
+                  const src = schemas.find((s) => s.id === currentId)
+                  setName(((src && src.name) || '模型') + ' 副本')
+                  setText(toText(src && src.jsonSchema))
+                  setCheckResult(null)
+                  setNotice('已复制为未保存副本：编辑名称后点「保存」')
+                }}>复制</button>
             </div>
-          </div>
-  
+          </nav>
+
+          <div className="pp-schema-main">
           <div className="pp-pane">
             <div className="pp-card-title">编辑</div>
             <div className="pp-form-grid" style={{ marginBottom: 'var(--sp-3)' }}>
@@ -282,13 +297,14 @@ export function SchemaPage(props) {
               <label className="pp-form-label">说明</label>
               <input className="pp-input" value={description} onChange={(e) => setDescription(e.target.value)} />
             </div>
-            <textarea className="pp-json-editor" rows={14} value={text}
-              onChange={(e) => { setText(e.target.value); setCheckResult(null) }} />
+            {/* JsonEditor 与调试页同组件：自带格式化/压缩工具条与行内报错 */}
+            <JsonEditor value={text} rows={8} placeholder='{ "type": "object" }'
+              onChange={(v) => { setText(v); setCheckResult(null) }} />
             <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
-              <button className="pp-btn" onClick={validate}>校验</button>
-              <button className="pp-btn" onClick={makeExample}>生成示例</button>
-              <button className="pp-btn pp-btn-primary" onClick={save}>保存</button>
-              <button className="pp-btn pp-btn-danger" onClick={remove}>删除</button>
+              <button className="pp-btn pp-btn-sm" onClick={validate}>校验</button>
+              <button className="pp-btn pp-btn-sm" onClick={makeExample}>生成示例</button>
+              <button className="pp-btn pp-btn-sm pp-btn-primary" onClick={save}>保存</button>
+              <button className="pp-btn pp-btn-sm pp-btn-danger" style={{ marginLeft: 'auto' }} onClick={remove}>删除</button>
             </div>
             {checkResult ? (
               <div className={checkResult.ok ? 'pp-note pp-note-ok' : 'pp-note pp-note-bad'} style={{ marginTop: 'var(--sp-3)' }}>
@@ -296,13 +312,14 @@ export function SchemaPage(props) {
               </div>
             ) : null}
           </div>
-  
+
           <div className="pp-pane">
             <div className="pp-card-title">示例数据</div>
             <pre className="pp-pre pp-pre-scroll">{example || '（点「生成示例」按当前 JSON Schema 生成）'}</pre>
           </div>
+          </div>
         </div>
-      
+
       </div>
     </div>
   )
