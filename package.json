@@ -1,6 +1,6 @@
 {
   "name": "dsh-postapi",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": false,
   "type": "module",
   "description": "DSH plugin: Apifox-style API workspace (docs, debug, mock, schema, env, history, tests, import/export, flow, search) inside the official right sidebar",
