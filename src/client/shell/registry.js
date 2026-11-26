@@ -161,6 +161,13 @@ export function createBridgeServices() {
       messages: (opts) => post('/ws/messages', opts ?? {}),
       close: (opts) => post('/ws/close', opts ?? {}),
     },
+    // gRPC / Dubbo 调试（桥路由同名：POST /grpc/invoke、POST /dubbo/invoke）
+    grpc: {
+      invoke: (opts) => post('/grpc/invoke', opts ?? {}),
+    },
+    dubbo: {
+      invoke: (opts) => post('/dubbo/invoke', opts ?? {}),
+    },
   }
 }
 
@@ -465,6 +472,12 @@ export function createStubServices() {
       messages: async () => ({ ok: false, lastIndex: 0, messages: [], error: { kind: 'unavailable', message: 'WebSocket 调试不可用（桥降级）' } }),
       close: async () => ({ ok: false, error: { kind: 'unavailable', message: 'WebSocket 调试不可用（桥降级）' } }),
     },
+    grpc: {
+      invoke: async () => ({ ok: false, error: { code: 'UNAVAILABLE', message: 'gRPC 调试不可用（桥降级）' } }),
+    },
+    dubbo: {
+      invoke: async () => ({ ok: false, error: { code: 'UNAVAILABLE', message: 'Dubbo 调试不可用（桥降级）' } }),
+    },
   }
 }
 
@@ -493,6 +506,8 @@ export const SERVICE_METHODS = {
   test: ['runCase', 'runScenario'],
   db: ['test', 'query', 'close'],
   ws: ['open', 'send', 'messages', 'close'],
+  grpc: ['invoke'],
+  dubbo: ['invoke'],
 }
 
 /**

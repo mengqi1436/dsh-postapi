@@ -21,6 +21,10 @@ const FILE = {
 
 const read = (file) => (existsSync(file) ? readFileSync(file, 'utf8') : '')
 const assert = (cond, message) => { if (!cond) throw new Error(message) }
+/** 本地深比较：固定键序对象用 JSON 串比较（ops 的键序由实现固定为 kind,id,parentId,order）。 */
+const deepEq = (a, b, message) => {
+  assert(JSON.stringify(a) === JSON.stringify(b), message + '：' + JSON.stringify(a) + ' ≠ ' + JSON.stringify(b))
+}
 
 /** 允许出现的类名：只限 design-tokens.css 已定义的 .pp-* 集合（本次不改样式表）。 */
 const ALLOWED_CLASSES = new Set([
@@ -154,6 +158,25 @@ function deepProject() {
     ],
     endpoints: [
       { id: 'e_deep', name: '深层接口', method: 'GET', folderId: 'f3', order: 0 },
+    ],
+  }
+}
+
+/** 拖拽排序夹具：两个顶级目录（f1 含子目录 f1a）+ 三层接口分布（f1 两条 / f2 一条 / 游离一条）。 */
+function moveProject() {
+  return {
+    id: 'proj_move',
+    name: '排序',
+    folders: [
+      { id: 'f1', name: '目录A', parentId: null, order: 0 },
+      { id: 'f2', name: '目录B', parentId: null, order: 1 },
+      { id: 'f1a', name: 'A-子', parentId: 'f1', order: 0 },
+    ],
+    endpoints: [
+      { id: 'e1', name: '接口1', method: 'GET', folderId: 'f1', order: 0 },
+      { id: 'e2', name: '接口2', method: 'POST', folderId: 'f1', order: 1 },
+      { id: 'e3', name: '接口3', method: 'PUT', folderId: 'f2', order: 0 },
+      { id: 'e4', name: '游离接口', method: 'DELETE', folderId: null, order: 0 },
     ],
   }
 }
@@ -345,6 +368,152 @@ export const tests = [
       // project 为 null 时也不能炸（页面首帧 project 尚未加载）
       const nullTree = FolderTree({ project: null, activeEndpointId: '', onPick() {}, onToggle() {}, collapsed: {} })
       assert(componentNodes(nullTree).length === 1, 'project=null 应退化为空态')
+    },
+  },
+  {
+    name: 'computeTreeMove: 同层重排（拖到接口行前）产出被移节点 + 受影响兄弟的归一化 ops',
+    async fn() {
+      const { computeTreeMove } = await loadModule(FILE.tree)
+      assert(typeof computeTreeMove === 'function', 'FolderTree.jsx 未导出 computeTreeMove')
+      const ops = computeTreeMove(moveProject(), { kind: 'endpoint', id: 'e2', targetKind: 'endpoint', targetId: 'e1', position: 'before' })
+      // f1 层：e2 插到 e1 前 → e2=0，e1=1（e2 原 order=1 变化、e1 原 0→1 变化，两条 op）
+      assert(ops.length === 2, '应产生 2 条 op，实际 ' + JSON.stringify(ops))
+      deepEq(ops[0], { kind: 'endpoint', id: 'e2', parentId: 'f1', order: 0 }, 'e2 op 不符')
+      deepEq(ops[1], { kind: 'endpoint', id: 'e1', parentId: 'f1', order: 1 }, 'e1 op 不符')
+      // f2 层的 e3 与游离的 e4 不受影响
+      assert(ops.every((o) => o.id !== 'e3' && o.id !== 'e4'), '跨层节点不应出现在 ops 里')
+    },
+  },
+  {
+    name: 'computeTreeMove: 跨目录移入（into 目录末尾）并归一化两层 order',
+    async fn() {
+      const { computeTreeMove } = await loadModule(FILE.tree)
+      const ops = computeTreeMove(moveProject(), { kind: 'endpoint', id: 'e1', targetKind: 'folder', targetId: 'f2', position: 'into' })
+      // f2 层：e3 不动（order 0 不变）、e1 追加到末尾 order 1；f1 源层：e2 归一化回 0
+      assert(ops.length === 2, '应产生 2 条 op，实际 ' + JSON.stringify(ops))
+      assert(ops.some((o) => o.id === 'e1' && o.parentId === 'f2' && o.order === 1), 'e1 应移入 f2 末尾：' + JSON.stringify(ops))
+      assert(ops.some((o) => o.id === 'e2' && o.parentId === 'f1' && o.order === 0), '源层 e2 应归一化回 0：' + JSON.stringify(ops))
+      assert(!ops.some((o) => o.id === 'e3'), 'e3 order 未变化不应产生 op')
+    },
+  },
+  {
+    name: 'computeTreeMove: 拖进自己 / 自己的子孙目录被拒，返回 []',
+    async fn() {
+      const { computeTreeMove } = await loadModule(FILE.tree)
+      const p = moveProject()
+      deepEq(computeTreeMove(p, { kind: 'folder', id: 'f1', targetKind: 'folder', targetId: 'f1', position: 'into' }), [], '拖到自己应被拒')
+      deepEq(computeTreeMove(p, { kind: 'folder', id: 'f1', targetKind: 'folder', targetId: 'f1a', position: 'into' }), [], '拖进直接子目录应被拒')
+      // 深一层：f1 → f2 → f3 结构里把 f1 拖进 f3 同样是子孙
+      const deep = deepProject()
+      deepEq(computeTreeMove(deep, { kind: 'folder', id: 'f1', targetKind: 'folder', targetId: 'f3', position: 'into' }), [], '拖进隔层子孙应被拒')
+    },
+  },
+  {
+    name: 'computeTreeMove: 目标不存在 / 非法移动一律返回 []',
+    async fn() {
+      const { computeTreeMove } = await loadModule(FILE.tree)
+      const p = moveProject()
+      deepEq(computeTreeMove(p, { kind: 'endpoint', id: 'e1', targetKind: 'folder', targetId: 'fld_gone', position: 'into' }), [], '目标目录不存在')
+      deepEq(computeTreeMove(p, { kind: 'endpoint', id: 'e1', targetKind: 'endpoint', targetId: 'ep_gone', position: 'before' }), [], '目标接口不存在')
+      deepEq(computeTreeMove(p, { kind: 'endpoint', id: 'ep_gone', targetKind: 'root', position: 'into' }), [], '被移动节点不存在')
+      deepEq(computeTreeMove(p, { kind: 'folder', id: 'f1', targetKind: 'root', position: 'before' }), [], 'root 无参照行，before 非法')
+      deepEq(computeTreeMove(p, { kind: 'endpoint', id: 'e1', targetKind: 'endpoint', targetId: 'e3', position: 'into' }), [], '接口行不接受 into')
+      deepEq(computeTreeMove(p, { kind: 'folder', id: 'f1', targetKind: 'endpoint', targetId: 'e3', position: 'before' }), [], '目录没有插到接口行前的语义')
+      deepEq(computeTreeMove(p, { kind: 'endpoint', id: 'e2', targetKind: 'endpoint', targetId: 'e2', position: 'before' }), [], '拖到自身上')
+      deepEq(computeTreeMove(p, null), [], '入参非对象')
+      deepEq(computeTreeMove(p, { kind: 'endpoint', id: '', targetKind: 'root', position: 'into' }), [], '缺 id')
+    },
+  },
+  {
+    name: 'computeTreeMove: 根/未归类层为目标（parentId null），order 归一化连续 0..n',
+    async fn() {
+      const { computeTreeMove } = await loadModule(FILE.tree)
+      const ops = computeTreeMove(moveProject(), { kind: 'endpoint', id: 'e1', targetKind: 'root', position: 'into' })
+      // 目标层（根/未归类）：e4 order 0 已就位不产出 op；e1 追加 order 1（parentId: null）；
+      // 源层 f1：e2 归一化回 0。order 全程 0..n 连续。
+      assert(ops.length === 2, '应产生 2 条 op，实际 ' + JSON.stringify(ops))
+      deepEq(ops[0], { kind: 'endpoint', id: 'e1', parentId: null, order: 1 }, 'e1 op 不符')
+      deepEq(ops[1], { kind: 'endpoint', id: 'e2', parentId: 'f1', order: 0 }, 'e2 op 不符')
+      for (const o of ops) assert(Number.isInteger(o.order) && o.order >= 0, 'order 应为非负整数：' + JSON.stringify(o))
+      // 目录同层重排：f2 提到 f1 前
+      const folderOps = computeTreeMove(moveProject(), { kind: 'folder', id: 'f2', targetKind: 'folder', targetId: 'f1', position: 'before' })
+      deepEq(folderOps, [
+        { kind: 'folder', id: 'f2', parentId: null, order: 0 },
+        { kind: 'folder', id: 'f1', parentId: null, order: 1 },
+      ], '目录同层重排 ops 不符')
+    },
+  },
+  {
+    name: 'folder-tree: 拖拽链路 dragstart→drop 逐条回调 onMove；目录拖到接口行就近映射为移入其目录',
+    async fn() {
+      const { FolderTree } = await loadModule(FILE.tree)
+      const moves = []
+      const root = FolderTree({ project: moveProject(), activeEndpointId: '', onPick() {}, onToggle() {}, collapsed: {}, onMove: (op) => moves.push(op) })
+      const eps = endpointRows(root)
+      const fols = folderRows(root)
+      const rowOf = (rows, text) => rows.find((row) => texts(row).join('').includes(text))
+      // 接口2 拖到 接口1 前：before 语义
+      const src = rowOf(eps, '接口2')
+      const dst = rowOf(eps, '接口1')
+      assert(typeof src.props.onDragStart === 'function' && src.props.draggable === true, '接口行应可拖拽（draggable + onDragStart）')
+      src.props.onDragStart({ dataTransfer: { setData() {}, setDragImage() {} } })
+      dst.props.onDragOver({ preventDefault() {}, dataTransfer: { dropEffect: '' } })
+      dst.props.onDrop({ preventDefault() {} })
+      deepEq(moves, [
+        { kind: 'endpoint', id: 'e2', parentId: 'f1', order: 0 },
+        { kind: 'endpoint', id: 'e1', parentId: 'f1', order: 1 },
+      ], 'drop 未按 computeTreeMove 逐条回调 onMove')
+
+      // 目录A 拖到 接口3（f2 内）行上：映射为移入 f2（f2 内原本无目录，落 order 0）；源层（根目录）f2 归一化回 0
+      moves.length = 0
+      const folderRow = rowOf(fols, '目录A')
+      assert(typeof folderRow.props.onDragStart === 'function', '目录行应可拖拽')
+      folderRow.props.onDragStart({ dataTransfer: { setData() {} } })
+      rowOf(eps, '接口3').props.onDrop({ preventDefault() {} })
+      deepEq(moves, [
+        { kind: 'folder', id: 'f1', parentId: 'f2', order: 0 },
+        { kind: 'folder', id: 'f2', parentId: null, order: 0 },
+      ], '目录拖到接口行应映射为移入其目录并归一化源层')
+
+      // 拖进自己的子孙：onMove 不应收到任何 op（computeTreeMove 拒绝）
+      moves.length = 0
+      const tree = FolderTree({ project: deepProject(), activeEndpointId: '', onPick() {}, onToggle() {}, collapsed: {}, onMove: (op) => moves.push(op) })
+      folderRows(tree)[0].props.onDragStart({ dataTransfer: { setData() {} } })
+      endpointRows(tree)[0].props.onDrop({ preventDefault() {} }) // 深层接口在 f3（f1 的孙层）内
+      deepEq(moves, [], '拖进子孙目录不应产生 op')
+
+      // onMove 缺省时 drop 不炸
+      const noCb = FolderTree({ project: moveProject(), activeEndpointId: '', onPick() {}, onToggle() {}, collapsed: {} })
+      endpointRows(noCb)[0].props.onDragStart({ dataTransfer: { setData() {} } })
+      endpointRows(noCb)[1].props.onDrop({ preventDefault() {} })
+    },
+  },
+  {
+    name: 'folder-tree: 行右键回调 onContextMenu(kind,id,x,y)；树空白/项目名行回 root',
+    async fn() {
+      const { FolderTree } = await loadModule(FILE.tree)
+      const seen = []
+      const root = FolderTree({
+        project: moveProject(),
+        activeEndpointId: '',
+        onPick() {},
+        onToggle() {},
+        collapsed: {},
+        onContextMenu: (kind, id, x, y) => seen.push([kind, id, x, y]),
+      })
+      const row = endpointRows(root).find((r) => texts(r).join('').includes('接口1'))
+      row.props.onContextMenu({ preventDefault() {}, clientX: 11, clientY: 22 })
+      deepEq(seen, [['endpoint', 'e1', 11, 22]], '接口行右键回调不符')
+
+      const folderRow = folderRows(root)[0]
+      folderRow.props.onContextMenu({ preventDefault() {}, clientX: 5, clientY: 6 })
+      deepEq(seen[1], ['folder', 'f1', 5, 6], '目录行右键回调不符')
+
+      // 树空白 / 项目名行：kind=root
+      const treeEl = byClass(root, 'pp-tree')[0]
+      assert(typeof treeEl.props.onContextMenu === 'function', '树根缺 onContextMenu（空白区右键）')
+      treeEl.props.onContextMenu({ preventDefault() {}, clientX: 1, clientY: 2 })
+      deepEq(seen[2], ['root', '', 1, 2], '空白区右键应回 kind=root')
     },
   },
 ]
