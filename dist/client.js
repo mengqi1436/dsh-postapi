@@ -102,6 +102,8 @@ var zh = {
   "menu.new.importDoc": "\u5BFC\u5165\u63A5\u53E3\u6587\u6863",
   "menu.new.importOpenapi": "OpenAPI / Swagger",
   "menu.new.importPostman": "Postman \u96C6\u5408",
+  "menu.new.importApifox": "Apifox \u9879\u76EE JSON",
+  "menu.new.importYapi": "YApi \u5BFC\u51FA JSON",
   "menu.new.importHar": "HAR \u6293\u5305",
   "menu.new.importCurl": "cURL \u547D\u4EE4",
   "menu.new.importData": "\u5BFC\u5165\u6570\u636E",
@@ -190,6 +192,8 @@ var en = {
   "menu.new.importDoc": "Import API document",
   "menu.new.importOpenapi": "OpenAPI / Swagger",
   "menu.new.importPostman": "Postman collection",
+  "menu.new.importApifox": "Apifox project JSON",
+  "menu.new.importYapi": "YApi export JSON",
   "menu.new.importHar": "HAR capture",
   "menu.new.importCurl": "cURL command",
   "menu.new.importData": "Import data",
@@ -367,7 +371,9 @@ function createBridgeServices() {
       openapi: (json) => post("/import/openapi", { json }),
       postman: (json) => post("/import/postman", { json }),
       har: (json) => post("/import/har", { json }),
-      curl: (text) => post("/import/curl", { text })
+      curl: (text) => post("/import/curl", { text }),
+      apifox: (json) => post("/import/apifox", { json }),
+      yapi: (json) => post("/import/yapi", { json })
     },
     export: {
       openapi: (project) => post("/export/openapi", { project }),
@@ -384,6 +390,12 @@ function createBridgeServices() {
       test: (opts) => post("/db/test", opts ?? {}),
       query: (opts) => post("/db/query", opts ?? {}),
       close: (opts) => post("/db/close", opts ?? {})
+    },
+    ws: {
+      open: (opts) => post("/ws/open", opts ?? {}),
+      send: (opts) => post("/ws/send", opts ?? {}),
+      messages: (opts) => post("/ws/messages", opts ?? {}),
+      close: (opts) => post("/ws/close", opts ?? {})
     }
   };
 }
@@ -673,7 +685,9 @@ function createStubServices() {
       openapi: async () => ({ folders: [], endpoints: [], schemas: [] }),
       postman: async () => ({ folders: [], endpoints: [], schemas: [] }),
       har: async () => ({ folders: [], endpoints: [], schemas: [] }),
-      curl: async () => ({ folders: [], endpoints: [], schemas: [], endpoint: null })
+      curl: async () => ({ folders: [], endpoints: [], schemas: [], endpoint: null }),
+      apifox: async () => ({ folders: [], endpoints: [], schemas: [] }),
+      yapi: async () => ({ folders: [], endpoints: [], schemas: [] })
     },
     export: {
       openapi: async () => "",
@@ -687,9 +701,15 @@ function createStubServices() {
       runScenario: async (projectId, scenarioId) => ({ scenarioId, passed: false, steps: [], durationMs: 0, error: "\u6D4B\u8BD5\u8FD0\u884C\u5668\u4E0D\u53EF\u7528\uFF08\u6865\u964D\u7EA7\uFF09" })
     },
     db: {
-      test: async () => ({ available: false, message: "\u6570\u636E\u5E93\u64CD\u4F5C\u89C4\u5212\u4E2D\uFF08P2\uFF09" }),
-      query: async () => ({ available: false, message: "\u6570\u636E\u5E93\u64CD\u4F5C\u89C4\u5212\u4E2D\uFF08P2\uFF09" }),
-      close: async () => ({ available: false, message: "\u6570\u636E\u5E93\u64CD\u4F5C\u89C4\u5212\u4E2D\uFF08P2\uFF09" })
+      test: async () => ({ ok: false, error: { code: "UNAVAILABLE", message: "\u6570\u636E\u5E93\u64CD\u4F5C\u4E0D\u53EF\u7528\uFF08\u6865\u964D\u7EA7\uFF09" } }),
+      query: async () => ({ ok: false, error: { code: "UNAVAILABLE", message: "\u6570\u636E\u5E93\u64CD\u4F5C\u4E0D\u53EF\u7528\uFF08\u6865\u964D\u7EA7\uFF09" } }),
+      close: async () => ({ ok: false, error: { code: "UNAVAILABLE", message: "\u6570\u636E\u5E93\u64CD\u4F5C\u4E0D\u53EF\u7528\uFF08\u6865\u964D\u7EA7\uFF09" } })
+    },
+    ws: {
+      open: async () => ({ id: "", url: "", status: "unavailable", messages: [], error: { kind: "unavailable", message: "WebSocket \u8C03\u8BD5\u4E0D\u53EF\u7528\uFF08\u6865\u964D\u7EA7\uFF09" } }),
+      send: async () => ({ ok: false, error: { kind: "unavailable", message: "WebSocket \u8C03\u8BD5\u4E0D\u53EF\u7528\uFF08\u6865\u964D\u7EA7\uFF09" } }),
+      messages: async () => ({ ok: false, lastIndex: 0, messages: [], error: { kind: "unavailable", message: "WebSocket \u8C03\u8BD5\u4E0D\u53EF\u7528\uFF08\u6865\u964D\u7EA7\uFF09" } }),
+      close: async () => ({ ok: false, error: { kind: "unavailable", message: "WebSocket \u8C03\u8BD5\u4E0D\u53EF\u7528\uFF08\u6865\u964D\u7EA7\uFF09" } })
     }
   };
 }
@@ -724,11 +744,12 @@ var SERVICE_METHODS = {
   script: ["run"],
   mock: ["start", "stop", "status"],
   schema: ["example", "validate"],
-  import: ["openapi", "postman", "har", "curl"],
+  import: ["openapi", "postman", "har", "curl", "apifox", "yapi"],
   export: ["openapi", "postman", "har", "markdown"],
   codegen: ["run"],
   test: ["runCase", "runScenario"],
-  db: ["test", "query", "close"]
+  db: ["test", "query", "close"],
+  ws: ["open", "send", "messages", "close"]
 };
 function installApi() {
   if (typeof window === "undefined") return void 0;
@@ -838,6 +859,8 @@ var NEW_MENU = [
         children: [
           { id: "import-openapi", labelKey: "menu.new.importOpenapi", action: { kind: "route", hash: "#/import", query: "kind=openapi" } },
           { id: "import-postman", labelKey: "menu.new.importPostman", action: { kind: "route", hash: "#/import", query: "kind=postman" } },
+          { id: "import-apifox", labelKey: "menu.new.importApifox", action: { kind: "route", hash: "#/import", query: "kind=apifox" } },
+          { id: "import-yapi", labelKey: "menu.new.importYapi", action: { kind: "route", hash: "#/import", query: "kind=yapi" } },
           { id: "import-har", labelKey: "menu.new.importHar", action: { kind: "route", hash: "#/import", query: "kind=har" } },
           { id: "import-curl", labelKey: "menu.new.importCurl", action: { kind: "route", hash: "#/import", query: "kind=curl" } }
         ]
@@ -2227,7 +2250,7 @@ function DocPage({ route, api }) {
   }
   const statusLabel = STATUS_LABEL[ep.status] || ep.status || "";
   const docHead = /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-doc-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-doc-title" }, ep.name), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-overview-actions" }, copied ? /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-note " + (copied === "\u5DF2\u590D\u5236" ? "pp-note-ok" : "pp-note-bad") }, copied) : null, statusLabel ? /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-pill pp-pill-accent" }, statusLabel) : null, /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-sm", onClick: copyCurl }, "\u590D\u5236\u4E3A cURL")));
-  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page-flush", "data-page": "doc", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-split" }, /* @__PURE__ */ (0, import_react.createElement)("nav", { className: "pp-panel", "aria-label": "\u63A5\u53E3\u76EE\u5F55" }, tree), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-doc-main" }, docHead, anchorBar, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-page" }, isMock ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-note pp-note-warn" }, "\u793A\u4F8B\u6570\u636E \u2014 window.__postapiApi \u672A\u6CE8\u5165\u6216\u8BFB\u53D6\u5931\u8D25\uFF0C\u4EE5\u4E0B\u4E3A\u6587\u4EF6\u5185 mock") : null, error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-note pp-note-bad" }, error) : null, /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-info" }, /* @__PURE__ */ (0, import_react.createElement)("h1", { className: "pp-doc-h1" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": ep.method }, ep.method), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ellipsis" }, ep.name)), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-mono pp-muted", style: { margin: "0 0 var(--sp-2) 0" } }, ep.method, " ", ep.url), ep.protocol && ep.protocol !== "http" ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-meta" }, "\u534F\u8BAE ", ep.protocol, "\uFF1A\u89C4\u5212\u4E2D\uFF08\u4EC5\u4FDD\u7559\u7C7B\u578B\u4F4D\uFF0C\u53D1\u9001\u56DE\u843D HTTP\uFF09") : null, /* @__PURE__ */ (0, import_react.createElement)("div", { style: { marginTop: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)(Markdown, { text: ep.description }))), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-path", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-doc-h2" }, "Path \u53C2\u6570"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: ep.pathParams, readOnly: true, emptyText: "\u65E0 Path \u53C2\u6570", emptyHint: "\u8DEF\u5F84\u91CC\u6CA1\u6709 {var} \u5360\u4F4D\u7B26" }))), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-params", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-doc-h2" }, "Query \u53C2\u6570"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: ep.params, readOnly: true, emptyText: "\u65E0 Query \u53C2\u6570" }))), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-headers", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-doc-h2" }, "\u8BF7\u6C42\u5934"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: ep.headers, readOnly: true, emptyText: "\u65E0\u8BF7\u6C42\u5934" }))), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-cookies", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-doc-h2" }, "Cookies"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: ep.cookies, readOnly: true, emptyText: "\u65E0 Cookies" }))), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-body", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-doc-h2" }, "\u8BF7\u6C42\u4F53\uFF08", ep.body && ep.body.type ? ep.body.type : "none", "\uFF09"), ep.body && ep.body.content ? /* @__PURE__ */ (0, import_react.createElement)(JsonEditor, { value: ep.body.content, readOnly: true, rows: 8 }) : /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u65E0\u8BF7\u6C42\u4F53" }), ep.body && ep.body.type && BODY_TYPES.indexOf(ep.body.type) < 0 ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-meta" }, "\u672A\u77E5 body \u7C7B\u578B\uFF1A", ep.body.type) : null), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-auth", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-doc-h2" }, "\u8BA4\u8BC1"), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, AUTH_LABEL[ep.auth && ep.auth.type || "none"] || ep.auth && ep.auth.type), ep.auth && ep.auth.type === "apikey" ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-mono" }, (ep.auth.key || "key") + " \u2192 " + (ep.auth.addTo === "query" ? "query" : "header")) : null), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-response", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-doc-h2" }, "\u54CD\u5E94"), responses.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u5C1A\u672A\u5B9A\u4E49\u54CD\u5E94", hint: "\u5728\u8C03\u8BD5\u9875\u53D1\u9001\u540E\u4FDD\u5B58\u4E3A\u63A5\u53E3\uFF0C\u6216\u65B0\u589E\u54CD\u5E94" }) : /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tabs" }, responses.map((r) => /* @__PURE__ */ (0, import_react.createElement)(
+  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page-flush", "data-page": "doc", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-split" }, /* @__PURE__ */ (0, import_react.createElement)("nav", { className: "pp-panel", "aria-label": "\u63A5\u53E3\u76EE\u5F55" }, tree), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-doc-main" }, docHead, anchorBar, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-page" }, isMock ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-note pp-note-warn" }, "\u793A\u4F8B\u6570\u636E \u2014 window.__postapiApi \u672A\u6CE8\u5165\u6216\u8BFB\u53D6\u5931\u8D25\uFF0C\u4EE5\u4E0B\u4E3A\u6587\u4EF6\u5185 mock") : null, error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-note pp-note-bad" }, error) : null, /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-info" }, /* @__PURE__ */ (0, import_react.createElement)("h1", { className: "pp-doc-h1" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": ep.method }, ep.method), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-ellipsis" }, ep.name)), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-mono pp-muted", style: { margin: "0 0 var(--sp-2) 0" } }, ep.method, " ", ep.url), ep.protocol && ep.protocol === "websocket" ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-meta" }, "\u534F\u8BAE WebSocket\uFF1A\u8C03\u8BD5\u9875\u5DF2\u652F\u6301\u771F\u5B9E\u8FDE\u63A5\uFF08\u8FDE\u63A5 / \u53D1\u9001 / \u6D88\u606F\u65E5\u5FD7 / \u65AD\u8D70\uFF09\uFF0C\u6587\u6863\u4EC5\u5C55\u793A\u5B9A\u4E49\u3002") : null, ep.protocol && ep.protocol !== "http" && ep.protocol !== "websocket" && ep.protocol !== "graphql" ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-meta" }, "\u534F\u8BAE ", ep.protocol, "\uFF1A\u89C4\u5212\u4E2D\uFF08\u4EC5\u4FDD\u7559\u7C7B\u578B\u4F4D\uFF0C\u53D1\u9001\u56DE\u843D HTTP\uFF09") : null, /* @__PURE__ */ (0, import_react.createElement)("div", { style: { marginTop: "var(--sp-2)" } }, /* @__PURE__ */ (0, import_react.createElement)(Markdown, { text: ep.description }))), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-path", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-doc-h2" }, "Path \u53C2\u6570"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: ep.pathParams, readOnly: true, emptyText: "\u65E0 Path \u53C2\u6570", emptyHint: "\u8DEF\u5F84\u91CC\u6CA1\u6709 {var} \u5360\u4F4D\u7B26" }))), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-params", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-doc-h2" }, "Query \u53C2\u6570"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: ep.params, readOnly: true, emptyText: "\u65E0 Query \u53C2\u6570" }))), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-headers", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-doc-h2" }, "\u8BF7\u6C42\u5934"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: ep.headers, readOnly: true, emptyText: "\u65E0\u8BF7\u6C42\u5934" }))), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-cookies", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-doc-h2" }, "Cookies"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: ep.cookies, readOnly: true, emptyText: "\u65E0 Cookies" }))), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-body", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-doc-h2" }, "\u8BF7\u6C42\u4F53\uFF08", ep.body && ep.body.type ? ep.body.type : "none", "\uFF09"), ep.body && ep.body.content ? /* @__PURE__ */ (0, import_react.createElement)(JsonEditor, { value: ep.body.content, readOnly: true, rows: 8 }) : /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u65E0\u8BF7\u6C42\u4F53" }), ep.body && ep.body.type && BODY_TYPES.indexOf(ep.body.type) < 0 ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-meta" }, "\u672A\u77E5 body \u7C7B\u578B\uFF1A", ep.body.type) : null), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-auth", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-doc-h2" }, "\u8BA4\u8BC1"), /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-muted" }, AUTH_LABEL[ep.auth && ep.auth.type || "none"] || ep.auth && ep.auth.type), ep.auth && ep.auth.type === "apikey" ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-mono" }, (ep.auth.key || "key") + " \u2192 " + (ep.auth.addTo === "query" ? "query" : "header")) : null), /* @__PURE__ */ (0, import_react.createElement)("section", { id: "sec-response", className: "pp-doc-section" }, /* @__PURE__ */ (0, import_react.createElement)("h2", { className: "pp-doc-h2" }, "\u54CD\u5E94"), responses.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { text: "\u5C1A\u672A\u5B9A\u4E49\u54CD\u5E94", hint: "\u5728\u8C03\u8BD5\u9875\u53D1\u9001\u540E\u4FDD\u5B58\u4E3A\u63A5\u53E3\uFF0C\u6216\u65B0\u589E\u54CD\u5E94" }) : /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tabs" }, responses.map((r) => /* @__PURE__ */ (0, import_react.createElement)(
     "button",
     {
       key: r.id,
@@ -2702,7 +2725,17 @@ var TABS = [
   { id: "body", label: "Body" },
   { id: "auth", label: "Auth" },
   { id: "script", label: "\u811A\u672C" },
+  { id: "db", label: "\u6570\u636E\u5E93" },
   { id: "settings", label: "\u8BBE\u7F6E" }
+];
+var WS_TABS = [
+  { id: "params", label: "Params" },
+  { id: "headers", label: "Headers" }
+];
+var DB_TYPES = [
+  { id: "sqlite", label: "SQLite\uFF08\u5185\u7F6E\u9A71\u52A8\uFF09" },
+  { id: "mysql", label: "MySQL\uFF08\u9700\u72EC\u7ACB\u9A71\u52A8\uFF09" },
+  { id: "postgresql", label: "PostgreSQL\uFF08\u9700\u72EC\u7ACB\u9A71\u52A8\uFF09" }
 ];
 var REPLAY_KEY = "postapi.debug.replay";
 var AUTH_LABEL2 = { none: "\u65E0\u8BA4\u8BC1", bearer: "Bearer", basic: "Basic", apikey: "API Key" };
@@ -2715,6 +2748,8 @@ function emptyDraft(ep) {
     name: ep && ep.name ? ep.name : "",
     folderId: ep && ep.folderId ? ep.folderId : null,
     method: ep && ep.method || "GET",
+    // 协议位（http | websocket | grpc...）：websocket 走调试页 WS 模式，其余仍回落 HTTP
+    protocol: ep && ep.protocol || "http",
     url: ep && ep.url || "",
     params: (ep && Array.isArray(ep.params) ? ep.params : []).map((r) => ({ ...r })),
     pathParams: (ep && Array.isArray(ep.pathParams) ? ep.pathParams : []).map((r) => ({ ...r })),
@@ -2808,6 +2843,25 @@ function appendCommonHeaders(rows, limit = 3) {
   }
   return list;
 }
+function toWsUrl(raw) {
+  const url = String(raw || "");
+  if (/^wss?:\/\//i.test(url)) return url;
+  return url.replace(/^https:\/\//i, "wss://").replace(/^http:\/\//i, "ws://");
+}
+function buildWsPayload(draft, finalUrl, variables) {
+  return {
+    url: toWsUrl(finalUrl),
+    params: (Array.isArray(draft.params) ? draft.params : []).filter((p) => p && p.enabled !== false && p.key),
+    headers: (Array.isArray(draft.headers) ? draft.headers : []).filter((h) => h && h.enabled !== false && h.key),
+    auth: draft.auth || { type: "none" },
+    variables
+  };
+}
+var WS_DIR_LABEL = { out: "\u2192", in: "\u2190", system: "\u25CF" };
+function wsTime(at) {
+  const raw = String(at || "");
+  return raw.length >= 19 ? raw.slice(11, 19) : raw;
+}
 function DebugPage({ route, api }) {
   const rootRef = (0, import_react10.useRef)(null);
   const abortRef = (0, import_react10.useRef)({ cancelled: false });
@@ -2827,6 +2881,15 @@ function DebugPage({ route, api }) {
   const [sending, setSending] = (0, import_react10.useState)(false);
   const [timeoutMs, setTimeoutMs] = (0, import_react10.useState)(3e4);
   const [savedHint, setSavedHint] = (0, import_react10.useState)("");
+  const [wsState, setWsState] = (0, import_react10.useState)({ id: "", status: "idle", messages: [], error: null });
+  const [wsInput, setWsInput] = (0, import_react10.useState)("");
+  const wsIndexRef = (0, import_react10.useRef)(0);
+  const wsTimerRef = (0, import_react10.useRef)(null);
+  const [dbConfig, setDbConfig] = (0, import_react10.useState)({ type: "sqlite", path: "", host: "", port: "", user: "", password: "", database: "" });
+  const [dbSql, setDbSql] = (0, import_react10.useState)("SELECT 1");
+  const [dbHint, setDbHint] = (0, import_react10.useState)("");
+  const [dbResult, setDbResult] = (0, import_react10.useState)(null);
+  const [dbBusy, setDbBusy] = (0, import_react10.useState)(false);
   (0, import_react10.useEffect)(() => {
     const storage = apiRef && apiRef.storage;
     if (!storage || typeof storage.listProjects !== "function" || typeof storage.getProject !== "function") return void 0;
@@ -2871,7 +2934,48 @@ function DebugPage({ route, api }) {
   const { table, env } = (0, import_react10.useMemo)(() => varTable(project, envId), [project, envId]);
   const varRefs = (0, import_react10.useMemo)(() => collectVarRefs(draft), [draft]);
   const missingVars = (0, import_react10.useMemo)(() => varRefs.filter((k) => !(k in table)), [varRefs, table]);
-  const finalUrl = (0, import_react10.useMemo)(() => joinUrl2(env && env.baseUrl, draft.url), [env, draft.url]);
+  const finalUrl = (0, import_react10.useMemo)(() => {
+    const raw = String(draft.url || "");
+    if (/^wss?:\/\//i.test(raw)) return raw;
+    return joinUrl2(env && env.baseUrl, raw);
+  }, [env, draft.url]);
+  const wsMode = draft.protocol === "websocket";
+  const activeTabs = wsMode ? WS_TABS : TABS;
+  const dbConnections = (0, import_react10.useMemo)(
+    () => project && project.settings && Array.isArray(project.settings.dbConnections) ? project.settings.dbConnections : [],
+    [project]
+  );
+  const pollWsMessages = () => {
+    const wsApi = apiRef && apiRef.ws;
+    if (!wsApi || typeof wsApi.messages !== "function" || !wsState.id) return;
+    wsApi.messages({ id: wsState.id, since: wsIndexRef.current }).then((result) => {
+      if (!result || result.ok === false) return;
+      if (Array.isArray(result.messages) && result.messages.length) {
+        setWsState((prev) => ({ ...prev, messages: [...prev.messages, ...result.messages], status: result.status || prev.status }));
+      } else {
+        setWsState((prev) => ({ ...prev, status: result.status || prev.status }));
+      }
+      if (Number.isFinite(result.lastIndex)) wsIndexRef.current = result.lastIndex;
+    }).catch(() => {
+    });
+  };
+  (0, import_react10.useEffect)(() => {
+    if (wsTimerRef.current) {
+      clearInterval(wsTimerRef.current);
+      wsTimerRef.current = null;
+    }
+    if (wsState.status !== "open" || !wsState.id) return void 0;
+    wsTimerRef.current = setInterval(pollWsMessages, 1e3);
+    return () => {
+      if (wsTimerRef.current) {
+        clearInterval(wsTimerRef.current);
+        wsTimerRef.current = null;
+      }
+    };
+  }, [wsState.status, wsState.id, apiRef]);
+  (0, import_react10.useEffect)(() => () => {
+    if (wsTimerRef.current) clearInterval(wsTimerRef.current);
+  }, []);
   const patch = (field, value) => setDraft((prev) => ({ ...prev, [field]: value }));
   const patchAuth = (field, value) => setDraft((prev) => ({ ...prev, auth: { ...prev.auth, [field]: value } }));
   const addCommonHeaders = () => setDraft((prev) => ({ ...prev, headers: appendCommonHeaders(prev.headers, 3) }));
@@ -2947,7 +3051,8 @@ function DebugPage({ route, api }) {
     }
     const endpoint = {
       ...draft,
-      name: draft.name || draft.method + " " + draft.url,
+      protocol: wsMode ? "websocket" : "http",
+      name: draft.name || (wsMode ? "WS " : draft.method + " ") + draft.url,
       responses: draft.responses.length ? draft.responses : []
     };
     Promise.resolve().then(() => storage.saveEndpoint(project.id, endpoint)).then((saved) => {
@@ -2955,8 +3060,119 @@ function DebugPage({ route, api }) {
       setDraft((prev) => ({ ...prev, id: saved && saved.id || prev.id }));
     }).catch((err) => setSavedHint("\u4FDD\u5B58\u5931\u8D25\uFF1A" + (err && err.message ? err.message : String(err))));
   };
+  const wsConnect = () => {
+    const wsApi = apiRef && apiRef.ws;
+    if (!wsApi || typeof wsApi.open !== "function") {
+      setWsState((prev) => ({ ...prev, status: "unavailable", error: { kind: "unavailable", message: "api.ws \u4E0D\u53EF\u7528" } }));
+      return;
+    }
+    const payload = buildWsPayload(draft, finalUrl, {
+      globals: project && project.globals ? project.globals.variables || [] : [],
+      environment: env && Array.isArray(env.variables) ? env.variables : [],
+      local: []
+    });
+    wsIndexRef.current = 0;
+    setWsState({ id: "", status: "connecting", messages: [], error: null });
+    wsApi.open({ ...payload, timeoutMs: timeoutMs > 0 ? timeoutMs : 3e4 }).then((result) => {
+      const messages = Array.isArray(result && result.messages) ? result.messages : [];
+      wsIndexRef.current = messages.length;
+      setWsState({
+        id: result && result.id || "",
+        url: result && result.url || "",
+        status: result && result.status || "closed",
+        messages,
+        error: result && result.error || null
+      });
+    }).catch((err) => setWsState({ id: "", url: "", status: "error", messages: [], error: { kind: "client", message: err && err.message ? err.message : String(err) } }));
+  };
+  const wsDisconnect = () => {
+    const wsApi = apiRef && apiRef.ws;
+    if (!wsApi || typeof wsApi.close !== "function" || !wsState.id) return;
+    wsApi.close({ id: wsState.id }).then(() => setWsState((prev) => ({ ...prev, status: "closed" }))).catch(() => setWsState((prev) => ({ ...prev, status: "closed" })));
+  };
+  const wsSend = () => {
+    const wsApi = apiRef && apiRef.ws;
+    if (!wsApi || typeof wsApi.send !== "function" || !wsState.id) return;
+    const text = String(wsInput);
+    wsApi.send({ id: wsState.id, message: text }).then((result) => {
+      if (result && result.ok === false) {
+        setWsState((prev) => ({ ...prev, error: result.error || { kind: "client", message: "\u53D1\u9001\u5931\u8D25" } }));
+        return;
+      }
+      setWsState((prev) => ({ ...prev, status: result && result.status || prev.status, messages: [...prev.messages, { direction: "out", at: (/* @__PURE__ */ new Date()).toISOString(), data: text, binary: false }] }));
+      setWsInput("");
+      pollWsMessages();
+    }).catch((err) => setWsState((prev) => ({ ...prev, error: { kind: "client", message: err && err.message ? err.message : String(err) } })));
+  };
+  const dbPatch = (field, value) => setDbConfig((prev) => ({ ...prev, [field]: value }));
+  const dbTest = () => {
+    const dbApi = apiRef && apiRef.db;
+    if (!dbApi || typeof dbApi.test !== "function") {
+      setDbHint("api.db \u4E0D\u53EF\u7528\uFF08\u6865\u964D\u7EA7\uFF09");
+      return;
+    }
+    setDbBusy(true);
+    setDbHint("");
+    dbApi.test({ connection: dbConfig }).then((result) => {
+      if (result && result.ok) setDbHint("\u8FDE\u63A5\u6210\u529F\uFF08" + result.driver + "\uFF09");
+      else setDbHint("\u8FDE\u63A5\u5931\u8D25\uFF1A" + (result && result.error && result.error.message || "\u672A\u77E5\u9519\u8BEF"));
+    }).catch((err) => setDbHint("\u8FDE\u63A5\u5931\u8D25\uFF1A" + (err && err.message ? err.message : String(err)))).finally(() => setDbBusy(false));
+  };
+  const dbRun = () => {
+    const dbApi = apiRef && apiRef.db;
+    if (!dbApi || typeof dbApi.query !== "function") {
+      setDbHint("api.db \u4E0D\u53EF\u7528\uFF08\u6865\u964D\u7EA7\uFF09");
+      return;
+    }
+    setDbBusy(true);
+    setDbHint("");
+    dbApi.query({ connection: dbConfig, sql: dbSql }).then((result) => {
+      setDbResult(result);
+    }).catch((err) => {
+      setDbResult(null);
+      setDbHint("\u6267\u884C\u5931\u8D25\uFF1A" + (err && err.message ? err.message : String(err)));
+    }).finally(() => setDbBusy(false));
+  };
+  const dbSave = () => {
+    const storage = apiRef && apiRef.storage;
+    if (!storage || typeof storage.saveProjectSettings !== "function" || !project || !project.id) {
+      setDbHint("\u4FDD\u5B58\u5931\u8D25\uFF1Astorage.saveProjectSettings \u4E0D\u53EF\u7528");
+      return;
+    }
+    const name = (dbConfig.type === "sqlite" ? dbConfig.path : dbConfig.host) || dbConfig.type;
+    const next = [...dbConnections.filter((c) => c && c.name !== name), { ...dbConfig, name }];
+    storage.saveProjectSettings(project.id, { dbConnections: next }).then(() => setProject((prev) => ({ ...prev, settings: { ...prev.settings || {}, dbConnections: next } }))).then(() => setDbHint("\u5DF2\u4FDD\u5B58\u8FDE\u63A5\uFF1A" + name)).catch((err) => setDbHint("\u4FDD\u5B58\u5931\u8D25\uFF1A" + (err && err.message ? err.message : String(err))));
+  };
+  const dbLoad = (name) => {
+    const hit = dbConnections.find((c) => c && c.name === name);
+    if (!hit) return;
+    setDbConfig({ type: "sqlite", path: "", host: "", port: "", user: "", password: "", database: "", ...hit });
+    setDbHint("\u5DF2\u8F7D\u5165\u8FDE\u63A5\uFF1A" + name);
+  };
+  const dbDelete = (name) => {
+    const storage = apiRef && apiRef.storage;
+    if (!storage || typeof storage.saveProjectSettings !== "function" || !project || !project.id) return;
+    const next = dbConnections.filter((c) => c && c.name !== name);
+    storage.saveProjectSettings(project.id, { dbConnections: next }).then(() => setProject((prev) => ({ ...prev, settings: { ...prev.settings || {}, dbConnections: next } }))).catch(() => {
+    });
+  };
+  const wsPanel = /* @__PURE__ */ (0, import_react.createElement)("section", { className: "pp-pane pp-debug-response", "data-ws": "1" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-group-title" }, "\u6D88\u606F\u65E5\u5FD7"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-pill " + (wsState.status === "open" ? "pp-pill-ok" : wsState.status === "connecting" ? "pp-pill-warn" : "") }, wsState.status === "idle" ? "\u672A\u8FDE\u63A5" : wsState.status === "connecting" ? "\u8FDE\u63A5\u4E2D" : wsState.status === "open" ? "\u5DF2\u8FDE\u63A5" : wsState.status === "closed" ? "\u5DF2\u65AD\u5F00" : wsState.status), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-link", onClick: pollWsMessages, disabled: !wsState.id }, "\u5237\u65B0")), wsState.error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-note pp-note-bad" }, wsState.error.message) : null, wsState.url ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-meta pp-ellipsis", title: wsState.url }, wsState.url) : null, wsState.messages.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)(EmptyState, { title: "\u6682\u65E0\u6D88\u606F", hint: "\u8FDE\u63A5\u5EFA\u7ACB\u540E\uFF0C\u6536\u53D1\u7684\u6D88\u606F\u4F1A\u6309\u65F6\u95F4\u987A\u5E8F\u663E\u793A\u5728\u8FD9\u91CC\u3002" }) : /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-pre", style: { maxHeight: 360, overflowY: "auto" } }, wsState.messages.map((m, i) => /* @__PURE__ */ (0, import_react.createElement)("div", { key: i, className: "pp-form-row", style: { alignItems: "baseline" } }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, wsTime(m.at), " ", WS_DIR_LABEL[m.direction] || "\xB7"), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-mono", style: { whiteSpace: "pre-wrap", wordBreak: "break-all" } }, m.event ? String(m.event) + (m.code != null ? ` (${m.code}${m.reason ? " " + m.reason : ""})` : "") : (m.binary ? "[\u4E8C\u8FDB\u5236 base64] " : "") + String(m.data == null ? "" : m.data))))));
   const responsePanel = /* @__PURE__ */ (0, import_react.createElement)("section", { className: "pp-pane pp-debug-response" }, /* @__PURE__ */ (0, import_react.createElement)(ResponsePanel, { resp, sending, onCancel: cancel }));
-  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page-flush", "data-page": "debug", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-debug-page pp-debug-split" }, /* @__PURE__ */ (0, import_react.createElement)("section", { className: "pp-pane pp-debug-request" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-url-row" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": draft.method }, draft.method), /* @__PURE__ */ (0, import_react.createElement)(
+  return /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-scope pp-page-flush", "data-page": "debug", ref: rootRef }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-debug-page pp-debug-split" }, /* @__PURE__ */ (0, import_react.createElement)("section", { className: "pp-pane pp-debug-request" }, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-url-row" }, /* @__PURE__ */ (0, import_react.createElement)(
+    "select",
+    {
+      className: "pp-select pp-input-sm",
+      value: draft.protocol || "http",
+      onChange: (e) => {
+        patch("protocol", e.target.value);
+        setTab((prev) => e.target.value === "websocket" && !WS_TABS.some((t) => t.id === prev) ? "params" : prev);
+      },
+      "aria-label": "\u534F\u8BAE",
+      title: "WebSocket \u8D70 WS \u8C03\u8BD5\u6A21\u5F0F\uFF0C\u5176\u4F59\u534F\u8BAE\u56DE\u843D HTTP"
+    },
+    /* @__PURE__ */ (0, import_react.createElement)("option", { value: "http" }, "HTTP"),
+    /* @__PURE__ */ (0, import_react.createElement)("option", { value: "websocket" }, "WebSocket")
+  ), wsMode ? /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": "WS", title: "WebSocket \u8FDE\u63A5" }, "WS") : /* @__PURE__ */ (0, import_react.createElement)(import_react.Fragment, null, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": draft.method }, draft.method), /* @__PURE__ */ (0, import_react.createElement)(
     "select",
     {
       className: "pp-select pp-url-method",
@@ -2965,16 +3181,25 @@ function DebugPage({ route, api }) {
       "aria-label": "\u8BF7\u6C42\u65B9\u6CD5"
     },
     METHODS.map((m) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: m, value: m }, m))
-  ), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-url-pill", title: env && env.baseUrl ? env.baseUrl : "\u672A\u914D\u7F6E baseUrl" }, env && env.baseUrl ? env.baseUrl : "\u672A\u914D\u7F6E baseUrl"), /* @__PURE__ */ (0, import_react.createElement)(
+  )), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-url-pill", title: env && env.baseUrl ? env.baseUrl : "\u672A\u914D\u7F6E baseUrl" }, env && env.baseUrl ? env.baseUrl : "\u672A\u914D\u7F6E baseUrl"), /* @__PURE__ */ (0, import_react.createElement)(
     "input",
     {
       className: "pp-input pp-input-mono",
       value: draft.url,
-      placeholder: "/api/v1/... \u6216 https://TARGET/endpoint\uFF0C\u652F\u6301 {{var}}",
+      placeholder: wsMode ? "ws://TARGET/path \u6216 /path\uFF08\u62FC baseUrl\uFF09\uFF0C\u652F\u6301 {{var}}" : "/api/v1/... \u6216 https://TARGET/endpoint\uFF0C\u652F\u6301 {{var}}",
       onChange: (e) => patch("url", e.target.value),
       "aria-label": "\u8BF7\u6C42\u8DEF\u5F84"
     }
-  ), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-send-group" }, /* @__PURE__ */ (0, import_react.createElement)(
+  ), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-send-group" }, wsMode ? wsState.status === "open" ? /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: wsDisconnect, title: "\u65AD\u5F00 WebSocket \u8FDE\u63A5" }, "\u65AD\u5F00") : /* @__PURE__ */ (0, import_react.createElement)(
+    "button",
+    {
+      className: "pp-btn pp-btn-primary",
+      onClick: wsConnect,
+      disabled: wsState.status === "connecting" || !String(draft.url || "").trim(),
+      title: String(draft.url || "").trim() ? "" : "\u5148\u586B\u5199\u8FDE\u63A5\u5730\u5740"
+    },
+    wsState.status === "connecting" ? "\u8FDE\u63A5\u4E2D\u2026" : "\u8FDE\u63A5"
+  ) : /* @__PURE__ */ (0, import_react.createElement)(import_react.Fragment, null, /* @__PURE__ */ (0, import_react.createElement)(
     "button",
     {
       className: "pp-btn pp-btn-primary",
@@ -2983,7 +3208,7 @@ function DebugPage({ route, api }) {
       title: String(draft.url || "").trim() ? "" : "\u5148\u586B\u5199\u8BF7\u6C42\u8DEF\u5F84"
     },
     sending ? "\u53D1\u9001\u4E2D\u2026" : "\u53D1\u9001"
-  ), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: cancel, disabled: !sending, title: "\u53D6\u6D88\u672C\u6B21\u53D1\u9001" }, "\u2715"))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-debug-meta" }, /* @__PURE__ */ (0, import_react.createElement)(
+  ), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: cancel, disabled: !sending, title: "\u53D6\u6D88\u672C\u6B21\u53D1\u9001" }, "\u2715")))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-debug-meta" }, /* @__PURE__ */ (0, import_react.createElement)(
     "select",
     {
       className: "pp-select pp-input-sm",
@@ -2993,7 +3218,7 @@ function DebugPage({ route, api }) {
     },
     envs.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("option", { value: "" }, "\uFF08\u65E0\u73AF\u5883\uFF09") : null,
     envs.map((e) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: e.id, value: e.id }, e.name))
-  ), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-mono pp-meta pp-ellipsis", title: finalUrl || "" }, finalUrl || "\uFF08\u672A\u586B\u5199 URL\uFF09"), varRefs.length > 0 ? /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, "\u53D8\u91CF ", varRefs.join("\u3001"), missingVars.length > 0 ? "\uFF08\u672A\u5B9A\u4E49\uFF1A" + missingVars.join("\u3001") + "\uFF09" : "\uFF08\u5747\u5DF2\u5B9A\u4E49\uFF09") : null, /* @__PURE__ */ (0, import_react.createElement)("a", { className: "pp-meta", href: "#/history" }, "\u8BF7\u6C42\u5386\u53F2")), !isMock && !String(draft.url || "").trim() ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-note" }, "\u5F53\u524D\u9879\u76EE\u8FD8\u6CA1\u6709\u63A5\u53E3\uFF0C\u5148\u5230 ", /* @__PURE__ */ (0, import_react.createElement)("a", { href: "#/doc" }, "\u63A5\u53E3\u6587\u6863"), " \u6216 ", /* @__PURE__ */ (0, import_react.createElement)("a", { href: "#/overview" }, "\u603B\u89C8"), " \u65B0\u5EFA\u4E00\u4E2A\uFF0C\u4E5F\u53EF\u4EE5\u76F4\u63A5\u5728\u4E0A\u65B9\u586B\u5199\u5B8C\u6574 URL \u8C03\u8BD5\u3002") : null, isMock ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-note pp-note-warn" }, "\u793A\u4F8B\u6570\u636E \u2014 window.__postapiApi \u672A\u6CE8\u5165\u6216\u8BFB\u53D6\u5931\u8D25\uFF0C\u53D1\u9001\u5C06\u8FD4\u56DE mock \u54CD\u5E94") : null, error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-note pp-note-bad" }, error) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tabs" }, TABS.map((t) => /* @__PURE__ */ (0, import_react.createElement)("button", { key: t.id, className: "pp-tab", "data-active": tab === t.id, onClick: () => setTab(t.id) }, t.label))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-debug-tabbody" }, tab === "params" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-title" }, "Path \u53C2\u6570"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: draft.pathParams, onChange: (rows) => patch("pathParams", rows), emptyText: "\u65E0 Path \u53C2\u6570" })), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-title" }, "Query \u53C2\u6570"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: draft.params, onChange: (rows) => patch("params", rows), emptyText: "\u65E0 Query \u53C2\u6570" }))) : null, tab === "headers" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-group-title" }, "\u8BF7\u6C42\u5934"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-link", onClick: addCommonHeaders, title: "\u8FFD\u52A0 3 \u6761\u5E38\u7528\u8BF7\u6C42\u5934" }, "+ \u5E38\u7528\u8BF7\u6C42\u5934")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(
+  ), /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-mono pp-meta pp-ellipsis", title: finalUrl || "" }, finalUrl || "\uFF08\u672A\u586B\u5199 URL\uFF09"), varRefs.length > 0 ? /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-meta" }, "\u53D8\u91CF ", varRefs.join("\u3001"), missingVars.length > 0 ? "\uFF08\u672A\u5B9A\u4E49\uFF1A" + missingVars.join("\u3001") + "\uFF09" : "\uFF08\u5747\u5DF2\u5B9A\u4E49\uFF09") : null, /* @__PURE__ */ (0, import_react.createElement)("a", { className: "pp-meta", href: "#/history" }, "\u8BF7\u6C42\u5386\u53F2")), !isMock && !String(draft.url || "").trim() ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-note" }, "\u5F53\u524D\u9879\u76EE\u8FD8\u6CA1\u6709\u63A5\u53E3\uFF0C\u5148\u5230 ", /* @__PURE__ */ (0, import_react.createElement)("a", { href: "#/doc" }, "\u63A5\u53E3\u6587\u6863"), " \u6216 ", /* @__PURE__ */ (0, import_react.createElement)("a", { href: "#/overview" }, "\u603B\u89C8"), " \u65B0\u5EFA\u4E00\u4E2A\uFF0C\u4E5F\u53EF\u4EE5\u76F4\u63A5\u5728\u4E0A\u65B9\u586B\u5199\u5B8C\u6574 URL \u8C03\u8BD5\u3002") : null, isMock ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-note pp-note-warn" }, "\u793A\u4F8B\u6570\u636E \u2014 window.__postapiApi \u672A\u6CE8\u5165\u6216\u8BFB\u53D6\u5931\u8D25\uFF0C\u53D1\u9001\u5C06\u8FD4\u56DE mock \u54CD\u5E94") : null, error ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-note pp-note-bad" }, error) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-tabs" }, activeTabs.map((t) => /* @__PURE__ */ (0, import_react.createElement)("button", { key: t.id, className: "pp-tab", "data-active": tab === t.id, onClick: () => setTab(t.id) }, t.label))), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-debug-tabbody" }, tab === "params" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-title" }, "Path \u53C2\u6570"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: draft.pathParams, onChange: (rows) => patch("pathParams", rows), emptyText: "\u65E0 Path \u53C2\u6570" })), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-title" }, "Query \u53C2\u6570"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(ParamTable, { rows: draft.params, onChange: (rows) => patch("params", rows), emptyText: "\u65E0 Query \u53C2\u6570" }))) : null, tab === "headers" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-group-title" }, "\u8BF7\u6C42\u5934"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-link", onClick: addCommonHeaders, title: "\u8FFD\u52A0 3 \u6761\u5E38\u7528\u8BF7\u6C42\u5934" }, "+ \u5E38\u7528\u8BF7\u6C42\u5934")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, /* @__PURE__ */ (0, import_react.createElement)(
     ParamTable,
     {
       rows: draft.headers,
@@ -3023,7 +3248,38 @@ function DebugPage({ route, api }) {
       value: String(draft.waitMs || 0),
       onChange: (e) => patch("waitMs", Number(e.target.value.replace(/[^0-9]/g, "")) || 0)
     }
-  )), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-title" }, "\u8BF7\u6C42\u6982\u89C8"), /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table" }, /* @__PURE__ */ (0, import_react.createElement)("tbody", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, "\u65B9\u6CD5"), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": draft.method }, draft.method))), /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, "\u5B8C\u6574 URL"), /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-mono pp-ellipsis" }, finalUrl || "\uFF08\u672A\u586B\u5199\uFF09")), /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, "\u73AF\u5883"), /* @__PURE__ */ (0, import_react.createElement)("td", null, env ? env.name : "\uFF08\u65E0\u73AF\u5883\uFF09")), /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, "\u53D8\u91CF"), /* @__PURE__ */ (0, import_react.createElement)("td", null, varRefs.length ? varRefs.join("\u3001") + (missingVars.length ? "\uFF08\u672A\u5B9A\u4E49\uFF1A" + missingVars.join("\u3001") + "\uFF09" : "\uFF08\u5747\u5DF2\u5B9A\u4E49\uFF09") : "\u65E0")), /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, "\u5DF2\u542F\u7528\u53C2\u6570"), /* @__PURE__ */ (0, import_react.createElement)("td", null, draft.params.filter((p) => p && p.enabled !== false && p.key).length, " \u4E2A Query / ", draft.pathParams.filter((p) => p && p.enabled !== false && p.key).length, " \u4E2A Path")), /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, "\u5DF2\u542F\u7528\u8BF7\u6C42\u5934"), /* @__PURE__ */ (0, import_react.createElement)("td", null, draft.headers.filter((h) => h && h.enabled !== false && h.key).length, " \u4E2A"))))) : null, tab === "auth" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u7C7B\u578B"), /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: draft.auth.type, onChange: (e) => patchAuth("type", e.target.value) }, AUTH_TYPES.map((t) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: t, value: t }, AUTH_LABEL2[t] || t)))), draft.auth.type === "bearer" ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "Token"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { flex: 1 }, value: draft.auth.token, onChange: (e) => patchAuth("token", e.target.value) })) : null, draft.auth.type === "basic" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u7528\u6237\u540D"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { flex: 1 }, value: draft.auth.username, onChange: (e) => patchAuth("username", e.target.value) })), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u5BC6\u7801"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { flex: 1 }, value: draft.auth.password, onChange: (e) => patchAuth("password", e.target.value) }))) : null, draft.auth.type === "apikey" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "Key"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { flex: 1 }, value: draft.auth.key, onChange: (e) => patchAuth("key", e.target.value) })), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "Value"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { flex: 1 }, value: draft.auth.value, onChange: (e) => patchAuth("value", e.target.value) })), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u4F4D\u7F6E"), /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: draft.auth.addTo, onChange: (e) => patchAuth("addTo", e.target.value) }, /* @__PURE__ */ (0, import_react.createElement)("option", { value: "header" }, "header"), /* @__PURE__ */ (0, import_react.createElement)("option", { value: "query" }, "query")))) : null, draft.auth.type === "none" ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-meta" }, "\u65E0\u8BA4\u8BC1") : null) : null), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)(
+  )), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-title" }, "\u8BF7\u6C42\u6982\u89C8"), /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table" }, /* @__PURE__ */ (0, import_react.createElement)("tbody", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, "\u65B9\u6CD5"), /* @__PURE__ */ (0, import_react.createElement)("td", null, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-method", "data-method": draft.method }, draft.method))), /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, "\u5B8C\u6574 URL"), /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-mono pp-ellipsis" }, finalUrl || "\uFF08\u672A\u586B\u5199\uFF09")), /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, "\u73AF\u5883"), /* @__PURE__ */ (0, import_react.createElement)("td", null, env ? env.name : "\uFF08\u65E0\u73AF\u5883\uFF09")), /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, "\u53D8\u91CF"), /* @__PURE__ */ (0, import_react.createElement)("td", null, varRefs.length ? varRefs.join("\u3001") + (missingVars.length ? "\uFF08\u672A\u5B9A\u4E49\uFF1A" + missingVars.join("\u3001") + "\uFF09" : "\uFF08\u5747\u5DF2\u5B9A\u4E49\uFF09") : "\u65E0")), /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, "\u5DF2\u542F\u7528\u53C2\u6570"), /* @__PURE__ */ (0, import_react.createElement)("td", null, draft.params.filter((p) => p && p.enabled !== false && p.key).length, " \u4E2A Query / ", draft.pathParams.filter((p) => p && p.enabled !== false && p.key).length, " \u4E2A Path")), /* @__PURE__ */ (0, import_react.createElement)("tr", null, /* @__PURE__ */ (0, import_react.createElement)("td", { className: "pp-meta" }, "\u5DF2\u542F\u7528\u8BF7\u6C42\u5934"), /* @__PURE__ */ (0, import_react.createElement)("td", null, draft.headers.filter((h) => h && h.enabled !== false && h.key).length, " \u4E2A"))))) : null, tab === "db" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-group-title" }, "\u6570\u636E\u5E93\u8FDE\u63A5"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-link", onClick: dbTest, disabled: dbBusy }, "\u6D4B\u8BD5\u8FDE\u63A5")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u9A71\u52A8"), /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: dbConfig.type, onChange: (e) => dbPatch("type", e.target.value) }, DB_TYPES.map((t) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: t.id, value: t.id }, t.label)))), dbConfig.type === "sqlite" ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u6587\u4EF6\u8DEF\u5F84"), /* @__PURE__ */ (0, import_react.createElement)(
+    "input",
+    {
+      className: "pp-input pp-input-mono",
+      style: { flex: 1 },
+      value: dbConfig.path,
+      placeholder: "/path/to/data.db \u6216 :memory:",
+      onChange: (e) => dbPatch("path", e.target.value)
+    }
+  )) : /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-note" }, "\u5F53\u524D\u4EC5\u5185\u7F6E SQLite \u9A71\u52A8\uFF08node:sqlite\uFF09\uFF1BMySQL / PostgreSQL \u9700\u72EC\u7ACB\u9A71\u52A8\u5305\uFF0C\u6D4B\u8BD5\u8FDE\u63A5\u4F1A\u660E\u786E\u62A5\u9519\u3002"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u4E3B\u673A"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { flex: 1 }, value: dbConfig.host, onChange: (e) => dbPatch("host", e.target.value) })), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u7AEF\u53E3"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-sm", style: { flex: 1, maxWidth: 120 }, value: dbConfig.port, onChange: (e) => dbPatch("port", e.target.value) })), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u7528\u6237\u540D"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input", style: { flex: 1 }, value: dbConfig.user, onChange: (e) => dbPatch("user", e.target.value) })), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u5BC6\u7801"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input", type: "password", style: { flex: 1 }, value: dbConfig.password, onChange: (e) => dbPatch("password", e.target.value) })), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u6570\u636E\u5E93"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input", style: { flex: 1 }, value: dbConfig.database, onChange: (e) => dbPatch("database", e.target.value) }))), dbConnections.length > 0 ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u5DF2\u5B58\u8FDE\u63A5"), /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: "", onChange: (e) => dbLoad(e.target.value) }, /* @__PURE__ */ (0, import_react.createElement)("option", { value: "" }, "\u9009\u62E9\u5DF2\u4FDD\u5B58\u7684\u8FDE\u63A5\u2026"), dbConnections.map((c) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: c.name, value: c.name }, c.name))), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-link", onClick: () => dbSave() }, "\u4FDD\u5B58\u5F53\u524D"), dbConnections.map((c) => /* @__PURE__ */ (0, import_react.createElement)("button", { key: c.name, className: "pp-btn pp-btn-link", onClick: () => dbDelete(c.name), title: "\u5220\u9664\u8BE5\u8FDE\u63A5" }, "\u2715 ", c.name))) : /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-link", onClick: dbSave }, "\u4FDD\u5B58\u8FDE\u63A5\u5230\u9879\u76EE")), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-head" }, /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-group-title" }, "SQL \u6267\u884C"), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: dbRun, disabled: dbBusy || !String(dbSql || "").trim() }, dbBusy ? "\u6267\u884C\u4E2D\u2026" : "\u6267\u884C")), /* @__PURE__ */ (0, import_react.createElement)(
+    "textarea",
+    {
+      className: "pp-input pp-input-mono",
+      style: { width: "100%", minHeight: 72, fontFamily: "var(--font-mono, monospace)" },
+      value: dbSql,
+      onChange: (e) => setDbSql(e.target.value),
+      placeholder: "SELECT * FROM users LIMIT 10"
+    }
+  ), dbHint ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-note " + (dbHint.indexOf("\u8FDE\u63A5\u6210\u529F") === 0 || dbHint.indexOf("\u5DF2\u4FDD\u5B58") === 0 ? "pp-note-ok" : "pp-note-bad") }, dbHint) : null, dbResult && Array.isArray(dbResult.rows) ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-group-title" }, "\u7ED3\u679C\uFF08", dbResult.rowCount, " \u884C", dbResult.truncated ? "\uFF0C\u8D85\u8FC7 1000 \u884C\u5DF2\u622A\u65AD" : "", "\uFF09"), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-table-wrap" }, dbResult.rows.length === 0 ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-meta" }, "\uFF08\u65E0\u8FD4\u56DE\u884C\uFF09") : /* @__PURE__ */ (0, import_react.createElement)("table", { className: "pp-table" }, /* @__PURE__ */ (0, import_react.createElement)("thead", null, /* @__PURE__ */ (0, import_react.createElement)("tr", null, dbResult.columns.map((c) => /* @__PURE__ */ (0, import_react.createElement)("th", { key: c }, c)))), /* @__PURE__ */ (0, import_react.createElement)("tbody", null, dbResult.rows.map((row, i) => /* @__PURE__ */ (0, import_react.createElement)("tr", { key: i }, dbResult.columns.map((c) => /* @__PURE__ */ (0, import_react.createElement)("td", { key: c, className: "pp-mono" }, row && row[c] != null ? String(row[c]) : "")))))))) : null, dbResult && dbResult.changes !== void 0 ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-note pp-note-ok" }, "\u5DF2\u6267\u884C\uFF1A\u5F71\u54CD ", dbResult.changes, " \u884C", dbResult.lastInsertRowid != null ? "\uFF0ClastInsertRowid=" + dbResult.lastInsertRowid : "") : null) : null, tab === "auth" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u7C7B\u578B"), /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: draft.auth.type, onChange: (e) => patchAuth("type", e.target.value) }, AUTH_TYPES.map((t) => /* @__PURE__ */ (0, import_react.createElement)("option", { key: t, value: t }, AUTH_LABEL2[t] || t)))), draft.auth.type === "bearer" ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "Token"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { flex: 1 }, value: draft.auth.token, onChange: (e) => patchAuth("token", e.target.value) })) : null, draft.auth.type === "basic" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u7528\u6237\u540D"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { flex: 1 }, value: draft.auth.username, onChange: (e) => patchAuth("username", e.target.value) })), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u5BC6\u7801"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { flex: 1 }, value: draft.auth.password, onChange: (e) => patchAuth("password", e.target.value) }))) : null, draft.auth.type === "apikey" ? /* @__PURE__ */ (0, import_react.createElement)("div", null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "Key"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { flex: 1 }, value: draft.auth.key, onChange: (e) => patchAuth("key", e.target.value) })), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "Value"), /* @__PURE__ */ (0, import_react.createElement)("input", { className: "pp-input pp-input-mono", style: { flex: 1 }, value: draft.auth.value, onChange: (e) => patchAuth("value", e.target.value) })), /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-form-row" }, /* @__PURE__ */ (0, import_react.createElement)("label", { className: "pp-form-label" }, "\u4F4D\u7F6E"), /* @__PURE__ */ (0, import_react.createElement)("select", { className: "pp-select", value: draft.auth.addTo, onChange: (e) => patchAuth("addTo", e.target.value) }, /* @__PURE__ */ (0, import_react.createElement)("option", { value: "header" }, "header"), /* @__PURE__ */ (0, import_react.createElement)("option", { value: "query" }, "query")))) : null, draft.auth.type === "none" ? /* @__PURE__ */ (0, import_react.createElement)("p", { className: "pp-meta" }, "\u65E0\u8BA4\u8BC1") : null) : null), wsMode ? /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)(
+    "input",
+    {
+      className: "pp-input pp-input-mono",
+      style: { flex: 1 },
+      placeholder: wsState.status === "open" ? "\u8F93\u5165\u8981\u53D1\u9001\u7684\u6D88\u606F\u2026" : "\u8FDE\u63A5\u5EFA\u7ACB\u540E\u53EF\u53D1\u9001\u6D88\u606F",
+      value: wsInput,
+      disabled: wsState.status !== "open",
+      onChange: (e) => setWsInput(e.target.value),
+      onKeyDown: (e) => {
+        if (e.key === "Enter" && wsState.status === "open") wsSend();
+      }
+    }
+  ), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn pp-btn-primary", onClick: wsSend, disabled: wsState.status !== "open" || wsInput === "" }, "\u53D1\u9001\u6D88\u606F")) : null, /* @__PURE__ */ (0, import_react.createElement)("div", { className: "pp-toolbar-inline", style: { marginTop: "var(--sp-3)" } }, /* @__PURE__ */ (0, import_react.createElement)(
     "input",
     {
       className: "pp-input",
@@ -3032,7 +3288,7 @@ function DebugPage({ route, api }) {
       value: draft.name,
       onChange: (e) => patch("name", e.target.value)
     }
-  ), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: saveAsEndpoint }, "\u4FDD\u5B58\u4E3A\u63A5\u53E3"), savedHint ? /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-note " + (savedHint.indexOf("\u5DF2\u4FDD\u5B58") === 0 ? "pp-note-ok" : "pp-note-bad") }, savedHint) : null)), responsePanel));
+  ), /* @__PURE__ */ (0, import_react.createElement)("button", { className: "pp-btn", onClick: saveAsEndpoint }, "\u4FDD\u5B58\u4E3A\u63A5\u53E3"), savedHint ? /* @__PURE__ */ (0, import_react.createElement)("span", { className: "pp-note " + (savedHint.indexOf("\u5DF2\u4FDD\u5B58") === 0 ? "pp-note-ok" : "pp-note-bad") }, savedHint) : null)), wsMode ? wsPanel : responsePanel));
 }
 
 // src/client/pages/mock.jsx
@@ -4235,9 +4491,13 @@ var PH_OPENAPI = ["{", '  "openapi": "3.0.0",', '  "info": { "title": "\u793A\u4
 var PH_POSTMAN = ["{", '  "info": { "name": "\u793A\u4F8B" },', '  "item": []', "}"].join("\n");
 var PH_HAR = ["{", '  "log": { "version": "1.2", "entries": [] }', "}"].join("\n");
 var PH_CURL = "curl -X GET 'https://api.example.com/pets' -H 'Accept: application/json'";
+var PH_APIFOX = ["{", '  "name": "Apifox \u5BFC\u51FA\u7684\u9879\u76EE",', '  "apiCollection": [ { "type": "folder", "name": "\u76EE\u5F55", "items": [] } ],', '  "models": []', "}"].join("\n");
+var PH_YAPI = ["{", '  "name": "YApi \u9879\u76EE",', '  "list": [ { "title": "\u63A5\u53E3", "path": "/api/x", "method": "GET" } ]', "}"].join("\n");
 var IMPORT_KINDS = [
   { id: "openapi", label: "OpenAPI / Swagger", hint: "\u7C98\u8D34 OpenAPI 3 \u6216 Swagger 2 JSON/YAML \u6587\u672C", placeholder: PH_OPENAPI },
   { id: "postman", label: "Postman", hint: "\u7C98\u8D34 Postman Collection v2.1 JSON \u6587\u672C", placeholder: PH_POSTMAN },
+  { id: "apifox", label: "Apifox JSON", hint: "\u7C98\u8D34 Apifox \u5BFC\u51FA\u7684\u9879\u76EE JSON\uFF08apiCollection / items \u6811\u4E0E models \u6A21\u578B\uFF09", placeholder: PH_APIFOX },
+  { id: "yapi", label: "YApi", hint: "\u7C98\u8D34 YApi \u6570\u636E\u7BA1\u7406\u5BFC\u51FA\u7684 JSON\uFF08list \u63A5\u53E3\u6570\u7EC4\uFF09", placeholder: PH_YAPI },
   { id: "har", label: "HAR", hint: "\u7C98\u8D34\u6D4F\u89C8\u5668\u5BFC\u51FA\u7684 HAR JSON \u6587\u672C", placeholder: PH_HAR },
   { id: "curl", label: "cURL", hint: "\u7C98\u8D34 cURL \u547D\u4EE4\uFF08\u53EF\u591A\u6761\uFF0C\u9010\u884C\uFF09", placeholder: PH_CURL }
 ];

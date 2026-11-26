@@ -446,7 +446,10 @@ export function DocPage({ route, api }) {
                 <span className="pp-ellipsis">{ep.name}</span>
               </h1>
               <p className="pp-mono pp-muted" style={{ margin: '0 0 var(--sp-2) 0' }}>{ep.method} {ep.url}</p>
-              {ep.protocol && ep.protocol !== 'http' ? (
+              {ep.protocol && ep.protocol === 'websocket' ? (
+                <p className="pp-meta">协议 WebSocket：调试页已支持真实连接（连接 / 发送 / 消息日志 / 断走），文档仅展示定义。</p>
+              ) : null}
+              {ep.protocol && ep.protocol !== 'http' && ep.protocol !== 'websocket' && ep.protocol !== 'graphql' ? (
                 <p className="pp-meta">协议 {ep.protocol}：规划中（仅保留类型位，发送回落 HTTP）</p>
               ) : null}
               <div style={{ marginTop: 'var(--sp-2)' }}><Markdown text={ep.description} /></div>
