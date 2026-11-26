@@ -237,17 +237,6 @@ export function MockPage({ route, api }) {
         </div>
       </div>
       <div className="pp-overview-content">
-<<<<<<< HEAD
-        <div className="pp-toolbar">
-          <span className="pp-meta">
-            {isMock ? '示例数据 — window.__postapiApi 未注入或读取失败，以下为文件内 mock' : '数据来源：postapi.storage + postapi.mock'}
-          </span>
-        </div>
-        {error ? <p className="pp-muted">{error}</p> : null}
-        {notice ? <p className="pp-muted">{notice}</p> : null}
-  
-        {/* 左：接口列表（与文档页目录树同规格）+ 右：配置纵向两卡。
-=======
         <p className="pp-muted">
           {isMock ? '示例数据 — window.__postapiApi 未注入或读取失败，以下为文件内 mock' : '数据来源：postapi.storage + postapi.mock'}
         </p>
@@ -255,7 +244,6 @@ export function MockPage({ route, api }) {
         {notice ? <p className="pp-note pp-note-ok">{notice}</p> : null}
 
         {/* 左：接口列表（FolderTree 与文档页完全同组件：分组/计数/空态一致）+ 右：配置纵向两卡。
->>>>>>> origin/master
             原来是 3 个子项塞进 2 列网格，第三块被挤到第二行左侧，与右侧形成高度差。 */}
         <div className="pp-mock-layout">
           <nav className="pp-panel" aria-label="接口列表">
