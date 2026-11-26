@@ -229,6 +229,7 @@ export function FlowPage(props) {
           <span className="pp-toolbar-spacer" />
           <button className="pp-btn pp-btn-sm" onClick={exportSvg}>导出 SVG</button>
           <button className="pp-btn pp-btn-sm" onClick={copyJson}>复制 JSON</button>
+
           <span className="pp-meta">
             {isMock
               ? '示例数据 — api.storage.saveFlow 不可用，编排结果仅存本地草稿（' + DRAFT_KEY + '）'

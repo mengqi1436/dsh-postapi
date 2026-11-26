@@ -176,8 +176,10 @@ export function SearchPage(props) {
             onKeyDown={(e) => { if (e.key === 'Enter') runSearch() }} />
           <button className="pp-btn pp-btn-primary pp-search-btn" onClick={runSearch}>搜索</button>
         </div>
-        <div className="pp-meta pp-search-source">
-          {isMock ? '示例数据 — api.storage.search 不可用，以下为文件内 mock' : '数据来源：api.storage.search（名称 / url / 描述，大小写不敏感）'}
+        <div className="pp-toolbar">
+          <span className="pp-meta">
+            {isMock ? '示例数据 — api.storage.search 不可用，以下为文件内 mock' : '数据来源：api.storage.search（名称 / url / 描述，大小写不敏感）'}
+          </span>
         </div>
         {error ? <p className="pp-error-text">{error}</p> : null}
 

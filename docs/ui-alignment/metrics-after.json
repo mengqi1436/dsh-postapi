@@ -1,0 +1,182 @@
+{
+  "overview": {
+    "page": "overview",
+    "container": ".pp-overview-content",
+    "containerRect": {
+      "left": 240,
+      "right": 760
+    },
+    "paddingLeft": "16px",
+    "paddingRight": "16px",
+    "contentLeft": 256,
+    "titleLeft": 256,
+    "titleFont": "18px",
+    "firstRowFont": "12px",
+    "firstRowColor": "rgb(152, 162, 179)"
+  },
+  "debug": {
+    "page": "debug",
+    "container": ".pp-debug-page",
+    "containerRect": {
+      "left": 240,
+      "right": 760
+    },
+    "paddingLeft": "16px",
+    "paddingRight": "16px",
+    "contentLeft": 256,
+    "titleLeft": null,
+    "titleFont": null,
+    "firstRowFont": "13px",
+    "firstRowColor": "rgb(152, 162, 179)"
+  },
+  "mock": {
+    "page": "mock",
+    "container": ".pp-overview-content",
+    "containerRect": {
+      "left": 240,
+      "right": 760
+    },
+    "paddingLeft": "16px",
+    "paddingRight": "16px",
+    "contentLeft": 256,
+    "titleLeft": 256,
+    "titleFont": "18px",
+    "firstRowFont": "12px",
+    "firstRowColor": "rgb(152, 162, 179)"
+  },
+  "schema": {
+    "page": "schema",
+    "container": ".pp-overview-content",
+    "containerRect": {
+      "left": 240,
+      "right": 778.1
+    },
+    "paddingLeft": "16px",
+    "paddingRight": "16px",
+    "contentLeft": 256,
+    "titleLeft": 256,
+    "titleFont": "18px",
+    "firstRowFont": "12px",
+    "firstRowColor": "rgb(152, 162, 179)"
+  },
+  "env": {
+    "page": "env",
+    "container": ".pp-overview-content",
+    "containerRect": {
+      "left": 240,
+      "right": 760
+    },
+    "paddingLeft": "16px",
+    "paddingRight": "16px",
+    "contentLeft": 256,
+    "titleLeft": 256,
+    "titleFont": "18px",
+    "firstRowFont": "12px",
+    "firstRowColor": "rgb(152, 162, 179)"
+  },
+  "history": {
+    "page": "history",
+    "container": ".pp-overview-content",
+    "containerRect": {
+      "left": 240,
+      "right": 760
+    },
+    "paddingLeft": "16px",
+    "paddingRight": "16px",
+    "contentLeft": 256,
+    "titleLeft": 256,
+    "titleFont": "18px",
+    "firstRowFont": "12px",
+    "firstRowColor": "rgb(152, 162, 179)"
+  },
+  "test": {
+    "page": "test",
+    "container": ".pp-overview-content",
+    "containerRect": {
+      "left": 240,
+      "right": 760
+    },
+    "paddingLeft": "16px",
+    "paddingRight": "16px",
+    "contentLeft": 256,
+    "titleLeft": 256,
+    "titleFont": "18px",
+    "firstRowFont": "12px",
+    "firstRowColor": "rgb(152, 162, 179)"
+  },
+  "import": {
+    "page": "import",
+    "container": ".pp-overview-content",
+    "containerRect": {
+      "left": 240,
+      "right": 778.1
+    },
+    "paddingLeft": "16px",
+    "paddingRight": "16px",
+    "contentLeft": 256,
+    "titleLeft": 256,
+    "titleFont": "18px",
+    "firstRowFont": "12px",
+    "firstRowColor": "rgb(152, 162, 179)"
+  },
+  "flow": {
+    "page": "flow",
+    "container": ".pp-overview-content",
+    "containerRect": {
+      "left": 240,
+      "right": 766.1
+    },
+    "paddingLeft": "16px",
+    "paddingRight": "16px",
+    "contentLeft": 256,
+    "titleLeft": 256,
+    "titleFont": "18px",
+    "firstRowFont": "12px",
+    "firstRowColor": "rgb(152, 162, 179)"
+  },
+  "search": {
+    "page": "search",
+    "container": ".pp-overview-content",
+    "containerRect": {
+      "left": 240,
+      "right": 760
+    },
+    "paddingLeft": "16px",
+    "paddingRight": "16px",
+    "contentLeft": 256,
+    "titleLeft": 256,
+    "titleFont": "18px",
+    "firstRowFont": "12px",
+    "firstRowColor": "rgb(152, 162, 179)"
+  },
+  "settings": {
+    "page": "settings",
+    "container": ".pp-overview-content",
+    "containerRect": {
+      "left": 240,
+      "right": 760
+    },
+    "paddingLeft": "16px",
+    "paddingRight": "16px",
+    "contentLeft": 256,
+    "titleLeft": 256,
+    "titleFont": "18px",
+    "firstRowFont": "12px",
+    "firstRowColor": "rgb(152, 162, 179)"
+  },
+  "doc": {
+    "page": "doc",
+    "container": ".pp-split",
+    "containerRect": {
+      "left": 240,
+      "right": 760
+    },
+    "paddingLeft": "16px",
+    "paddingRight": "16px",
+    "contentLeft": 256,
+    "titleLeft": 273,
+    "titleFont": "18px",
+    "firstRowFont": "12px",
+    "firstRowColor": "rgb(152, 162, 179)"
+  }
+}

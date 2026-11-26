@@ -253,9 +253,11 @@ export function SchemaPage(props) {
         </div>
       </div>
       <div className="pp-overview-content">
-        <p className="pp-muted">
-          {isMock ? '示例数据 — api.storage 不可用，以下为文件内 mock' : '数据来源：api.storage（saveSchema / deleteSchema）'}
-        </p>
+        <div className="pp-toolbar">
+          <span className="pp-meta">
+            {isMock ? '示例数据 — api.storage 不可用，以下为文件内 mock' : '数据来源：api.storage（saveSchema / deleteSchema）'}
+          </span>
+        </div>
         {error ? <p className="pp-error-text">{error}</p> : null}
         {notice ? <p className="pp-note pp-note-ok">{notice}</p> : null}
 
