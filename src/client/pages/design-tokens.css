@@ -1026,15 +1026,15 @@
   gap: var(--sp-4);
 }
 
-/* —— 调试：整页 padding 10px（Apifox .apiCase padding:10px）—— */
-/* 调试页：Apifox .apiCase 原文（width/height 100%、padding 10px、overflow auto）。
-   单栏结构——接口树由左侧全局导航承担，页面内不再自带。 */
+/* —— 调试：整页 padding 与其它分页同格 —— */
+/* 调试页：Apifox .apiCase 原文是 padding:10px；这里改 16px（--sp-4）与
+   .pp-overview-content / .pp-split 同格——12 个分页内容左缘一致，
+   切页时不再 10/16/20px 跳动。右侧不再单独补偿滚动条宽度（其余页面同样不补）。 */
 .pp-debug-page {
   display: flex;
   flex-direction: column;
   gap: var(--sp-3);
-  padding: var(--page-pad);
-  padding-right: calc(var(--page-pad) - var(--sp-1) + var(--layout-pad));
+  padding: var(--sp-4);
   min-height: 0;
 }
 /* 元信息行：环境选择 + 实际地址 + 变量 + 历史入口，压成一行 */
@@ -1075,9 +1075,6 @@
 .pp-search-btn {
   flex: none;
   min-width: 72px;
-}
-.pp-search-source {
-  margin: var(--sp-2) 0 var(--sp-3);
 }
 .pp-search-hint {
   display: flex;
@@ -1797,9 +1794,6 @@
 .pp-flow-name {
   width: 180px;
 }
-.pp-flow-source {
-  margin-bottom: var(--sp-2);
-}
 .pp-seq-wrap {
   overflow-x: auto;
   border: 1px solid var(--border);
@@ -2173,19 +2167,22 @@
 }
 
 /* —— 页头 —— */
-/* 页头：对齐 Apifox .overview-header-container（下边框 1px / padding 16px 20px 16px 14px / 最大宽 1512px） */
+/* 页头内边距四边统一 16px（--sp-4）：Apifox .overview-header-container 原文是
+   padding:16px 20px 16px 14px，标题左缘（14px）与内容区（16px）本来就差 2px。
+   这里有意统一到 16px：页头标题、内容、动作与页内四边落在同一栅格，
+   12 个分页切换时标题与内容左缘严格对齐（用户要求所有页面对齐）。 */
 .pp-page-head {
   display: flex;
   align-items: center;
   gap: var(--sp-3);
   max-width: var(--content-max-w);
-  padding: var(--sp-4) var(--sp-5) var(--sp-4) var(--sp-3);
+  padding: var(--sp-4);
   background: var(--bg-surface);
   border-bottom: 1px solid var(--border);
 }
 /* 概览页头：标题 18px / 700（Apifox .overview-header__title） */
-/* 页头：Apifox .overview-header-container 原文
-   （border-bottom:1px split; max-width:1512px; padding:16px 20px 16px 14px）。
+/* 页头：下边框 + 最大宽沿用 Apifox .overview-header-container；
+   内边距四边统一 16px，理由见上方 .pp-page-head 的注释。
    窄容器（侧边栏里只有 455px）时动作区必须换行，否则会把页面顶出 111~693px 横向溢出。 */
 .pp-overview-head {
   display: flex;
@@ -2194,7 +2191,7 @@
   gap: var(--sp-2) var(--sp-3);
   width: 100%;
   max-width: var(--content-max-w);
-  padding: var(--sp-4) var(--sp-5) var(--sp-4) var(--sp-3);
+  padding: var(--sp-4);
   background: var(--bg-surface);
   border-bottom: 1px solid var(--border);
 }
@@ -2226,18 +2223,9 @@
   flex: 0 1 auto;
   min-width: 96px;
 }
-/* 文档页头：与概览同规格 */
-.pp-doc-head {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: var(--sp-2) var(--sp-3);
-  width: 100%;
-  max-width: var(--content-max-w);
-  padding: var(--sp-4) var(--sp-5) var(--sp-4) var(--sp-3);
-  background: var(--bg-surface);
-  border-bottom: 1px solid var(--border);
-}
+/* 文档页头已并入 .pp-overview-head（原本是逐字重复的第二份规则，
+   两份各自漂移就会造成页与页不对齐）；标题 .pp-doc-title 保留——
+   tests/ui-audit.test.js 硬断言锁定该规则（18px / 700）。 */
 .pp-doc-title {
   margin-right: auto;
   font-size: var(--fs-18);
@@ -2293,7 +2281,8 @@
   grid-template-columns: clamp(var(--panel-w), 32%, var(--panel-w-max)) minmax(0, 1fr);
   gap: var(--sp-4);
   align-items: start;
-  padding: var(--sp-4) var(--sp-5);
+  /* 内边距与 .pp-overview-content 同格（16px 四边）：文档页与其它 10 个分页的内容左缘一致 */
+  padding: var(--sp-4);
   min-height: 0;
 }
 /* 并排时面板宽度由 grid 轨道决定，自身不再定宽（否则比轨道窄会留白） */
@@ -2326,7 +2315,8 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  margin: var(--sp-4) var(--sp-5);
+  /* 空态主列独占一行：外边距与 .pp-overview-content 同格（16px 四边） */
+  margin: var(--sp-4);
 }
 .pp-doc-main .pp-page {
   padding: var(--sp-5);

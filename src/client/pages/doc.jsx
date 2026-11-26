@@ -396,7 +396,7 @@ export function DocPage({ route, api }) {
     return (
       <div className="pp-scope pp-page-flush" data-page="doc" ref={rootRef}>
         <div className="pp-doc-main">
-          <div className="pp-doc-head">
+          <div className="pp-overview-head">
             <span className="pp-doc-title">接口文档</span>
           </div>
           <div className="pp-page">
@@ -416,7 +416,7 @@ export function DocPage({ route, api }) {
   // 文档页头：Apifox .overview-header-container 同规格（18px/700 标题 + 右侧动作区，下边框）
   const statusLabel = STATUS_LABEL[ep.status] || ep.status || ''
   const docHead = (
-    <div className="pp-doc-head">
+    <div className="pp-overview-head">
       <span className="pp-doc-title">{ep.name}</span>
       <div className="pp-overview-actions">
         {copied ? (

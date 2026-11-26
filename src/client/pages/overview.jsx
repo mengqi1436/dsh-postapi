@@ -234,11 +234,13 @@ export function OverviewPage(props) {
         </div>
       </div>
       <div className="pp-overview-content">
-        <p className="pp-muted">
-          {isMock
-            ? '示例数据 — api.storage 未注入或不可用，以下为文件内 mock'
-            : '数据来源：api.storage（listProjects / getProject）'}
-        </p>
+        <div className="pp-toolbar">
+          <span className="pp-meta">
+            {isMock
+              ? '示例数据 — api.storage 未注入或不可用，以下为文件内 mock'
+              : '数据来源：api.storage（listProjects / getProject）'}
+          </span>
+        </div>
         {error ? <p className="pp-error-text">{error}</p> : null}
         {notice ? <p className="pp-muted">{notice}</p> : null}
   

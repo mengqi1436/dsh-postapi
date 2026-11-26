@@ -203,9 +203,11 @@ export function MockPage({ route, api }) {
         </div>
       </div>
       <div className="pp-overview-content">
-        <p className="pp-muted">
-          {isMock ? '示例数据 — window.__postapiApi 未注入或读取失败，以下为文件内 mock' : '数据来源：postapi.storage + postapi.mock'}
-        </p>
+        <div className="pp-toolbar">
+          <span className="pp-meta">
+            {isMock ? '示例数据 — window.__postapiApi 未注入或读取失败，以下为文件内 mock' : '数据来源：postapi.storage + postapi.mock'}
+          </span>
+        </div>
         {error ? <p className="pp-muted">{error}</p> : null}
         {notice ? <p className="pp-muted">{notice}</p> : null}
   

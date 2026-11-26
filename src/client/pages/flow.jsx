@@ -227,10 +227,12 @@ export function FlowPage(props) {
           <button className="pp-btn pp-btn-sm" onClick={exportSvg}>导出 SVG</button>
           <button className="pp-btn pp-btn-sm" onClick={copyJson}>复制 JSON</button>
         </div>
-        <div className="pp-meta pp-flow-source">
-          {isMock
-            ? '示例数据 — api.storage.saveFlow 不可用，编排结果仅存本地草稿（' + DRAFT_KEY + '）'
-            : '数据来源：api.storage（getProject / saveFlow）'}
+        <div className="pp-toolbar">
+          <span className="pp-meta">
+            {isMock
+              ? '示例数据 — api.storage.saveFlow 不可用，编排结果仅存本地草稿（' + DRAFT_KEY + '）'
+              : '数据来源：api.storage（getProject / saveFlow）'}
+          </span>
         </div>
         {error ? <p className="pp-error-text">{error}</p> : null}
         {notice ? <p className="pp-muted">{notice}</p> : null}
