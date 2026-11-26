@@ -205,9 +205,18 @@ export function createMockServer({ getProject, port = 4010 } = {}) {
   }
 
   function buildBody(project, endpoint) {
-    const rules = (Array.isArray(project.mocks) ? project.mocks : []).filter(
+    // 规则两个落点都认（契约 §2 两种形态并存）：
+    //   - project.mocks（带 endpointId，批量/导入形态）
+    //   - endpoint.mock.rules（Mock 页「保存配置」的落点——此前只读 project.mocks，
+    //     页面配置的规则从不生效，命中地址永远回落默认响应）
+    const fromProject = (Array.isArray(project.mocks) ? project.mocks : []).filter(
       (r) => r && r.enabled !== false && String(r.endpointId || '') === String(endpoint.id || ''),
     )
+    const fromEndpoint = (endpoint && endpoint.mock && Array.isArray(endpoint.mock.rules)
+      ? endpoint.mock.rules
+      : []
+    ).filter((r) => r && r.enabled !== false)
+    const rules = fromProject.concat(fromEndpoint)
     if (rules.length === 0) return null
     const root = {}
     let whole = null

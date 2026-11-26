@@ -554,6 +554,42 @@ const mockTests = [
     }),
   },
   {
+    name: 'mock: endpoint.mock.rules（Mock 页落点）与 project.mocks 合并生效',
+    fn: () => withMockServer(async (srv, base) => {
+      // 回归：Mock 页「保存配置」把规则写到 endpoint.mock.rules，服务端此前只读
+      // project.mocks，页面配置的规则从不生效，命中地址永远回落默认响应。
+      const project = mockProject()
+      project.mocks = []
+      project.endpoints[0].mock.rules = [
+        { id: 'mr_1', endpointId: 'ep_m1', field: 'name', rule: 'fixed', value: 'page-rule', enabled: true },
+        { id: 'mr_2', endpointId: 'ep_m1', field: 'gone', rule: 'fixed', value: 'nope', enabled: false },
+      ]
+      const srv2 = createMockServer({ getProject: async () => project, port: 0 })
+      const s2 = await srv2.start()
+      try {
+        const b = await (await fetch(`http://127.0.0.1:${s2.port}/mock/proj_m/ep_m1`)).json()
+        assert.equal(b.name, 'page-rule')
+        assert.equal(b.gone, undefined)
+      } finally {
+        await srv2.stop()
+      }
+      // 两个落点同时存在时都生效
+      const both = mockProject()
+      both.endpoints[0].mock.rules = [
+        { id: 'mr_3', endpointId: 'ep_m1', field: 'extra', rule: 'fixed', value: 'from-endpoint', enabled: true },
+      ]
+      const srv3 = createMockServer({ getProject: async () => both, port: 0 })
+      const s3 = await srv3.start()
+      try {
+        const b = await (await fetch(`http://127.0.0.1:${s3.port}/mock/proj_m/ep_m1`)).json()
+        assert.equal(b.name, 'tom')
+        assert.equal(b.extra, 'from-endpoint')
+      } finally {
+        await srv3.stop()
+      }
+    }),
+  },
+  {
     name: 'mock: 无匹配规则回落默认响应（status/body 取自 responses.isDefault）',
     fn: () => withMockServer(async (srv, base) => {
       const project = mockProject()
@@ -599,6 +635,28 @@ const runnerTests = [
       assert.deepEqual(out.results.map((r) => [r.name, r.passed]), [['状态码 200', true]])
       assert.deepEqual(out.extracted, { method: 'GET' })
       assert.ok(out.durationMs >= 0)
+    }),
+  },
+  {
+    name: 'test-runner: 相对 URL 接口自动拼默认环境 baseUrl（与调试页 joinUrl 同语义）',
+    fn: () => withEchoServer(async (svc, base) => {
+      const project = makeProject(base)
+      // 环境只存 baseUrl，接口只存 path —— 页面上最常见的数据形态
+      project.environments = [{ id: 'env_1', name: '测试环境', baseUrl: base, isDefault: true }]
+      const ep = project.endpoints.find((e) => e.id === 'ep_echo')
+      ep.url = '/echo'
+      const runner = createTestRunner({ storage: stubStorage(project), request: svc })
+      const out = await runner.runCase('proj_a', 'tc_1')
+      assert.equal(out.passed, true, JSON.stringify(out.results))
+      // 绝对 URL 不受影响
+      ep.url = `${base}/echo`
+      const out2 = await runner.runCase('proj_a', 'tc_1')
+      assert.equal(out2.passed, true)
+      // 无 baseUrl 环境保持原样
+      project.environments = [{ id: 'env_2', name: '无baseUrl', baseUrl: '', isDefault: true }]
+      ep.url = '/echo'
+      const out3 = await runner.runCase('proj_a', 'tc_1')
+      assert.equal(out3.passed, false, '无 baseUrl 时相对路径应保持原样并失败')
     }),
   },
   {

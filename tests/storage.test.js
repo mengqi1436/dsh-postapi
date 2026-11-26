@@ -158,4 +158,32 @@ export const tests = [
       assert.equal(raw.endpoints.length, 10)
     }),
   },
+  {
+    name: 'storage: 空串 id 的新实体自动补 id（调试页保存形态）',
+    fn: () => withTempStorage(async (storage, base) => {
+      const p = await storage.createProject('空 id 项目')
+      // 调试页 emptyDraft 的 id 是 ''（不是 null/undefined），必须按新建处理而不是 upsert 到 id:''
+      const ep = await storage.saveEndpoint(p.id, { id: '', name: 'echo 调试接口', method: 'GET', url: '/echo' })
+      assert.match(ep.id, /^ep_[0-9a-z]+$/)
+      const folder = await storage.saveFolder(p.id, { id: '', name: '目录' })
+      assert.match(folder.id, /^fld_[0-9a-z]+$/)
+      const schema = await storage.saveSchema(p.id, { id: '', name: 'Order', jsonSchema: { type: 'object' } })
+      assert.match(schema.id, /^sch_[0-9a-z]+$/)
+      const env = await storage.saveEnvironment(p.id, { id: '', name: '测试环境' })
+      assert.match(env.id, /^env_[0-9a-z]+$/)
+      const resp = await storage.saveResponse(p.id, ep.id, { id: '', name: '成功', code: 200 })
+      assert.match(resp.id, /^res_[0-9a-z]+$/)
+      // 空串 id 不落盘为 ''；带真实 id 的保存仍走覆盖路径
+      const project = await storage.getProject(p.id)
+      assert.ok(project.endpoints.every((e) => e.id !== ''))
+      const updated = await storage.saveEndpoint(p.id, { id: ep.id, name: '改名后' })
+      assert.equal(updated.id, ep.id)
+      const after = await storage.getProject(p.id)
+      assert.equal(after.endpoints.find((e) => e.id === ep.id).name, '改名后')
+      assert.equal(after.endpoints.length, 1)
+      // 历史条目空 id 同样补齐
+      const his = await storage.appendHistory(p.id, { id: '', method: 'GET', url: '/echo', status: 200 })
+      assert.match(his.id, /^his_[0-9a-z]+$/)
+    }),
+  },
 ]

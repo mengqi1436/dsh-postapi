@@ -540,6 +540,15 @@ export function installApi() {
     api[ns] = {}
     for (const method of methods) api[ns][method] = wrap(bridgeServices[ns][method], stubServices[ns][method])
   }
+  // 存储根目录：/health 透传 host 注入的 basePath，设置页只读展示用；
+  // 拉取失败静默（桩模式或桥不可达时设置页回落本地草稿）。
+  Promise.resolve()
+    .then(async () => {
+      const payload = await bridgeGet('/health').catch(() => null)
+      const root = payload && typeof payload.storeRoot === 'string' ? payload.storeRoot : ''
+      if (root.trim()) api.storeRoot = root
+    })
+    .catch(() => {})
   window.__postapiApi = api
   return api
 }

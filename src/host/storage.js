@@ -48,6 +48,13 @@ function uniqueId(prefix, existing) {
   return id
 }
 
+/** id 是否真实存在：null/undefined 与空串都视为「无 id」。
+ *  调试页等客户端会带着 id:'' 保存新实体，只判 != null 会把空串当既有 id 落盘，
+ *  产出 id:'' 的死记录（文档路由 / Mock 规则 / 用例绑定全部失联）。 */
+function hasRealId(id) {
+  return id != null && String(id).trim() !== ''
+}
+
 /** 契约 §2.2 endpoint 默认结构（v2 全字段；createdAt/updatedAt 由写路径显式赋）。 */
 export const ENDPOINT_DEFAULTS = {
   name: '',
@@ -311,6 +318,8 @@ export function createStorageService(basePath = DEFAULT_BASE_PATH) {
   }
 
   return {
+    // 存储根目录：health 桥透传给设置页只读展示（README「存储路径 host 注入值」）
+    basePath,
     async listProjects() {
       const { index, upgraded } = await readIndexState()
       // v1 index.json 读入后升级落盘（契约 §2.1：自动补 version: 2 并保留 projects）
@@ -373,7 +382,7 @@ export function createStorageService(basePath = DEFAULT_BASE_PATH) {
       return enqueue(async () => {
         const project = await loadProjectForWrite(projectId)
         const ts = nowIso()
-        if (endpoint && endpoint.id != null) {
+        if (endpoint && hasRealId(endpoint.id)) {
           // 有 id 覆盖：保留 createdAt，更新 updatedAt（契约 §2）
           const prev = project.endpoints.find((e) => e.id === endpoint.id)
           const saved = {
@@ -413,7 +422,7 @@ export function createStorageService(basePath = DEFAULT_BASE_PATH) {
     async saveFolder(projectId, folder) {
       return enqueue(async () => {
         const project = await loadProjectForWrite(projectId)
-        const saved = folder && folder.id != null
+        const saved = folder && hasRealId(folder.id)
           ? { name: '', parentId: null, order: 0, ...folder }
           : {
               name: '',
@@ -575,14 +584,14 @@ export function createStorageService(basePath = DEFAULT_BASE_PATH) {
       return enqueue(async () => {
         const project = await loadProjectForWrite(projectId)
         const ts = nowIso()
-        const prev = schema && schema.id != null
+        const prev = schema && hasRealId(schema.id)
           ? project.schemas.find((s) => s.id === schema.id)
           : undefined
         const saved = {
           ...SCHEMA_DEFAULTS,
           ...(prev || {}),
           ...(schema || {}),
-          id: schema && schema.id != null
+          id: hasRealId(schema && schema.id)
             ? schema.id
             : uniqueId('sch_', new Set(project.schemas.map((s) => s.id))),
           createdAt: prev ? prev.createdAt : ts,
@@ -608,7 +617,7 @@ export function createStorageService(basePath = DEFAULT_BASE_PATH) {
     async saveEnvironment(projectId, env) {
       return enqueue(async () => {
         const project = await loadProjectForWrite(projectId)
-        const prev = env && env.id != null
+        const prev = env && hasRealId(env.id)
           ? project.environments.find((e) => e.id === env.id)
           : undefined
         const saved = {
@@ -618,7 +627,7 @@ export function createStorageService(basePath = DEFAULT_BASE_PATH) {
           variables: Array.isArray((env && env.variables))
             ? env.variables
             : (prev && Array.isArray(prev.variables) ? prev.variables : []),
-          id: env && env.id != null
+          id: hasRealId(env && env.id)
             ? env.id
             : uniqueId('env_', new Set(project.environments.map((e) => e.id))),
         }
@@ -687,18 +696,18 @@ export function createStorageService(basePath = DEFAULT_BASE_PATH) {
           return {
             ...RESPONSE_DEFAULTS,
             ...(response || {}),
-            id: response && response.id != null ? response.id : uniqueId('res_', new Set()),
+            id: response && hasRealId(response.id) ? response.id : uniqueId('res_', new Set()),
           }
         }
         if (!Array.isArray(ep.responses)) ep.responses = []
-        const prev = response && response.id != null
+        const prev = response && hasRealId(response.id)
           ? ep.responses.find((r) => r.id === response.id)
           : undefined
         const saved = {
           ...RESPONSE_DEFAULTS,
           ...(prev || {}),
           ...(response || {}),
-          id: response && response.id != null
+          id: hasRealId(response && response.id)
             ? response.id
             : uniqueId('res_', new Set(ep.responses.map((r) => r.id))),
         }
@@ -739,7 +748,7 @@ export function createStorageService(basePath = DEFAULT_BASE_PATH) {
         const limit = Number((project.settings && project.settings.historyLimit) || DEFAULT_HISTORY_LIMIT)
         const e = entry && typeof entry === 'object' ? entry : {}
         const saved = {
-          id: e.id != null
+          id: hasRealId(e.id)
             ? String(e.id)
             : uniqueId('his_', new Set(history.entries.map((x) => x.id))),
           at: e.at != null ? String(e.at) : nowIso(),
@@ -775,7 +784,9 @@ export function createStorageService(basePath = DEFAULT_BASE_PATH) {
       const kw = typeof keyword === 'string' ? keyword.trim().toLowerCase() : ''
       if (kw === '') return { endpoints: [], schemas: [], folders: [] }
       const loaded = await loadProjectData(projectId)
-      if (!loaded) throw new Error(`project not found: ${projectId}`)
+      // 未知项目返回空结果而非 500：搜索是只读查询，项目缺失（页面初挂载带
+      // mock 占位 id 自动查一次）不该炸成 INTERNAL，也不该把 console 染红。
+      if (!loaded) return { endpoints: [], schemas: [], folders: [] }
       const project = loaded.data
       const hit = (...fields) =>
         fields.some((f) => typeof f === 'string' && f.toLowerCase().includes(kw))
