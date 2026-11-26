@@ -117,7 +117,7 @@ export async function handlePostapiRequest(req, res, { storage, request, service
     const key = method + ' ' + p
 
     if (key === 'GET /health') {
-      return sendOk(res, { status: 'up' })
+      return sendOk(res, { status: 'up', storeRoot: String((storage && storage.basePath) || '') })
     }
     if (key === 'GET /storage/listProjects') {
       return sendOk(res, await storage.listProjects())

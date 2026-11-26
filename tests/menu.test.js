@@ -148,4 +148,19 @@ export const tests = [
       assert(menuItemCount <= 3, 'pp-menu-item 渲染点应集中在 MenuTree 内，实际出现 ' + menuItemCount + ' 次')
     },
   },
+  {
+    name: 'menu: 面板不被外部点击误关（shellRef 含顶栏 + 点内跳过清单）',
+    fn() {
+      const src = read(join(SHELL, 'Body.js'))
+      // 回归：shellRef 挂 .pp-shell 时，位于顶栏的菜单面板在 mousedown 阶段被当作
+      // 「外部点击」整面板关掉，二级菜单永远打不开。ref 必须挂在 pp-scope 根。
+      assert(/className="pp-scope pp-workbench-v2"[^>]*ref=\{shellRef\}/.test(src),
+        'shellRef 应挂在 pp-scope 根节点（含顶栏），否则菜单项点击先触发整面板关闭')
+      assert(src.includes("target.closest('.pp-menu-anchor')"),
+        '点内跳过清单必须包含 .pp-menu-anchor')
+      // Esc 行为：空路径时收起整个面板（此前 Esc 只能关帮助卡）
+      assert(/setMenuOpen\(false\)\s*\n\s*setHelpOpen\(false\)/.test(src.replace(/\r/g, '')),
+        'Esc 空路径时应 setMenuOpen(false) 收起面板')
+    },
+  },
 ]

@@ -39,6 +39,15 @@ export function createTestRunner({ storage, request } = {}) {
     return envs.find((e) => e && e.isDefault) || envs[0] || null
   }
 
+  /** 相对 URL + 环境 baseUrl 拼接；绝对 URL / 空 baseUrl 原样返回（调试页 joinUrl 同语义）。 */
+  function joinWithBaseUrl(url, env) {
+    const raw = String(url == null ? '' : url)
+    if (/^https?:\/\//i.test(raw)) return raw
+    const base = String((env && env.baseUrl) || '').replace(/\/+$/, '')
+    if (!base) return raw
+    return base + (raw.charAt(0) === '/' ? raw : '/' + raw)
+  }
+
   function endpointOf(project, endpointId) {
     const list = Array.isArray(project.endpoints) ? project.endpoints : []
     return list.find((e) => e && String(e.id) === String(endpointId)) || null
@@ -50,7 +59,9 @@ export function createTestRunner({ storage, request } = {}) {
     const settings = project.settings && typeof project.settings === 'object' ? project.settings : {}
     return {
       method: merged.method,
-      url: merged.url,
+      // 相对 URL 拼接默认环境 baseUrl（与调试页 joinUrl 同语义）：用例/场景的
+      // 接口通常只存 path，直接 fetch 相对路径会失败。
+      url: joinWithBaseUrl(merged.url, defaultEnv(project)),
       params: merged.params,
       headers: merged.headers,
       body: merged.body,

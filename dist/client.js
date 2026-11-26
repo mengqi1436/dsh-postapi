@@ -785,6 +785,12 @@ function installApi() {
     api[ns] = {};
     for (const method of methods) api[ns][method] = wrap(bridgeServices[ns][method], stubServices[ns][method]);
   }
+  Promise.resolve().then(async () => {
+    const payload = await bridgeGet("/health").catch(() => null);
+    const root = payload && typeof payload.storeRoot === "string" ? payload.storeRoot : "";
+    if (root.trim()) api.storeRoot = root;
+  }).catch(() => {
+  });
   window.__postapiApi = api;
   return api;
 }
@@ -1123,7 +1129,8 @@ function PostApiBody({ useTabInfo }) {
     const onKey = (event) => {
       if (!event) return;
       if (event.key === "Escape") {
-        setMenuPath((prev) => prev.length > 0 ? prev.slice(0, -1) : prev);
+        if (menuPath.length > 0) setMenuPath(menuPath.slice(0, -1));
+        else setMenuOpen(false);
         setHelpOpen(false);
       }
     };
@@ -1146,7 +1153,7 @@ function PostApiBody({ useTabInfo }) {
       };
     }
     return void 0;
-  }, []);
+  }, [menuPath]);
   (0, import_react3.useEffect)(() => {
     setHelpOpen(false);
   }, [route.name, route.arg]);
@@ -1171,7 +1178,7 @@ function PostApiBody({ useTabInfo }) {
     goto(searchHash(q));
   };
   const toggleHelp = () => setHelpOpen((prev) => !prev);
-  return /* @__PURE__ */ (0, import_react3.createElement)("div", { className: "pp-scope pp-workbench-v2", "data-theme": theme, "data-route": route.name }, /* @__PURE__ */ (0, import_react3.createElement)("header", { className: "pp-topbar" }, /* @__PURE__ */ (0, import_react3.createElement)("span", { className: "pp-topbar-brand" }, /* @__PURE__ */ (0, import_react3.createElement)(Icon, { name: "layers", size: 16 }), /* @__PURE__ */ (0, import_react3.createElement)("span", null, zh["type.label"])), /* @__PURE__ */ (0, import_react3.createElement)("span", { className: "pp-crumb" }, zh[activeGroup.labelKey], /* @__PURE__ */ (0, import_react3.createElement)("span", { className: "pp-crumb-sep" }, "/"), zh[active.labelKey]), /* @__PURE__ */ (0, import_react3.createElement)("span", { className: "pp-topbar-spacer" }), /* @__PURE__ */ (0, import_react3.createElement)(
+  return /* @__PURE__ */ (0, import_react3.createElement)("div", { className: "pp-scope pp-workbench-v2", "data-theme": theme, "data-route": route.name, ref: shellRef }, /* @__PURE__ */ (0, import_react3.createElement)("header", { className: "pp-topbar" }, /* @__PURE__ */ (0, import_react3.createElement)("span", { className: "pp-topbar-brand" }, /* @__PURE__ */ (0, import_react3.createElement)(Icon, { name: "layers", size: 16 }), /* @__PURE__ */ (0, import_react3.createElement)("span", null, zh["type.label"])), /* @__PURE__ */ (0, import_react3.createElement)("span", { className: "pp-crumb" }, zh[activeGroup.labelKey], /* @__PURE__ */ (0, import_react3.createElement)("span", { className: "pp-crumb-sep" }, "/"), zh[active.labelKey]), /* @__PURE__ */ (0, import_react3.createElement)("span", { className: "pp-topbar-spacer" }), /* @__PURE__ */ (0, import_react3.createElement)(
     "input",
     {
       className: "pp-input pp-input-sm pp-topbar-search",
@@ -1255,7 +1262,7 @@ function PostApiBody({ useTabInfo }) {
       "aria-label": zh["aside.about"]
     },
     /* @__PURE__ */ (0, import_react3.createElement)(Icon, { name: "help", size: 18 })
-  )), /* @__PURE__ */ (0, import_react3.createElement)("div", { className: "pp-shell", ref: shellRef }, /* @__PURE__ */ (0, import_react3.createElement)("nav", { className: "pp-sider", "aria-label": zh["aside.nav"] }, NAV_GROUPS.map((group) => /* @__PURE__ */ (0, import_react3.createElement)("div", { key: group.id }, /* @__PURE__ */ (0, import_react3.createElement)("div", { className: "pp-sider-group" }, zh[group.labelKey]), routesOfGroup(group).map((item) => /* @__PURE__ */ (0, import_react3.createElement)(
+  )), /* @__PURE__ */ (0, import_react3.createElement)("div", { className: "pp-shell" }, /* @__PURE__ */ (0, import_react3.createElement)("nav", { className: "pp-sider", "aria-label": zh["aside.nav"] }, NAV_GROUPS.map((group) => /* @__PURE__ */ (0, import_react3.createElement)("div", { key: group.id }, /* @__PURE__ */ (0, import_react3.createElement)("div", { className: "pp-sider-group" }, zh[group.labelKey]), routesOfGroup(group).map((item) => /* @__PURE__ */ (0, import_react3.createElement)(
     "a",
     {
       key: item.name,
@@ -2159,6 +2166,30 @@ function DocPage({ route, api }) {
     window.addEventListener("hashchange", onHash);
     return () => window.removeEventListener("hashchange", onHash);
   }, []);
+  const newQueryHandledRef = (0, import_react8.useRef)("");
+  (0, import_react8.useEffect)(() => {
+    const query = route && typeof route.query === "string" ? route.query : "";
+    const wants = query.includes("new=1") || query.includes("newFolder=1");
+    if (!wants || isMock || !project || !project.id) return;
+    if (newQueryHandledRef.current === query) return;
+    newQueryHandledRef.current = query;
+    const storage = apiRef && apiRef.storage;
+    if (!storage || typeof storage.saveEndpoint !== "function") return;
+    if (query.includes("newFolder=1")) {
+      if (typeof storage.saveFolder !== "function") return;
+      Promise.resolve().then(() => storage.saveFolder(project.id, { name: "\u65B0\u5EFA\u76EE\u5F55" })).then(() => {
+        setError("");
+      }).catch((err) => setError("\u65B0\u5EFA\u76EE\u5F55\u5931\u8D25\uFF1A" + (err && err.message ? err.message : String(err))));
+    } else {
+      Promise.resolve().then(() => storage.saveEndpoint(project.id, { name: "\u65B0\u5EFA\u63A5\u53E3", method: "GET", url: "" })).then((saved) => {
+        setError("");
+        if (saved && saved.id) pick(saved.id);
+      }).catch((err) => setError("\u65B0\u5EFA\u63A5\u53E3\u5931\u8D25\uFF1A" + (err && err.message ? err.message : String(err))));
+    }
+    if (typeof window !== "undefined" && /#\?|new=|newFolder=/.test(window.location.hash)) {
+      window.location.hash = "#/doc" + (selectedId ? "/" + encodeURIComponent(selectedId) : "");
+    }
+  }, [project.id, isMock, route && route.query]);
   const endpoints = (0, import_react8.useMemo)(() => Array.isArray(project && project.endpoints) ? project.endpoints : [], [project]);
   const folders = (0, import_react8.useMemo)(() => Array.isArray(project && project.folders) ? project.folders : [], [project]);
   const ep = endpoints.find((e) => e.id === selectedId) || endpoints[0] || null;
@@ -3686,6 +3717,8 @@ function SchemaPage(props) {
             setProjects(list);
             setProjectId(list[0].id);
             await loadProject(list[0].id);
+            const query = route.query && typeof route.query === "string" ? route.query : "";
+            if (query.includes("new=1")) blank();
             return;
           }
         } catch (err) {
@@ -4363,13 +4396,13 @@ function normalizeAssertions(list) {
 function casesOf(project) {
   const p = project && typeof project === "object" ? project : {};
   const settings = p.settings && typeof p.settings === "object" ? p.settings : {};
-  const src = Array.isArray(p.testCases) ? p.testCases : Array.isArray(settings.testCases) ? settings.testCases : [];
+  const src = Array.isArray(settings.testCases) ? settings.testCases : Array.isArray(p.testCases) ? p.testCases : [];
   return src.filter((c) => c && typeof c === "object");
 }
 function scenariosOf(project) {
   const p = project && typeof project === "object" ? project : {};
   const settings = p.settings && typeof p.settings === "object" ? p.settings : {};
-  const src = Array.isArray(p.testScenarios) ? p.testScenarios : Array.isArray(settings.testScenarios) ? settings.testScenarios : [];
+  const src = Array.isArray(settings.testScenarios) ? settings.testScenarios : Array.isArray(p.testScenarios) ? p.testScenarios : [];
   return src.filter((s) => s && typeof s === "object");
 }
 function errText6(err) {
@@ -4419,6 +4452,12 @@ function TestPage(props) {
             setProjects(list);
             setProjectId(list[0].id);
             await loadProject(list[0].id);
+            const query = props && props.route && typeof props.route.query === "string" ? props.route.query : "";
+            if (query.includes("new=case")) addCase();
+            if (query.includes("new=scenario")) {
+              setTab("scenarios");
+              addScenario();
+            }
             return;
           }
         } catch (err) {
@@ -4691,7 +4730,10 @@ var LANGS = [
   { id: "fetch", label: "JavaScript fetch" },
   { id: "axios", label: "JavaScript axios" },
   { id: "python", label: "Python requests" },
-  { id: "go", label: "Go net/http" }
+  { id: "go", label: "Go net/http" },
+  { id: "java", label: "Java" },
+  { id: "php", label: "PHP" },
+  { id: "csharp", label: "C#" }
 ];
 var MOCK_CURL = "curl -X GET 'https://api.example.test/api/v1/orders?page=1' -H 'Accept: application/json'";
 var MOCK_ENDPOINT = {
@@ -4746,6 +4788,13 @@ function ImportPage(props) {
   const [codeOut, setCodeOut] = (0, import_react16.useState)("");
   const [busy, setBusy] = (0, import_react16.useState)(false);
   (0, import_react16.useEffect)(() => applyTheme(rootRef.current), []);
+  (0, import_react16.useEffect)(() => {
+    const query = props && props.route && typeof props.route.query === "string" ? props.route.query : "";
+    const m = /(?:^|&)kind=([^&]+)/.exec(query);
+    if (!m) return;
+    const kind = decodeURIComponent(m[1]);
+    if (IMPORT_KINDS.some((k) => k.id === kind)) pickImportKind(kind);
+  }, []);
   (0, import_react16.useEffect)(() => {
     const boot = async () => {
       if (!storage || typeof storage.listProjects !== "function") return;
@@ -5956,6 +6005,21 @@ function SettingsPage(props) {
   const [notice, setNotice] = (0, import_react20.useState)("");
   (0, import_react20.useEffect)(() => {
     applyTheme(rootRef.current);
+  }, []);
+  (0, import_react20.useEffect)(() => {
+    if (api && typeof api.storeRoot === "string" && api.storeRoot.trim()) return void 0;
+    let tries = 0;
+    const id = setInterval(() => {
+      tries += 1;
+      const value = api && api.storeRoot;
+      if (typeof value === "string" && value.trim()) {
+        setStoreRoot(value);
+        clearInterval(id);
+        return;
+      }
+      if (tries > 20) clearInterval(id);
+    }, 200);
+    return () => clearInterval(id);
   }, []);
   (0, import_react20.useEffect)(() => {
     const boot = async () => {

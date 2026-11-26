@@ -171,7 +171,11 @@ async function loadPage(name) {
   const code = readFileSync(outfile, 'utf8')
   const mod = { exports: {} }
   const win = { __postapiQueue: [] }
-  vm.runInNewContext(code, { window: win, module: mod, exports: mod.exports, require: requireShim, console })
+  // settings 页 storeRoot 轮询用到定时器：与浏览器一致地暴露最小定时器面
+  vm.runInNewContext(code, {
+    window: win, module: mod, exports: mod.exports, require: requireShim, console,
+    setInterval, clearInterval, setTimeout, clearTimeout,
+  })
   return { exports: mod.exports, queue: win.__postapiQueue, code }
 }
 
@@ -664,16 +668,18 @@ t('test.summarizeResult：透传 error 字段', async () => {
   if (r.error !== 'runner 不可用') throw new Error('error 未透传')
 })
 
-t('test.casesOf / scenariosOf：顶层优先，回落 settings 子键，过滤非法项', async () => {
+t('test.casesOf / scenariosOf：settings 子键优先（运行器落点），回落顶层，过滤非法项', async () => {
   const cf = await ex('test', 'casesOf')
   const sf = await ex('test', 'scenariosOf')
-  const a = cf({ testCases: [{ id: 'c1' }], settings: { testCases: [{ id: 'c2' }] } })
-  if (a.length !== 1 || a[0].id !== 'c1') throw new Error('顶层未优先')
-  const b = cf({ settings: { testCases: [{ id: 'c3' }, null] } })
-  if (b.length !== 1 || b[0].id !== 'c3') throw new Error('settings 回落失败')
+  // 回归：getProject 顶层的 testCases/testScenarios 是 v2 骨架兼容位，空项目时恒为
+  // []，若优先读取会把 settings 里已保存的用例遮蔽成「暂无用例」。
+  const a = cf({ testCases: [{ id: 'stale' }], settings: { testCases: [{ id: 'c1' }] } })
+  if (a.length !== 1 || a[0].id !== 'c1') throw new Error('settings 未优先')
+  const b = cf({ testCases: [{ id: 'legacy' }, null] })
+  if (b.length !== 1 || b[0].id !== 'legacy') throw new Error('顶层回落失败')
   if (cf(null).length !== 0) throw new Error('空项目未返回空数组')
-  const s = sf({ settings: { testScenarios: [{ id: 's1' }] } })
-  if (s.length !== 1 || s[0].id !== 's1') throw new Error('场景回落失败')
+  const s = sf({ testScenarios: [{ id: 'stale' }], settings: { testScenarios: [{ id: 's1' }] } })
+  if (s.length !== 1 || s[0].id !== 's1') throw new Error('场景 settings 未优先')
 })
 
 t('test 渲染：断言表 .pp-table + 运行结果 .pp-result-row/.pp-pill', async () => {
