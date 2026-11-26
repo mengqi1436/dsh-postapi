@@ -1,0 +1,1254 @@
+{
+  "at": "2026-11-26T06:56:11.352Z",
+  "repo": "/home/home/.dsh/state/superagent2/work/ui-full-parity-audit-fdf9ae932c8c",
+  "total": 37,
+  "failed": 0,
+  "results": [
+    {
+      "name": "overview",
+      "ok": true,
+      "failed": [],
+      "route": "#/overview",
+      "tabs": [],
+      "methodBadges": [
+        "GET",
+        "POST",
+        "DELETE"
+      ],
+      "counts": {
+        "inputs": 0,
+        "tables": 1,
+        "treeRows": 0,
+        "emptyStates": 0,
+        "buttons": 4
+      }
+    },
+    {
+      "name": "overview-context-menu",
+      "ok": true,
+      "failed": [],
+      "route": "#/overview",
+      "tabs": [],
+      "methodBadges": [
+        "GET",
+        "POST",
+        "DELETE"
+      ],
+      "counts": {
+        "inputs": 0,
+        "tables": 1,
+        "treeRows": 0,
+        "emptyStates": 0,
+        "buttons": 6
+      }
+    },
+    {
+      "name": "overview-new-menu-3level",
+      "ok": true,
+      "failed": [],
+      "route": "#/overview",
+      "tabs": [],
+      "methodBadges": [
+        "GET",
+        "POST",
+        "DELETE"
+      ],
+      "counts": {
+        "inputs": 0,
+        "tables": 1,
+        "treeRows": 0,
+        "emptyStates": 0,
+        "buttons": 4
+      }
+    },
+    {
+      "name": "overview-help-card",
+      "ok": true,
+      "failed": [],
+      "route": "#/overview",
+      "tabs": [],
+      "methodBadges": [
+        "GET",
+        "POST",
+        "DELETE"
+      ],
+      "counts": {
+        "inputs": 0,
+        "tables": 1,
+        "treeRows": 0,
+        "emptyStates": 0,
+        "buttons": 4
+      }
+    },
+    {
+      "name": "overview-dark",
+      "ok": true,
+      "failed": [],
+      "route": "#/overview",
+      "tabs": [],
+      "methodBadges": [
+        "GET",
+        "POST",
+        "DELETE"
+      ],
+      "counts": {
+        "inputs": 0,
+        "tables": 1,
+        "treeRows": 0,
+        "emptyStates": 0,
+        "buttons": 4
+      }
+    },
+    {
+      "name": "doc-default",
+      "ok": true,
+      "failed": [],
+      "route": "#/doc",
+      "tabs": [
+        {
+          "text": "200 成功",
+          "active": true
+        },
+        {
+          "text": "404 订单不存在",
+          "active": false
+        }
+      ],
+      "methodBadges": [
+        "DELETE",
+        "GET",
+        "POST"
+      ],
+      "counts": {
+        "inputs": 1,
+        "tables": 2,
+        "treeRows": 8,
+        "emptyStates": 3,
+        "buttons": 7
+      }
+    },
+    {
+      "name": "doc-context-menu",
+      "ok": true,
+      "failed": [],
+      "route": "#/doc",
+      "tabs": [
+        {
+          "text": "200 成功",
+          "active": true
+        },
+        {
+          "text": "404 订单不存在",
+          "active": false
+        }
+      ],
+      "methodBadges": [
+        "DELETE",
+        "GET",
+        "POST"
+      ],
+      "counts": {
+        "inputs": 1,
+        "tables": 2,
+        "treeRows": 8,
+        "emptyStates": 3,
+        "buttons": 11
+      }
+    },
+    {
+      "name": "doc-multi-response",
+      "ok": true,
+      "failed": [],
+      "route": "#/doc",
+      "tabs": [
+        {
+          "text": "200 成功",
+          "active": false
+        },
+        {
+          "text": "404 订单不存在",
+          "active": true
+        }
+      ],
+      "methodBadges": [
+        "DELETE",
+        "GET",
+        "POST"
+      ],
+      "counts": {
+        "inputs": 1,
+        "tables": 2,
+        "treeRows": 8,
+        "emptyStates": 3,
+        "buttons": 7
+      }
+    },
+    {
+      "name": "doc-drag-move",
+      "ok": true,
+      "failed": [],
+      "route": "#/doc",
+      "tabs": [
+        {
+          "text": "200 成功",
+          "active": true
+        },
+        {
+          "text": "404 订单不存在",
+          "active": false
+        }
+      ],
+      "methodBadges": [
+        "DELETE",
+        "GET",
+        "POST"
+      ],
+      "counts": {
+        "inputs": 1,
+        "tables": 2,
+        "treeRows": 8,
+        "emptyStates": 3,
+        "buttons": 7
+      }
+    },
+    {
+      "name": "debug-http-tabs",
+      "ok": true,
+      "failed": [],
+      "route": "#/debug",
+      "tabs": [
+        {
+          "text": "Params",
+          "active": true
+        },
+        {
+          "text": "Headers",
+          "active": false
+        },
+        {
+          "text": "Body",
+          "active": false
+        },
+        {
+          "text": "Auth",
+          "active": false
+        },
+        {
+          "text": "脚本",
+          "active": false
+        },
+        {
+          "text": "数据库",
+          "active": false
+        },
+        {
+          "text": "设置",
+          "active": false
+        },
+        {
+          "text": "项目设置",
+          "active": false
+        }
+      ],
+      "methodBadges": [
+        "GET"
+      ],
+      "counts": {
+        "inputs": 17,
+        "tables": 2,
+        "treeRows": 0,
+        "emptyStates": 1,
+        "buttons": 17
+      }
+    },
+    {
+      "name": "debug-tab-Headers",
+      "ok": true,
+      "failed": [],
+      "route": "#/debug",
+      "tabs": [
+        {
+          "text": "Params",
+          "active": false
+        },
+        {
+          "text": "Headers",
+          "active": true
+        },
+        {
+          "text": "Body",
+          "active": false
+        },
+        {
+          "text": "Auth",
+          "active": false
+        },
+        {
+          "text": "脚本",
+          "active": false
+        },
+        {
+          "text": "数据库",
+          "active": false
+        },
+        {
+          "text": "设置",
+          "active": false
+        },
+        {
+          "text": "项目设置",
+          "active": false
+        }
+      ],
+      "methodBadges": [
+        "GET"
+      ],
+      "counts": {
+        "inputs": 11,
+        "tables": 2,
+        "treeRows": 0,
+        "emptyStates": 1,
+        "buttons": 17
+      }
+    },
+    {
+      "name": "debug-tab-Body",
+      "ok": true,
+      "failed": [],
+      "route": "#/debug",
+      "tabs": [
+        {
+          "text": "Params",
+          "active": false
+        },
+        {
+          "text": "Headers",
+          "active": false
+        },
+        {
+          "text": "Body",
+          "active": true
+        },
+        {
+          "text": "Auth",
+          "active": false
+        },
+        {
+          "text": "脚本",
+          "active": false
+        },
+        {
+          "text": "数据库",
+          "active": false
+        },
+        {
+          "text": "设置",
+          "active": false
+        },
+        {
+          "text": "项目设置",
+          "active": false
+        }
+      ],
+      "methodBadges": [
+        "GET"
+      ],
+      "counts": {
+        "inputs": 6,
+        "tables": 0,
+        "treeRows": 0,
+        "emptyStates": 2,
+        "buttons": 13
+      }
+    },
+    {
+      "name": "debug-tab-Auth",
+      "ok": true,
+      "failed": [],
+      "route": "#/debug",
+      "tabs": [
+        {
+          "text": "Params",
+          "active": false
+        },
+        {
+          "text": "Headers",
+          "active": false
+        },
+        {
+          "text": "Body",
+          "active": false
+        },
+        {
+          "text": "Auth",
+          "active": true
+        },
+        {
+          "text": "脚本",
+          "active": false
+        },
+        {
+          "text": "数据库",
+          "active": false
+        },
+        {
+          "text": "设置",
+          "active": false
+        },
+        {
+          "text": "项目设置",
+          "active": false
+        }
+      ],
+      "methodBadges": [
+        "GET"
+      ],
+      "counts": {
+        "inputs": 7,
+        "tables": 0,
+        "treeRows": 0,
+        "emptyStates": 1,
+        "buttons": 13
+      }
+    },
+    {
+      "name": "debug-tab-脚本",
+      "ok": true,
+      "failed": [],
+      "route": "#/debug",
+      "tabs": [
+        {
+          "text": "Params",
+          "active": false
+        },
+        {
+          "text": "Headers",
+          "active": false
+        },
+        {
+          "text": "Body",
+          "active": false
+        },
+        {
+          "text": "Auth",
+          "active": false
+        },
+        {
+          "text": "脚本",
+          "active": true
+        },
+        {
+          "text": "数据库",
+          "active": false
+        },
+        {
+          "text": "设置",
+          "active": false
+        },
+        {
+          "text": "项目设置",
+          "active": false
+        }
+      ],
+      "methodBadges": [
+        "GET"
+      ],
+      "counts": {
+        "inputs": 8,
+        "tables": 1,
+        "treeRows": 0,
+        "emptyStates": 1,
+        "buttons": 14
+      }
+    },
+    {
+      "name": "debug-tab-设置",
+      "ok": true,
+      "failed": [],
+      "route": "#/debug",
+      "tabs": [
+        {
+          "text": "Params",
+          "active": false
+        },
+        {
+          "text": "Headers",
+          "active": false
+        },
+        {
+          "text": "Body",
+          "active": false
+        },
+        {
+          "text": "Auth",
+          "active": false
+        },
+        {
+          "text": "脚本",
+          "active": false
+        },
+        {
+          "text": "数据库",
+          "active": false
+        },
+        {
+          "text": "设置",
+          "active": true
+        },
+        {
+          "text": "项目设置",
+          "active": false
+        }
+      ],
+      "methodBadges": [
+        "GET"
+      ],
+      "counts": {
+        "inputs": 7,
+        "tables": 1,
+        "treeRows": 0,
+        "emptyStates": 1,
+        "buttons": 13
+      }
+    },
+    {
+      "name": "debug-send-real",
+      "ok": true,
+      "failed": [],
+      "route": "#/debug",
+      "tabs": [
+        {
+          "text": "Params",
+          "active": true
+        },
+        {
+          "text": "Headers",
+          "active": false
+        },
+        {
+          "text": "Body",
+          "active": false
+        },
+        {
+          "text": "Auth",
+          "active": false
+        },
+        {
+          "text": "脚本",
+          "active": false
+        },
+        {
+          "text": "数据库",
+          "active": false
+        },
+        {
+          "text": "设置",
+          "active": false
+        },
+        {
+          "text": "项目设置",
+          "active": false
+        },
+        {
+          "text": "Body",
+          "active": true
+        },
+        {
+          "text": "Headers (5)",
+          "active": false
+        },
+        {
+          "text": "Cookies",
+          "active": false
+        },
+        {
+          "text": "实际请求",
+          "active": false
+        },
+        {
+          "text": "测试结果 (0)",
+          "active": false
+        },
+        {
+          "text": "控制台",
+          "active": false
+        },
+        {
+          "text": "美化",
+          "active": true
+        },
+        {
+          "text": "原文",
+          "active": false
+        }
+      ],
+      "methodBadges": [
+        "GET"
+      ],
+      "counts": {
+        "inputs": 17,
+        "tables": 2,
+        "treeRows": 0,
+        "emptyStates": 0,
+        "buttons": 26
+      }
+    },
+    {
+      "name": "debug-websocket",
+      "ok": true,
+      "failed": [],
+      "route": "#/debug",
+      "tabs": [
+        {
+          "text": "Params",
+          "active": true
+        },
+        {
+          "text": "Headers",
+          "active": false
+        }
+      ],
+      "methodBadges": [
+        "WS"
+      ],
+      "counts": {
+        "inputs": 17,
+        "tables": 2,
+        "treeRows": 0,
+        "emptyStates": 1,
+        "buttons": 12
+      }
+    },
+    {
+      "name": "debug-grpc",
+      "ok": true,
+      "failed": [],
+      "route": "#/debug",
+      "tabs": [
+        {
+          "text": "Params",
+          "active": true
+        },
+        {
+          "text": "Headers",
+          "active": false
+        }
+      ],
+      "methodBadges": [
+        "RPC"
+      ],
+      "counts": {
+        "inputs": 20,
+        "tables": 2,
+        "treeRows": 0,
+        "emptyStates": 1,
+        "buttons": 10
+      }
+    },
+    {
+      "name": "debug-dubbo",
+      "ok": true,
+      "failed": [],
+      "route": "#/debug",
+      "tabs": [
+        {
+          "text": "Params",
+          "active": true
+        },
+        {
+          "text": "Headers",
+          "active": false
+        }
+      ],
+      "methodBadges": [
+        "RPC"
+      ],
+      "counts": {
+        "inputs": 23,
+        "tables": 2,
+        "treeRows": 0,
+        "emptyStates": 1,
+        "buttons": 10
+      }
+    },
+    {
+      "name": "debug-db-sqlite",
+      "ok": true,
+      "failed": [],
+      "route": "#/debug",
+      "tabs": [
+        {
+          "text": "Params",
+          "active": false
+        },
+        {
+          "text": "Headers",
+          "active": false
+        },
+        {
+          "text": "Body",
+          "active": false
+        },
+        {
+          "text": "Auth",
+          "active": false
+        },
+        {
+          "text": "脚本",
+          "active": false
+        },
+        {
+          "text": "数据库",
+          "active": true
+        },
+        {
+          "text": "设置",
+          "active": false
+        },
+        {
+          "text": "项目设置",
+          "active": false
+        }
+      ],
+      "methodBadges": [
+        "GET"
+      ],
+      "counts": {
+        "inputs": 8,
+        "tables": 0,
+        "treeRows": 0,
+        "emptyStates": 1,
+        "buttons": 16
+      }
+    },
+    {
+      "name": "debug-proj-settings-4tabs",
+      "ok": true,
+      "failed": [],
+      "route": "#/debug",
+      "tabs": [
+        {
+          "text": "Params",
+          "active": false
+        },
+        {
+          "text": "Headers",
+          "active": false
+        },
+        {
+          "text": "Body",
+          "active": false
+        },
+        {
+          "text": "Auth",
+          "active": false
+        },
+        {
+          "text": "脚本",
+          "active": false
+        },
+        {
+          "text": "数据库",
+          "active": false
+        },
+        {
+          "text": "设置",
+          "active": false
+        },
+        {
+          "text": "项目设置",
+          "active": true
+        },
+        {
+          "text": "基本信息",
+          "active": true
+        },
+        {
+          "text": "全局参数",
+          "active": false
+        },
+        {
+          "text": "全局认证",
+          "active": false
+        },
+        {
+          "text": "前后置脚本",
+          "active": false
+        }
+      ],
+      "methodBadges": [
+        "GET"
+      ],
+      "counts": {
+        "inputs": 7,
+        "tables": 0,
+        "treeRows": 0,
+        "emptyStates": 1,
+        "buttons": 18
+      }
+    },
+    {
+      "name": "mock",
+      "ok": true,
+      "failed": [],
+      "route": "#/mock",
+      "tabs": [],
+      "methodBadges": [
+        "DELETE",
+        "GET",
+        "POST"
+      ],
+      "counts": {
+        "inputs": 15,
+        "tables": 1,
+        "treeRows": 8,
+        "emptyStates": 0,
+        "buttons": 10
+      }
+    },
+    {
+      "name": "schema",
+      "ok": true,
+      "failed": [],
+      "route": "#/schema",
+      "tabs": [],
+      "methodBadges": [],
+      "counts": {
+        "inputs": 4,
+        "tables": 0,
+        "treeRows": 1,
+        "emptyStates": 0,
+        "buttons": 9
+      }
+    },
+    {
+      "name": "env",
+      "ok": true,
+      "failed": [],
+      "route": "#/env",
+      "tabs": [
+        {
+          "text": "环境变量",
+          "active": true
+        },
+        {
+          "text": "全局变量",
+          "active": false
+        },
+        {
+          "text": "优先级",
+          "active": false
+        }
+      ],
+      "methodBadges": [],
+      "counts": {
+        "inputs": 8,
+        "tables": 1,
+        "treeRows": 2,
+        "emptyStates": 0,
+        "buttons": 10
+      }
+    },
+    {
+      "name": "env-globals",
+      "ok": true,
+      "failed": [],
+      "route": "#/env",
+      "tabs": [
+        {
+          "text": "环境变量",
+          "active": false
+        },
+        {
+          "text": "全局变量",
+          "active": true
+        },
+        {
+          "text": "优先级",
+          "active": false
+        }
+      ],
+      "methodBadges": [],
+      "counts": {
+        "inputs": 5,
+        "tables": 1,
+        "treeRows": 2,
+        "emptyStates": 0,
+        "buttons": 9
+      }
+    },
+    {
+      "name": "env-priority",
+      "ok": true,
+      "failed": [],
+      "route": "#/env",
+      "tabs": [
+        {
+          "text": "环境变量",
+          "active": false
+        },
+        {
+          "text": "全局变量",
+          "active": false
+        },
+        {
+          "text": "优先级",
+          "active": true
+        }
+      ],
+      "methodBadges": [],
+      "counts": {
+        "inputs": 1,
+        "tables": 0,
+        "treeRows": 2,
+        "emptyStates": 0,
+        "buttons": 6
+      }
+    },
+    {
+      "name": "history",
+      "ok": true,
+      "failed": [],
+      "route": "#/history",
+      "tabs": [],
+      "methodBadges": [
+        "GET",
+        "POST",
+        "DELETE"
+      ],
+      "counts": {
+        "inputs": 4,
+        "tables": 1,
+        "treeRows": 0,
+        "emptyStates": 0,
+        "buttons": 11
+      }
+    },
+    {
+      "name": "history-detail",
+      "ok": true,
+      "failed": [],
+      "route": "#/history",
+      "tabs": [],
+      "methodBadges": [
+        "GET",
+        "POST",
+        "DELETE"
+      ],
+      "counts": {
+        "inputs": 4,
+        "tables": 1,
+        "treeRows": 0,
+        "emptyStates": 0,
+        "buttons": 11
+      }
+    },
+    {
+      "name": "test-cases",
+      "ok": true,
+      "failed": [],
+      "route": "#/test",
+      "tabs": [
+        {
+          "text": "测试用例",
+          "active": true
+        },
+        {
+          "text": "测试场景",
+          "active": false
+        }
+      ],
+      "methodBadges": [],
+      "counts": {
+        "inputs": 1,
+        "tables": 0,
+        "treeRows": 1,
+        "emptyStates": 2,
+        "buttons": 5
+      }
+    },
+    {
+      "name": "test-scenarios",
+      "ok": true,
+      "failed": [],
+      "route": "#/test",
+      "tabs": [
+        {
+          "text": "测试用例",
+          "active": false
+        },
+        {
+          "text": "测试场景",
+          "active": true
+        }
+      ],
+      "methodBadges": [],
+      "counts": {
+        "inputs": 1,
+        "tables": 0,
+        "treeRows": 1,
+        "emptyStates": 2,
+        "buttons": 5
+      }
+    },
+    {
+      "name": "import",
+      "ok": true,
+      "failed": [],
+      "route": "#/import",
+      "tabs": [
+        {
+          "text": "导入",
+          "active": true
+        },
+        {
+          "text": "导出",
+          "active": false
+        },
+        {
+          "text": "代码生成",
+          "active": false
+        }
+      ],
+      "methodBadges": [],
+      "counts": {
+        "inputs": 2,
+        "tables": 0,
+        "treeRows": 0,
+        "emptyStates": 0,
+        "buttons": 14
+      }
+    },
+    {
+      "name": "import-export",
+      "ok": true,
+      "failed": [],
+      "route": "#/import",
+      "tabs": [
+        {
+          "text": "导入",
+          "active": false
+        },
+        {
+          "text": "导出",
+          "active": true
+        },
+        {
+          "text": "代码生成",
+          "active": false
+        }
+      ],
+      "methodBadges": [],
+      "counts": {
+        "inputs": 1,
+        "tables": 0,
+        "treeRows": 0,
+        "emptyStates": 0,
+        "buttons": 10
+      }
+    },
+    {
+      "name": "import-codegen",
+      "ok": true,
+      "failed": [],
+      "route": "#/import",
+      "tabs": [
+        {
+          "text": "导入",
+          "active": false
+        },
+        {
+          "text": "导出",
+          "active": false
+        },
+        {
+          "text": "代码生成",
+          "active": true
+        }
+      ],
+      "methodBadges": [
+        "GET"
+      ],
+      "counts": {
+        "inputs": 1,
+        "tables": 0,
+        "treeRows": 0,
+        "emptyStates": 0,
+        "buttons": 14
+      }
+    },
+    {
+      "name": "flow",
+      "ok": true,
+      "failed": [],
+      "route": "#/flow",
+      "tabs": [],
+      "methodBadges": [],
+      "counts": {
+        "inputs": 11,
+        "tables": 0,
+        "treeRows": 0,
+        "emptyStates": 0,
+        "buttons": 8
+      }
+    },
+    {
+      "name": "search-results",
+      "ok": true,
+      "failed": [],
+      "route": "#/search?q=%E8%AE%A2%E5%8D%95",
+      "tabs": [],
+      "methodBadges": [
+        "GET",
+        "POST",
+        "DELETE"
+      ],
+      "counts": {
+        "inputs": 2,
+        "tables": 0,
+        "treeRows": 0,
+        "emptyStates": 0,
+        "buttons": 5
+      }
+    },
+    {
+      "name": "settings",
+      "ok": true,
+      "failed": [],
+      "route": "#/settings",
+      "tabs": [],
+      "methodBadges": [],
+      "counts": {
+        "inputs": 8,
+        "tables": 0,
+        "treeRows": 0,
+        "emptyStates": 0,
+        "buttons": 2
+      }
+    },
+    {
+      "name": "dom-nesting-datalist",
+      "ok": true,
+      "failed": [],
+      "route": "#/debug",
+      "tabs": [
+        {
+          "text": "Params",
+          "active": true
+        },
+        {
+          "text": "Headers",
+          "active": false
+        },
+        {
+          "text": "Body",
+          "active": false
+        },
+        {
+          "text": "Auth",
+          "active": false
+        },
+        {
+          "text": "脚本",
+          "active": false
+        },
+        {
+          "text": "数据库",
+          "active": false
+        },
+        {
+          "text": "设置",
+          "active": false
+        },
+        {
+          "text": "项目设置",
+          "active": false
+        }
+      ],
+      "methodBadges": [
+        "GET"
+      ],
+      "counts": {
+        "inputs": 17,
+        "tables": 2,
+        "treeRows": 0,
+        "emptyStates": 1,
+        "buttons": 17
+      }
+    }
+  ],
+  "iconUsage": [
+    {
+      "paths": "M4 7h16|M4 12h16|M4 17h10",
+      "uses": 1
+    },
+    {
+      "paths": "M12 4v2|M12 18v2|M4 12h2|M18 12h2|M6.3 6.3l1.4 1.4|M16.3 16.3l1.4 1.4|M6.3 17.7l1.4-1.4|M16.3 7.7l1.4-1.4",
+      "uses": 1
+    },
+    {
+      "paths": "M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z|M19 12a7 7 0 0 0-.1-1l2-1.5-2-3.4-2.3 1a7 7 0 0 0-1.7-1L14.5 3h-4l-.4 2.6a7 7 0 0 0-1.7 1l-2.3-1-2 3.4 2 1.5a7 7 0 0 0 0 2l-2 1.5 2 3.4 2.3-1a7 7 0 0 0 1.7 1l.4 2.6h4l.4-2.6a7 7 0 0 0 1.7-1l2.3 1 2-3.4-2-1.5c.1-.3.1-.7.1-1z",
+      "uses": 2
+    },
+    {
+      "paths": "M12 18h.01|M9.1 9a3 3 0 1 1 4.2 2.7c-.8.5-1.3 1.1-1.3 2.3|M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z",
+      "uses": 1
+    },
+    {
+      "paths": "M4 4h6v6H4z|M14 4h6v6h-6z|M4 14h6v6H4z|M14 14h6v6h-6z",
+      "uses": 1
+    },
+    {
+      "paths": "M4 5.5A2.5 2.5 0 0 1 6.5 3H20v18H6.5A2.5 2.5 0 0 1 4 18.5z|M8 3v18",
+      "uses": 1
+    },
+    {
+      "paths": "M21 3L10 14|M21 3l-7 18-4-7-7-4z",
+      "uses": 1
+    },
+    {
+      "paths": "M12 3l8 4.5v9L12 21l-8-4.5v-9z|M12 12l8-4.5|M12 12v9|M12 12L4 7.5",
+      "uses": 1
+    },
+    {
+      "paths": "M5 6c0-1.1 3.1-2 7-2s7 .9 7 2-3.1 2-7 2-7-.9-7-2z|M5 6v12c0 1.1 3.1 2 7 2s7-.9 7-2V6|M5 12c0 1.1 3.1 2 7 2s7-.9 7-2",
+      "uses": 1
+    },
+    {
+      "paths": "M4 7h10|M18 7h2|M4 17h4|M12 17h8|M14 4v6|M8 14v6",
+      "uses": 1
+    },
+    {
+      "paths": "M4 12l5 5L20 6",
+      "uses": 1
+    },
+    {
+      "paths": "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z|M12 7v5l3 2",
+      "uses": 1
+    },
+    {
+      "paths": "M5 6h5|M14 6h5|M7.5 6v12|M16.5 6v12|M5 18h5|M14 18h5",
+      "uses": 1
+    },
+    {
+      "paths": "M4 8h13l-3-3|M20 16H7l3 3",
+      "uses": 1
+    },
+    {
+      "paths": "M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14z|M20 20l-4.2-4.2",
+      "uses": 1
+    },
+    {
+      "paths": "M6 6l12 12|M18 6L6 18",
+      "uses": 1
+    },
+    {
+      "paths": "M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z",
+      "uses": 1
+    },
+    {
+      "paths": "M4 8.5L12 4l8 4.5v7L12 20l-8-4.5z|M12 12l8-4.5|M12 12v8|M12 12L4 7.5",
+      "uses": 3
+    }
+  ]
+}

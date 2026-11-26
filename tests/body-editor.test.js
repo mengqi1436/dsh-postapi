@@ -212,6 +212,9 @@ tests.push({
     assert.equal(keyCells.length, fields.length, 'key 单元格数应等于 fields 行数')
     assert.equal(keyCells[0].children[0].props.value, 'name', '首行 key 应回显 fields[0].key')
     assert.equal(find(tree, (n) => n.type === 'textarea'), undefined, 'form 不应渲染文本域')
+    // datalist 必须是 table 的兄弟节点（HTML 嵌套规则：<datalist> 不能是 <table> 直接子元素，
+    // 否则 React validateDOMNesting 每次渲染都报控制台红错）
+    assert.ok(!collectNodes(table).some((n) => n.type === 'datalist'), 'datalist 不能是 table 的子孙节点')
   },
 })
 

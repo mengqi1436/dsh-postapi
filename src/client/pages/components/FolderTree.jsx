@@ -196,6 +196,9 @@ export function FolderTree({ project, activeEndpointId, onPick, onToggle, collap
   const contextMenuAt = (kind, id) => (e) => {
     if (typeof onContextMenu !== 'function' || !e) return
     e.preventDefault()
+    // 行菜单必须阻断冒泡：.pp-tree / .pp-tree-group 上的 root 兜底菜单会在
+    // 同一次右键里覆盖行菜单（React 合成事件按冒泡序执行，最后 setState 者胜）。
+    if (typeof e.stopPropagation === 'function') e.stopPropagation()
     onContextMenu(kind, id, e.clientX, e.clientY)
   }
 
