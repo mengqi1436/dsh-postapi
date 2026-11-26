@@ -185,7 +185,10 @@ export function ParamTable({
       </datalist>
     : null
 
-  return (
+  // datalist 不能是 <table> 的直接子元素（HTML 嵌套规则，React validateDOMNesting 会报红）：
+  // 有建议下拉时用 Fragment 让 datalist 与 table 成兄弟节点（inputs 靠 list={suggestId} 引用）；
+  // 无建议时保持裸 table 作为根（历史契约：根节点即 .pp-table）。
+  const tableEl = (
     <table className="pp-table pp-table-params" data-param-table style={{ minWidth: tableMinWidth(columns, editable) }}>
       <thead>
         <tr>
@@ -220,7 +223,12 @@ export function ParamTable({
           </tr>
         ) : null}
       </tbody>
-      {datalist}
     </table>
   )
+  return hasSuggest ? (
+    <>
+      {datalist}
+      {tableEl}
+    </>
+  ) : tableEl
 }

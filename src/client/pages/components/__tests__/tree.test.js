@@ -489,7 +489,7 @@ export const tests = [
     },
   },
   {
-    name: 'folder-tree: 行右键回调 onContextMenu(kind,id,x,y)；树空白/项目名行回 root',
+    name: 'folder-tree: 行右键回调 onContextMenu(kind,id,x,y) 并阻断冒泡；树空白/项目名行回 root',
     async fn() {
       const { FolderTree } = await loadModule(FILE.tree)
       const seen = []
@@ -501,13 +501,17 @@ export const tests = [
         collapsed: {},
         onContextMenu: (kind, id, x, y) => seen.push([kind, id, x, y]),
       })
+      // 行级事件必须 stopPropagation：.pp-tree/.pp-tree-group 上的 root 兜底菜单
+      // 与行菜单同冒泡链，不阻断时 root 菜单会覆盖行菜单（见 docs 全页审计 2026-11-26）。
+      const stopped = []
       const row = endpointRows(root).find((r) => texts(r).join('').includes('接口1'))
-      row.props.onContextMenu({ preventDefault() {}, clientX: 11, clientY: 22 })
+      row.props.onContextMenu({ preventDefault() {}, stopPropagation: () => stopped.push('endpoint'), clientX: 11, clientY: 22 })
       deepEq(seen, [['endpoint', 'e1', 11, 22]], '接口行右键回调不符')
 
       const folderRow = folderRows(root)[0]
-      folderRow.props.onContextMenu({ preventDefault() {}, clientX: 5, clientY: 6 })
+      folderRow.props.onContextMenu({ preventDefault() {}, stopPropagation: () => stopped.push('folder'), clientX: 5, clientY: 6 })
       deepEq(seen[1], ['folder', 'f1', 5, 6], '目录行右键回调不符')
+      deepEq(stopped, ['endpoint', 'folder'], '行右键未阻断冒泡（行菜单会被 root 菜单覆盖）')
 
       // 树空白 / 项目名行：kind=root
       const treeEl = byClass(root, 'pp-tree')[0]
