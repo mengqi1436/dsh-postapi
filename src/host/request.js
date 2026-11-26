@@ -255,6 +255,7 @@ export function createRequestService() {
           body: bodyValue,
         }
         let ranPre = false
+        let preVariables = {}
         for (const [script, logPrefix, phase] of [
           [projectPreScript, 'project pre ', 'projectPreScript'],
           [preScript, 'pre ', 'preScript'],
@@ -272,6 +273,7 @@ export function createRequestService() {
             return result
           }
           ranPre = true
+          preVariables = out.variables
         }
         if (ranPre) {
           methodValue = String(ctxRequest.method || methodValue).toUpperCase()
@@ -281,8 +283,8 @@ export function createRequestService() {
           bodyValue = ctxRequest.body
           // 前置脚本 pm.variables.set 的变量参与请求模板替换（对齐 Apifox/Postman：先跑前置脚本再定稿请求）；
           // 已在步骤 1 解析过的占位符保持不变，脚本新设的变量按 local 最高优先级补解析
-          if (Object.keys(out.variables).length > 0) {
-            const scriptResolver = createVariableResolver({ local: out.variables })
+          if (Object.keys(preVariables).length > 0) {
+            const scriptResolver = createVariableResolver({ local: preVariables })
             const R2 = (v) => scriptResolver.resolve(v == null ? '' : String(v))
             urlValue = R2(urlValue)
             paramList = paramList.map((p) => ({ ...p, key: R2(p.key), value: R2(p.value) }))
