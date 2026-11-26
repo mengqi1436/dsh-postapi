@@ -49,13 +49,13 @@ profile 的 `package.json` 里 `dsh.profile.bundles` 必须同时含：
 |---|---|---|
 | `#/overview` | 项目总览 | 项目卡片网格、新建/重命名/删除（两段式确认）、最近接口表、快捷入口 |
 | `#/doc/:endpointId` | 接口文档 | 左树（目录折叠 + 未归类分组）、Markdown 描述、Path/Query/Headers/Cookies 四组参数表、请求体、认证、多响应页签、右侧 TOC、复制为 cURL |
-| `#/debug` | 调试发送 | 接口列表、环境选择与 baseUrl 拼接、`{{var}}` 引用标注与未定义提示、Params/Headers/Body/Auth 四页签（Body 七类型）、发送/取消、响应面板（状态胶囊/耗时/大小/响应头/原文↔美化/断言结果/脚本日志/截断标记）、保存为接口 |
+| `#/debug` | 调试发送 | HTTP/WebSocket 协议切换（WS：连接/发送消息/消息日志/断走，握手头与认证注入）、接口列表、环境选择与 baseUrl 拼接、`{{var}}` 引用标注与未定义提示、Params/Headers/Body/Auth/脚本/数据库/设置页签（Body 七类型）、发送/取消、响应面板（状态胶囊/耗时/大小/响应头/原文↔美化/断言结果/脚本日志/截断标记）、数据库页签（SQLite 连接与 SQL 执行，连接可存项目）、保存为接口 |
 | `#/mock` | Mock | 字段规则表（fixed/regex/increment/random/template）、延迟与启用、本地 Mock 服务启停、命中地址 |
 | `#/schema` | 数据模型 | JSON Schema 列表与编辑、校验、生成示例 |
 | `#/env` | 环境与变量 | 环境增删改、baseUrl、变量表（key/value/enabled/secret）、全局变量、变量优先级说明 |
 | `#/history` | 请求历史 | 时间/方法/URL/状态/耗时/大小、详情、回放到调试页、清空（两段式确认） |
 | `#/test` | 自动化测试 | 用例（断言 + 提取器）、场景（多步骤 + 变量传递）、运行与结果明细 |
-| `#/import` | 导入导出 | 导入 OpenAPI / Postman / HAR / cURL；导出 OpenAPI / Postman / HAR / Markdown；代码生成 8 语言 |
+| `#/import` | 导入导出 | 导入 OpenAPI / Postman / Apifox JSON / YApi / HAR / cURL；导出 OpenAPI / Postman / HAR / Markdown；代码生成 8 语言 |
 | `#/flow` | 流程图 | sequence 渲染 + SVG 导出 + 步骤编排落盘 |
 | `#/search` | 全局搜索 | 跨接口/模型/目录关键字搜索与分组跳转 |
 | `#/settings` | 设置 | 存储路径（只读展示 host 注入值）、主题、语言、Mock 端口、代理、超时、历史条数 |
@@ -64,9 +64,11 @@ profile 的 `package.json` 里 `dsh.profile.bundles` 必须同时含：
 
 - **侧边栏**：全部使用 DSH 官方组件 —— 右栏 `@deepseek-ai/dsh-client-ui-sidebar-right`（`sidebarRightTabs` 两段式注册，`keepMounted` + guide 单入口）；左栏走桌面端原生（官方 sidebar 包 SlotMap 无插件可用席位，不自制侧边栏）；会话输入框 `conversation.composer.dock` 徽章保留。
 - **client ↔ host 通信**：DSH 官方 webServer prefix 桥 —— host 挂 `/dsh-postapi/api`（handler 首行 `connection.requestRejection` 鉴权栅栏，401/403 兜底写 JSON），client 同源 `fetch`；桥不可达时 client 自动降级内存桩（签名不变，页面不白屏）。
-- **路由**：48 条唯一路由（`GET|POST /<domain>/<method>`），覆盖 storage CRUD、`request/send|preview`、`script/run`、`mock/start|stop|status`、`schema/validate|example`、`test/runCase|runScenario`、`import/*`、`export/*`、`codegen/run`、`storage/search|getHistory|appendHistory|clearHistory`。`/db/query|test|close` 三条固定返回 `501 NOT_IMPLEMENTED`（P2 占位）。
+- **路由**：57 条唯一路由（`GET|POST /<domain>/<method>`），覆盖 storage CRUD、`request/send|preview`、`script/run`、`mock/start|stop|status`、`schema/validate|example`、`test/runCase|runScenario`、`import/*`（含 apifox/yapi）、`export/*`、`codegen/run`、`storage/search|getHistory|appendHistory|clearHistory`、`ws/open|send|messages|close`、`db/test|query|close`。
 - **存储 v2**：`index.json`（`version`）+ `<projectId>/project.json`（folders/endpoints/schemas/environments/globals/mocks/testCases/testScenarios/flow/settings）+ `<projectId>/history.json`；tmp+rename 原子写、写操作串行队列、损坏隔离 `.corrupt-<ts>`、删项目 `.trash` 备份；v1 数据读入自动升级 v2。
 - **请求管线**：`{{var}}` 与 11 个 `{{$dynamic}}`（`$timestamp`/`$isoTimestamp`/`$randomInt`/`$randomString`/`$uuid`/`$randomEmail`/`$randomPhone`/`$randomBoolean`/`$randomFloat`/`$datetime`/`$date`），优先级 局部 > 环境 > 全局 → 前置脚本（`node:vm` 沙箱，`pm.*` 兼容面）→ `fetch` + AbortController（默认 30s）→ 后置脚本 → 断言（status/body/header/time × 9 种 op：`eq`/`neq`/`gt`/`lt`/`contains`/`notContains`/`exists`/`notExists`/`regex`）→ 历史落盘；响应 >2MB 截断标注。
+- **WebSocket 调试**：`ws-client.js` 连接注册表（Node 全局 WebSocket + `{ headers }` 握手头扩展），变量替换与认证注入语义对齐 HTTP 管线，http(s) 地址自动归一 ws(s)，消息日志上限 200 条。
+- **数据库操作**：`db.js` 用 `node:sqlite` 内置模块真实现连接测试 / 单语句执行 / 连接复用（行上限 1000，bigint/BLOB 归一）；MySQL/PostgreSQL 未捆绑驱动，显式返回 `UNSUPPORTED_DRIVER`。
 - **Mock 服务**：`node:http` 独立端口（默认 4010），两种命中路径，规则优先、默认响应回落。
 - **测试运行器**：`runCase` / `runScenario`，场景步骤间用 extractor 提取的变量传递。
 
@@ -87,14 +89,15 @@ profile 的 `package.json` 里 `dsh.profile.bundles` 必须同时含：
 index.js                     host 入口（re-export src/host/index.js）
 cordis.patch.yml             bundle 补丁（插入 id: dsh-postapi）
 src/host/                    storage / request / variables / script-sandbox /
-                             mock-server / test-runner / import-export / codegen / bridge
+                             mock-server / test-runner / import-export / codegen /
+                             ws-client / db / bridge
 src/client/index.js          client 入口（右侧栏接线 + 样式注入 + 桥）
 src/client/shell/            definition / Body 路由 / registry 桥 api + 桩 / locales / menu
 src/client/pages/            12 个页面 + components + sequence + design-tokens.css
 locale/                      zh.json / en.json
 dist/client.js               构建产物（esbuild 打包，随包发布）
-tests/                       16 套件 328 用例（node 直跑，无测试框架依赖）
-scripts/smoke-host.mjs       宿主端到端冒烟 27 项
+tests/                       18 套件 338 用例（node 直跑，无测试框架依赖）
+scripts/smoke-host.mjs       宿主端到端冒烟 30 项
 docs/                        契约、视觉规格、功能矩阵、排查报告
 ```
 
@@ -103,8 +106,8 @@ docs/                        契约、视觉规格、功能矩阵、排查报告
 ```bash
 npm install          # 只装 esbuild（唯一的 devDependency）
 npm run build        # esbuild 打包 src/client → dist/client.js，附 vm smoke
-npm test             # 16 套件 / 328 用例
-npm run smoke        # 宿主端到端冒烟 27 项（临时基路径 + 真实基路径）
+npm test             # 18 套件 / 338 用例
+npm run smoke        # 宿主端到端冒烟 30 项（临时基路径 + 真实基路径）
 npm run verify       # 上面三步串跑
 ```
 
@@ -112,8 +115,8 @@ npm run verify       # 上面三步串跑
 
 ## 已知边界（0.0.1 Demo）
 
-- gRPC / Dubbo / Tars：只有协议字段与 UI 提示，未做真实收发。
-- 数据库操作：`/db/query|test|close` 三条路由固定 `501 NOT_IMPLEMENTED`，UI 保留占位。
+- gRPC / Dubbo / Tars / Socket.IO：只有协议字段与 UI 提示，未做真实收发（WebSocket 已真实现）。
+- 数据库操作：SQLite 走 `node:sqlite` 真实现；MySQL / PostgreSQL 未捆绑驱动，测试连接显式报 `UNSUPPORTED_DRIVER`。
 - 无云端账号、团队协作、在线分享；无 AI 生成用例。
 - 自动化测试运行器在宿主侧串行执行，无并发/重试策略。
 - 只支持 `platform: web`（桌面端与 web 端共用右侧栏组件）；无原生客户端实现。

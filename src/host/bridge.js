@@ -87,7 +87,6 @@ class BridgeError extends Error {
 
 const badRequest = (message) => new BridgeError(400, 'INVALID_ARGUMENT', message)
 const notWired = (message) => new BridgeError(501, 'NOT_WIRED', message)
-const notImplemented = (message) => new BridgeError(501, 'NOT_IMPLEMENTED', message)
 
 /** 取服务方法：对象或方法缺失一律 501 NOT_WIRED（并行开发期 storage/services 尚未补齐也不崩）。 */
 function need(target, name, label) {
@@ -285,6 +284,8 @@ export async function handlePostapiRequest(req, res, { storage, request, service
       'POST /import/postman': (b) => need(svc.importExport, 'importPostman')(payloadOf(b)),
       'POST /import/har': (b) => need(svc.importExport, 'importHar')(payloadOf(b)),
       'POST /import/curl': (b) => need(svc.importExport, 'importCurl')(str(b.text) || str(b.curl)),
+      'POST /import/apifox': (b) => need(svc.importExport, 'importApifox')(payloadOf(b)),
+      'POST /import/yapi': (b) => need(svc.importExport, 'importYApi')(payloadOf(b)),
 
       /* ---- 导出（契约 §4） ---- */
       'POST /export/openapi': async (b, s) => need(svc.importExport, 'exportOpenApi')(await projectOf(b, s)),
@@ -309,18 +310,34 @@ export async function handlePostapiRequest(req, res, { storage, request, service
         return need(svc.runner, 'runScenario')(projectId, str(b.scenarioId))
       },
 
-      /* ---- 数据库操作（feature-matrix P2：只留路由位，固定 501） ---- */
-      'POST /db/test': () => { throw notImplemented('数据库操作规划中（feature-matrix P2）') },
-      'POST /db/query': () => { throw notImplemented('数据库操作规划中（feature-matrix P2）') },
-      'POST /db/close': () => { throw notImplemented('数据库操作规划中（feature-matrix P2）') },
+      /* ---- WebSocket 调试（feature-matrix 域 3：ws-client.js 真实现） ---- */
+      'POST /ws/open': (b) => need(svc.ws, 'open')({
+        url: str(b.url),
+        headers: b.headers,
+        params: b.params,
+        auth: b.auth && typeof b.auth === 'object' ? b.auth : undefined,
+        variables: b.variables && typeof b.variables === 'object' ? b.variables : undefined,
+        timeoutMs: Number.isFinite(b.timeoutMs) ? b.timeoutMs : undefined,
+      }),
+      'POST /ws/send': (b) => need(svc.ws, 'send')({ id: str(b.id), message: b.message }),
+      'POST /ws/messages': (b) => need(svc.ws, 'messages')({ id: str(b.id), since: b.since }),
+      'POST /ws/close': (b) => need(svc.ws, 'close')({ id: str(b.id), code: b.code, reason: str(b.reason) }),
+
+      /* ---- 数据库操作（feature-matrix 域 9：db.js 真实现，sqlite 走 node:sqlite） ---- */
+      'POST /db/test': (b) => need(svc.db, 'test')({ connection: b.connection }),
+      'POST /db/query': (b) => need(svc.db, 'query')({ connection: b.connection, sql: b.sql, params: b.params }),
+      'POST /db/close': (b) => need(svc.db, 'close')({ connection: b.connection }),
     }
     const newRoute = newRoutes[key]
     if (newRoute) return sendOk(res, await newRoute(body, search))
 
     return sendFail(res, 404, 'NOT_FOUND', 'no route: ' + key)
   } catch (e) {
-    // 契约 §5：400 参数错误 / 501 服务未接线 / 500 其余异常，统一转 JSON 封套
-    if (e instanceof BridgeError) return sendFail(res, e.status, e.code, e.message)
+    // 契约 §5：400 参数错误 / 501 服务未接线 / 500 其余异常，统一转 JSON 封套。
+    // DbError（db.js）与 BridgeError 同构携带 status/code，duck-typing 一并收进封套。
+    if (e instanceof BridgeError || (e && e.status && e.code)) {
+      return sendFail(res, e.status, e.code, e.message)
+    }
     return sendFail(res, 500, 'INTERNAL', e && e.message ? e.message : String(e))
   }
 }

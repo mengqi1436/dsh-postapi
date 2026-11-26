@@ -8,7 +8,7 @@
 
 - Apifox 是 Electron 37 + UmiJS 渲染层 + Dexie(IndexedDB) 数据层 + 云端同步的接口全生命周期平台。
 - 本插件不复制其架构（IndexedDB/MessagePort/bytenode/NSIS 均无必要），只复制**功能面与数据模型**：单文件 JSON 存储 + webServer prefix 桥 + React 页面（Vercel Geist token）。
-- 功能域共 18 类，下表逐项给出实现归属。P0+P1 合计 96 项，P2 合计 34 项。
+- 功能域共 18 类，下表逐项给出实现归属。P0+P1 合计 96 项；P2 只剩云端协作、AI 生成与 gRPC/Dubbo/Tars/Socket.IO 真实收发（2026-11 更新：WebSocket 调试、数据库操作（sqlite）、Apifox/YApi 导入已从 P2 提升为 P1 落地）。
 
 ## 1. 功能域矩阵
 
@@ -16,18 +16,18 @@
 |---|---|---|---|---|---|
 | 1 | 项目与目录 | 项目增删改查、多级目录、拖拽排序、目录树折叠 | host-data + pages-b | P0 | storage 测试 + 页面渲染 |
 | 2 | 接口设计·HTTP | method/URL/path 变量、Params/Headers/Cookies/Path 四组参数、body 六种类型 | host-data + pages-a | P0 | endpoint upsert 测试 + doc/debug 页 |
-| 3 | 接口设计·其他协议 | WebSocket、Socket.IO、gRPC、GraphQL、RPC(Dubbo/Tars) 协议类型位 | host-data + pages-a | P2 | protocol 字段可存可取，UI 标注「规划中」 |
+| 3 | 接口设计·其他协议 | WebSocket、Socket.IO、gRPC、GraphQL、RPC(Dubbo/Tars) 协议类型位 | host-data + pages-a | WebSocket P1 真实现（ws-client，调试页 WS 模式）；GraphQL P1（HTTP body=graphql，已实现）；Socket.IO/gRPC/Dubbo/Tars P2 只留协议位 | ws open/send/messages/close 桥测试 + debug 页 WS 模式渲染 |
 | 4 | 接口文档 | Markdown 描述、参数表、请求体表、响应示例、TOC、复制为 cURL | pages-a | P0 | doc 页渲染 + 锚点 |
 | 5 | 数据模型(Schema) | JSON Schema 定义、复用引用、示例生成、校验 | host-data + pages-b | P1 | schema CRUD 测试 + 示例生成 |
 | 6 | 响应管理 | 多响应（code/name/contentType/body/schema/enabled）、默认响应 | host-data + pages-a | P1 | 响应增删改测试 |
 | 7 | 环境与变量 | 环境列表、环境变量、全局变量、变量优先级（局部>环境>全局）、动态变量 {{$timestamp}} 等 | host-runtime + pages-b | P0 | 变量替换单测 + env 页 |
 | 8 | 认证 | none/bearer/basic/apikey/oauth2/digest 位 | host-runtime + pages-a | P1 | auth 注入测试 |
-| 9 | 前置/后置操作 | JS 脚本（pm.* 兼容沙箱）、断言、变量提取、继承开关、数据库操作 | host-runtime | P0(脚本/断言/提取) P2(数据库) | 沙箱单测 + 断言单测 |
+| 9 | 前置/后置操作 | JS 脚本（pm.* 兼容沙箱）、断言、变量提取、继承开关、数据库操作 | host-runtime | P0(脚本/断言/提取) P1(数据库：sqlite 真实现，db.js + 调试页数据库页签；mysql/pg 需独立驱动，显式 UNSUPPORTED_DRIVER) | 沙箱单测 + 断言单测 + db 桥测试 |
 | 10 | Mock | 智能 Mock、字段规则、Mock 期望、本地 Mock 服务 | host-runtime + pages-a | P1 | mock 规则测试 + mock 页 |
 | 11 | 调试发送 | 发送请求、响应展示（status/耗时/大小/headers/body/预览）、取消、历史记录、保存为接口 | host-runtime + pages-a | P0 | request 测试 + debug 页 |
 | 12 | 请求历史 | 按项目记录最近 N 条、可回放、可清空 | host-data + pages-b | P1 | history 测试 + history 页 |
 | 13 | 自动化测试 | 测试用例、测试场景（多步骤+变量传递）、批量运行、结果报告 | host-runtime + pages-b | P1 | runCase 测试 + test 页 |
-| 14 | 导入 | OpenAPI/Swagger、Postman、HAR、cURL、Apifox JSON、YApi | host-data | P1(openapi/postman/har/curl) P2(yapi/apifox) | importer 单测（固定样本） |
+| 14 | 导入 | OpenAPI/Swagger、Postman、HAR、cURL、Apifox JSON、YApi | host-data | P1(openapi/postman/har/curl/apifox/yapi 全部真实现) | importer 单测（固定样本） |
 | 15 | 导出 | OpenAPI 3、Postman、HAR、Markdown、Apifox JSON | host-data | P1 | exporter 单测（往返一致） |
 | 16 | 代码生成 | cURL / fetch / axios / Python requests / Go / Java / PHP / C# 等 | host-data | P1(前 5 种) P2(其余) | codegen 快照测试 |
 | 17 | 全局搜索 | 跨接口/目录/模型的关键字搜索 | host-data + pages-b | P1 | search 测试 |
@@ -90,11 +90,12 @@
 | POST /mock/start / stop / status | 本地 Mock 服务 | host-runtime | P1 |
 | GET /mock/serve/* | Mock 响应（由 Mock 服务内部转发） | host-runtime | P1 |
 | POST /schema/example / validate | 示例生成与校验 | host-runtime | P1 |
-| POST /import/openapi / postman / har / curl | 导入 | host-data | P1 |
+| POST /import/openapi / postman / har / curl / apifox / yapi | 导入 | host-data | P1 |
 | POST /export/openapi / postman / har / markdown | 导出 | host-data | P1 |
 | POST /codegen/run | 代码生成 | host-data | P1 |
-| POST /db/test / query / close | 数据库操作 | host-runtime | P2 |
+| POST /db/test / query / close | 数据库操作（sqlite 内置驱动，db.js） | host-runtime | P1 |
 | POST /test/runCase / runScenario | 自动化测试执行 | host-runtime | P1 |
+| POST /ws/open / send / messages / close | WebSocket 调试（ws-client.js） | host-runtime | P1 |
 
 ## 5. 实现边界（明确不做）
 

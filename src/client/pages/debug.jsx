@@ -68,7 +68,20 @@ const TABS = [
   { id: 'body', label: 'Body' },
   { id: 'auth', label: 'Auth' },
   { id: 'script', label: '脚本' },
+  { id: 'db', label: '数据库' },
   { id: 'settings', label: '设置' },
+]
+
+/** WebSocket 模式下只保留与握手相关的页签（Body/Auth/脚本属于 HTTP 语义）。 */
+const WS_TABS = [
+  { id: 'params', label: 'Params' },
+  { id: 'headers', label: 'Headers' },
+]
+
+const DB_TYPES = [
+  { id: 'sqlite', label: 'SQLite（内置驱动）' },
+  { id: 'mysql', label: 'MySQL（需独立驱动）' },
+  { id: 'postgresql', label: 'PostgreSQL（需独立驱动）' },
 ]
 
 /** 回放快照 key：与 history 页写入的 key 一致，切到调试页即按快照重填。 */
@@ -88,6 +101,8 @@ function emptyDraft(ep) {
     name: ep && ep.name ? ep.name : '',
     folderId: ep && ep.folderId ? ep.folderId : null,
     method: (ep && ep.method) || 'GET',
+    // 协议位（http | websocket | grpc...）：websocket 走调试页 WS 模式，其余仍回落 HTTP
+    protocol: (ep && ep.protocol) || 'http',
     url: (ep && ep.url) || '',
     params: (ep && Array.isArray(ep.params) ? ep.params : []).map((r) => ({ ...r })),
     pathParams: (ep && Array.isArray(ep.pathParams) ? ep.pathParams : []).map((r) => ({ ...r })),
@@ -202,6 +217,32 @@ export function prettyJson(text) {
   }
 }
 
+/** WS 握手地址：http(s) 自动转 ws(s)（宿主 ws-client 再兜底一次）。 */
+export function toWsUrl(raw) {
+  const url = String(raw || '')
+  if (/^wss?:\/\//i.test(url)) return url
+  return url.replace(/^https:\/\//i, 'wss://').replace(/^http:\/\//i, 'ws://')
+}
+
+/** WS open 入参：URL/参数/头/认证原样下发，变量替换与认证物化在宿主侧完成（对齐 request.send 语义）。 */
+export function buildWsPayload(draft, finalUrl, variables) {
+  return {
+    url: toWsUrl(finalUrl),
+    params: (Array.isArray(draft.params) ? draft.params : []).filter((p) => p && p.enabled !== false && p.key),
+    headers: (Array.isArray(draft.headers) ? draft.headers : []).filter((h) => h && h.enabled !== false && h.key),
+    auth: draft.auth || { type: 'none' },
+    variables,
+  }
+}
+
+/** WS 消息方向徽标：→ 发出 / ← 收到 / ● 系统。 */
+const WS_DIR_LABEL = { out: '→', in: '←', system: '●' }
+
+function wsTime(at) {
+  const raw = String(at || '')
+  return raw.length >= 19 ? raw.slice(11, 19) : raw
+}
+
 export function DebugPage({ route, api }) {
   const rootRef = useRef(null)
   const abortRef = useRef({ cancelled: false })
@@ -223,6 +264,17 @@ export function DebugPage({ route, api }) {
   const [sending, setSending] = useState(false)
   const [timeoutMs, setTimeoutMs] = useState(30000)
   const [savedHint, setSavedHint] = useState('')
+  // —— WebSocket 模式状态（draft.protocol === 'websocket' 时启用）——
+  const [wsState, setWsState] = useState({ id: '', status: 'idle', messages: [], error: null })
+  const [wsInput, setWsInput] = useState('')
+  const wsIndexRef = useRef(0) // 增量取消息游标（宿主 messages({ since })）
+  const wsTimerRef = useRef(null)
+  // —— 数据库页签状态 ——
+  const [dbConfig, setDbConfig] = useState({ type: 'sqlite', path: '', host: '', port: '', user: '', password: '', database: '' })
+  const [dbSql, setDbSql] = useState('SELECT 1')
+  const [dbHint, setDbHint] = useState('')
+  const [dbResult, setDbResult] = useState(null)
+  const [dbBusy, setDbBusy] = useState(false)
 
   // 载入项目（列表首个）
   useEffect(() => {
@@ -275,7 +327,46 @@ export function DebugPage({ route, api }) {
   const { table, env } = useMemo(() => varTable(project, envId), [project, envId])
   const varRefs = useMemo(() => collectVarRefs(draft), [draft])
   const missingVars = useMemo(() => varRefs.filter((k) => !(k in table)), [varRefs, table])
-  const finalUrl = useMemo(() => joinUrl(env && env.baseUrl, draft.url), [env, draft.url])
+  const finalUrl = useMemo(() => {
+    const raw = String(draft.url || '')
+    // ws(s):// 绝对地址不拼 baseUrl（joinUrl 只认 http 绝对地址）
+    if (/^wss?:\/\//i.test(raw)) return raw
+    return joinUrl(env && env.baseUrl, raw)
+  }, [env, draft.url])
+  const wsMode = draft.protocol === 'websocket'
+  const activeTabs = wsMode ? WS_TABS : TABS
+  const dbConnections = useMemo(
+    () => (project && project.settings && Array.isArray(project.settings.dbConnections) ? project.settings.dbConnections : []),
+    [project],
+  )
+
+  /** 增量拉取 WS 消息：open 期间每秒一次；连接结束自动停。 */
+  const pollWsMessages = () => {
+    const wsApi = apiRef && apiRef.ws
+    if (!wsApi || typeof wsApi.messages !== 'function' || !wsState.id) return
+    wsApi.messages({ id: wsState.id, since: wsIndexRef.current })
+      .then((result) => {
+        if (!result || result.ok === false) return
+        if (Array.isArray(result.messages) && result.messages.length) {
+          setWsState((prev) => ({ ...prev, messages: [...prev.messages, ...result.messages], status: result.status || prev.status }))
+        } else {
+          setWsState((prev) => ({ ...prev, status: result.status || prev.status }))
+        }
+        if (Number.isFinite(result.lastIndex)) wsIndexRef.current = result.lastIndex
+      })
+      .catch(() => { /* 轮询失败下一轮再试 */ })
+  }
+
+  // open 期间轮询；状态变化（连接建立/断开）即重建定时器
+  useEffect(() => {
+    if (wsTimerRef.current) { clearInterval(wsTimerRef.current); wsTimerRef.current = null }
+    if (wsState.status !== 'open' || !wsState.id) return undefined
+    wsTimerRef.current = setInterval(pollWsMessages, 1000)
+    return () => { if (wsTimerRef.current) { clearInterval(wsTimerRef.current); wsTimerRef.current = null } }
+  }, [wsState.status, wsState.id, apiRef])
+
+  // 卸载兜底：清轮询定时器
+  useEffect(() => () => { if (wsTimerRef.current) clearInterval(wsTimerRef.current) }, [])
 
   const patch = (field, value) => setDraft((prev) => ({ ...prev, [field]: value }))
   const patchAuth = (field, value) => setDraft((prev) => ({ ...prev, auth: { ...prev.auth, [field]: value } }))
@@ -354,7 +445,8 @@ export function DebugPage({ route, api }) {
     }
     const endpoint = {
       ...draft,
-      name: draft.name || draft.method + ' ' + draft.url,
+      protocol: wsMode ? 'websocket' : 'http',
+      name: draft.name || (wsMode ? 'WS ' : draft.method + ' ') + draft.url,
       responses: draft.responses.length ? draft.responses : [],
     }
     Promise.resolve()
@@ -365,6 +457,146 @@ export function DebugPage({ route, api }) {
       })
       .catch((err) => setSavedHint('保存失败：' + (err && err.message ? err.message : String(err))))
   }
+
+  // —— WebSocket 模式动作：连接 / 发送消息 / 断开 ——
+  const wsConnect = () => {
+    const wsApi = apiRef && apiRef.ws
+    if (!wsApi || typeof wsApi.open !== 'function') {
+      setWsState((prev) => ({ ...prev, status: 'unavailable', error: { kind: 'unavailable', message: 'api.ws 不可用' } }))
+      return
+    }
+    const payload = buildWsPayload(draft, finalUrl, {
+      globals: project && project.globals ? project.globals.variables || [] : [],
+      environment: env && Array.isArray(env.variables) ? env.variables : [],
+      local: [],
+    })
+    wsIndexRef.current = 0
+    setWsState({ id: '', status: 'connecting', messages: [], error: null })
+    wsApi.open({ ...payload, timeoutMs: timeoutMs > 0 ? timeoutMs : 30000 })
+      .then((result) => {
+        const messages = Array.isArray(result && result.messages) ? result.messages : []
+        wsIndexRef.current = messages.length
+        setWsState({
+          id: (result && result.id) || '',
+          url: (result && result.url) || '',
+          status: (result && result.status) || 'closed',
+          messages,
+          error: (result && result.error) || null,
+        })
+      })
+      .catch((err) => setWsState({ id: '', url: '', status: 'error', messages: [], error: { kind: 'client', message: err && err.message ? err.message : String(err) } }))
+  }
+
+  const wsDisconnect = () => {
+    const wsApi = apiRef && apiRef.ws
+    if (!wsApi || typeof wsApi.close !== 'function' || !wsState.id) return
+    wsApi.close({ id: wsState.id })
+      .then(() => setWsState((prev) => ({ ...prev, status: 'closed' })))
+      .catch(() => setWsState((prev) => ({ ...prev, status: 'closed' })))
+  }
+
+  const wsSend = () => {
+    const wsApi = apiRef && apiRef.ws
+    if (!wsApi || typeof wsApi.send !== 'function' || !wsState.id) return
+    const text = String(wsInput)
+    wsApi.send({ id: wsState.id, message: text })
+      .then((result) => {
+        if (result && result.ok === false) {
+          setWsState((prev) => ({ ...prev, error: result.error || { kind: 'client', message: '发送失败' } }))
+          return
+        }
+        setWsState((prev) => ({ ...prev, status: (result && result.status) || prev.status, messages: [...prev.messages, { direction: 'out', at: new Date().toISOString(), data: text, binary: false }] }))
+        setWsInput('')
+        pollWsMessages()
+      })
+      .catch((err) => setWsState((prev) => ({ ...prev, error: { kind: 'client', message: err && err.message ? err.message : String(err) } })))
+  }
+
+  // —— 数据库页签动作：测试连接 / 执行 SQL / 保存连接 / 载入连接 ——
+  const dbPatch = (field, value) => setDbConfig((prev) => ({ ...prev, [field]: value }))
+
+  const dbTest = () => {
+    const dbApi = apiRef && apiRef.db
+    if (!dbApi || typeof dbApi.test !== 'function') { setDbHint('api.db 不可用（桥降级）'); return }
+    setDbBusy(true)
+    setDbHint('')
+    dbApi.test({ connection: dbConfig })
+      .then((result) => {
+        if (result && result.ok) setDbHint('连接成功（' + result.driver + '）')
+        else setDbHint('连接失败：' + ((result && result.error && result.error.message) || '未知错误'))
+      })
+      .catch((err) => setDbHint('连接失败：' + (err && err.message ? err.message : String(err))))
+      .finally(() => setDbBusy(false))
+  }
+
+  const dbRun = () => {
+    const dbApi = apiRef && apiRef.db
+    if (!dbApi || typeof dbApi.query !== 'function') { setDbHint('api.db 不可用（桥降级）'); return }
+    setDbBusy(true)
+    setDbHint('')
+    dbApi.query({ connection: dbConfig, sql: dbSql })
+      .then((result) => { setDbResult(result) })
+      .catch((err) => { setDbResult(null); setDbHint('执行失败：' + (err && err.message ? err.message : String(err))) })
+      .finally(() => setDbBusy(false))
+  }
+
+  const dbSave = () => {
+    const storage = apiRef && apiRef.storage
+    if (!storage || typeof storage.saveProjectSettings !== 'function' || !project || !project.id) {
+      setDbHint('保存失败：storage.saveProjectSettings 不可用')
+      return
+    }
+    const name = (dbConfig.type === 'sqlite' ? dbConfig.path : dbConfig.host) || dbConfig.type
+    const next = [...dbConnections.filter((c) => c && c.name !== name), { ...dbConfig, name }]
+    storage.saveProjectSettings(project.id, { dbConnections: next })
+      .then(() => setProject((prev) => ({ ...prev, settings: { ...(prev.settings || {}), dbConnections: next } })))
+      .then(() => setDbHint('已保存连接：' + name))
+      .catch((err) => setDbHint('保存失败：' + (err && err.message ? err.message : String(err))))
+  }
+
+  const dbLoad = (name) => {
+    const hit = dbConnections.find((c) => c && c.name === name)
+    if (!hit) return
+    setDbConfig({ type: 'sqlite', path: '', host: '', port: '', user: '', password: '', database: '', ...hit })
+    setDbHint('已载入连接：' + name)
+  }
+
+  const dbDelete = (name) => {
+    const storage = apiRef && apiRef.storage
+    if (!storage || typeof storage.saveProjectSettings !== 'function' || !project || !project.id) return
+    const next = dbConnections.filter((c) => c && c.name !== name)
+    storage.saveProjectSettings(project.id, { dbConnections: next })
+      .then(() => setProject((prev) => ({ ...prev, settings: { ...(prev.settings || {}), dbConnections: next } })))
+      .catch(() => { /* 列表刷新失败不打断 */ })
+  }
+
+  const wsPanel = (
+    <section className="pp-pane pp-debug-response" data-ws="1">
+      <div className="pp-group-head">
+        <span className="pp-group-title">消息日志</span>
+        <span className={'pp-pill ' + (wsState.status === 'open' ? 'pp-pill-ok' : wsState.status === 'connecting' ? 'pp-pill-warn' : '')}>
+          {wsState.status === 'idle' ? '未连接' : wsState.status === 'connecting' ? '连接中' : wsState.status === 'open' ? '已连接' : wsState.status === 'closed' ? '已断开' : wsState.status}
+        </span>
+        <button className="pp-btn pp-btn-link" onClick={pollWsMessages} disabled={!wsState.id}>刷新</button>
+      </div>
+      {wsState.error ? <p className="pp-note pp-note-bad">{wsState.error.message}</p> : null}
+      {wsState.url ? <p className="pp-meta pp-ellipsis" title={wsState.url}>{wsState.url}</p> : null}
+      {wsState.messages.length === 0 ? (
+        <EmptyState title="暂无消息" hint="连接建立后，收发的消息会按时间顺序显示在这里。" />
+      ) : (
+        <div className="pp-pre" style={{ maxHeight: 360, overflowY: 'auto' }}>
+          {wsState.messages.map((m, i) => (
+            <div key={i} className="pp-form-row" style={{ alignItems: 'baseline' }}>
+              <span className="pp-meta">{wsTime(m.at)} {WS_DIR_LABEL[m.direction] || '·'}</span>
+              <span className="pp-mono" style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
+                {m.event ? String(m.event) + (m.code != null ? ` (${m.code}${m.reason ? ' ' + m.reason : ''})` : '') : (m.binary ? '[二进制 base64] ' : '') + String(m.data == null ? '' : m.data)}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
+  )
 
   const responsePanel = (
     <section className="pp-pane pp-debug-response">
@@ -379,32 +611,66 @@ export function DebugPage({ route, api }) {
         <section className="pp-pane pp-debug-request">
           {/* URL 行（Apifox .main-input-bar）：40px 高，方法 + baseUrl 胶囊 + path + 发送按钮组 */}
           <div className="pp-url-row">
-            {/* 方法下拉本身承担方法色（data-method → CSS 变色）：不再「徽标 + 下拉」双元素并排 */}
+            {/* 协议切换：HTTP / WebSocket（Apifox 调试台同款双态）；WS 模式无方法语义 */}
             <select
-              className="pp-select pp-url-method"
-              data-method={draft.method}
-              value={draft.method}
-              onChange={(e) => patch('method', e.target.value)}
-              aria-label="请求方法"
+              className="pp-select pp-input-sm"
+              value={draft.protocol || 'http'}
+              onChange={(e) => {
+                patch('protocol', e.target.value)
+                // 切协议后当前页签可能不在新协议的页签集里（如 Body/Auth），落回 Params
+                setTab((prev) => (e.target.value === 'websocket' && !WS_TABS.some((t) => t.id === prev) ? 'params' : prev))
+              }}
+              aria-label="协议"
+              title="WebSocket 走 WS 调试模式，其余协议回落 HTTP"
             >
-              {METHODS.map((m) => <option key={m} value={m}>{m}</option>)}
+              <option value="http">HTTP</option>
+              <option value="websocket">WebSocket</option>
             </select>
+            {wsMode ? (
+              <span className="pp-method" data-method="WS" title="WebSocket 连接">WS</span>
+            ) : (
+              <>
+                <span className="pp-method" data-method={draft.method}>{draft.method}</span>
+                <select
+                  className="pp-select pp-url-method"
+                  value={draft.method}
+                  onChange={(e) => patch('method', e.target.value)}
+                  aria-label="请求方法"
+                >
+                  {METHODS.map((m) => <option key={m} value={m}>{m}</option>)}
+                </select>
+              </>
+            )}
             <span className="pp-url-pill" title={env && env.baseUrl ? env.baseUrl : '未配置 baseUrl'}>
               {env && env.baseUrl ? env.baseUrl : '未配置 baseUrl'}
             </span>
             <input
               className="pp-input pp-input-mono"
               value={draft.url}
-              placeholder="/api/v1/... 或 https://TARGET/endpoint，支持 {{var}}"
+              placeholder={wsMode ? 'ws://TARGET/path 或 /path（拼 baseUrl），支持 {{var}}' : '/api/v1/... 或 https://TARGET/endpoint，支持 {{var}}'}
               onChange={(e) => patch('url', e.target.value)}
               aria-label="请求路径"
             />
             <span className="pp-send-group">
-              <button className="pp-btn pp-btn-primary" onClick={send} disabled={sending || !String(draft.url || '').trim()}
-                title={String(draft.url || '').trim() ? '' : '先填写请求路径'}>
-                {sending ? '发送中…' : '发送'}
-              </button>
-              <button className="pp-btn" onClick={cancel} disabled={!sending} title="取消本次发送">✕</button>
+              {wsMode ? (
+                wsState.status === 'open' ? (
+                  <button className="pp-btn" onClick={wsDisconnect} title="断开 WebSocket 连接">断开</button>
+                ) : (
+                  <button className="pp-btn pp-btn-primary" onClick={wsConnect}
+                    disabled={wsState.status === 'connecting' || !String(draft.url || '').trim()}
+                    title={String(draft.url || '').trim() ? '' : '先填写连接地址'}>
+                    {wsState.status === 'connecting' ? '连接中…' : '连接'}
+                  </button>
+                )
+              ) : (
+                <>
+                  <button className="pp-btn pp-btn-primary" onClick={send} disabled={sending || !String(draft.url || '').trim()}
+                    title={String(draft.url || '').trim() ? '' : '先填写请求路径'}>
+                    {sending ? '发送中…' : '发送'}
+                  </button>
+                  <button className="pp-btn" onClick={cancel} disabled={!sending} title="取消本次发送">✕</button>
+                </>
+              )}
             </span>
           </div>
 
@@ -448,7 +714,7 @@ export function DebugPage({ route, api }) {
           {error ? <p className="pp-note pp-note-bad">{error}</p> : null}
 
           <div className="pp-tabs">
-            {TABS.map((t) => (
+            {activeTabs.map((t) => (
               <button key={t.id} className="pp-tab" data-active={tab === t.id} onClick={() => setTab(t.id)}>{t.label}</button>
             ))}
           </div>
@@ -517,6 +783,107 @@ export function DebugPage({ route, api }) {
                 </table>
               </div>
             ) : null}
+            {tab === 'db' ? (
+              <div>
+                <div className="pp-group-head">
+                  <span className="pp-group-title">数据库连接</span>
+                  <button className="pp-btn pp-btn-link" onClick={dbTest} disabled={dbBusy}>测试连接</button>
+                </div>
+                <div className="pp-form-row">
+                  <label className="pp-form-label">驱动</label>
+                  <select className="pp-select" value={dbConfig.type} onChange={(e) => dbPatch('type', e.target.value)}>
+                    {DB_TYPES.map((t) => <option key={t.id} value={t.id}>{t.label}</option>)}
+                  </select>
+                </div>
+                {dbConfig.type === 'sqlite' ? (
+                  <div className="pp-form-row">
+                    <label className="pp-form-label">文件路径</label>
+                    <input className="pp-input pp-input-mono" style={{ flex: 1 }} value={dbConfig.path} placeholder="/path/to/data.db 或 :memory:"
+                      onChange={(e) => dbPatch('path', e.target.value)} />
+                  </div>
+                ) : (
+                  <div>
+                    <p className="pp-note">当前仅内置 SQLite 驱动（node:sqlite）；MySQL / PostgreSQL 需独立驱动包，测试连接会明确报错。</p>
+                    <div className="pp-form-row">
+                      <label className="pp-form-label">主机</label>
+                      <input className="pp-input pp-input-mono" style={{ flex: 1 }} value={dbConfig.host} onChange={(e) => dbPatch('host', e.target.value)} />
+                    </div>
+                    <div className="pp-form-row">
+                      <label className="pp-form-label">端口</label>
+                      <input className="pp-input pp-input-sm" style={{ flex: 1, maxWidth: 120 }} value={dbConfig.port} onChange={(e) => dbPatch('port', e.target.value)} />
+                    </div>
+                    <div className="pp-form-row">
+                      <label className="pp-form-label">用户名</label>
+                      <input className="pp-input" style={{ flex: 1 }} value={dbConfig.user} onChange={(e) => dbPatch('user', e.target.value)} />
+                    </div>
+                    <div className="pp-form-row">
+                      <label className="pp-form-label">密码</label>
+                      <input className="pp-input" type="password" style={{ flex: 1 }} value={dbConfig.password} onChange={(e) => dbPatch('password', e.target.value)} />
+                    </div>
+                    <div className="pp-form-row">
+                      <label className="pp-form-label">数据库</label>
+                      <input className="pp-input" style={{ flex: 1 }} value={dbConfig.database} onChange={(e) => dbPatch('database', e.target.value)} />
+                    </div>
+                  </div>
+                )}
+                {dbConnections.length > 0 ? (
+                  <div className="pp-form-row">
+                    <label className="pp-form-label">已存连接</label>
+                    <select className="pp-select" value="" onChange={(e) => dbLoad(e.target.value)}>
+                      <option value="">选择已保存的连接…</option>
+                      {dbConnections.map((c) => <option key={c.name} value={c.name}>{c.name}</option>)}
+                    </select>
+                    <button className="pp-btn pp-btn-link" onClick={() => dbSave()}>保存当前</button>
+                    {dbConnections.map((c) => (
+                      <button key={c.name} className="pp-btn pp-btn-link" onClick={() => dbDelete(c.name)} title="删除该连接">✕ {c.name}</button>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="pp-form-row">
+                    <label className="pp-form-label" />
+                    <button className="pp-btn pp-btn-link" onClick={dbSave}>保存连接到项目</button>
+                  </div>
+                )}
+                <div className="pp-group-head">
+                  <span className="pp-group-title">SQL 执行</span>
+                  <button className="pp-btn pp-btn-primary" onClick={dbRun} disabled={dbBusy || !String(dbSql || '').trim()}>{dbBusy ? '执行中…' : '执行'}</button>
+                </div>
+                <textarea
+                  className="pp-input pp-input-mono"
+                  style={{ width: '100%', minHeight: 72, fontFamily: 'var(--font-mono, monospace)' }}
+                  value={dbSql}
+                  onChange={(e) => setDbSql(e.target.value)}
+                  placeholder="SELECT * FROM users LIMIT 10"
+                />
+                {dbHint ? <p className={'pp-note ' + (dbHint.indexOf('连接成功') === 0 || dbHint.indexOf('已保存') === 0 ? 'pp-note-ok' : 'pp-note-bad')}>{dbHint}</p> : null}
+                {dbResult && Array.isArray(dbResult.rows) ? (
+                  <div>
+                    <div className="pp-group-title">结果（{dbResult.rowCount} 行{dbResult.truncated ? '，超过 1000 行已截断' : ''}）</div>
+                    <div className="pp-table-wrap">
+                      {dbResult.rows.length === 0 ? (
+                        <p className="pp-meta">（无返回行）</p>
+                      ) : (
+                        <table className="pp-table">
+                          <thead>
+                            <tr>{dbResult.columns.map((c) => <th key={c}>{c}</th>)}</tr>
+                          </thead>
+                          <tbody>
+                            {dbResult.rows.map((row, i) => (
+                              <tr key={i}>{dbResult.columns.map((c) => (
+                                <td key={c} className="pp-mono">{row && row[c] != null ? String(row[c]) : ''}</td>
+                              ))}</tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      )}
+                    </div>
+                  </div>
+                ) : null}
+                {dbResult && dbResult.changes !== undefined ? (
+                  <p className="pp-note pp-note-ok">已执行：影响 {dbResult.changes} 行{dbResult.lastInsertRowid != null ? '，lastInsertRowid=' + dbResult.lastInsertRowid : ''}</p>
+                ) : null}
+              </div>
+            ) : null}
             {tab === 'auth' ? (
               <div>
                 <div className="pp-form-row">
@@ -567,6 +934,21 @@ export function DebugPage({ route, api }) {
             ) : null}
           </div>
 
+          {wsMode ? (
+            <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
+              <input
+                className="pp-input pp-input-mono"
+                style={{ flex: 1 }}
+                placeholder={wsState.status === 'open' ? '输入要发送的消息…' : '连接建立后可发送消息'}
+                value={wsInput}
+                disabled={wsState.status !== 'open'}
+                onChange={(e) => setWsInput(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter' && wsState.status === 'open') wsSend() }}
+              />
+              <button className="pp-btn pp-btn-primary" onClick={wsSend} disabled={wsState.status !== 'open' || wsInput === ''}>发送消息</button>
+            </div>
+          ) : null}
+
           <div className="pp-toolbar-inline" style={{ marginTop: 'var(--sp-3)' }}>
             <input
               className="pp-input"
@@ -582,7 +964,7 @@ export function DebugPage({ route, api }) {
           </div>
         </section>
 
-        {responsePanel}
+        {wsMode ? wsPanel : responsePanel}
       </div>
     </div>
   )

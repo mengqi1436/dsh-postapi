@@ -23,6 +23,8 @@ async function optionalSuite(file, exportName) {
 
 const hostDataTests = await optionalSuite('host-data.test.js', 'tests')
 const hostRuntimeTests = await optionalSuite('host-runtime.test.js', 'tests')
+const hostWsTests = await optionalSuite('host-ws.test.js', 'tests')
+const hostDbTests = await optionalSuite('host-db.test.js', 'tests')
 
 /** 页面套件在 src/ 下，用绝对路径动态导入。 */
 async function optionalPageSuite(relPath, exportName) {
@@ -65,6 +67,8 @@ const suites = [
   ['tests/bridge.test.js', bridgeTests],
   ['tests/host-data.test.js', hostDataTests],
   ['tests/host-runtime.test.js', hostRuntimeTests],
+  ['tests/host-ws.test.js', hostWsTests],
+  ['tests/host-db.test.js', hostDbTests],
   ['src/client/pages/components/__tests__/pages-a.test.js', pagesATests],
   ['src/client/pages/components/__tests__/apifox-ui.test.js', apifoxUiTests],
   ['src/client/pages/components/__tests__/tree.test.js', treeTests],

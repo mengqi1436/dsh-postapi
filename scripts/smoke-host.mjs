@@ -11,7 +11,9 @@
  */
 import assert from 'node:assert/strict'
 import http from 'node:http'
+import crypto from 'node:crypto'
 import { once } from 'node:events'
+const { createHash } = crypto
 import { promises as fs } from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
@@ -56,8 +58,28 @@ function httpJson(base, p, opts = {}) {
   })
 }
 
+/** 确定性关停：跟踪全部 TCP 连接（含升级后脱离 server 跟踪的），先毁后关，close 最多等 2s。 */
+function closeServer(server, conns, sockets) {
+  if (sockets) for (const s of sockets) s.destroy()
+  if (conns) for (const c of conns) c.destroy()
+  try { server.closeIdleConnections() } catch { /* 旧版本 Node 无此方法 */ }
+  try { server.closeAllConnections() } catch { /* 同上 */ }
+  try { server.close() } catch { /* 已停则忽略 */ }
+  return Promise.race([
+    once(server, 'close').then(() => 'closed'),
+    new Promise((resolve) => setTimeout(() => {
+      if (conns) for (const c of conns) c.destroy()
+      try { server.closeAllConnections() } catch { /* 同上 */ }
+      resolve('forced')
+    }, 2000)),
+  ])
+}
+
 function startServer(handler) {
+  const conns = new Set()
   const server = http.createServer((req, res) => {
+    conns.add(req.socket)
+    res.on('close', () => conns.delete(req.socket))
     Promise.resolve(handler(req, res)).catch(() => {
       if (!res.headersSent) {
         res.statusCode = 500
@@ -106,23 +128,65 @@ function mount(basePath) {
 
 /** 本地 echo 目标：给 request/send 用，不依赖外网。 */
 function startEcho() {
+  const conns = new Set()
   const server = http.createServer((req, res) => {
+    conns.add(req.socket)
+    res.on('close', () => conns.delete(req.socket))
     res.writeHead(200, { 'Content-Type': 'text/plain' })
     res.end('pong')
   })
   server.listen(0, '127.0.0.1')
-  return { server, listening: once(server, 'listening') }
+  return { server, conns, listening: once(server, 'listening') }
+}
+
+/** 本地 WS echo：握手 + 文本帧回显 + close 帧应答（给 ws/* 冒烟用）。 */
+function startWsEcho() {
+  const sockets = new Set()
+  const conns = new Set() // 全部 TCP 连接（含升级后脱离 server 跟踪的）
+  const server = http.createServer(() => {})
+  server.on('connection', (c) => { conns.add(c); c.on('close', () => conns.delete(c)) })
+  server.on('upgrade', (req, socket) => {
+    sockets.add(socket)
+    const accept = createHash('sha1')
+      .update(req.headers['sec-websocket-key'] + '258EAFA5-E914-47DA-95CA-C5AB0DC85B11')
+      .digest('base64')
+    socket.write('HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: ' + accept + '\r\n\r\n')
+    socket.on('data', (buf) => {
+      if (buf[0] === 0x88) {
+        socket.write(Buffer.from([0x88, 0x00]))
+        return
+      }
+      if ((buf[0] & 0x0f) === 1 && buf.length > 6) {
+        const len = buf[1] & 0x7f
+        const mask = buf.slice(2, 6)
+        const out = Buffer.from(buf.slice(6, 6 + len))
+        for (let i = 0; i < out.length; i += 1) out[i] ^= mask[i % 4]
+        socket.write(Buffer.concat([Buffer.from([0x81, out.length]), out]))
+      }
+    })
+  })
+  server.listen(0, '127.0.0.1')
+  return {
+    server,
+    listening: once(server, 'listening'),
+    close() {
+      return closeServer(server, conns, sockets)
+    },
+  }
 }
 
 async function tempStage() {
   const basePath = await fs.mkdtemp(path.join(os.tmpdir(), 'postapi-smoke-'))
-  const { server, listening } = startServer(mount(basePath))
+  const { server, conns: serverConns, listening } = startServer(mount(basePath))
   await listening
   const base = 'http://127.0.0.1:' + server.address().port
   const echo = startEcho()
   await echo.listening
   const echoUrl = 'http://127.0.0.1:' + echo.server.address().port + '/echo'
   ECHO_URL = echoUrl
+  const wsEcho = startWsEcho()
+  await wsEcho.listening
+  WS_ECHO_URL = 'ws://127.0.0.1:' + wsEcho.server.address().port + '/echo'
   try {
     console.log('\n== 1) 临时基路径 ' + basePath + ' ==')
 
@@ -226,16 +290,18 @@ async function tempStage() {
     assert.deepEqual(afterDelete.json.data, [])
     record('POST deleteProject（client {id} 形态）', 'listProjects 已空')
   } finally {
-    echo.server.close()
-    await once(echo.server, 'close')
-    server.close()
-    await once(server, 'close')
+    // 升级后的 WS 连接会脱离 server 跟踪、keep-alive 空闲连接也可能让 close() 长等——
+    // 统一走确定性关停（先毁后关 + 2s 超时兜底），保证冒烟进程必定退出。
+    await closeServer(echo.server, echo.conns)
+    await wsEcho.close()
+    await closeServer(server, serverConns)
     await fs.rm(basePath, { recursive: true, force: true })
   }
 }
 
 /** v2 阶段：变量渲染 / 脚本 / Mock / 导入导出 / 代码生成 / 自动化测试 全链路。 */
 let ECHO_URL = ''
+let WS_ECHO_URL = ''
 async function v2Stage(base, projectId) {
   const echoUrl = ECHO_URL;
   // 1) 变量渲染（request/preview 走 services.variables）
@@ -406,11 +472,54 @@ async function v2Stage(base, projectId) {
   assert.equal(stopped.json.data.running, false)
   record('POST mock/start|status|stop', 'running=true → false')
 
-  // 12) P2 路由位固定 501
-  const dbRoute = await httpJson(base, PREFIX + '/db/query', { method: 'POST', body: { sql: 'select 1' } })
-  assert.equal(dbRoute.status, 501)
-  assert.equal(dbRoute.json.code, 'NOT_IMPLEMENTED')
-  record('POST db/query（P2 路由位）', 'status=501 code=NOT_IMPLEMENTED')
+  // 12) 数据库操作（sqlite 内置驱动真实现）
+  const dbQuery = await httpJson(base, PREFIX + '/db/query', {
+    method: 'POST',
+    body: { connection: { type: 'sqlite', path: ':memory:' }, sql: 'SELECT 40 + 2 AS answer' },
+  })
+  assert.equal(dbQuery.status, 200)
+  assert.equal(dbQuery.json.ok, true)
+  assert.equal(dbQuery.json.data.rows[0].answer, 42)
+  record('POST db/query（sqlite 内置驱动）', 'rows[0].answer=' + dbQuery.json.data.rows[0].answer)
+
+  const dbUnsupported = await httpJson(base, PREFIX + '/db/test', {
+    method: 'POST',
+    body: { connection: { type: 'mysql', host: '127.0.0.1' } },
+  })
+  assert.equal(dbUnsupported.status, 200)
+  assert.equal(dbUnsupported.json.data.ok, false)
+  assert.equal(dbUnsupported.json.data.error.code, 'UNSUPPORTED_DRIVER')
+  record('POST db/test（未内置驱动明确报错）', 'ok=false code=' + dbUnsupported.json.data.error.code)
+
+  // 13) WebSocket 调试（本地 WS echo，握手即连）
+  const wsOpen = await httpJson(base, PREFIX + '/ws/open', { method: 'POST', body: { url: WS_ECHO_URL.replace('ws://', 'http://') } })
+  assert.equal(wsOpen.status, 200)
+  assert.equal(wsOpen.json.ok, true)
+  assert.equal(wsOpen.json.data.status, 'open', 'http 地址应自动归一为 ws 并完成握手')
+  const wsId = wsOpen.json.data.id
+  const wsSend = await httpJson(base, PREFIX + '/ws/send', { method: 'POST', body: { id: wsId, message: 'smoke-ws' } })
+  assert.equal(wsSend.json.data.ok, true)
+  await new Promise((resolve) => setTimeout(resolve, 150))
+  const wsMessages = await httpJson(base, PREFIX + '/ws/messages', { method: 'POST', body: { id: wsId } })
+  assert.ok(wsMessages.json.data.messages.some((m) => m.direction === 'in' && m.data === 'smoke-ws'), '应收到回显')
+  const wsClose = await httpJson(base, PREFIX + '/ws/close', { method: 'POST', body: { id: wsId } })
+  assert.equal(wsClose.json.data.ok, true)
+  record('POST ws/open|send|messages|close（本地 echo）', 'status=open echo=smoke-ws')
+
+  // 14) Apifox / YApi 导入路由
+  const apifoxIn = await httpJson(base, PREFIX + '/import/apifox', {
+    method: 'POST',
+    body: { json: { name: 'smoke-apifox', apiCollection: [{ type: 'api', method: 'GET', path: '/smoke', name: '冒烟接口' }] } },
+  })
+  assert.equal(apifoxIn.status, 200)
+  assert.equal(apifoxIn.json.data.endpoints.length, 1)
+  const yapiIn = await httpJson(base, PREFIX + '/import/yapi', {
+    method: 'POST',
+    body: { json: { name: 'smoke-yapi', list: [{ title: '冒烟接口', path: '/smoke', method: 'GET' }] } },
+  })
+  assert.equal(yapiIn.status, 200)
+  assert.equal(yapiIn.json.data.endpoints.length, 1)
+  record('POST import/apifox + import/yapi', 'endpoints=1/1')
 }
 
 async function realStage() {

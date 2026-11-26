@@ -743,6 +743,15 @@ export const tests = [
             ['/api/test/runCase', { projectId, caseId: 'tc_1' }],
             ['/api/test/runScenario', { projectId, scenarioId: 'ts_1' }],
             ['/api/request/preview', { url: 'http://x' }],
+            ['/api/ws/open', { url: 'ws://127.0.0.1:1/x' }],
+            ['/api/ws/send', { id: 'x', message: 'm' }],
+            ['/api/ws/messages', { id: 'x' }],
+            ['/api/ws/close', { id: 'x' }],
+            ['/api/db/test', { connection: { type: 'sqlite', path: ':memory:' } }],
+            ['/api/db/query', { connection: { type: 'sqlite', path: ':memory:' }, sql: 'SELECT 1' }],
+            ['/api/db/close', { connection: {} }],
+            ['/api/import/apifox', { json: {} }],
+            ['/api/import/yapi', { json: {} }],
           ]
           for (const [route, body] of routes) {
             const r = await jsonFetch(httpBase, route, { method: 'POST', body })
@@ -759,19 +768,189 @@ export const tests = [
     }),
   },
   {
-    name: 'bridge: db/test|query|close 固定返回 501 NOT_IMPLEMENTED（P2 路由位）',
+    name: 'bridge: db/test|query|close 真实现（sqlite 内置驱动 + 不支持驱动 400 + 参数校验）',
     fn: () => withTempBase(async (base) => {
+      const { createDbService } = await import('../src/host/db.js')
       const fake = makeFakeServices()
+      const services = { ...fake.services, db: createDbService() }
       await withHandlerServer(
         (req, res) => handlePostapiRequest(req, res, {
-          storage: createStorageService(base), request: createRequestService(), services: fake.services,
+          storage: createStorageService(base), request: createRequestService(), services,
         }),
         async (httpBase) => {
-          for (const route of ['test', 'query', 'close']) {
-            const r = await jsonFetch(httpBase, '/api/db/' + route, { method: 'POST', body: {} })
-            assert.equal(r.status, 501, 'db/' + route + ' 应 501')
-            assert.equal(r.json.code, 'NOT_IMPLEMENTED')
+          const conn = { type: 'sqlite', path: ':memory:' }
+          // test：内置驱动连通
+          const t = await jsonFetch(httpBase, '/api/db/test', { method: 'POST', body: { connection: conn } })
+          assert.equal(t.status, 200)
+          assert.equal(t.json.data.ok, true)
+          assert.equal(t.json.data.driver, 'sqlite')
+          // query：SELECT 返回行
+          const q = await jsonFetch(httpBase, '/api/db/query', {
+            method: 'POST',
+            body: { connection: conn, sql: 'SELECT 1 AS one, \'a\' AS s' },
+          })
+          assert.equal(q.status, 200)
+          assert.deepEqual(q.json.data.rows, [{ one: 1, s: 'a' }])
+          assert.equal(q.json.data.rowCount, 1)
+          // query：写入语句返回 changes
+          const w = await jsonFetch(httpBase, '/api/db/query', {
+            method: 'POST',
+            body: { connection: conn, sql: 'CREATE TABLE t1 (id INTEGER); ' },
+          })
+          assert.equal(w.status, 200)
+          assert.equal(w.json.data.changes, 0)
+          // 不支持的驱动：db/test 返回 ok:false + UNSUPPORTED_DRIVER（验证端点不抛）；db/query 抛 400
+          const u = await jsonFetch(httpBase, '/api/db/test', {
+            method: 'POST',
+            body: { connection: { type: 'mysql', host: '127.0.0.1' } },
+          })
+          assert.equal(u.status, 200)
+          assert.equal(u.json.data.ok, false)
+          assert.equal(u.json.data.error.code, 'UNSUPPORTED_DRIVER')
+          const uq = await jsonFetch(httpBase, '/api/db/query', {
+            method: 'POST',
+            body: { connection: { type: 'mysql', host: '127.0.0.1' }, sql: 'SELECT 1' },
+          })
+          assert.equal(uq.status, 400)
+          assert.equal(uq.json.code, 'UNSUPPORTED_DRIVER')
+          // 参数校验：缺 sql → 400
+          const bad = await jsonFetch(httpBase, '/api/db/query', { method: 'POST', body: { connection: conn, sql: '' } })
+          assert.equal(bad.status, 400)
+          assert.equal(bad.json.code, 'INVALID_ARGUMENT')
+          // close 幂等
+          const c = await jsonFetch(httpBase, '/api/db/close', { method: 'POST', body: { connection: conn } })
+          assert.equal(c.status, 200)
+          assert.equal(c.json.data.ok, true)
+        },
+      )
+    }),
+  },
+  {
+    name: 'bridge: /ws/* 未接线 501 NOT_WIRED，接线后 open/send/messages/close 全链路（本地 echo）',
+    fn: () => withTempBase(async (base) => {
+      const { createWsClient } = await import('../src/host/ws-client.js')
+      const http = await import('node:http')
+      const crypto = await import('node:crypto')
+      // 本地 WS echo：握手 + 文本帧回显（测试内自建，不依赖外网）
+      const frameReply = (socket, text) => {
+        const payload = Buffer.from(text)
+        socket.write(Buffer.concat([Buffer.from([0x81, payload.length]), payload]))
+      }
+      const echoServer = http.createServer(() => {})
+      const sockets = new Set()
+      echoServer.on('upgrade', (req, socket) => {
+        // 升级后的 socket 脱离 server 的连接跟踪，closeAllConnections 收不掉——手动登记，收尾销毁
+        sockets.add(socket)
+        socket.on('close', () => sockets.delete(socket))
+        const accept = crypto.createHash('sha1')
+          .update(req.headers['sec-websocket-key'] + '258EAFA5-E914-47DA-95CA-C5AB0DC85B11')
+          .digest('base64')
+        socket.write('HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: ' + accept + '\r\n\r\n')
+        socket.on('data', (buf) => {
+          // close 帧原样回一个空 close 帧，完成关闭握手（undici 才会立刻释放连接）
+          if (buf[0] === 0x88) {
+            socket.write(Buffer.from([0x88, 0x00]))
+            return
           }
+          if ((buf[0] & 0x0f) === 1 && buf.length > 6) {
+            const len = buf[1] & 0x7f
+            const mask = buf.slice(2, 6)
+            const out = Buffer.from(buf.slice(6, 6 + len))
+            for (let i = 0; i < out.length; i += 1) out[i] ^= mask[i % 4]
+            frameReply(socket, out.toString('utf8'))
+          }
+        })
+      })
+      await new Promise((resolve) => echoServer.listen(0, '127.0.0.1', resolve))
+      const echoUrl = 'ws://127.0.0.1:' + echoServer.address().port + '/echo'
+      const fake = makeFakeServices()
+      const services = { ...fake.services, ws: createWsClient() }
+      try {
+        await withHandlerServer(
+          (req, res) => handlePostapiRequest(req, res, {
+            storage: createStorageService(base), request: createRequestService(), services,
+          }),
+          async (httpBase) => {
+            // 未接线场景单独起一个 handler（services 去掉 ws）
+            await withHandlerServer(
+              (req2, res2) => handlePostapiRequest(req2, res2, {
+                storage: createStorageService(base), request: createRequestService(), services: fake.services,
+              }),
+              async (bareBase) => {
+                const r = await jsonFetch(bareBase, '/api/ws/open', { method: 'POST', body: { url: echoUrl } })
+                assert.equal(r.status, 501)
+                assert.equal(r.json.code, 'NOT_WIRED')
+              },
+            )
+            // 接线全链路
+            const opened = await jsonFetch(httpBase, '/api/ws/open', {
+              method: 'POST',
+              body: { url: echoUrl.replace('ws://', 'http://'), headers: [{ key: 'X-Test', value: '1', enabled: true }] },
+            })
+            assert.equal(opened.status, 200)
+            assert.equal(opened.json.data.status, 'open')
+            const id = opened.json.data.id
+            assert.ok(id, '应返回连接 id')
+            const sent = await jsonFetch(httpBase, '/api/ws/send', { method: 'POST', body: { id, message: 'ping-echo' } })
+            assert.equal(sent.status, 200)
+            assert.equal(sent.json.data.ok, true)
+            await new Promise((resolve) => setTimeout(resolve, 200))
+            const logs = await jsonFetch(httpBase, '/api/ws/messages', { method: 'POST', body: { id } })
+            assert.equal(logs.status, 200)
+            const texts = logs.json.data.messages.filter((m) => m.direction === 'in').map((m) => m.data)
+            assert.deepEqual(texts, ['ping-echo'], '应收到 echo 消息')
+            const closed = await jsonFetch(httpBase, '/api/ws/close', { method: 'POST', body: { id } })
+            assert.equal(closed.status, 200)
+            assert.equal(closed.json.data.ok, true)
+            // 已关连接再 send：ok:false 带 error（不崩）
+            const after = await jsonFetch(httpBase, '/api/ws/send', { method: 'POST', body: { id, message: 'x' } })
+            assert.equal(after.status, 200)
+            assert.equal(after.json.data.ok, false)
+          },
+        )
+      } finally {
+        // 升级 socket + close() 都收不干净的连接统一销毁，事件循环才能排空（进程正常退出）
+        for (const s of sockets) s.destroy()
+        echoServer.closeAllConnections()
+        echoServer.close()
+      }
+    }),
+  },
+  {
+    name: 'bridge: /import/apifox 与 /import/yapi 路由接线并返回 bundle',
+    fn: () => withTempBase(async (base) => {
+      const fake = makeFakeServices()
+      const services = { ...fake.services, importExport: await import('../src/host/import-export.js') }
+      await withHandlerServer(
+        (req, res) => handlePostapiRequest(req, res, {
+          storage: createStorageService(base), request: createRequestService(), services,
+        }),
+        async (httpBase) => {
+          const ax = await jsonFetch(httpBase, '/api/import/apifox', {
+            method: 'POST',
+            body: { json: { name: 'P', apiCollection: [{ type: 'api', method: 'GET', path: '/x', name: 'X' }] } },
+          })
+          assert.equal(ax.status, 200)
+          assert.equal(ax.json.data.endpoints.length, 1)
+          assert.equal(ax.json.data.endpoints[0].url, '/x')
+          const y = await jsonFetch(httpBase, '/api/import/yapi', {
+            method: 'POST',
+            body: { json: { name: 'Y', list: [{ title: 'T', path: '/y', method: 'GET', req_query: [{ name: 'a' }] }] } },
+          })
+          assert.equal(y.status, 200)
+          assert.equal(y.json.data.endpoints.length, 1)
+          assert.equal(y.json.data.endpoints[0].params[0].key, 'a')
+          // 未接线：501 NOT_WIRED
+          await withHandlerServer(
+            (req2, res2) => handlePostapiRequest(req2, res2, {
+              storage: createStorageService(base), request: createRequestService(), services: fake.services,
+            }),
+            async (bareBase) => {
+              const r = await jsonFetch(bareBase, '/api/import/apifox', { method: 'POST', body: { json: {} } })
+              assert.equal(r.status, 501)
+              assert.equal(r.json.code, 'NOT_WIRED')
+            },
+          )
         },
       )
     }),
@@ -931,7 +1110,11 @@ export const tests = [
         assert.equal(runCase.caseId, 'tc_1')
         assert.equal(runCase.passed, false)
         const dbTest = await api.db.test({})
-        assert.equal(dbTest.available, false)
+        assert.equal(dbTest.ok, false)
+        assert.ok(dbTest.error && dbTest.error.message, 'db 桩应带 error.message')
+        const wsOpen = await api.ws.open({ url: 'ws://127.0.0.1:1/x' })
+        assert.equal(wsOpen.status, 'unavailable')
+        assert.ok(wsOpen.error && wsOpen.error.message, 'ws 桩应带 error.message')
         // 降级只 warn 一次
         assert.equal(warnings.filter((w) => w.includes('桥不可达')).length, 1, '降级提示应只出现一次')
         // 桩 request：fetch 抛错时返回 error 结构而非抛出

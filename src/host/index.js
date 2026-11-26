@@ -9,6 +9,8 @@ import { createStorageService } from './storage.js'
 import { createRequestService } from './request.js'
 import { createMockServer } from './mock-server.js'
 import { createTestRunner } from './test-runner.js'
+import { createWsClient } from './ws-client.js'
+import { createDbService } from './db.js'
 import { runScript } from './script-sandbox.js'
 import { createVariableResolver, DYNAMIC_VARS } from './variables.js'
 import * as importExport from './import-export.js'
@@ -48,6 +50,8 @@ export function apply(ctx, config) {
     port: (config && config.mockPort) || 4010,
   })
   const runner = createTestRunner({ storage, request })
+  const ws = createWsClient()
+  const db = createDbService()
 
   // 桥第三参：服务方法缺失时对应路由返回 501 NOT_WIRED，绝不崩 handler。
   const services = {
@@ -60,6 +64,8 @@ export function apply(ctx, config) {
     runner,
     importExport,
     codegen,
+    ws,
+    db,
   }
 
   // cordis ctx 为受控对象，禁止直接挂属性（cannot set property without provide）；
@@ -92,10 +98,12 @@ export function apply(ctx, config) {
     'postapi-api',
   )
 
-  // 插件卸载时收掉可能仍在监听的 Mock 端口（effect disposer 随插件生命周期释放）。
+  // 插件卸载时收掉可能仍在监听的 Mock 端口与 WS 连接、DB 连接（effect disposer 随插件生命周期释放）。
   ctx.effect?.(
     () => () => {
       mock.stop().catch(() => {})
+      ws.closeAll().catch(() => {})
+      db.closeAll().catch(() => {})
     },
     'postapi-mock-teardown',
   )

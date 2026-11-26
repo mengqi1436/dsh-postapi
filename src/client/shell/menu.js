@@ -91,6 +91,8 @@ export const NEW_MENU = [
         children: [
           { id: 'import-openapi', labelKey: 'menu.new.importOpenapi', action: { kind: 'route', hash: '#/import', query: 'kind=openapi' } },
           { id: 'import-postman', labelKey: 'menu.new.importPostman', action: { kind: 'route', hash: '#/import', query: 'kind=postman' } },
+          { id: 'import-apifox', labelKey: 'menu.new.importApifox', action: { kind: 'route', hash: '#/import', query: 'kind=apifox' } },
+          { id: 'import-yapi', labelKey: 'menu.new.importYapi', action: { kind: 'route', hash: '#/import', query: 'kind=yapi' } },
           { id: 'import-har', labelKey: 'menu.new.importHar', action: { kind: 'route', hash: '#/import', query: 'kind=har' } },
           { id: 'import-curl', labelKey: 'menu.new.importCurl', action: { kind: 'route', hash: '#/import', query: 'kind=curl' } },
         ],

@@ -1,6 +1,6 @@
 // import.jsx — 导入导出 + 代码生成页（Apifox 工作台：导入卡片 + 导出按钮组 + 结果 pre）
 // 自注册：模块求值期入队 __postapiQueue
-// 数据：api.import.{openapi,postman,har,curl} / api.export.{openapi,postman,har,markdown} / api.codegen.run
+// 数据：api.import.{openapi,postman,apifox,yapi,har,curl} / api.export.{openapi,postman,har,markdown} / api.codegen.run
 // 失败页面内显示错误文案（不弹窗）；结果统一渲染到可复制的 pre 块
 // 视觉基线：docs/apifox-design-spec.md —— .pp-card / .pp-btn 按钮组 / .pp-pre / .pp-select
 import React, { useEffect, useRef, useState } from 'react'
@@ -20,10 +20,14 @@ const PH_OPENAPI = ['{', '  "openapi": "3.0.0",', '  "info": { "title": "示例"
 const PH_POSTMAN = ['{', '  "info": { "name": "示例" },', '  "item": []', '}'].join('\n')
 const PH_HAR = ['{', '  "log": { "version": "1.2", "entries": [] }', '}'].join('\n')
 const PH_CURL = "curl -X GET 'https://api.example.com/pets' -H 'Accept: application/json'"
+const PH_APIFOX = ['{', '  "name": "Apifox 导出的项目",', '  "apiCollection": [ { "type": "folder", "name": "目录", "items": [] } ],', '  "models": []', '}'].join('\n')
+const PH_YAPI = ['{', '  "name": "YApi 项目",', '  "list": [ { "title": "接口", "path": "/api/x", "method": "GET" } ]', '}'].join('\n')
 
 const IMPORT_KINDS = [
   { id: 'openapi', label: 'OpenAPI / Swagger', hint: '粘贴 OpenAPI 3 或 Swagger 2 JSON/YAML 文本', placeholder: PH_OPENAPI },
   { id: 'postman', label: 'Postman', hint: '粘贴 Postman Collection v2.1 JSON 文本', placeholder: PH_POSTMAN },
+  { id: 'apifox', label: 'Apifox JSON', hint: '粘贴 Apifox 导出的项目 JSON（apiCollection / items 树与 models 模型）', placeholder: PH_APIFOX },
+  { id: 'yapi', label: 'YApi', hint: '粘贴 YApi 数据管理导出的 JSON（list 接口数组）', placeholder: PH_YAPI },
   { id: 'har', label: 'HAR', hint: '粘贴浏览器导出的 HAR JSON 文本', placeholder: PH_HAR },
   { id: 'curl', label: 'cURL', hint: '粘贴 cURL 命令（可多条，逐行）', placeholder: PH_CURL },
 ]

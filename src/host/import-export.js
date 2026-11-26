@@ -2,6 +2,7 @@
  * 导入导出（契约 §3 / feature-matrix 14、15）：全部纯函数，不落盘、不依赖 storage。
  * 导入返回 { folders, endpoints, schemas } 骨架（id 稳定且可预测，便于重复导入幂等）；
  * 导出返回可 JSON.stringify 的对象或 Markdown 字符串。
+ * 导入格式：OpenAPI/Swagger、Postman、HAR、cURL、Apifox JSON、YApi。
  */
 
 /** 导入产物里的稳定 id：前缀 + 三位序号（重复导入同一文档得到同一批 id）。 */
@@ -622,6 +623,219 @@ export function importCurl(text) {
     body,
     auth,
   })
+}
+
+/* ── 导入：Apifox JSON ─────────────────────────────────────────────────── */
+
+/**
+ * Apifox 导出 JSON（v1 apiCollection / v2 items 树）→ bundle。
+ * 树节点：{ type: 'folder'|'api'|..., name, items|children }；api 叶子是 OpenAPI 风格
+ * （parameters/requestBody/responses），直接复用本文件的 OpenAPI 映射函数。
+ * 容错旧版扁平形态：顶层 apis[]（每项可带 folder/group 名称字段）。
+ */
+export function importApifox(json) {
+  const doc = json && typeof json === 'object' ? json : {}
+  const folders = []
+  const endpoints = []
+  const tree = asArray(doc.apiCollection).length ? asArray(doc.apiCollection) : asArray(doc.items)
+
+  const walk = (nodes, parentId) => {
+    let folderOrder = 0
+    let endpointOrder = 0
+    for (const raw of asArray(nodes)) {
+      const item = raw && typeof raw === 'object' ? raw : {}
+      const name = str(item.name || item.title)
+      const children = asArray(item.items).length ? asArray(item.items) : asArray(item.children)
+      const type = str(item.type).toLowerCase()
+      const isFolder = children.length > 0 && type !== 'api' && !item.method
+      if (isFolder) {
+        const id = seqId('fld_', folders.length)
+        folders.push({ id, name: name || '未命名目录', parentId, order: folderOrder++ })
+        walk(children, id)
+        continue
+      }
+      // api 叶子（OpenAPI 风格字段）
+      const method = (str(item.method) || 'GET').toUpperCase()
+      const url = str(item.path) || str(item.url)
+      if (url === '') continue
+      const split = splitParameters(item.parameters)
+      endpoints.push(makeEndpoint({
+        id: seqId('ep_', endpoints.length),
+        name: name || (method + ' ' + url),
+        folderId: parentId,
+        order: endpointOrder++,
+        method,
+        url,
+        params: split.params,
+        pathParams: split.pathParams,
+        headers: split.headers,
+        cookies: split.cookies,
+        body: item.requestBody !== undefined ? buildRequestBody(item.requestBody) : { type: 'none', content: '', schema: null, examples: [] },
+        responses: item.responses !== undefined ? buildResponses(item.responses) : [],
+        description: str(item.description) || str(item.markdown) || str(item.doc && item.doc.markdown),
+      }))
+    }
+  }
+
+  const schemas = asArray(doc.models).length ? asArray(doc.models)
+    : asArray(doc.dataSchemas).length ? asArray(doc.dataSchemas)
+    : asArray(doc.schemas)
+  const schemaList = schemas
+    .filter((s) => s && typeof s === 'object')
+    .map((s, i) => ({
+      id: seqId('sch_', i),
+      name: str(s.name) || ('模型 ' + (i + 1)),
+      folderId: null,
+      jsonSchema: s.jsonSchema !== undefined ? s.jsonSchema : (s.json_schema !== undefined ? s.json_schema : null),
+      description: str(s.description),
+    }))
+
+  if (tree.length > 0) {
+    // 顶层项目名作为根目录（与 Postman 导入器同语义）；无项目名不造根目录
+    const rootName = str(doc.name)
+    const rootId = rootName === '' ? null : seqId('fld_', folders.length)
+    if (rootId) folders.push({ id: rootId, name: rootName, parentId: null, order: 0 })
+    walk(tree, rootId)
+    return { folders, endpoints, schemas: schemaList }
+  }
+
+  // 旧版扁平形态：apis[] + 每项 folder/group
+  const flat = asArray(doc.apis)
+  if (flat.length === 0) return { folders: [], endpoints: [], schemas: schemaList }
+  const folderIndex = new Map()
+  let flatOrder = 0
+  for (const raw of flat) {
+    const item = raw && typeof raw === 'object' ? raw : {}
+    const groupName = str(item.folder) || str(item.folderName) || str(item.group) || str(item.groupName)
+    let folderId = null
+    if (groupName !== '') {
+      if (!folderIndex.has(groupName)) {
+        const id = seqId('fld_', folders.length)
+        folders.push({ id, name: groupName, parentId: null, order: folderIndex.size })
+        folderIndex.set(groupName, id)
+      }
+      folderId = folderIndex.get(groupName)
+    }
+    const method = (str(item.method) || 'GET').toUpperCase()
+    const url = str(item.path) || str(item.url)
+    if (url === '') continue
+    const split = splitParameters(item.parameters)
+    endpoints.push(makeEndpoint({
+      id: seqId('ep_', endpoints.length),
+      name: str(item.name) || (method + ' ' + url),
+      folderId,
+      order: flatOrder++,
+      method,
+      url,
+      params: split.params,
+      pathParams: split.pathParams,
+      headers: split.headers,
+      cookies: split.cookies,
+      body: item.requestBody !== undefined ? buildRequestBody(item.requestBody) : { type: 'none', content: '', schema: null, examples: [] },
+      responses: item.responses !== undefined ? buildResponses(item.responses) : [],
+      description: str(item.description) || str(item.markdown),
+    }))
+  }
+  return { folders, endpoints, schemas: schemaList }
+}
+
+/* ── 导入：YApi ────────────────────────────────────────────────────────── */
+
+/** YApi required 字段：'0'/'1' 字符串与布尔并存 → 统一布尔。 */
+function yapiRequired(v) {
+  if (v === '1' || v === 1 || v === true) return true
+  return false
+}
+
+/** YApi res_body（JSON-Schema 字符串或示例字符串）→ schema 对象或 null。 */
+function yapiSchemaOf(resBody) {
+  const text = str(resBody).trim()
+  if (text === '') return null
+  try {
+    const parsed = JSON.parse(text)
+    return parsed && typeof parsed === 'object' ? parsed : null
+  } catch {
+    return null
+  }
+}
+
+/**
+ * YApi 导出 JSON（数据管理 → 导出数据）→ bundle。
+ * list[] 每项一个接口：title/path/method + req_query/req_headers/req_body_form/req_body_other
+ * + res_body（JSON-Schema 字符串）；项目 name 作根目录。
+ */
+export function importYApi(json) {
+  const doc = json && typeof json === 'object' ? json : {}
+  const list = asArray(doc.list)
+  const endpoints = []
+  const schemas = []
+  if (list.length === 0) return { folders: [], endpoints, schemas }
+  const rootName = str(doc.name) || str(doc.project && doc.project.name)
+  const folders = []
+  const rootId = rootName === '' ? null : seqId('fld_', 0)
+  if (rootId) folders.push({ id: rootId, name: rootName, parentId: null, order: 0 })
+
+  let order = 0
+  for (const raw of list) {
+    const item = raw && typeof raw === 'object' ? raw : {}
+    const method = (str(item.method) || 'GET').toUpperCase()
+    const url = str(item.path)
+    if (url === '') continue
+    const bodyType = str(item.req_body_type).toLowerCase()
+    let body = { type: 'none', content: '', schema: null, examples: [] }
+    if (bodyType === 'json' && str(item.req_body_other) !== '') {
+      body = { type: 'json', content: str(item.req_body_other), schema: yapiSchemaOf(item.req_body_other), examples: [] }
+    } else if (bodyType === 'form' && asArray(item.req_body_form).length > 0) {
+      body = {
+        type: 'form',
+        content: JSON.stringify(asArray(item.req_body_form).map((f) => ({
+          key: str(f && f.name),
+          value: str(f && f.example),
+          type: str(f && f.type) || 'text',
+          required: yapiRequired(f && f.required),
+        }))),
+        schema: null,
+        examples: [],
+      }
+    } else if (bodyType === 'raw' && str(item.req_body_other) !== '') {
+      body = { type: 'raw', content: str(item.req_body_other), schema: null, examples: [] }
+    }
+    const responses = []
+    const schema = yapiSchemaOf(item.res_body)
+    if (schema) {
+      responses.push({
+        id: seqId('res_', 0),
+        name: '响应 200',
+        code: 200,
+        contentType: 'application/json',
+        body: '',
+        schema,
+        headers: [],
+        enabled: true,
+        isDefault: true,
+      })
+    }
+    endpoints.push(makeEndpoint({
+      id: seqId('ep_', endpoints.length),
+      name: str(item.title) || (method + ' ' + url),
+      folderId: rootId,
+      order: order++,
+      method,
+      url,
+      params: asArray(item.req_query).map((q) => makeParam(q && q.name, q && q.value, {
+        required: yapiRequired(q && q.required),
+        description: q && q.desc,
+      })),
+      headers: asArray(item.req_headers).map((h) => makeParam(h && h.name, h && h.value, {
+        required: yapiRequired(h && h.required),
+        description: h && h.desc,
+      })),
+      body,
+      responses,
+      description: str(item.markdown) || str(item.desc),
+    }))
+  }
+  return { folders, endpoints, schemas }
 }
 
 /* ── 导出 ──────────────────────────────────────────────────────────────── */

@@ -745,6 +745,163 @@ export const tests = [
       assert.equal(blank.url, '')
     },
   },
+  {
+    name: 'import: Apifox JSON → apiCollection 树/OpenAPI 风格叶子/models 模型，重复导入 id 稳定',
+    fn: async () => {
+      const { importApifox } = await import('../src/host/import-export.js')
+      const sample = {
+        name: 'Apifox 示例项目',
+        apiCollection: [
+          {
+            type: 'folder',
+            name: '用户模块',
+            items: [
+              {
+                type: 'api',
+                method: 'GET',
+                path: '/v1/users/{id}',
+                name: '查询用户',
+                description: '按 id 查用户',
+                parameters: [
+                  { name: 'id', in: 'path', required: true, description: '用户 id' },
+                  { name: 'verbose', in: 'query', description: '详细输出' },
+                  { name: 'X-Trace', in: 'header', example: 't-1' },
+                ],
+                responses: { 200: { description: 'OK', content: { 'application/json': { example: { id: 1 } } } } },
+              },
+            ],
+          },
+          { type: 'api', method: 'POST', path: '/v1/orders', name: '下单' },
+        ],
+        models: [{ name: 'User', jsonSchema: { type: 'object' } }],
+      }
+      const out = importApifox(sample)
+      // 项目名根目录 + 用户模块子目录
+      assert.equal(out.folders.length, 2)
+      assert.equal(out.folders[0].name, 'Apifox 示例项目')
+      assert.equal(out.folders[0].parentId, null)
+      assert.equal(out.folders[1].name, '用户模块')
+      assert.equal(out.folders[1].parentId, out.folders[0].id)
+      assert.equal(out.endpoints.length, 2)
+      const get = out.endpoints.find((e) => e.name === '查询用户')
+      assert.equal(get.method, 'GET')
+      assert.equal(get.url, '/v1/users/{id}')
+      assert.equal(get.folderId, out.folders[1].id)
+      assert.equal(get.pathParams.length, 1)
+      assert.equal(get.pathParams[0].key, 'id')
+      assert.equal(get.params.length, 1)
+      assert.equal(get.params[0].key, 'verbose')
+      assert.equal(get.headers.length, 1)
+      assert.equal(get.headers[0].key, 'X-Trace')
+      assert.equal(get.description, '按 id 查用户')
+      assert.equal(get.responses.length, 1)
+      assert.equal(get.responses[0].code, 200)
+      const post = out.endpoints.find((e) => e.name === '下单')
+      assert.equal(post.folderId, out.folders[0].id)
+      assert.equal(out.schemas.length, 1)
+      assert.equal(out.schemas[0].name, 'User')
+      assert.deepEqual(out.schemas[0].jsonSchema, { type: 'object' })
+
+      // v2 形态：items 树 + dataSchemas，叶子用 url 字段
+      const v2 = importApifox({
+        items: [{ type: 'api', method: 'PUT', url: '/x', name: '改' }],
+        dataSchemas: [{ name: 'S', jsonSchema: { type: 'string' } }],
+      })
+      assert.equal(v2.endpoints.length, 1)
+      assert.equal(v2.endpoints[0].url, '/x')
+      assert.equal(v2.folders.length, 0) // 无项目名不造根目录
+      assert.equal(v2.schemas[0].name, 'S')
+
+      // 扁平形态：apis[] + folder 字段
+      const flat = importApifox({
+        apis: [
+          { method: 'GET', path: '/a', name: 'A', folder: '组一' },
+          { method: 'GET', path: '/b', name: 'B', folder: '组一' },
+          { method: 'GET', path: '/c', name: 'C' },
+        ],
+      })
+      assert.equal(flat.folders.length, 1)
+      assert.equal(flat.folders[0].name, '组一')
+      assert.equal(flat.endpoints.filter((e) => e.folderId === flat.folders[0].id).length, 2)
+      assert.equal(flat.endpoints.find((e) => e.name === 'C').folderId, null)
+
+      // 幂等：重复导入同文档得到同一批 id
+      const again = importApifox(sample)
+      assert.deepEqual(again.endpoints.map((e) => e.id), out.endpoints.map((e) => e.id))
+      // 空文档边界
+      assert.deepEqual(importApifox(null), { folders: [], endpoints: [], schemas: [] })
+      assert.deepEqual(importApifox({}), { folders: [], endpoints: [], schemas: [] })
+    },
+  },
+  {
+    name: 'import: YApi → list 数组/req_query/req_headers/req_body_* /res_body JSON-Schema，项目名根目录',
+    fn: async () => {
+      const { importYApi } = await import('../src/host/import-export.js')
+      const out = importYApi({
+        name: 'YApi 迁移项目',
+        list: [
+          {
+            title: '创建用户',
+            path: '/v1/users',
+            method: 'POST',
+            markdown: '创建用户的说明',
+            req_headers: [{ name: 'Authorization', value: 'Bearer x', required: '1' }],
+            req_body_type: 'json',
+            req_body_other: '{ "type": "object", "required": ["name"] }',
+            res_body_type: 'json',
+            res_body: '{ "type": "object", "properties": { "id": { "type": "integer" } } }',
+          },
+          {
+            title: '查询用户',
+            path: '/v1/users',
+            method: 'GET',
+            req_query: [
+              { name: 'page', value: '1', required: '0' },
+              { name: 'size', value: '20', required: '1', desc: '每页条数' },
+            ],
+          },
+          {
+            title: '表单上传',
+            path: '/v1/upload',
+            method: 'POST',
+            req_body_type: 'form',
+            req_body_form: [{ name: 'file', type: 'file', required: '1' }],
+          },
+        ],
+      })
+      assert.equal(out.folders.length, 1)
+      assert.equal(out.folders[0].name, 'YApi 迁移项目')
+      assert.equal(out.endpoints.length, 3)
+
+      const post = out.endpoints.find((e) => e.name === '创建用户')
+      assert.equal(post.method, 'POST')
+      assert.equal(post.body.type, 'json')
+      assert.deepEqual(post.body.schema, { type: 'object', required: ['name'] })
+      assert.equal(post.headers.length, 1)
+      assert.equal(post.headers[0].required, true)
+      assert.equal(post.responses.length, 1)
+      assert.deepEqual(post.responses[0].schema.properties.id, { type: 'integer' })
+      assert.equal(post.description, '创建用户的说明')
+
+      const get = out.endpoints.find((e) => e.name === '查询用户')
+      assert.deepEqual(get.params.map((p) => p.key), ['page', 'size'])
+      assert.equal(get.params[0].required, false)
+      assert.equal(get.params[1].required, true)
+      assert.equal(get.params[1].description, '每页条数')
+      assert.equal(get.body.type, 'none')
+
+      const form = out.endpoints.find((e) => e.name === '表单上传')
+      assert.equal(form.body.type, 'form')
+      assert.deepEqual(JSON.parse(form.body.content), [{ key: 'file', value: '', type: 'file', required: true }])
+
+      // res_body 非 JSON-Schema 字符串 → 不产生响应
+      const noSchema = importYApi({ list: [{ title: 'T', path: '/t', method: 'GET', res_body: '不是 JSON' }] })
+      assert.equal(noSchema.endpoints[0].responses.length, 0)
+      // 空边界
+      assert.deepEqual(importYApi(null), { folders: [], endpoints: [], schemas: [] })
+      assert.deepEqual(importYApi({ list: [] }), { folders: [], endpoints: [], schemas: [] })
+    },
+  },
 
   /* ── 导出与往返 ───────────────────────────────────────────────────── */
 

@@ -136,6 +136,8 @@ export function createBridgeServices() {
       postman: (json) => post('/import/postman', { json }),
       har: (json) => post('/import/har', { json }),
       curl: (text) => post('/import/curl', { text }),
+      apifox: (json) => post('/import/apifox', { json }),
+      yapi: (json) => post('/import/yapi', { json }),
     },
     export: {
       openapi: (project) => post('/export/openapi', { project }),
@@ -152,6 +154,12 @@ export function createBridgeServices() {
       test: (opts) => post('/db/test', opts ?? {}),
       query: (opts) => post('/db/query', opts ?? {}),
       close: (opts) => post('/db/close', opts ?? {}),
+    },
+    ws: {
+      open: (opts) => post('/ws/open', opts ?? {}),
+      send: (opts) => post('/ws/send', opts ?? {}),
+      messages: (opts) => post('/ws/messages', opts ?? {}),
+      close: (opts) => post('/ws/close', opts ?? {}),
     },
   }
 }
@@ -432,6 +440,8 @@ export function createStubServices() {
       postman: async () => ({ folders: [], endpoints: [], schemas: [] }),
       har: async () => ({ folders: [], endpoints: [], schemas: [] }),
       curl: async () => ({ folders: [], endpoints: [], schemas: [], endpoint: null }),
+      apifox: async () => ({ folders: [], endpoints: [], schemas: [] }),
+      yapi: async () => ({ folders: [], endpoints: [], schemas: [] }),
     },
     export: {
       openapi: async () => '',
@@ -445,9 +455,15 @@ export function createStubServices() {
       runScenario: async (projectId, scenarioId) => ({ scenarioId, passed: false, steps: [], durationMs: 0, error: '测试运行器不可用（桥降级）' }),
     },
     db: {
-      test: async () => ({ available: false, message: '数据库操作规划中（P2）' }),
-      query: async () => ({ available: false, message: '数据库操作规划中（P2）' }),
-      close: async () => ({ available: false, message: '数据库操作规划中（P2）' }),
+      test: async () => ({ ok: false, error: { code: 'UNAVAILABLE', message: '数据库操作不可用（桥降级）' } }),
+      query: async () => ({ ok: false, error: { code: 'UNAVAILABLE', message: '数据库操作不可用（桥降级）' } }),
+      close: async () => ({ ok: false, error: { code: 'UNAVAILABLE', message: '数据库操作不可用（桥降级）' } }),
+    },
+    ws: {
+      open: async () => ({ id: '', url: '', status: 'unavailable', messages: [], error: { kind: 'unavailable', message: 'WebSocket 调试不可用（桥降级）' } }),
+      send: async () => ({ ok: false, error: { kind: 'unavailable', message: 'WebSocket 调试不可用（桥降级）' } }),
+      messages: async () => ({ ok: false, lastIndex: 0, messages: [], error: { kind: 'unavailable', message: 'WebSocket 调试不可用（桥降级）' } }),
+      close: async () => ({ ok: false, error: { kind: 'unavailable', message: 'WebSocket 调试不可用（桥降级）' } }),
     },
   }
 }
@@ -471,11 +487,12 @@ export const SERVICE_METHODS = {
   script: ['run'],
   mock: ['start', 'stop', 'status'],
   schema: ['example', 'validate'],
-  import: ['openapi', 'postman', 'har', 'curl'],
+  import: ['openapi', 'postman', 'har', 'curl', 'apifox', 'yapi'],
   export: ['openapi', 'postman', 'har', 'markdown'],
   codegen: ['run'],
   test: ['runCase', 'runScenario'],
   db: ['test', 'query', 'close'],
+  ws: ['open', 'send', 'messages', 'close'],
 }
 
 /**
