@@ -74,8 +74,14 @@ DOM 实测：整站渲染过的 svg path 指纹 18 种（与 ICON_PATHS 全集�
 
 ## 3. 本次发现并修复的缺陷（2 个，均已带回归测试）
 
-1. **行级右键菜单全部失效**（`FolderTree.jsx`）：行 `onContextMenu` 未 `stopPropagation`，事件冒泡到 `.pp-tree`/`.pp-tree-group` 的 root 兜底 handler 后二次 setState，行菜单被根级「新建目录/新建接口」覆盖——目录行的新建子目录/重命名/删除、接口行的调试页打开/复制 URL/重命名/删除在真机全部不可达。修复：行 handler 阻断冒泡；`tree.test.js` 增加 stopPropagation 断言；实拍 `doc-context-menu.png` 验证。
-2. **ParamTable `<datalist>` 非法嵌套**（`ParamTable.jsx`）：datalist 作为 `<table>` 直接子元素违反 HTML 嵌套规则，每次渲染 Headers 表 React `validateDOMNesting` 都报控制台红错。修复：有建议下拉时用 Fragment 使 datalist 与 table 成兄弟节点；无建议时保持裸 table 根（历史契约不变）。`body-editor.test.js` 增加「datalist 不在 table 子树」断言；整站控制台复查仅剩 harness 自身 favicon 404，产品零红错。
+1. **行级右键菜单全部失效**（`FolderTree.jsx`）：行 `onContextMenu` 未 `stopPropagation`，事件冒泡到 `.pp-tree`/`.pp-tree-group` 的 root 兜底 handler 后二次 setState，行菜单被根级「新建目录/新建接口」覆盖——目录行的新建子目录/重命名/删除、接口行的调试页打开/复制 URL/重命名/删除在真机全部不可达。修复：行 handler 阻断冒泡；`tree.test.js` 增加 stopPropagation 断言。
+   **Before/After 实拍**（同场景右键「订单管理」目录行，基线 `d0e1819` vs 本 PR `92a46ed`）：
+   - Before：`before-doc-context-menu.png`（修复前——目录行右键只弹根级「新建目录/新建接口」，行级菜单不可达）
+   - After：`doc-context-menu.png`（修复后——完整行级菜单「新建子目录/新建接口/重命名/删除」）
+2. **ParamTable `<datalist>` 非法嵌套**（`ParamTable.jsx`）：datalist 作为 `<table>` 直接子元素违反 HTML 嵌套规则，每次渲染 Headers 表 React `validateDOMNesting` 都报控制台红错。修复：有建议下拉时用 Fragment 使 datalist 与 table 成兄弟节点；无建议时保持裸 table 根（历史契约不变）。`body-editor.test.js` 增加「datalist 不在 table 子树」断言。
+   **Before/After 证据**（控制台实录，非截图可表达项）：
+   - Before：修复前实拍控制台输出 `Warning: validateDOMNesting(...): <datalist> cannot appear as a child of <table> … at ParamTable`（调试页每次渲染报错）
+   - After：修复后整站控制台复查 0 产品红错（仅截图 harness 自身 favicon 404）
 
 ## 4. 渲染态断言（`dom-facts.json`，37/37 通过）
 
